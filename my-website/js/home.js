@@ -1,5 +1,5 @@
-const API_KEY = 'a1e72742aa17a327005b91fb6602054523286;
-    const BASE_URL = 'https://api.themoviedb.org/3';
+const API_KEY = EY = '742aa17a327005b91fb6602054523286';
+const BASE_URL = Rhttps://api.themoviedb.org/3';
     const IMG_URL = 'https://image.tmdb.org/t/p/original';
     let currentItem;
 
@@ -122,5 +122,6 @@ const API_KEY = 'a1e72742aa17a327005b91fb6602054523286;
 
 
     init();
+
 
 

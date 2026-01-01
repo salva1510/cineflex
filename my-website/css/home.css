@@ -427,20 +427,8 @@ body {
 .logo:hover {
   text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
-.video-wrapper {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: black;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
 
-#modal-video {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+
 
 
 

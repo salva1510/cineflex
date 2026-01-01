@@ -238,3 +238,16 @@ toggleBtn.onclick = () => {
   document.documentElement.setAttribute("data-theme", next);
   localStorage.setItem("theme", next);
 };
+function toggleFavorite(item) {
+  let favs = JSON.parse(localStorage.getItem("favorites")) || [];
+  const exists = favs.find(f => f.id === item.id);
+
+  if (exists) {
+    favs = favs.filter(f => f.id !== item.id);
+  } else {
+    favs.push(item);
+  }
+
+  localStorage.setItem("favorites", JSON.stringify(favs));
+  alert(exists ? "Removed from favorites" : "Added to favorites ❤️");
+}

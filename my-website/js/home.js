@@ -120,6 +120,8 @@ function closeModal() {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
 }
+changeServer();
+
 
 /* =========================
    VIDEO SERVERS
@@ -360,6 +362,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

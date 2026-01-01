@@ -331,4 +331,9 @@ function saveProgress(item, time) {
 
   localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
 }
+function restoreProgress(video) {
+  video.addEventListener("timeupdate", () => {
+    saveProgress(currentItem, video.currentTime);
+  });
+}
 

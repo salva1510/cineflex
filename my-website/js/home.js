@@ -336,4 +336,5 @@ function restoreProgress(video) {
     saveProgress(currentItem, video.currentTime);
   });
 }
+restoreProgress(document.getElementById("modal-video"));
 

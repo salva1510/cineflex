@@ -337,3 +337,17 @@
 
 .scroll-btn.left { left: 0; }
 .scroll-btn.right { right: 0; }
+:root[data-theme="dark"] {
+  --bg: #0f0f0f;
+  --text: #ffffff;
+}
+
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #111111;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}

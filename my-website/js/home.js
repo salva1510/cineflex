@@ -376,6 +376,24 @@ function playVideo() {
     behavior: "smooth"
   });
 }
+function enableMiniPlayer() {
+  const wrapper = document.getElementById("videoWrapper");
+  const modalContent = document.querySelector(".modal-content");
+
+  if (!wrapper || !modalContent) return;
+
+  modalContent.addEventListener("scroll", () => {
+    const triggerHeight = 220;
+
+    if (modalContent.scrollTop > triggerHeight) {
+      wrapper.classList.add("mini");
+    } else {
+      wrapper.classList.remove("mini");
+    }
+  });
+}
+
+
 
 
 

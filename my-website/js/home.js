@@ -308,6 +308,26 @@ window.addEventListener("load", () => {
   const logo = document.querySelector(".logo");
   logo.classList.add("netflix-intro");
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("cineflex-logo");
+
+  const dunSound = new Audio("assets/netflix-dun.mp3");
+  dunSound.volume = 0.6;
+
+  let played = false;
+
+  const playDun = () => {
+    if (played) return;
+    played = true;
+    dunSound.play().catch(() => {});
+  };
+
+  // Play on first user interaction (browser-safe)
+  window.addEventListener("click", playDun, { once: true });
+  window.addEventListener("keydown", playDun, { once: true });
+});
+
+
 
 
 

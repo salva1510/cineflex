@@ -306,4 +306,11 @@ function setActiveProfile(profileId) {
 function getActiveProfile() {
   return localStorage.getItem(ACTIVE_PROFILE_KEY);
 }
+function createProfile(name) {
+  const profiles = getProfiles();
+  const id = Date.now().toString();
+  profiles.push({ id, name, avatar: "👤" });
+  setProfiles(profiles);
+  setActiveProfile(id);
+}
 

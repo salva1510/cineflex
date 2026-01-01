@@ -377,15 +377,4 @@ body {
   border-radius: 10px;
   pointer-events: none;
 }
-.logo {
-  width: 150px;
-  height: auto;
-  margin: 1rem;
-  transition: transform 0.3s;
-}
-
-.logo:hover {
-  transform: scale(1.05);
-}
-
 

@@ -137,6 +137,7 @@ function changeServer() {
       } else if (server === "player.videasy.net") {
         embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
       }
+   iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
 
   document.getElementById("modal-video").src = embedURL;
 }
@@ -375,6 +376,7 @@ function playVideo() {
     behavior: "smooth"
   });
 }
+
 
 
 

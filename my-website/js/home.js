@@ -288,4 +288,22 @@ async function attachTrailerHover(img, item) {
   });
 }
 attachTrailerHover(img, item);
+const PROFILE_KEY = "profiles";
+const ACTIVE_PROFILE_KEY = "activeProfile";
+
+function getProfiles() {
+  return JSON.parse(localStorage.getItem(PROFILE_KEY)) || [];
+}
+
+function setProfiles(profiles) {
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profiles));
+}
+
+function setActiveProfile(profileId) {
+  localStorage.setItem(ACTIVE_PROFILE_KEY, profileId);
+}
+
+function getActiveProfile() {
+  return localStorage.getItem(ACTIVE_PROFILE_KEY);
+}
 

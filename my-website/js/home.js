@@ -287,3 +287,4 @@ async function attachTrailerHover(img, item) {
     if (iframe) iframe.remove();
   });
 }
+attachTrailerHover(img, item);

@@ -292,5 +292,12 @@ async function attachTrailerHover(img, item) {
   });
 }
 attachTrailerHover(img, item);
+// Add a loading placeholder for the logo
+document.getElementById('logo').loading = 'lazy';
+
+// Add a title on hover
+document.getElementById('logo').title = 'Cineflex Movie Database';
+
+
 
 

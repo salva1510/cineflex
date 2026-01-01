@@ -219,3 +219,11 @@ document.querySelectorAll(".scroll-btn").forEach(btn => {
     });
   });
 });
+document.addEventListener("keydown", e => {
+  const row = document.querySelector(".row-list:hover");
+  if (!row) return;
+
+  if (e.key === "ArrowRight") row.scrollBy({ left: 300, behavior: "smooth" });
+  if (e.key === "ArrowLeft") row.scrollBy({ left: -300, behavior: "smooth" });
+  if (e.key === "Escape") closeModal();
+});

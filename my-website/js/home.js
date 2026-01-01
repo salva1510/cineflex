@@ -227,3 +227,14 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") row.scrollBy({ left: -300, behavior: "smooth" });
   if (e.key === "Escape") closeModal();
 });
+const toggleBtn = document.getElementById("theme-toggle");
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+
+toggleBtn.onclick = () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("theme", next);
+};

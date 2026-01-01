@@ -145,6 +145,12 @@ function changeServer() {
 
   document.getElementById("modal-video").src = embedURL;
 }
+(async () => {
+  const fastest = await autoPickFastestServer(currentItem.id, currentItem.media_type);
+  document.getElementById("server").value = fastest;
+  changeServer();
+})();
+
 
 /* =========================
    SEARCH
@@ -363,6 +369,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

@@ -209,3 +209,13 @@ async function init() {
 }
 
 init();
+document.querySelectorAll(".scroll-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const row = btn.parentElement.querySelector(".row-list");
+    const scrollAmount = row.clientWidth * 0.8;
+    row.scrollBy({
+      left: btn.classList.contains("right") ? scrollAmount : -scrollAmount,
+      behavior: "smooth"
+    });
+  });
+});

@@ -263,3 +263,10 @@ function showSkeleton(containerId, count = 8) {
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
+async function getTrailer(id, type) {
+  const data = await fetchJSON(
+    `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
+  );
+  const trailer = data.results.find(v => v.type === "Trailer");
+  return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : null;
+}

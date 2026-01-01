@@ -392,6 +392,21 @@ function enableMiniPlayer() {
     }
   });
 }
+function playVideo() {
+  const videoWrapper = document.getElementById("videoWrapper");
+
+  videoWrapper.classList.add("active");
+  changeServer();
+
+  document.querySelector(".modal-content").scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  enableMiniPlayer();
+}
+
+
 
 
 

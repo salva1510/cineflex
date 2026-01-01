@@ -251,3 +251,12 @@ function toggleFavorite(item) {
   localStorage.setItem("favorites", JSON.stringify(favs));
   alert(exists ? "Removed from favorites" : "Added to favorites ❤️");
 }
+function showSkeleton(containerId, count = 8) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const div = document.createElement("div");
+    div.className = "skeleton";
+    container.appendChild(div);
+  }
+}

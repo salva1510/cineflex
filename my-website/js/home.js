@@ -304,5 +304,11 @@ function personalizedGreeting() {
     `${greeting}! Visit #${visits}`;
 }
 attachTrailerHover(img, item);
+window.addEventListener("load", () => {
+  const logo = document.querySelector(".logo");
+  logo.classList.add("netflix-intro");
+});
+
+
 
 

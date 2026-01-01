@@ -260,3 +260,6 @@ function showSkeleton(containerId, count = 8) {
     container.appendChild(div);
   }
 }
+showSkeleton("movies-list");
+showSkeleton("tvshows-list");
+showSkeleton("anime-list");

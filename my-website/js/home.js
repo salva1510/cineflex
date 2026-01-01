@@ -494,6 +494,30 @@ function analyticsSummary() {
     lastSeen: logs.at(-1)?.title
   };
 }
+{
+  "name": "StreamX",
+  "short_name": "StreamX",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#e50914",
+  "icons": [
+    { "src": "/icons/192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("install-btn").style.display = "block";
+});
+
+function installApp() {
+  deferredPrompt.prompt();
+}
+
 
 
 

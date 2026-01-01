@@ -326,6 +326,45 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("click", playDun, { once: true });
   window.addEventListener("keydown", playDun, { once: true });
 });
+async function autoPickFastestServer(movieId, type = "movie") {
+  const servers = [
+    "vidsrc.cc",
+    "vidsrc.me",
+    "player.videasy.net"
+  ];
+
+  const testResults = [];
+
+  for (const server of servers) {
+    const start = performance.now();
+
+    try {
+      const testUrl =
+        type === "movie"
+          ? `https://${server}/embed/movie/${movieId}`
+          : `https://${server}/embed/tv/${movieId}`;
+
+      // lightweight HEAD request
+      await fetch(testUrl, {
+        method: "HEAD",
+        mode: "no-cors",
+        cache: "no-store"
+      });
+
+      const time = performance.now() - start;
+      testResults.push({ server, time });
+    } catch {
+      // ignore failed servers
+    }
+  }
+
+  if (!testResults.length) return servers[0];
+
+  testResults.sort((a, b) => a.time - b.time);
+  return testResults[0].server;
+}
+
+
 
 
 

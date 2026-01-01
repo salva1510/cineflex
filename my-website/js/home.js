@@ -410,5 +410,20 @@ document.getElementById("modal").addEventListener("touchend", e => {
   const endY = e.changedTouches[0].clientY;
   if (endY - startY > 120) closeModal();
 });
+function createProfile(name, pin, avatar) {
+  const profiles = getProfiles();
+  const id = Date.now().toString();
+
+  profiles.push({
+    id,
+    name,
+    pin,
+    avatar,
+    created: Date.now()
+  });
+
+  setProfiles(profiles);
+  setActiveProfile(id);
+}
 
 

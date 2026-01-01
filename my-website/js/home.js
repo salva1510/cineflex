@@ -425,5 +425,75 @@ function createProfile(name, pin, avatar) {
   setProfiles(profiles);
   setActiveProfile(id);
 }
+function loginProfile(profileId, pinInput) {
+  const profile = getProfiles().find(p => p.id === profileId);
+  if (!profile || profile.pin !== pinInput) {
+    alert("Wrong PIN");
+    return false;
+  }
+  setActiveProfile(profileId);
+  return true;
+}
+const AVATARS = ["😎", "👩‍🚀", "🦊", "🐼", "🔥", "🎮", "🍿", "🧠"];
+function renderAvatarPicker(containerId, onSelect) {
+  const box = document.getElementById(containerId);
+  box.innerHTML = "";
+
+  AVATARS.forEach(icon => {
+    const btn = document.createElement("button");
+    btn.textContent = icon;
+    btn.onclick = () => onSelect(icon);
+    box.appendChild(btn);
+  });
+}
+function showActiveProfile() {
+  const profile = getProfiles().find(p => p.id === getActiveProfile());
+  if (!profile) return;
+
+  document.getElementById("profile-avatar").textContent = profile.avatar;
+  document.getElementById("profile-name").textContent = profile.name;
+}
+function becauseYouWatched(item, allItems) {
+  return allItems.filter(i =>
+    i.id !== item.id &&
+    i.genre_ids?.some(g => item.genre_ids.includes(g))
+  ).slice(0, 15);
+}
+function showBecauseYouWatched(item, allItems) {
+  const recs = becauseYouWatched(item, allItems);
+  if (recs.length) {
+    displayList(recs, "because-you-watched");
+  }
+}
+showBecauseYouWatched(item, window.ALL_CONTENT);
+function logAnalytics(event, item) {
+  const profile = getActiveProfile();
+  if (!profile) return;
+
+  const key = `analytics_${profile}`;
+  const logs = JSON.parse(localStorage.getItem(key)) || [];
+
+  logs.push({
+    event,
+    id: item.id,
+    title: item.title || item.name,
+    time: Date.now()
+  });
+
+  localStorage.setItem(key, JSON.stringify(logs));
+}
+logAnalytics("open", item);
+logAnalytics("play", currentItem);
+function analyticsSummary() {
+  const profile = getActiveProfile();
+  const logs = JSON.parse(localStorage.getItem(`analytics_${profile}`)) || [];
+
+  return {
+    watched: logs.filter(l => l.event === "play").length,
+    opened: logs.length,
+    lastSeen: logs.at(-1)?.title
+  };
+}
+
 
 

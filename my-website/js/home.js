@@ -126,14 +126,17 @@ function closeModal() {
    VIDEO SERVERS
 ========================= */
 function changeServer() {
-  const server = document.getElementById("server").value;
-  const iframe = document.getElementById("modal-video");
+      const server = document.getElementById('server').value;
+      const type = currentItem.media_type === "movie" ? "movie" : "tv";
+      let embedURL = "";
 
-  const id = currentItem.id;
-  const type = currentItem.media_type === "tv" ? "tv" : "movie";
-
-  iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
-}
+      if (server === "vidsrc.cc") {
+        embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
+      } else if (server === "vidsrc.me") {
+        embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
+      } else if (server === "player.videasy.net") {
+        embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
+      }
 
   document.getElementById("modal-video").src = embedURL;
 }
@@ -361,6 +364,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

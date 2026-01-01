@@ -1,3 +1,4 @@
+
 /* =========================
    CONFIG
 ========================= */
@@ -208,10 +209,6 @@ async function init() {
   }
 }
 
-// Add this in your init() function to ensure the logo is loaded correctly
-document.getElementById('logo').addEventListener('error', () => {
-  this.src = 'fallback-logo.png'; // Fallback in case the image fails to load
-});
 init();
 document.querySelectorAll(".scroll-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -292,12 +289,3 @@ async function attachTrailerHover(img, item) {
   });
 }
 attachTrailerHover(img, item);
-// Add a loading placeholder for the logo
-document.getElementById('logo').loading = 'lazy';
-
-// Add a title on hover
-document.getElementById('logo').title = 'Cineflex Movie Database';
-
-
-
-

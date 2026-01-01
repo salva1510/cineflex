@@ -344,4 +344,17 @@ function loadContinueWatching(containerId) {
   const list = JSON.parse(localStorage.getItem(`continue_${profile}`)) || [];
   displayList(list, containerId);
 }
+function trackInteraction(item) {
+  const profile = getActiveProfile();
+  if (!profile) return;
+
+  const key = `taste_${profile}`;
+  const taste = JSON.parse(localStorage.getItem(key)) || {};
+
+  item.genre_ids.forEach(g => {
+    taste[g] = (taste[g] || 0) + 1;
+  });
+
+  localStorage.setItem(key, JSON.stringify(taste));
+}
 

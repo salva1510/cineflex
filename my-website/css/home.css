@@ -283,4 +283,26 @@
     flex-direction: row;
     gap: 8px;
   }
+.poster-item {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeIn 0.6s forwards ease;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.poster-item:hover {
+  transform: scale(1.08);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#banner {
+  transition: opacity 0.6s ease, background-image 0.6s ease;
+}
 }

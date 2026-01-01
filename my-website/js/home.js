@@ -112,7 +112,7 @@ function showDetails(item) {
   document.getElementById("modal-rating").innerHTML =
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
-  changeServer();
+changeServer();
   document.getElementById("modal").style.display = "flex";
 }
 
@@ -120,7 +120,6 @@ function closeModal() {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
 }
-changeServer();
 
 
 /* =========================
@@ -362,6 +361,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

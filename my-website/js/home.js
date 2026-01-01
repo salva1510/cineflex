@@ -270,3 +270,20 @@ async function getTrailer(id, type) {
   const trailer = data.results.find(v => v.type === "Trailer");
   return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : null;
 }
+async function attachTrailerHover(img, item) {
+  let iframe;
+
+  img.addEventListener("mouseenter", async () => {
+    const url = await getTrailer(item.id, item.media_type || "movie");
+    if (!url) return;
+
+    iframe = document.createElement("iframe");
+    iframe.src = url;
+    iframe.className = "hover-trailer";
+    img.parentElement.appendChild(iframe);
+  });
+
+  img.addEventListener("mouseleave", () => {
+    if (iframe) iframe.remove();
+  });
+}

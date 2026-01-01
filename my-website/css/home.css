@@ -468,6 +468,33 @@ body {
 .play-btn:hover {
   background: #e50914;
 }
+.video-wrapper {
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+/* Floating mini-player mode */
+.video-wrapper.mini {
+  position: fixed;
+  width: 320px;
+  aspect-ratio: 16 / 9;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border-radius: 12px;
+}
+
+/* Mobile sizing */
+@media (max-width: 600px) {
+  .video-wrapper.mini {
+    width: 220px;
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+
 
 
 

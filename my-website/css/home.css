@@ -377,4 +377,13 @@ body {
   border-radius: 10px;
   pointer-events: none;
 }
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: red;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+
 

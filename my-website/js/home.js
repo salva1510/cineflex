@@ -313,4 +313,22 @@ function createProfile(name) {
   setProfiles(profiles);
   setActiveProfile(id);
 }
+function saveProgress(item, time) {
+  const profile = getActiveProfile();
+  if (!profile) return;
+
+  const key = `continue_${profile}`;
+  let list = JSON.parse(localStorage.getItem(key)) || [];
+
+  list = list.filter(i => i.id !== item.id);
+  list.unshift({
+    id: item.id,
+    title: item.title || item.name,
+    poster: item.poster_path,
+    time,
+    type: item.media_type || "movie"
+  });
+
+  localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+}
 

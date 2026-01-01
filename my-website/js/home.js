@@ -125,7 +125,7 @@ function closeModal() {
 /* =========================
    VIDEO SERVERS
 ========================= */
-ffunction changeServer() {
+function changeServer() {
   const server = document.getElementById("server").value;
   const iframe = document.getElementById("modal-video");
 
@@ -361,6 +361,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

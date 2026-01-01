@@ -337,4 +337,11 @@ function restoreProgress(video) {
   });
 }
 restoreProgress(document.getElementById("modal-video"));
+function loadContinueWatching(containerId) {
+  const profile = getActiveProfile();
+  if (!profile) return;
+
+  const list = JSON.parse(localStorage.getItem(`continue_${profile}`)) || [];
+  displayList(list, containerId);
+}
 

@@ -357,4 +357,58 @@ function trackInteraction(item) {
 
   localStorage.setItem(key, JSON.stringify(taste));
 }
+showDetails(item);
+trackInteraction(item);
+function recommend(allItems) {
+  const profile = getActiveProfile();
+  if (!profile) return [];
+
+  const taste = JSON.parse(localStorage.getItem(`taste_${profile}`)) || {};
+  const favGenres = Object.keys(taste).sort((a, b) => taste[b] - taste[a]);
+
+  return allItems.filter(item =>
+    item.genre_ids?.some(g => favGenres.includes(g.toString()))
+  ).slice(0, 20);
+}
+const CACHE_NAME = "stream-cache-v1";
+
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.open(CACHE_NAME).then(cache =>
+      cache.match(event.request).then(resp =>
+        resp || fetch(event.request).then(response => {
+          cache.put(event.request, response.clone());
+          return response;
+        })
+      )
+    )
+  );
+});
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}
+document.querySelectorAll(".row-list").forEach(row => {
+  let startX = 0;
+
+  row.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  row.addEventListener("touchmove", e => {
+    const diff = startX - e.touches[0].clientX;
+    row.scrollLeft += diff;
+    startX = e.touches[0].clientX;
+  });
+});
+let startY = 0;
+
+document.getElementById("modal").addEventListener("touchstart", e => {
+  startY = e.touches[0].clientY;
+});
+
+document.getElementById("modal").addEventListener("touchend", e => {
+  const endY = e.changedTouches[0].clientY;
+  if (endY - startY > 120) closeModal();
+});
+
 

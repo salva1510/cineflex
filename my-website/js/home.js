@@ -200,20 +200,7 @@ async function init() {
       fetchTrendingAnime()
     ]);
      
-function personalizedGreeting() {
-  const hour = new Date().getHours();
-  let greeting = "Welcome";
 
-  if (hour < 12) greeting = "Good Morning";
-  else if (hour < 18) greeting = "Good Afternoon";
-  else greeting = "Good Evening";
-
-  let visits = Number(localStorage.getItem("visits") || 0) + 1;
-  localStorage.setItem("visits", visits);
-
-  document.getElementById("banner-title").textContent =
-    `${greeting}! Visit #${visits}`;
-}
     autoRotateBanner(movies);
     displayList(movies, "movies-list");
     displayList(tvShows, "tvshows-list");
@@ -302,5 +289,20 @@ async function attachTrailerHover(img, item) {
     if (iframe) iframe.remove();
   });
 }
+function personalizedGreeting() {
+  const hour = new Date().getHours();
+  let greeting = "Welcome";
+
+  if (hour < 12) greeting = "Good Morning";
+  else if (hour < 18) greeting = "Good Afternoon";
+  else greeting = "Good Evening";
+
+  let visits = Number(localStorage.getItem("visits") || 0) + 1;
+  localStorage.setItem("visits", visits);
+
+  document.getElementById("banner-title").textContent =
+    `${greeting}! Visit #${visits}`;
+}
 attachTrailerHover(img, item);
+
 

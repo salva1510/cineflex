@@ -515,6 +515,12 @@ body {
   z-index: 101;
   pointer-events: auto;
 }
+.banner {
+  position: relative;
+  z-index: 1;
+}
+
+
 
 
 

@@ -142,6 +142,17 @@ function changeServer() {
       }
   document.getElementById("modal-video").src = embedURL;
 }
+function loadVideo(item) {
+  const iframe = document.getElementById("modal-video");
+  const server = document.getElementById("server").value;
+
+  if (item.media_type === "movie") {
+    iframe.src = `https://${server}/embed/movie/${item.id}`;
+  } else {
+    iframe.src = `https://${server}/embed/tv/${item.id}`;
+  }
+}
+
 
 
 /* =========================
@@ -369,6 +380,7 @@ function openSearchModal() {
 function closeSearchModal() {
   document.getElementById("search-modal").style.display = "none";
 }
+
 
 
 

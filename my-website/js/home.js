@@ -98,28 +98,31 @@ function displayList(items, containerId) {
 /* =========================
    MODAL
 ========================= */
-function showDetails(item) {
-  currentItem = item;
+function openModal(item) {
+  const modal = document.getElementById("modal");
+  const iframe = document.getElementById("modal-video");
 
+  modal.style.display = "flex";
+
+  // 🔥 CLEAR old video first (important)
+  iframe.src = "";
+
+  // 🔥 LOAD VIDEO FIRST (TOP)
+  loadVideo(item);
+
+  // THEN load details
   document.getElementById("modal-title").textContent =
     item.title || item.name;
+
   document.getElementById("modal-description").textContent =
-    item.overview || "No description available.";
+    item.overview || "No description available";
+
   document.getElementById("modal-image").src =
-    `${IMG_URL}${item.poster_path}`;
-
-  const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML =
-    "★".repeat(stars) + "☆".repeat(5 - stars);
-
-changeServer();
-  document.getElementById("modal").style.display = "flex";
+    item.poster_path
+      ? "https://image.tmdb.org/t/p/w500" + item.poster_path
+      : "";
 }
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  document.getElementById("modal-video").src = "";
-}
 
 
 /* =========================
@@ -366,6 +369,7 @@ function openSearchModal() {
 function closeSearchModal() {
   document.getElementById("search-modal").style.display = "none";
 }
+
 
 
 

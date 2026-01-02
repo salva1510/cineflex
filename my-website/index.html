@@ -43,30 +43,16 @@
     <div class="list" id="anime-list"></div>
   </div>
 
-  <div class="modal-content">
-
-  <!-- VIDEO (starts hidden position) -->
-  <div class="video-wrapper" id="videoWrapper">
-    <iframe
-      id="modal-video"
-      frameborder="0"
-      allow="autoplay; fullscreen"
-      allowfullscreen>
-    </iframe>
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
+      <div class="modal-body">
+  <img id="modal-image" src="" alt="" />
+  <div class="modal-text">
+    <h2 id="modal-title"></h2>
+    <div class="stars" id="modal-rating"></div>
+    <p id="modal-description"></p>
   </div>
-
-  <!-- INFO -->
-  <div class="modal-body" id="infoSection">
-    <img id="modal-image" src="" alt="" />
-    <div class="modal-text">
-      <h2 id="modal-title"></h2>
-      <div class="stars" id="modal-rating"></div>
-      <p id="modal-description"></p>
-
-      <button class="play-btn" onclick="playVideo()">▶ Play</button>
-    </div>
-  </div>
-
 </div>
 
       
@@ -109,6 +95,7 @@
   <button class="scroll-btn right">›</button>
 </div>
 <button onclick="toggleFavorite(currentItem)">❤️ Favorite</button>
+
 
 
 

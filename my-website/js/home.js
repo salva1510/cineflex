@@ -137,10 +137,11 @@ function changeServer() {
       } else if (server === "player.videasy.net") {
         embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
       }
-   iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
 
   document.getElementById("modal-video").src = embedURL;
 }
+iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
+
 
 
 
@@ -361,6 +362,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

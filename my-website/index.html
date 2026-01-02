@@ -1,15 +1,8 @@
 <html lang="en">
 <head>
-  <meta name="theme-color" content="#e50914">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="CineFlex">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-  <meta name="application-name" content="CineFlex">
-<meta name="apple-mobile-web-app-title" content="CineFlex">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CineFlex</title>
+  <title>My Website</title>
   <link rel="stylesheet" href="css/home.css">
   <link rel="preload" href="css/home.css" as="style">
   <link rel="preload" href="js/home.js" as="script">
@@ -20,56 +13,35 @@
 
 <body>
   <div class="navbar">
-    <div class="logo netflix-intro">
-  <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
-</div>
+    <img src="logo.png" alt="LOGO HERE" />
     <div class="nav-links">
-  <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
-</div>
+      <a href="index.html">Home</a>
+      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
+    </div>
   </div>
 
   <div class="banner" id="banner">
     <h1 id="banner-title"></h1>
   </div>
-<div class="row">
-  <h2>Trending Movies</h2>
-  <div class="list" id="movies-list"></div>
-</div>
 
-<div class="row">
-  <h2>Trending TV Shows</h2>
-  <div class="list" id="tvshows-list"></div>
-</div>
-
-<div class="row">
-  <h2>Trending Anime</h2>
-  <div class="list" id="anime-list"></div>
-</div>
-
-<!-- Modal for Movie/Show Details -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <div class="modal-body">
-      <img id="modal-image" src="" alt="" />
-      <div class="modal-text">
-        <h2 id="modal-title"></h2>
-        <div class="stars" id="modal-rating"></div>
-        <p id="modal-description"></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-      <!-- Seasons & Episodes -->
-<div id="tv-controls" style="display:none;">
-  <div class="season-selector">
-    <label>Season</label>
-    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  <div class="row">
+    <h2>Trending Movies</h2>
+    <div class="list" id="movies-list"></div>
   </div>
 
-  <div id="episodes" class="episodes-grid"></div>
-</div>
+  <div class="row">
+    <h2>Trending TV Shows</h2>
+    <div class="list" id="tvshows-list"></div>
+  </div>
+
+  <div class="row">
+    <h2>Trending Anime</h2>
+    <div class="list" id="anime-list"></div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
       <div class="modal-body">
   <img id="modal-image" src="" alt="" />
   <div class="modal-text">
@@ -78,24 +50,14 @@
     <p id="modal-description"></p>
   </div>
 </div>
-
       
       <div class="server-selector">
-        <!-- Seasons & Episodes -->
-<div id="tv-controls" style="display:none;">
-  <div class="season-selector">
-    <label>Season</label>
-    <select id="seasonSelect" onchange="loadEpisodes()"></select>
-  </div>
-
-  <div id="episodes" class="episodes-grid"></div>
-</div>
         <label for="server">Change Server:</label>
         <select id="server" onchange="changeServer()">
-  <option value="vidsrc.cc">CineFlex Ultra</option>
-  <option value="vidsrc.me">CineFlex Max</option>
-  <option value="player.videasy.net">CineFlex Lite</option>
-</select>
+          <option value="vidsrc.cc">Vidsrc.cc</option>
+          <option value="vidsrc.me">Vidsrc.me</option>
+          <option value="player.videasy.net">Player.Videasy.net</option>
+        </select>
       </div>
       <iframe id="modal-video" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
     </div>
@@ -106,64 +68,18 @@
     <input type="text" id="search-input" placeholder="Search for a movie or show..." oninput="searchTMDB()" />
     <div class="results" id="search-results"></div>
   </div>
-  <footer class="footer">
-   <button id="installBtn" style="display:none;">📲 Install App</button>
-  <div class="footer-content">
-    <p>&copy; 2025 CineFlex. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="#">Disclaimer</a>
-      <a href="#">About Us</a>
-      <a href="#">Contact Us</a>
-      <!-- Add the copyright policy link -->
-      <a href="/copyright-policy.html">Copyright Policy</a>
-    </div>
-  </div>
-</footer>
 
 <footer class="footer">
-   <button id="installBtn" style="display:none;">📲 Install App</button>
   <div class="footer-content">
-    <p>&copy; 2025 CineFlex. All rights reserved.</p>
+    <p>&copy; 2025 My Website. All rights reserved.</p>
     <div class="footer-links">
       <a href="#">Disclaimer</a>
       <a href="#">About Us</a>
       <a href="#">Contact Us</a>
-      <button id="theme-toggle">🌙</button>
     </div>
   </div>
 </footer>
-<button id="theme-toggle">🌙</button>
+
+  
 
 </body>
-
-  <div class="row">
-  <button class="scroll-btn left">‹</button>
-  <div class="row-list" id="movies-list"></div>
-  <button class="scroll-btn right">›</button>
-</div>
-<button onclick="toggleFavorite(currentItem)">❤️ Favorite</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

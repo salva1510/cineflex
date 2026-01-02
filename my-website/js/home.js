@@ -382,6 +382,33 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+// Open Modal with movie details
+function openModal(movieId) {
+  // Fetch movie data using an API or predefined data
+  const movieData = getMovieDataById(movieId);
+  
+  document.getElementById('modal-title').textContent = movieData.title;
+  document.getElementById('modal-description').textContent = movieData.description;
+  document.getElementById('modal-image').src = movieData.imageUrl;
+  document.getElementById('modal-rating').textContent = `⭐ ${movieData.rating}`;
+  
+  document.getElementById('modal').style.display = 'flex';
+}
+
+// Close the Modal
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+// Attach the openModal function to each image
+document.querySelectorAll('.list img').forEach(img => {
+  img.addEventListener('click', (e) => {
+    const movieId = e.target.dataset.id;  // Assume you store the movie ID in the data-id attribute
+    openModal(movieId);
+  });
+});
+
+
 
 
 

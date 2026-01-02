@@ -467,6 +467,46 @@ body {
     height: 220px;
   }
 }
+/* PLAYER CONTROLS */
+.player-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+#theater-btn {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#theater-btn:hover {
+  background: red;
+}
+
+/* THEATER MODE */
+.modal-content.theater {
+  max-width: 95vw;
+  background: #000;
+}
+
+.modal-content.theater .player-layout {
+  grid-template-columns: 1fr;
+}
+
+.modal-content.theater .player-info {
+  display: none;
+}
+
+.modal-content.theater iframe {
+  height: 75vh;
+}
+
+
 
 
 

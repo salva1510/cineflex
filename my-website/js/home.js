@@ -98,31 +98,28 @@ function displayList(items, containerId) {
 /* =========================
    MODAL
 ========================= */
-function openModal(item) {
-  const modal = document.getElementById("modal");
-  const iframe = document.getElementById("modal-video");
+function showDetails(item) {
+  currentItem = item;
 
-  modal.style.display = "flex";
-
-  // 🔥 CLEAR old video first (important)
-  iframe.src = "";
-
-  // 🔥 LOAD VIDEO FIRST (TOP)
-  loadVideo(item);
-
-  // THEN load details
   document.getElementById("modal-title").textContent =
     item.title || item.name;
-
   document.getElementById("modal-description").textContent =
-    item.overview || "No description available";
-
+    item.overview || "No description available.";
   document.getElementById("modal-image").src =
-    item.poster_path
-      ? "https://image.tmdb.org/t/p/w500" + item.poster_path
-      : "";
+    `${IMG_URL}${item.poster_path}`;
+
+  const stars = Math.round(item.vote_average / 2);
+  document.getElementById("modal-rating").innerHTML =
+    "★".repeat(stars) + "☆".repeat(5 - stars);
+
+changeServer();
+  document.getElementById("modal").style.display = "flex";
 }
 
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-video").src = "";
+}
 
 
 /* =========================
@@ -142,17 +139,6 @@ function changeServer() {
       }
   document.getElementById("modal-video").src = embedURL;
 }
-function loadVideo(item) {
-  const iframe = document.getElementById("modal-video");
-  const server = document.getElementById("server").value;
-
-  if (item.media_type === "movie") {
-    iframe.src = `https://${server}/embed/movie/${item.id}`;
-  } else {
-    iframe.src = `https://${server}/embed/tv/${item.id}`;
-  }
-}
-
 
 
 /* =========================
@@ -372,16 +358,6 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
-function openSearchModal() {
-  document.getElementById("search-modal").style.display = "flex";
-  document.getElementById("search-input").focus();
-}
-
-function closeSearchModal() {
-  document.getElementById("search-modal").style.display = "none";
-}
-
-
 
 
 

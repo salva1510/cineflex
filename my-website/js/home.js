@@ -129,6 +129,7 @@ function changeServer() {
       const server = document.getElementById('server').value;
       const type = currentItem.media_type === "movie" ? "movie" : "tv";
       let embedURL = "";
+   iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
 
       if (server === "vidsrc.cc") {
         embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
@@ -140,9 +141,6 @@ function changeServer() {
 
   document.getElementById("modal-video").src = embedURL;
 }
-iframe.src = `https://${server}/embed/${type}/${id}?autoplay=1`;
-
-
 
 
 /* =========================
@@ -362,6 +360,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+
 
 
 

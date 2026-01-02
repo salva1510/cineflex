@@ -45,25 +45,25 @@
   <div class="modal" id="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
-      <div class="modal-body">
-  <img id="modal-image" src="" alt="" />
+      <div class="video-wrapper">
+  <iframe id="modal-video" allowfullscreen></iframe>
+</div>
+
+<div class="server-selector">
+  <label>Change Server:</label>
+  <select id="server" onchange="changeServer()">
+    <option value="vidsrc.cc">CineFlex Ultra</option>
+    <option value="vidsrc.me">CineFlex Max</option>
+    <option value="player.videasy.net">CineFlex Lite</option>
+  </select>
+</div>
+
+<div class="modal-body">
+  <img id="modal-image" />
   <div class="modal-text">
     <h2 id="modal-title"></h2>
     <div class="stars" id="modal-rating"></div>
     <p id="modal-description"></p>
-  </div>
-</div>
-
-      
-      <div class="server-selector">
-        <label for="server">Change Server:</label>
-        <select id="server" onchange="changeServer()">
-  <option value="vidsrc.cc">CineFlex Ultra</option>
-  <option value="vidsrc.me">CineFlex Max</option>
-  <option value="player.videasy.net">CineFlex Lite</option>
-</select>
-      </div>
-      <iframe id="modal-video" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -94,6 +94,7 @@
   <button class="scroll-btn right">›</button>
 </div>
 <button onclick="toggleFavorite(currentItem)">❤️ Favorite</button>
+
 
 
 

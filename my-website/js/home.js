@@ -358,4 +358,14 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
+function openSearchModal() {
+  document.getElementById("search-modal").style.display = "flex";
+  document.getElementById("search-input").focus();
+}
+
+function closeSearchModal() {
+  document.getElementById("search-modal").style.display = "none";
+}
+
+
 

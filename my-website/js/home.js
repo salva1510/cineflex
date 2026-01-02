@@ -358,44 +358,4 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
-function toggleTheater() {
-  const modal = document.querySelector(".modal-content");
-  const btn = document.getElementById("theater-btn");
-  const icon = btn.querySelector("i");
-
-  modal.classList.toggle("theater");
-
-  if (modal.classList.contains("theater")) {
-    icon.classList.replace("fa-expand", "fa-compress");
-    btn.innerHTML = `<i class="fa-solid fa-compress"></i> Exit`;
-  } else {
-    btn.innerHTML = `<i class="fa-solid fa-expand"></i> Theater`;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

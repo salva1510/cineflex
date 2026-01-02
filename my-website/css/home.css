@@ -427,6 +427,54 @@ body {
 .logo:hover {
   text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
+.season-selector {
+  text-align: left;
+  margin: 15px 0;
+}
+
+.season-selector select {
+  background: #111;
+  color: white;
+  border: 1px solid #333;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.episode-card {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.episode-card:hover {
+  background: #222;
+  transform: scale(1.05);
+}
+
+.episode-card h4 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.episode-card p {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.episode-card.active {
+  border: 2px solid red;
+}
+
+
 
 
 

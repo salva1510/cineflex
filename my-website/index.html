@@ -50,6 +50,15 @@
   <div class="modal" id="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
+      <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
+
+  <div id="episodes" class="episodes-grid"></div>
+</div>
       <div class="modal-body">
   <img id="modal-image" src="" alt="" />
   <div class="modal-text">
@@ -61,6 +70,15 @@
 
       
       <div class="server-selector">
+        <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
+
+  <div id="episodes" class="episodes-grid"></div>
+</div>
         <label for="server">Change Server:</label>
         <select id="server" onchange="changeServer()">
   <option value="vidsrc.cc">CineFlex Ultra</option>
@@ -99,6 +117,7 @@
   <button class="scroll-btn right">›</button>
 </div>
 <button onclick="toggleFavorite(currentItem)">❤️ Favorite</button>
+
 
 
 

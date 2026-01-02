@@ -361,21 +361,7 @@ async function autoPickFastestServer(movieId, type = "movie") {
   testResults.sort((a, b) => a.time - b.time);
   return testResults[0].server;
 }
-function playVideo() {
-  const videoWrapper = document.getElementById("videoWrapper");
-  const iframe = document.getElementById("modal-video");
 
-  videoWrapper.classList.add("active");
-
-  // Load & autoplay
-  changeServer();
-
-  // Scroll modal to top smoothly
-  document.querySelector(".modal-content").scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
 
 
 

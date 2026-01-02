@@ -505,6 +505,18 @@ body {
 .modal-content.theater iframe {
   height: 75vh;
 }
+.navbar {
+  position: relative;
+  z-index: 100;
+}
+
+.search-bar {
+  position: relative;
+  z-index: 101;
+  pointer-events: auto;
+}
+
+
 
 
 

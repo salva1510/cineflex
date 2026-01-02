@@ -379,6 +379,11 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
   await deferredPrompt.userChoice;
   deferredPrompt = null;
 });
+let currentShow = null;
+let currentSeason = 1;
+let currentEpisode = 1;
+
+
 
 
 

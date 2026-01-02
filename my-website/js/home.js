@@ -1,4 +1,3 @@
-
 /* =========================
    CONFIG
 ========================= */
@@ -112,7 +111,7 @@ function showDetails(item) {
   document.getElementById("modal-rating").innerHTML =
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
-changeServer();
+  changeServer();
   document.getElementById("modal").style.display = "flex";
 }
 
@@ -121,25 +120,30 @@ function closeModal() {
   document.getElementById("modal-video").src = "";
 }
 
-
 /* =========================
    VIDEO SERVERS
 ========================= */
 function changeServer() {
-      const server = document.getElementById('server').value;
-      const type = currentItem.media_type === "movie" ? "movie" : "tv";
-      let embedURL = "";
+  if (!currentItem) return;
 
-      if (server === "vidsrc.cc") {
-        embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
-      } else if (server === "vidsrc.me") {
-        embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
-      } else if (server === "player.videasy.net") {
-        embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
-      }
+  const server = document.getElementById("server").value;
+  const type = currentItem.media_type === "movie" ? "movie" : "tv";
+  let embedURL = "";
+
+  switch (server) {
+    case "vidsrc.cc":
+      embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
+      break;
+    case "vidsrc.me":
+      embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
+      break;
+    case "player.videasy.net":
+      embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
+      break;
+  }
+
   document.getElementById("modal-video").src = embedURL;
 }
-
 
 /* =========================
    SEARCH
@@ -194,7 +198,6 @@ async function init() {
       fetchTrending("tv"),
       fetchTrendingAnime()
     ]);
-     
 
     autoRotateBanner(movies);
     displayList(movies, "movies-list");
@@ -206,215 +209,3 @@ async function init() {
 }
 
 init();
-document.querySelectorAll(".scroll-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const row = btn.parentElement.querySelector(".row-list");
-    const scrollAmount = row.clientWidth * 0.8;
-    row.scrollBy({
-      left: btn.classList.contains("right") ? scrollAmount : -scrollAmount,
-      behavior: "smooth"
-    });
-  });
-});
-document.addEventListener("keydown", e => {
-  const row = document.querySelector(".row-list:hover");
-  if (!row) return;
-
-  if (e.key === "ArrowRight") row.scrollBy({ left: 300, behavior: "smooth" });
-  if (e.key === "ArrowLeft") row.scrollBy({ left: -300, behavior: "smooth" });
-  if (e.key === "Escape") closeModal();
-});
-const toggleBtn = document.getElementById("theme-toggle");
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
-
-toggleBtn.onclick = () => {
-  const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "light" ? "dark" : "light";
-  document.documentElement.setAttribute("data-theme", next);
-  localStorage.setItem("theme", next);
-};
-function toggleFavorite(item) {
-  let favs = JSON.parse(localStorage.getItem("favorites")) || [];
-  const exists = favs.find(f => f.id === item.id);
-
-  if (exists) {
-    favs = favs.filter(f => f.id !== item.id);
-  } else {
-    favs.push(item);
-  }
-
-  localStorage.setItem("favorites", JSON.stringify(favs));
-  alert(exists ? "Removed from favorites" : "Added to favorites ❤️");
-}
-function showSkeleton(containerId, count = 8) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  for (let i = 0; i < count; i++) {
-    const div = document.createElement("div");
-    div.className = "skeleton";
-    container.appendChild(div);
-  }
-}
-showSkeleton("movies-list");
-showSkeleton("tvshows-list");
-showSkeleton("anime-list");
-async function getTrailer(id, type) {
-  const data = await fetchJSON(
-    `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
-  );
-  const trailer = data.results.find(v => v.type === "Trailer");
-  return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : null;
-}
-async function attachTrailerHover(img, item) {
-  let iframe;
-
-  img.addEventListener("mouseenter", async () => {
-    const url = await getTrailer(item.id, item.media_type || "movie");
-    if (!url) return;
-
-    iframe = document.createElement("iframe");
-    iframe.src = url;
-    iframe.className = "hover-trailer";
-    img.parentElement.appendChild(iframe);
-  });
-
-  img.addEventListener("mouseleave", () => {
-    if (iframe) iframe.remove();
-  });
-}
-function personalizedGreeting() {
-  const hour = new Date().getHours();
-  let greeting = "Welcome";
-
-  if (hour < 12) greeting = "Good Morning";
-  else if (hour < 18) greeting = "Good Afternoon";
-  else greeting = "Good Evening";
-
-  let visits = Number(localStorage.getItem("visits") || 0) + 1;
-  localStorage.setItem("visits", visits);
-
-  document.getElementById("banner-title").textContent =
-    `${greeting}! Visit #${visits}`;
-}
-attachTrailerHover(img, item);
-window.addEventListener("load", () => {
-  const logo = document.querySelector(".logo");
-  logo.classList.add("netflix-intro");
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const logo = document.getElementById("cineflex-logo");
-
-  const dunSound = new Audio("assets/netflix-dun.mp3");
-  dunSound.volume = 0.6;
-
-  let played = false;
-
-  const playDun = () => {
-    if (played) return;
-    played = true;
-    dunSound.play().catch(() => {});
-  };
-
-  // Play on first user interaction (browser-safe)
-  window.addEventListener("click", playDun, { once: true });
-  window.addEventListener("keydown", playDun, { once: true });
-});
-async function autoPickFastestServer(movieId, type = "movie") {
-  const servers = [
-    "vidsrc.cc",
-    "vidsrc.me",
-    "player.videasy.net"
-  ];
-
-  const testResults = [];
-
-  for (const server of servers) {
-    const start = performance.now();
-
-    try {
-      const testUrl =
-        type === "movie"
-          ? `https://${server}/embed/movie/${movieId}`
-          : `https://${server}/embed/tv/${movieId}`;
-
-      // lightweight HEAD request
-      await fetch(testUrl, {
-        method: "HEAD",
-        mode: "no-cors",
-        cache: "no-store"
-      });
-
-      const time = performance.now() - start;
-      testResults.push({ server, time });
-    } catch {
-      // ignore failed servers
-    }
-  }
-
-  if (!testResults.length) return servers[0];
-
-  testResults.sort((a, b) => a.time - b.time);
-  return testResults[0].server;
-}
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
-      .then(() => console.log("Service Worker Registered"))
-      .catch(err => console.error("SW failed", err));
-  });
-}
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("installBtn").style.display = "block";
-});
-
-document.getElementById("installBtn")?.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-});
-let currentShow = null;
-let currentSeason = 1;
-let currentEpisode = 1;
-// Open Modal with movie details
-function openModal(movieId) {
-  // Fetch movie data using an API or predefined data
-  const movieData = getMovieDataById(movieId);
-  
-  document.getElementById('modal-title').textContent = movieData.title;
-  document.getElementById('modal-description').textContent = movieData.description;
-  document.getElementById('modal-image').src = movieData.imageUrl;
-  document.getElementById('modal-rating').textContent = `⭐ ${movieData.rating}`;
-  
-  document.getElementById('modal').style.display = 'flex';
-}
-
-// Close the Modal
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-// Attach the openModal function to each image
-document.querySelectorAll('.list img').forEach(img => {
-  img.addEventListener('click', (e) => {
-    const movieId = e.target.dataset.id;  // Assume you store the movie ID in the data-id attribute
-    openModal(movieId);
-  });
-});
-
-
-
-
-
-
-
-
-
-
-

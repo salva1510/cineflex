@@ -1,5 +1,4 @@
-
-/* =========================
+    /* =========================
    CONFIG
 ========================= */
 const API_KEY = "742aa17a327005b91fb6602054523286";
@@ -99,13 +98,6 @@ function displayList(items, containerId) {
    MODAL
 ========================= */
 function showDetails(item) {
-  const loggedInUser = localStorage.getItem("loggedInUser");
-  if (!loggedInUser) {
-    alert("⚠️ You must log in to watch movies.");
-    openAuthModal("login");
-    return;
-  }
-
   currentItem = item;
 
   document.getElementById("modal-title").textContent =
@@ -119,8 +111,13 @@ function showDetails(item) {
   document.getElementById("modal-rating").innerHTML =
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
-  changeServer();
+changeServer();
   document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-video").src = "";
 }
 
 
@@ -256,13 +253,6 @@ function showSkeleton(containerId, count = 8) {
   for (let i = 0; i < count; i++) {
     const div = document.createElement("div");
     div.className = "skeleton";
-     if (!localStorage.getItem("loggedInUser")) {
-  const lock = document.createElement("div");
-  lock.textContent = "🔒 Login to Watch";
-  lock.className = "lock-overlay";
-  img.style.filter = "blur(2px) brightness(0.7)";
-  img.parentElement?.appendChild(lock);
-}
     container.appendChild(div);
   }
 }
@@ -391,71 +381,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-let authMode = "login";
-
-function openAuthModal(mode = "login") {
-  authMode = mode;
-  document.getElementById("auth-modal").style.display = "flex";
-  document.getElementById("auth-title").textContent = mode === "login" ? "Login" : "Sign Up";
-  document.getElementById("auth-submit").textContent = mode === "login" ? "Login" : "Sign Up";
-}
-
-function closeAuthModal() {
-  document.getElementById("auth-modal").style.display = "none";
-}
-
-function toggleAuthMode() {
-  authMode = authMode === "login" ? "signup" : "login";
-  openAuthModal(authMode);
-}
-
-function handleAuth(e) {
-  e.preventDefault();
-  const username = document.getElementById("auth-username").value;
-  const password = document.getElementById("auth-password").value;
-
-  let users = JSON.parse(localStorage.getItem("users") || "[]");
-  if (authMode === "signup") {
-    if (users.find(u => u.username === username)) {
-      alert("Username already exists!");
-      return;
-    }
-    users.push({ username, password });
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Sign up successful! You can now log in.");
-    openAuthModal("login");
-  } else {
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      localStorage.setItem("loggedInUser", username);
-      alert(`Welcome back, ${username}!`);
-      closeAuthModal();
-      updateNavbarUser();
-    } else {
-      alert("Invalid credentials!");
-    }
-  }
-}
-
-function updateNavbarUser() {
-  const loggedInUser = localStorage.getItem("loggedInUser");
-  const nav = document.querySelector(".nav-links");
-  if (loggedInUser) {
-    nav.innerHTML = `
-      <span>👋 ${loggedInUser}</span>
-      <a href="#" onclick="logout()">Logout</a>
-      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
-    `;
-  } else {
-    nav.innerHTML = `
-      <a href="#" onclick="openAuthModal('login')">Login</a>
-      <a href="#" onclick="openAuthModal('signup')">Sign Up</a>
-      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
-    `;
-  }
-}
-
-
 
 
 

@@ -7,13 +7,6 @@ const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
 let bannerInterval = null;
-const SERVERS = [
-  "vidsrc.cc",           // Ultra (fastest)
-  "vsrc.su",             // Plus
-  "player.videasy.net"   // Lite (fallback)
-];
-
-let currentServerIndex = 0;
 
 function getConnectionProfile() {
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -161,45 +154,21 @@ function showDetails(item) {
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
   // 🔥 Bandwidth-aware server selection
-  autoSelectServer();
+  const profile = getConnectionProfile();
+  document.getElementById("server").value = profile.server;
+
+  changeServer();
   document.getElementById("modal").style.display = "flex";
 }
   function closeModal() {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
 }
-function autoSelectServer() {
-  const saved = localStorage.getItem("lastServer");
-
-  currentServerIndex = saved
-    ? SERVERS.indexOf(saved)
-    : 0;
-
-  if (currentServerIndex < 0) currentServerIndex = 0;
-
-  document.getElementById("server").value =
-    SERVERS[currentServerIndex];
-
-  changeServer();
-}
    
 /* =========================
    VIDEO SERVERS
 ========================= */
-currentServerIndex = SERVERS.indexOf(server);
 function changeServer() {
-   const iframe = document.getElementById("modal-video");
-
-iframe.addEventListener("error", () => {
-  autoFallbackServer();
-});
-
-iframe.addEventListener("load", () => {
-  localStorage.setItem(
-    "lastServer",
-    SERVERS[currentServerIndex]
-  );
-});
   const server = document.getElementById("server").value;
   const type = currentItem.media_type === "movie" ? "movie" : "tv";
   let embedURL = "";
@@ -217,20 +186,6 @@ iframe.addEventListener("load", () => {
 
   const iframe = document.getElementById("modal-video");
   iframe.src = embedURL;
-}
-function autoFallbackServer() {
-  currentServerIndex++;
-
-  if (currentServerIndex >= SERVERS.length) {
-    console.warn("All servers failed");
-    return;
-  }
-
-  const nextServer = SERVERS[currentServerIndex];
-  document.getElementById("server").value = nextServer;
-
-  console.log("Switching to:", nextServer);
-  changeServer();
 }
 
 
@@ -475,11 +430,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-
-
-
-
-
 
 
 

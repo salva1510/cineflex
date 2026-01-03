@@ -164,17 +164,6 @@ function showDetails(item) {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
 }
-// utils.js (or inside the same file)
-function buildEmbedUrl(item) {
-  const type   = item.media_type === "movie" ? "movie" : "tv";
-  const server = getConnectionProfile().server; // low‑latency choice
-
-  // Map the server name to the proper embed prefix
-  const prefix = VIDEO_SERVERS.find(s => s.name === server)?.embedPrefix
-                 || "https://vidsrc.cc/v2/embed/";
-
-  return `${prefix}${type}/${item.id}`;
-}
    
 /* =========================
    VIDEO SERVERS
@@ -203,18 +192,27 @@ function changeServer() {
 /* =========================
    SEARCH
 ========================= */
-async function changeServerAutomatically(item) {
-  // If you want a pure latency test instead of getConnectionProfile:
-  // const server = await autoPickFastestServer(item.id, item.media_type || "movie");
+async function searchTMDB() {
+  const query = document.getElementById("search-input").value.trim();
+  const resultsBox = document.getElementById("search-results");
 
-  // Or combine both:
-  const networkProfile = getConnectionProfile();
-  const server = networkProfile.server; // will be one of the three values above
+  if (!query) {
+    resultsBox.innerHTML = "";
+    return;
+  }
 
-  // Build the embed URL and set the iframe
-  const embedUrl = buildEmbedUrl(item);
-  document.getElementById("modal-video").src = embedUrl;
-}
+  const data = await fetchJSON(
+    `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`
+  );
+
+  resultsBox.innerHTML = "";
+
+  data.results.forEach(item => {
+    if (!item.poster_path) return;
+
+    const img = document.createElement("img");
+    img.src = `${IMG_URL}${item.poster_path}`;
+    img.alt = item.title || item.name;
     img.onclick = () => {
       closeSearchModal();
       showDetails(item);
@@ -432,6 +430,28 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

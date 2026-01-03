@@ -29,9 +29,19 @@
   <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
 </div>
     <div class="nav-links">
-  <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
-</div>
+  <div class="search-container">
+    <i class="fa fa-search"></i>
+    <input 
+      type="text" 
+      id="search-bar"
+      class="search-bar"
+      placeholder="Search movies or shows..."
+      oninput="liveSearch(this.value)"
+      autocomplete="off"
+    />
+    <div id="search-dropdown" class="search-dropdown"></div>
   </div>
+</div>
 
   <div class="banner" id="banner">
     <h1 id="banner-title"></h1>
@@ -130,6 +140,7 @@
   <div class="row-list" id="movies-list"></div>
   <button class="scroll-btn right">›</button>
 </div>
+
 
 
 

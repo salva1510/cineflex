@@ -7,6 +7,13 @@ const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
 let bannerInterval = null;
+const SERVERS = [
+  "vidsrc.cc",           // Ultra (fastest)
+  "vsrc.su",             // Plus
+  "player.videasy.net"   // Lite (fallback)
+];
+
+let currentServerIndex = 0;
 
 function getConnectionProfile() {
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -430,6 +437,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

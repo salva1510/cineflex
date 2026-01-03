@@ -217,6 +217,20 @@ iframe.addEventListener("load", () => {
   const iframe = document.getElementById("modal-video");
   iframe.src = embedURL;
 }
+function autoFallbackServer() {
+  currentServerIndex++;
+
+  if (currentServerIndex >= SERVERS.length) {
+    console.warn("All servers failed");
+    return;
+  }
+
+  const nextServer = SERVERS[currentServerIndex];
+  document.getElementById("server").value = nextServer;
+
+  console.log("Switching to:", nextServer);
+  changeServer();
+}
 
 
 /* =========================
@@ -460,6 +474,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

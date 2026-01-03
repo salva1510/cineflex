@@ -187,6 +187,18 @@ function autoSelectServer() {
    VIDEO SERVERS
 ========================= */
 function changeServer() {
+   const iframe = document.getElementById("modal-video");
+
+iframe.addEventListener("error", () => {
+  autoFallbackServer();
+});
+
+iframe.addEventListener("load", () => {
+  localStorage.setItem(
+    "lastServer",
+    SERVERS[currentServerIndex]
+  );
+});
   const server = document.getElementById("server").value;
   const type = currentItem.media_type === "movie" ? "movie" : "tv";
   let embedURL = "";
@@ -448,6 +460,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

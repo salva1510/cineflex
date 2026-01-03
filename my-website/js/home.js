@@ -473,6 +473,29 @@ document.querySelectorAll(".preview-card").forEach(card => {
     video.play().catch(() => {});
   });
 });
+async function attachNetflixPreview(card, item) {
+  const video = card.querySelector(".preview");
+  let hoverTimer;
+
+  card.addEventListener("mouseenter", async () => {
+    hoverTimer = setTimeout(async () => {
+      const trailer = await getTrailer(item.id, item.media_type || "movie");
+      if (!trailer) return;
+
+      video.src = trailer;
+      video.style.opacity = 1;
+      video.play().catch(() => {});
+    }, 500); // Netflix-style delay
+  });
+
+  card.addEventListener("mouseleave", () => {
+    clearTimeout(hoverTimer);
+    video.pause();
+    video.src = "";
+    video.style.opacity = 0;
+  });
+}
+
 
 
 

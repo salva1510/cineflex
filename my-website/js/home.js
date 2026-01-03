@@ -169,18 +169,26 @@ function showDetails(item) {
    VIDEO SERVERS
 ========================= */
 function changeServer() {
-      const server = document.getElementById('server').value;
-      const type = currentItem.media_type === "movie" ? "movie" : "tv";
-      let embedURL = "";
+  const server = document.getElementById("server").value;
+  const type = currentItem.media_type === "movie" ? "movie" : "tv";
+  let embedURL = "";
 
-      if (server === "vidsrc.cc") {
-        embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
-      } else if (server === "vidsrc-embed.ru") {
-        embedURL = `https://vidsrc-embed.ru/embed/movie/${type}/?tmdb=${currentItem.id}`;
-      } else if (server === "player.videasy.net") {
-        embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
-      }
-  document.getElementById("modal-video").src = embedURL;
+  if (server === "vidsrc.cc") {
+    embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
+
+  } else if (server === "vidsrc.me") {
+    embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
+
+  } else if (server === "vsrc.su") {
+    // ✅ vsrc.su embed
+    embedURL = `https://vsrc.su/embed/${type}/${currentItem.id}`;
+
+  } else if (server === "player.videasy.net") {
+    embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
+  }
+
+  const iframe = document.getElementById("modal-video");
+  iframe.src = embedURL;
 }
 
 
@@ -425,6 +433,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

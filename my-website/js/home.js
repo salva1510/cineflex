@@ -50,18 +50,6 @@ async function fetchTrendingAnime() {
    BANNER
 ========================= */
 function setBanner(item) {
-   const banner = document.getElementById("banner");
-
-   getTrailer(item.id, item.media_type || "movie").then(trailer => {
-  if (!trailer) return;
-
-  banner.innerHTML = `
-    <video autoplay muted loop playsinline class="banner-video">
-      <source src="${trailer}">
-    </video>
-    <h1 id="banner-title">${item.title || item.name}</h1>
-  `;
-});
   const banner = document.getElementById("banner");
   banner.style.opacity = 0;
 
@@ -403,5 +391,4 @@ let currentEpisode = 1;
 
 
 
-          
-
+     :

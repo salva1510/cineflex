@@ -473,6 +473,40 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+.search-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  width: 250px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 5px;
+  display: none;
+  flex-direction: column;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.search-dropdown div {
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-dropdown div:hover {
+  background: #444;
+}
+
+.search-dropdown img {
+  width: 40px;
+  border-radius: 5px;
+}
+
 
 
 

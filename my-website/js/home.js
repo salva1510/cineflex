@@ -168,6 +168,20 @@ function showDetails(item) {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
 }
+function autoSelectServer() {
+  const saved = localStorage.getItem("lastServer");
+
+  currentServerIndex = saved
+    ? SERVERS.indexOf(saved)
+    : 0;
+
+  if (currentServerIndex < 0) currentServerIndex = 0;
+
+  document.getElementById("server").value =
+    SERVERS[currentServerIndex];
+
+  changeServer();
+}
    
 /* =========================
    VIDEO SERVERS
@@ -434,6 +448,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

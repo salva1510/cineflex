@@ -186,6 +186,7 @@ function autoSelectServer() {
 /* =========================
    VIDEO SERVERS
 ========================= */
+currentServerIndex = SERVERS.indexOf(server);
 function changeServer() {
    const iframe = document.getElementById("modal-video");
 
@@ -474,6 +475,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

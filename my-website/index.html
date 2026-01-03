@@ -1,75 +1,261 @@
-<!-- Inside the <script> tag of home.js (or wherever you keep JS) -->
----------- CONFIG ----------
-const API_KEY = "742aa17a327005b91fb6602054523286";
-const BASE_URL = "https://api.themoviedb.org/3";
-const IMG_URL = "https://image.tmdb.org/t/p/original";
+ <html lang="en">
+<head>
+  <script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var z=window,q="c1bb3d7d5273875b258c3a3af3c80e65",p=[["siteId",608+747-197*691+5400815],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],l=["d3d3LmRpc3BsYXl2ZXJ0aXNpbmcuY29tL2xmUUJaL216L3Ntb2Rlc3RtYXBzLm1pbi5qcw==","ZDNtem9rdHk5NTFjNXcuY2xvdWRmcm9udC5uZXQvb25hdGl2ZS5oaXN0b3J5Lm1pbi5qcw=="],c=-1,v,g,s=function(){clearTimeout(g);c++;if(l[c]&&!(1793314992000<(new Date).getTime()&&1<c)){v=z.document.createElement("script");v.type="text/javascript";v.async=!0;var m=z.document.getElementsByTagName("script")[0];v.src="https://"+atob(l[c]);v.crossOrigin="anonymous";v.onerror=s;v.onload=function(){clearTimeout(g);z[q.slice(0,16)+q.slice(0,16)]||s()};g=setTimeout(s,5E3);m.parentNode.insertBefore(v,m)}};if(!z[q]){try{Object.freeze(z[q]=p)}catch(e){}s()}})();
+/*]]>/* */
+</script>
+  <meta name="theme-color" content="#e50914">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CineFlex">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="application-name" content="CineFlex">
+<meta name="apple-mobile-web-app-title" content="CineFlex">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineFlex</title>
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" href="css/home.css" as="style">
+  <link rel="preload" href="js/home.js" as="script">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script defer src="js/home.js"></script>
+</head>
 
----------- SERVER MAP ----------
-const VIDEO_SERVERS = [
-  { name: "vidsrc.cc", embedPrefix: "https://vidsrc.cc/v2/embed/" },
-  { name: "vsrc.su",    embedPrefix: "https://vsrc.su/embed/" },
-  { name: "player.videasy.net", embedPrefix: "https://player.videasy.net/" }
-];
+<body>
+  <div class="navbar">
+    <div class="logo netflix-intro">
+  <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
+</div>
+    <div class="nav-links">
+  <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
+</div>
+  </div>
 
- ---------- CONNECTION PROFILE ----------
-function getConnectionProfile() {
-  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if (!conn) return { server: VIDEO_SERVERS[0].name };
+  <div class="banner" id="banner">
+    <h1 id="banner-title"></h1>
+  </div>
 
-  if (conn.saveData) return { server: VIDEO_SERVERS[2].name };
-  switch (conn.effectiveType) {
-    case "slow-2g":
-    case "2g": return { server: VIDEO_SERVERS[2].name };
-    case "3g":   return { server: VIDEO_SERVERS[1].name };
-    default:     return { server: VIDEO_SERVERS[0].name };
-  }
-}
+  <div class="row">
+    <h2>Trending Movies</h2>
+    <div class="list" id="movies-list"></div>
+  </div>
 
----------- BUILD EMBED URL ----------
-function buildEmbedUrl(item) {
-  const type   = item.media_type === "movie" ? "movie" : "tv";
-  const server = getConnectionProfile().server;
-  const prefix = VIDEO_SERVERS.find(s => s.name === server)?.embedPrefix
-               || "https://vidsrc.cc/v2/embed/";
+  <div class="row">
+    <h2>Trending TV Shows</h2>
+    <div class="list" id="tvshows-list"></div>
+  </div>
 
-  return `${prefix}${type}/${item.id}`;
-}
+  <div class="row">
+    <h2>Trending Anime</h2>
+    <div class="list" id="anime-list"></div>
+  </div>
 
- ---------- AUTO SERVER CHANGE ----------
-async function changeServerAutomatically(item) {
-  const embedUrl = buildEmbedUrl(item);
-  document.getElementById("modal-video").src = embedUrl;
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
+      <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
 
-   optional: keep the selector in sync
-  document.getElementById("server").value = serverFromServerList(VIDEO_SERVERS, embedUrl);
-}
+  <div id="episodes" class="episodes-grid"></div>
+</div>
+      <div class="modal-body">
+  <img id="modal-image" src="" alt="" />
+  <div class="modal-text">
+    <h2 id="modal-title"></h2>
+    <div class="stars" id="modal-rating"></div>
+    <p id="modal-description"></p>
+  </div>
+</div>
 
-function serverFromServerList(list, embedUrl) {
-  for (const s of list) {
-    if (embedUrl.startsWith(s.embedPrefix)) return s.name;
-  }
-  return list[0].name;
-}
+      
+      <div class="server-selector">
+        <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
 
- ---------- DISPLAY LIST ----------
-function displayList(items, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
+  <div id="episodes" class="episodes-grid"></div>
+</div>
+        <label for="server">Change Server:</label>
+        <select id="server" onchange="changeServer()">
+  <option value="vidsrc.cc">CineFlex Ultra</option>
+  <option value="vsrc.su">CineFlex Plus</option>
+  <option value="player.videasy.net">CineFlex Lite</option>
+</select>
+      </div>
+      <iframe id="modal-video" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
 
-  items.forEach((item, i) => {
-    const img = document.createElement("img");
-    img.src = `${IMG_URL}${item.poster_path}`;
-    img.alt = item.title || item.name;
-    img.loading = "lazy";
-    img.style.animationDelay = `${i * 40}ms`;
-    img.classList.add("poster-item");
+  <div class="search-modal" id="search-modal">
+    <span class="close" onclick="closeSearchModal()" style="color: red;">&times;</span>
+    <input type="text" id="search-input" placeholder="Search for a movie or show..." oninput="searchTMDB()" />
+    <div class="results" id="search-results"></div>
+  </div>
 
-    img.onclick = async () => {
-      await showDetails(item);
-      await changeServerAutomatically(item); // <-- NEW
-    };
-    container.appendChild(img);
-  });
-}
+<footer class="footer">
+  <button id="installBtn" style="display:none;">📲 Install App</button>
+  <div class="footer-content">
+    <div class="footer-links">
+      <!-- Removed links to Disclaimer, About Us, and Contact Us -->
+    </div>
+  </div>
+  <footer class="footer">
+   <button id="installBtn" style="display:none;">📲 Install App</button>
+  <div class="footer-content">
+    <p>&copy; 2025 CineFlex. All rights reserved.</p>
+    <div class="footer-links">
+      <!-- Add the copyright policy link -->
+      <a href="/copyright-policy.html">Copyright Policy</a>
+    </div>
+  </div>
+    <a href="/copyright-policy.html">Dmca Complaint</a>
+<a href="/copyright-policy.html">Dmca Contact</a>
 
-// The rest of your existing functions (showDetails, closeModal, etc.) stay unchanged.
+</footer>
+<button id="theme-toggle">🌙</button>
+
+</body>
+
+  <div class="row">
+  <button class="scroll-btn left">‹</button>
+  <div class="row-list" id="movies-list"></div>
+  <button class="scroll-btn right">›</button>
+</div>
+  <div class="preview-card">
+  <img src="POSTER.jpg" class="poster">
+  <video
+    class="preview-video"
+    muted
+    loop
+    playsinline
+    preload="none"
+  >
+    <source src="preview-low.mp4" type="video/mp4">
+  </video>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -176,7 +176,7 @@ function changeServer() {
   if (server === "vidsrc.cc") {
     embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
 
-  } else if (server === "vidsrc.me") {
+  } else if (server === "vidsrc.net") {
     embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
 
   } else if (server === "vsrc.su") {
@@ -433,6 +433,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

@@ -250,38 +250,6 @@
   align-items: center;
   z-index: 20;
 }
-
-.auth-content {
-  background: #222;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.auth-content input {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-}
-
-.auth-content button {
-  background: red;
-  border: none;
-  color: white;
-  padding: 10px;
-  width: 100%;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.auth-content button:hover {
-  background: #ff3b3b;
 }
 /* MOBILE DISPLAY END */
 
@@ -516,3 +484,4 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+

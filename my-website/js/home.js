@@ -80,17 +80,24 @@ function displayList(items, containerId) {
   container.innerHTML = "";
 
   items.forEach((item, i) => {
-    const img = document.createElement("img");
+    const card = document.createElement("div");
+    card.className = "netflix-card";
 
-    img.src = `${IMG_URL}${item.poster_path}`;
-    img.alt = item.title || item.name;
-    img.loading = "lazy";
-    img.style.animationDelay = `${i * 40}ms`;
+    card.innerHTML = `
+      <img class="poster" src="${IMG_URL}${item.poster_path}">
+      <video
+        class="preview"
+        muted
+        loop
+        playsinline
+        preload="none"
+      ></video>
+    `;
 
-    img.classList.add("poster-item");
+    card.onclick = () => showDetails(item);
+    container.appendChild(card);
 
-    img.onclick = () => showDetails(item);
-    container.appendChild(img);
+    attachNetflixPreview(card, item);
   });
 }
 
@@ -466,6 +473,7 @@ document.querySelectorAll(".preview-card").forEach(card => {
     video.play().catch(() => {});
   });
 });
+
 
 
 

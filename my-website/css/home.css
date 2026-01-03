@@ -473,6 +473,30 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+.preview-card {
+  position: relative;
+  width: 150px;
+}
+
+.preview-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.preview-card:hover .preview-video {
+  opacity: 1;
+}
+
+.preview-card:hover .poster {
+  opacity: 0;
+}
+
 
 
 

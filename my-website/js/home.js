@@ -135,10 +135,13 @@ function changeServer() {
         embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
       } else if (server === "player.videasy.net") {
         embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
-      }  else if (server === "zxcstream.xyz") {
-    const lang = "en";
+      } 
+  // 🔥 New ZXCStream Embed
+  else if (server === "zxcstream.xyz") {
+    const lang = "en"; // you can change this to 'jp', 'fr', etc. dynamically
     embedURL = `https://zxcstream.xyz/player/movie/${currentItem.id}/${lang}`;
   }
+
   document.getElementById("modal-video").src = embedURL;
 }
 
@@ -449,6 +452,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

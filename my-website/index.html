@@ -1,17 +1,17 @@
 <!-- Inside the <script> tag of home.js (or wherever you keep JS) -->
-// ---------- CONFIG ----------
+---------- CONFIG ----------
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
 
-// ---------- SERVER MAP ----------
+---------- SERVER MAP ----------
 const VIDEO_SERVERS = [
   { name: "vidsrc.cc", embedPrefix: "https://vidsrc.cc/v2/embed/" },
   { name: "vsrc.su",    embedPrefix: "https://vsrc.su/embed/" },
   { name: "player.videasy.net", embedPrefix: "https://player.videasy.net/" }
 ];
 
-// ---------- CONNECTION PROFILE ----------
+ ---------- CONNECTION PROFILE ----------
 function getConnectionProfile() {
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (!conn) return { server: VIDEO_SERVERS[0].name };
@@ -25,7 +25,7 @@ function getConnectionProfile() {
   }
 }
 
-// ---------- BUILD EMBED URL ----------
+---------- BUILD EMBED URL ----------
 function buildEmbedUrl(item) {
   const type   = item.media_type === "movie" ? "movie" : "tv";
   const server = getConnectionProfile().server;
@@ -35,12 +35,12 @@ function buildEmbedUrl(item) {
   return `${prefix}${type}/${item.id}`;
 }
 
-// ---------- AUTO SERVER CHANGE ----------
+ ---------- AUTO SERVER CHANGE ----------
 async function changeServerAutomatically(item) {
   const embedUrl = buildEmbedUrl(item);
   document.getElementById("modal-video").src = embedUrl;
 
-  // optional: keep the selector in sync
+   optional: keep the selector in sync
   document.getElementById("server").value = serverFromServerList(VIDEO_SERVERS, embedUrl);
 }
 
@@ -51,7 +51,7 @@ function serverFromServerList(list, embedUrl) {
   return list[0].name;
 }
 
-// ---------- DISPLAY LIST ----------
+ ---------- DISPLAY LIST ----------
 function displayList(items, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";

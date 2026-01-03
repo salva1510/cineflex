@@ -437,16 +437,17 @@ function updateNavbarUser() {
     nav.innerHTML = `
       <span>👋 ${loggedInUser}</span>
       <a href="#" onclick="logout()">Logout</a>
+      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
+    `;
+  } else {
+    nav.innerHTML = `
+      <a href="#" onclick="openAuthModal('login')">Login</a>
+      <a href="#" onclick="openAuthModal('signup')">Sign Up</a>
+      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
     `;
   }
 }
 
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  location.reload();
-}
-
-document.addEventListener("DOMContentLoaded", updateNavbarUser);
 
 
 

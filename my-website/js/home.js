@@ -256,6 +256,13 @@ function showSkeleton(containerId, count = 8) {
   for (let i = 0; i < count; i++) {
     const div = document.createElement("div");
     div.className = "skeleton";
+     if (!localStorage.getItem("loggedInUser")) {
+  const lock = document.createElement("div");
+  lock.textContent = "🔒 Login to Watch";
+  lock.className = "lock-overlay";
+  img.style.filter = "blur(2px) brightness(0.7)";
+  img.parentElement?.appendChild(lock);
+}
     container.appendChild(div);
   }
 }
@@ -447,6 +454,7 @@ function updateNavbarUser() {
     `;
   }
 }
+
 
 
 

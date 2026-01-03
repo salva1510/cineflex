@@ -160,6 +160,11 @@ function showDetails(item) {
   changeServer();
   document.getElementById("modal").style.display = "flex";
 }
+  function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-video").src = "";
+}
+   
 /* =========================
    VIDEO SERVERS
 ========================= */
@@ -420,6 +425,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

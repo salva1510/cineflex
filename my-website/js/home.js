@@ -1,4 +1,3 @@
-
 /* =========================
    CONFIG
 ========================= */
@@ -8,6 +7,48 @@ const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
 let bannerInterval = null;
+
+function getConnectionProfile() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  if (!conn) {
+    return {
+      quality: "high",
+      server: "vidsrc.cc"
+    };
+  }
+
+  // Save-Data mode (Android / Chrome)
+  if (conn.saveData) {
+    return {
+      quality: "low",
+      server: "player.videasy.net"
+    };
+  }
+
+  // Effective connection types
+  switch (conn.effectiveType) {
+    case "slow-2g":
+    case "2g":
+      return {
+        quality: "low",
+        server: "player.videasy.net"
+      };
+
+    case "3g":
+      return {
+        quality: "medium",
+        server: "vidsrc.me"
+      };
+
+    case "4g":
+    default:
+      return {
+        quality: "high",
+        server: "vidsrc.cc"
+      };
+  }
+}
 
 /* =========================
    FETCH HELPERS
@@ -382,6 +423,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

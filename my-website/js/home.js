@@ -146,6 +146,71 @@ function changeServer() {
 async function searchTMDB() {
   const query = document.getElementById("search-input").value.trim();
   const resultsBox = document.getElementById("search-results");
+    let searchTimeout;
+
+async function liveSearch(query) {
+  clearTimeout(searchTimeout);
+  const dropdown = document.getElementById("search-dropdown");
+
+  if (!query.trim()) {
+    dropdown.style.display = "none";
+    dropdown.innerHTML = "";
+    return;
+  }
+
+  // Debounce (wait a bit before searching)
+  searchTimeout = setTimeout(async () => {
+    try {
+      const data = await fetchJSON(
+        `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
+      );
+
+      const results = data.results.filter(item => item.poster_path).slice(0, 6);
+      if (!results.length) {
+        dropdown.innerHTML = `<div>No results found</div>`;
+        dropdown.style.display = "flex";
+        return;
+      }
+
+      dropdown.innerHTML = results
+        .map(
+          item => `
+          <div onclick="selectSearchResult(${item.id}, '${item.media_type}')">
+            <img src="${IMG_URL}${item.poster_path}" alt="">
+            <span>${item.title || item.name}</span>
+          </div>
+        `
+        )
+        .join("");
+
+      dropdown.style.display = "flex";
+    } catch (err) {
+      console.error("Search failed", err);
+    }
+  }, 400);
+}
+
+async function selectSearchResult(id, type) {
+  const dropdown = document.getElementById("search-dropdown");
+  dropdown.style.display = "none";
+
+  try {
+    const item = await fetchJSON(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}`);
+    showDetails(item);
+  } catch (err) {
+    console.error("Failed to fetch item details", err);
+  }
+}
+
+// Hide dropdown when clicking outside
+document.addEventListener("click", e => {
+  const dropdown = document.getElementById("search-dropdown");
+  const searchBar = document.getElementById("search-bar");
+  if (!dropdown || !searchBar) return;
+  if (!dropdown.contains(e.target) && !searchBar.contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
 
   if (!query) {
     resultsBox.innerHTML = "";
@@ -381,6 +446,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

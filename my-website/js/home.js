@@ -175,8 +175,8 @@ function changeServer() {
 
       if (server === "vidsrc.cc") {
         embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
-      } else if (server === "vidsrc-embed.ru") {
-        embedURL = `https://vidsrc-embed.ru/${type}/?tmdb=${currentItem.id}`;
+      } else if (server === "vsrc.su") {
+        embedURL = `https://vsrc.su/${type}/?tmdb=${currentItem.id}`;
       } else if (server === "player.videasy.net") {
         embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
       }
@@ -425,6 +425,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

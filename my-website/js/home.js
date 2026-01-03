@@ -140,6 +140,28 @@ function displayList(items, containerId) {
    MODAL
 ========================= */
 function showDetails(item) {
+   async function showDetails(item) {
+  currentItem = item;
+
+  document.getElementById("modal-title").textContent =
+    item.title || item.name;
+  document.getElementById("modal-description").textContent =
+    item.overview || "No description available.";
+  document.getElementById("modal-image").src =
+    `${IMG_URL}${item.poster_path}`;
+
+  const stars = Math.round(item.vote_average / 2);
+  document.getElementById("modal-rating").innerHTML =
+    "★".repeat(stars) + "☆".repeat(5 - stars);
+
+  const type = item.media_type === "movie" ? "movie" : "tv";
+  const fastestServer = await autoPickFastestServer(item.id, type);
+
+  document.getElementById("server").value = fastestServer || "vidsrc.cc";
+  changeServer();
+
+  document.getElementById("modal").style.display = "flex";
+}
   currentItem = item;
 
   document.getElementById("modal-title").textContent =
@@ -430,6 +452,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

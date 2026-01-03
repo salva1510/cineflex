@@ -382,6 +382,69 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+let authMode = "login";
+
+function openAuthModal(mode = "login") {
+  authMode = mode;
+  document.getElementById("auth-modal").style.display = "flex";
+  document.getElementById("auth-title").textContent = mode === "login" ? "Login" : "Sign Up";
+  document.getElementById("auth-submit").textContent = mode === "login" ? "Login" : "Sign Up";
+}
+
+function closeAuthModal() {
+  document.getElementById("auth-modal").style.display = "none";
+}
+
+function toggleAuthMode() {
+  authMode = authMode === "login" ? "signup" : "login";
+  openAuthModal(authMode);
+}
+
+function handleAuth(e) {
+  e.preventDefault();
+  const username = document.getElementById("auth-username").value;
+  const password = document.getElementById("auth-password").value;
+
+  let users = JSON.parse(localStorage.getItem("users") || "[]");
+  if (authMode === "signup") {
+    if (users.find(u => u.username === username)) {
+      alert("Username already exists!");
+      return;
+    }
+    users.push({ username, password });
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Sign up successful! You can now log in.");
+    openAuthModal("login");
+  } else {
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user) {
+      localStorage.setItem("loggedInUser", username);
+      alert(`Welcome back, ${username}!`);
+      closeAuthModal();
+      updateNavbarUser();
+    } else {
+      alert("Invalid credentials!");
+    }
+  }
+}
+
+function updateNavbarUser() {
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  const nav = document.querySelector(".nav-links");
+  if (loggedInUser) {
+    nav.innerHTML = `
+      <span>👋 ${loggedInUser}</span>
+      <a href="#" onclick="logout()">Logout</a>
+    `;
+  }
+}
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  location.reload();
+}
+
+document.addEventListener("DOMContentLoaded", updateNavbarUser);
 
 
 

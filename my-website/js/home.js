@@ -1,4 +1,5 @@
-    /* =========================
+
+/* =========================
    CONFIG
 ========================= */
 const API_KEY = "742aa17a327005b91fb6602054523286";
@@ -80,24 +81,17 @@ function displayList(items, containerId) {
   container.innerHTML = "";
 
   items.forEach((item, i) => {
-    const card = document.createElement("div");
-    card.className = "netflix-card";
+    const img = document.createElement("img");
 
-    card.innerHTML = `
-      <img class="poster" src="${IMG_URL}${item.poster_path}">
-      <video
-        class="preview"
-        muted
-        loop
-        playsinline
-        preload="none"
-      ></video>
-    `;
+    img.src = `${IMG_URL}${item.poster_path}`;
+    img.alt = item.title || item.name;
+    img.loading = "lazy";
+    img.style.animationDelay = `${i * 40}ms`;
 
-    card.onclick = () => showDetails(item);
-    container.appendChild(card);
+    img.classList.add("poster-item");
 
-    attachNetflixPreview(card, item);
+    img.onclick = () => showDetails(item);
+    container.appendChild(img);
   });
 }
 
@@ -142,8 +136,7 @@ function changeServer() {
         embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${currentItem.id}`;
       } else if (server === "player.videasy.net") {
         embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
-      } 
-  
+      }
   document.getElementById("modal-video").src = embedURL;
 }
 
@@ -154,71 +147,6 @@ function changeServer() {
 async function searchTMDB() {
   const query = document.getElementById("search-input").value.trim();
   const resultsBox = document.getElementById("search-results");
-    let searchTimeout;
-
-async function liveSearch(query) {
-  clearTimeout(searchTimeout);
-  const dropdown = document.getElementById("search-dropdown");
-
-  if (!query.trim()) {
-    dropdown.style.display = "none";
-    dropdown.innerHTML = "";
-    return;
-  }
-
-  // Debounce (wait a bit before searching)
-  searchTimeout = setTimeout(async () => {
-    try {
-      const data = await fetchJSON(
-        `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
-      );
-
-      const results = data.results.filter(item => item.poster_path).slice(0, 6);
-      if (!results.length) {
-        dropdown.innerHTML = `<div>No results found</div>`;
-        dropdown.style.display = "flex";
-        return;
-      }
-
-      dropdown.innerHTML = results
-        .map(
-          item => `
-          <div onclick="selectSearchResult(${item.id}, '${item.media_type}')">
-            <img src="${IMG_URL}${item.poster_path}" alt="">
-            <span>${item.title || item.name}</span>
-          </div>
-        `
-        )
-        .join("");
-
-      dropdown.style.display = "flex";
-    } catch (err) {
-      console.error("Search failed", err);
-    }
-  }, 400);
-}
-
-async function selectSearchResult(id, type) {
-  const dropdown = document.getElementById("search-dropdown");
-  dropdown.style.display = "none";
-
-  try {
-    const item = await fetchJSON(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}`);
-    showDetails(item);
-  } catch (err) {
-    console.error("Failed to fetch item details", err);
-  }
-}
-
-// Hide dropdown when clicking outside
-document.addEventListener("click", e => {
-  const dropdown = document.getElementById("search-dropdown");
-  const searchBar = document.getElementById("search-bar");
-  if (!dropdown || !searchBar) return;
-  if (!dropdown.contains(e.target) && !searchBar.contains(e.target)) {
-    dropdown.style.display = "none";
-  }
-});
 
   if (!query) {
     resultsBox.innerHTML = "";
@@ -454,45 +382,13 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-document.querySelectorAll(".preview-card").forEach(card => {
-  const video = card.querySelector(".preview-video");
-
-  // Desktop hover
-  card.addEventListener("mouseenter", () => {
-    video.currentTime = 0;
-    video.play().catch(() => {});
-  });
-
-  card.addEventListener("mouseleave", () => {
-    video.pause();
-  });
-
-  // Mobile tap
-  card.addEventListener("touchstart", () => {
-    video.currentTime = 0;
-    video.play().catch(() => {});
-  });
-async function attachNetflixPreview(card, item) {
-  const video = card.querySelector(".preview");
-  let hoverTimer;
-
-  card.addEventListener("mouseenter", async () => {
-    hoverTimer = setTimeout(async () => {
-      const trailer = await getTrailer(item.id, item.media_type || "movie");
-      if (!trailer) return;
-
-      video.src = trailer;
-      video.style.opacity = 1;
-      video.play().catch(() => {});
-    }, 500); // Netflix-style delay
-  });
-
-  card.addEventListener("mouseleave", () => {
-    clearTimeout(hoverTimer);
-    video.pause();
-    video.src = "";
-    video.style.opacity = 0;
-  });
-}
 
 
+
+
+
+
+
+
+
+          

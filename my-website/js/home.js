@@ -99,6 +99,13 @@ function displayList(items, containerId) {
    MODAL
 ========================= */
 function showDetails(item) {
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  if (!loggedInUser) {
+    alert("⚠️ You must log in to watch movies.");
+    openAuthModal("login");
+    return;
+  }
+
   currentItem = item;
 
   document.getElementById("modal-title").textContent =
@@ -112,13 +119,8 @@ function showDetails(item) {
   document.getElementById("modal-rating").innerHTML =
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
-changeServer();
+  changeServer();
   document.getElementById("modal").style.display = "flex";
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  document.getElementById("modal-video").src = "";
 }
 
 
@@ -445,6 +447,7 @@ function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", updateNavbarUser);
+
 
 
 

@@ -161,10 +161,7 @@ function showDetails(item) {
     "★".repeat(stars) + "☆".repeat(5 - stars);
 
   // 🔥 Bandwidth-aware server selection
-  const profile = getConnectionProfile();
-  document.getElementById("server").value = profile.server;
-
-  changeServer();
+  autoSelectServer();
   document.getElementById("modal").style.display = "flex";
 }
   function closeModal() {
@@ -437,6 +434,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

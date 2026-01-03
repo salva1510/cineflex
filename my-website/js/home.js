@@ -447,6 +447,26 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+document.querySelectorAll(".preview-card").forEach(card => {
+  const video = card.querySelector(".preview-video");
+
+  // Desktop hover
+  card.addEventListener("mouseenter", () => {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  });
+
+  card.addEventListener("mouseleave", () => {
+    video.pause();
+  });
+
+  // Mobile tap
+  card.addEventListener("touchstart", () => {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  });
+});
+
 
 
 

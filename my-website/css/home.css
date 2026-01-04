@@ -13,6 +13,19 @@
     .search-bar {
       padding: 5px; border-radius: 5px; border: none;
     }
+.banner {
+      height: 50vh;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .banner h1 {
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+    }
+
 
     .row {
       margin: 20px;
@@ -530,6 +543,7 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+
 
 
 

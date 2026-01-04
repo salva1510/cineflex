@@ -419,7 +419,7 @@ async function getTrailer(id, type) {
   const trailer = data.results.find(v => v.type === "Trailer");
   return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : null;
 }
-async function attachTrailerHover(img, item) {
+ {
   let iframe;
 
   img.addEventListener("mouseenter", async () => {
@@ -534,6 +534,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

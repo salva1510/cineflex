@@ -30,12 +30,11 @@
   height: 100%;
   object-fit: cover;      /* no distortion, fills area */
   display: block;
-    @media (max-width: 768px) {
+    }
+@media (max-width: 768px) {
   .banner {
     height: 30vh;
     max-height: 260px;
-  }
-    }
 
     .row {
       margin: 20px;
@@ -557,5 +556,6 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+
 
 

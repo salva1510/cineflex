@@ -257,110 +257,25 @@ function closeSearchModal() {
 /* =========================
    INIT
 ========================= */
-async function initGenreBrowse() {
-  const select = document.getElementById("genre-select");
-  const containerId = "genre-movies-list";
-  const paginationEl = document.getElementById("genre-pagination");
-  const prevBtn = document.getElementById("genre-prev");
-  const nextBtn = document.getElementById("genre-next");
-  const pageLabel = document.getElementById("genre-page-label");
-
-  if (!select) return;
-
-  // State for the current browsing session
-  let currentGenreId = null;
-  let currentPage = 1;
-
-  async function loadGenrePage(genreId, page) {
-    if (!genreId) return;
-
-    const listEl = document.getElementById(containerId);
-    showSkeleton(containerId);
-
-    try {
-      const items = await fetchByGenre(genreId, page);
-      displayList(items, containerId);
-
-      currentGenreId = genreId;
-      currentPage = page;
-
-      // Update UI for pagination
-      if (paginationEl) paginationEl.style.display = "flex";
-      if (pageLabel) pageLabel.textContent = `Page ${currentPage}`;
-
-      // Disable "Prev" on first page
-      if (prevBtn) prevBtn.disabled = currentPage <= 1;
-
-      // TMDB usually has many pages, but we don't know total here.
-      // You can leave "Next" always enabled, or implement a max.
-      // For now, always allow Next.
-      if (nextBtn) nextBtn.disabled = false;
-    } catch (err) {
-      console.error("Failed to load movies for this genre:", err);
-      listEl.innerHTML =
-        "<p style='margin: 20px; color: #aaa;'>Failed to load movies for this category.</p>";
-    }
-  }
-
-  // Initial: load genres list
-  showSkeleton(containerId);
-
+async function init() {
   try {
-    const genres = await fetchGenres();
+    const [movies, tvShows, anime] = await Promise.all([
+      fetchTrending("movie"),
+      fetchTrending("tv"),
+      fetchTrendingAnime()
+    ]);
 
-    // Clear and fill dropdown
-    select.innerHTML = "";
-
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "Select a genre";
-    select.appendChild(defaultOption);
-
-    genres.forEach(g => {
-      const opt = document.createElement("option");
-      opt.value = g.id;
-      opt.textContent = g.name;
-      select.appendChild(opt);
-    });
-
-    // When the user picks a genre, reset to page 1
-    select.addEventListener("change", () => {
-      const genreId = select.value;
-      const listEl = document.getElementById(containerId);
-
-      if (!genreId) {
-        listEl.innerHTML = "";
-        if (paginationEl) paginationEl.style.display = "none";
-        return;
-      }
-
-      loadGenrePage(genreId, 1);
-    });
-
-    // Prev / Next button handlers
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        if (!currentGenreId || currentPage <= 1) return;
-        loadGenrePage(currentGenreId, currentPage - 1);
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        if (!currentGenreId) return;
-        loadGenrePage(currentGenreId, currentPage + 1);
-      });
-    }
+    autoRotateBanner(movies);
+    displayList(movies, "movies-list");
+    displayList(tvShows, "tvshows-list");
+    displayList(anime, "anime-list");
   } catch (err) {
-    console.error("Failed to load genres:", err);
-    const row = document.getElementById("browse-category-row");
-    if (row) row.style.display = "none";
+    console.error("Failed to load content:", err);
   }
-}
-   initGenreBrowse();
 
   // Initialize Browse by Category (after main content)
-
+  initGenreBrowse();
+}
 
 init();
      /* =========================
@@ -619,9 +534,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-
-
-
 
 
 

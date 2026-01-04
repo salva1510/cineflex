@@ -265,6 +265,19 @@ async function init() {
       fetchTrendingAnime()
     ]);
 
+    autoRotateBanner(movies);
+    displayList(movies, "movies-list");
+    displayList(tvShows, "tvshows-list");
+    displayList(anime, "anime-list");
+  } catch (err) {
+    console.error("Failed to load content:", err);
+  }
+
+  // Initialize Browse by Category (after main content)
+  initGenreBrowse();
+}
+
+init();
      /* =========================
    GENRES / BROWSE BY CATEGORY
 ========================= */
@@ -343,15 +356,6 @@ async function initGenreBrowse() {
   }
 }
      
-
-    autoRotateBanner(movies);
-    displayList(movies, "movies-list");
-    displayList(tvShows, "tvshows-list");
-    displayList(anime, "anime-list");
-  } catch (err) {
-    console.error("Failed to load content:", err);
-  }
-}
 
 init();
 document.querySelectorAll(".scroll-btn").forEach(btn => {
@@ -530,6 +534,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

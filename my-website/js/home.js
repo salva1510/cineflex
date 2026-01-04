@@ -126,23 +126,48 @@ function autoRotateBanner(items) {
    LIST RENDERING
 ========================= */
 // Get trailer URL from TMDB
+// 1) Ask TMDB for a trailer and return a YouTube URL
 async function getTrailer(id, type) {
-  const data = await fetchJSON(
-    `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
-  );
-  const trailer = data.results.find(v => v.type === "Trailer");
-  return trailer
-    ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`
-    : null;
+  try {
+    const data = await fetchJSON(
+      `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`
+    );
+
+    if (!data.results || !data.results.length) {
+      console.log("No videos found for", id, type);
+      return null;
+    }
+
+    // Prefer official Trailer
+    const trailer =
+      data.results.find(v => v.type === "Trailer" && v.site === "YouTube") ||
+      data.results.find(v => v.site === "YouTube");
+
+    if (!trailer) {
+      console.log("No YouTube trailer found for", id, type);
+      return null;
+    }
+
+    const url = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`;
+    console.log("Trailer URL:", url);
+    return url;
+  } catch (err) {
+    console.error("Error fetching trailer:", err);
+    return null;
+  }
 }
 
-// Add hover behavior to one poster image
-async function attachTrailerHover(img, item) {
+// 2) Add hover behavior to one poster image
+function attachTrailerHover(img, item) {
   let iframe;
 
   img.addEventListener("mouseenter", async () => {
-    const url = await getTrailer(item.id, item.media_type || "movie");
-    if (!url) return;
+    // Avoid creating multiple iframes if you wiggle the mouse
+    if (iframe) return;
+
+    const type = item.media_type || (item.first_air_date ? "tv" : "movie");
+    const url = await getTrailer(item.id, type);
+    if (!url) return; // no trailer, do nothing
 
     iframe = document.createElement("iframe");
     iframe.src = url;
@@ -151,30 +176,29 @@ async function attachTrailerHover(img, item) {
     iframe.setAttribute("allow", "autoplay; encrypted-media");
     iframe.setAttribute("allowfullscreen", "true");
 
-    img.parentElement.appendChild(iframe);
+    // SIMPLE: put trailer right under the poster for now
+    iframe.style.display = "block";
+    iframe.style.width = "100%";
+    iframe.style.height = "180px";
+    iframe.style.marginTop = "5px";
+
+    // Wrap img + iframe in a small container
+    const wrapper = document.createElement("div");
+    wrapper.style.display = "flex";
+    wrapper.style.flexDirection = "column";
+    wrapper.style.alignItems = "center";
+
+    img.parentElement.insertBefore(wrapper, img);
+    wrapper.appendChild(img);
+    wrapper.appendChild(iframe);
   });
 
   img.addEventListener("mouseleave", () => {
-    if (iframe) iframe.remove();
-  });
-}
-function displayList(items, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-
-  items.forEach((item, i) => {
-    const img = document.createElement("img");
-
-    img.src = `${IMG_URL}${item.poster_path}`;
-    img.alt = item.title || item.name;
-    img.loading = "lazy";
-    img.style.animationDelay = `${i * 40}ms`;
-
-    img.classList.add("poster-item");
-
-    img.onclick = () => showDetails(item);
-     attachTrailerHover(img, item);
-    container.appendChild(img);
+    if (iframe) {
+      iframe.remove();
+      iframe = null;
+      // We do NOT unwrap img for simplicity – it still works fine
+    }
   });
 }
 
@@ -561,6 +585,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

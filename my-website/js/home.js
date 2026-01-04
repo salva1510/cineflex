@@ -412,6 +412,7 @@ function showSkeleton(containerId, count = 8) {
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
+showSkeleton("kdrama-list"); // NEW
 async function getTrailer(id, type) {
   const data = await fetchJSON(
     `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
@@ -534,6 +535,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

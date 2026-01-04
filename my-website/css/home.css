@@ -14,17 +14,22 @@
       padding: 5px; border-radius: 5px; border: none;
     }
 
-    .banner {
-      height: 50vh;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      padding: 20px;
-    }
+    /* Medium-sized banner */
+.banner {
+  position: relative;
+  width: 100%;
+  height: 40vh;           /* main change: medium height */
+  max-height: 380px;      /* don’t let it grow too tall on big screens */
+  min-height: 220px;      /* don’t let it shrink too tiny */
+  overflow: hidden;
+}
 
-    .banner h1 {
-      background: rgba(0,0,0,0.7);
-      padding: 10px;
+/* Make sure the banner image scales properly */
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* no distortion, fills area */
+  display: block;
     }
 
     .row {
@@ -547,3 +552,4 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+

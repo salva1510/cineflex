@@ -25,11 +25,20 @@
 }
 
 /* Make sure the banner image scales properly */
+.banner {
+  position: relative;
+  width: 100%;
+  /* Remove fixed height if you have it, or set a max-height only: */
+  max-height: 450px;    /* adjust as you like */
+  overflow: hidden;
+}
+
+/* Show full image, keep aspect ratio */
 .banner img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;      /* no distortion, fills area */
-  display: block;
+  height: auto;         /* auto = no vertical stretching */
+  object-fit: contain;  /* show entire image */
+  display: block;      /* no distortion, fills area */
     }
 
     .row {
@@ -552,6 +561,7 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+
 
 
 

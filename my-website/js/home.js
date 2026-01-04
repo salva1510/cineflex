@@ -561,7 +561,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-item.media_type || "movie"
+
 
 
 

@@ -14,23 +14,22 @@
       padding: 5px; border-radius: 5px; border: none;
     }
 
-    /* Medium-sized banner */
-.banner {
+    .banner {
   position: relative;
   width: 100%;
-  height: 40vh;           /* main change: medium height */
-  max-height: 380px;      /* don’t let it grow too tall on big screens */
-  min-height: 220px;      /* don’t let it shrink too tiny */
+  height: 40vh;            /* medium height */
+  max-height: 400px;
+  min-height: 220px;
   overflow: hidden;
 }
 
 /* Make sure the banner image scales properly */
-.banner {
-  position: relative;
+.banner img {
   width: 100%;
-  /* Remove fixed height if you have it, or set a max-height only: */
-  max-height: 450px;    /* adjust as you like */
-  overflow: hidden;
+  height: 100%;
+  object-fit: cover;        /* still a banner look */
+  object-position: center top; /* or center center / center bottom */
+  display: block;
 }
 
 /* Show full image, keep aspect ratio */
@@ -561,6 +560,7 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+
 
 
 

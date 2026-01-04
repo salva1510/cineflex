@@ -53,6 +53,14 @@ function getConnectionProfile() {
 /* =========================
    FETCH HELPERS
 ========================= */
+async function fetchTrending(type) {
+  const data = await fetchJSON(
+    `${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`
+  );
+  return data.results
+    .filter(i => i.poster_path)
+    .map(i => ({ ...i, media_type: type }));
+}
 async function fetchJSON(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error("TMDB request failed");
@@ -553,6 +561,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

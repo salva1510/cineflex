@@ -86,31 +86,6 @@ async function fetchTrendingAnime() {
 
   return anime;
 }
-// Get Korean TV dramas (K-Drama)
-async function fetchKoreanDramas() {
-  let kdramas = [];
-
-  for (let page = 1; page <= 3; page++) {
-    const data = await fetchJSON(
-      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&page=${page}`
-    );
-
-    const filtered = data.results.filter(
-      item =>
-        item.original_language === "ko" && // Korean language
-        item.poster_path
-    );
-
-    // Make sure each item has media_type "tv" for your player logic
-    filtered.forEach(item => {
-      item.media_type = "tv";
-    });
-
-    kdramas.push(...filtered);
-  }
-
-  return kdramas;
-}
 
 /* =========================
    BANNER
@@ -284,23 +259,22 @@ function closeSearchModal() {
 ========================= */
 async function init() {
   try {
-    const [movies, tvShows, anime, kdramas] = await Promise.all([
+    const [movies, tvShows, anime] = await Promise.all([
       fetchTrending("movie"),
       fetchTrending("tv"),
-      fetchTrendingAnime(),
-      fetchKoreanDramas() // NEW
+      fetchTrendingAnime()
     ]);
 
     autoRotateBanner(movies);
     displayList(movies, "movies-list");
     displayList(tvShows, "tvshows-list");
     displayList(anime, "anime-list");
-    displayList(kdramas, "kdrama-list"); // NEW
   } catch (err) {
     console.error("Failed to load content:", err);
   }
 
-  // if you already call initGenreBrowse() or other things, keep them here
+  // Initialize Browse by Category (after main content)
+  initGenreBrowse();
 }
 
 init();
@@ -438,7 +412,6 @@ function showSkeleton(containerId, count = 8) {
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
-showSkeleton("kdrama-list"); // NEW
 async function getTrailer(id, type) {
   const data = await fetchJSON(
     `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
@@ -561,9 +534,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-
-
-
 
 
 

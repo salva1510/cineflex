@@ -264,6 +264,84 @@ async function init() {
       fetchTrending("tv"),
       fetchTrendingAnime()
     ]);
+
+     /* =========================
+   GENRES / BROWSE BY CATEGORY
+========================= */
+async function fetchGenres() {
+  const data = await fetchJSON(
+    `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`
+  );
+  return data.genres; // [{ id, name }, ...]
+}
+
+async function fetchByGenre(genreId, page = 1) {
+  const data = await fetchJSON(
+    `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&sort_by=popularity.desc&page=${page}`
+  );
+
+  // Make sure each result has media_type "movie" so your existing code works
+  return data.results
+    .filter(item => item.poster_path)
+    .map(item => ({ ...item, media_type: "movie" }));
+}
+
+async function initGenreBrowse() {
+  const select = document.getElementById("genre-select");
+  const containerId = "genre-movies-list";
+
+  if (!select) return;
+
+  // Show skeletons in the category list while loading genres
+  showSkeleton(containerId);
+
+  try {
+    const genres = await fetchGenres();
+
+    // Clear and fill dropdown
+    select.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select a genre";
+    select.appendChild(defaultOption);
+
+    genres.forEach(g => {
+      const opt = document.createElement("option");
+      opt.value = g.id;
+      opt.textContent = g.name;
+      select.appendChild(opt);
+    });
+
+    // When the user picks a genre
+    select.addEventListener("change", async () => {
+      const genreId = select.value;
+      const listEl = document.getElementById(containerId);
+
+      if (!genreId) {
+        listEl.innerHTML = "";
+        return;
+      }
+
+      // Show skeletons while loading movies
+      showSkeleton(containerId);
+
+      try {
+        const items = await fetchByGenre(genreId);
+        displayList(items, containerId); // uses your existing click-to-open-modal logic
+      } catch (err) {
+        console.error("Failed to load movies for this genre:", err);
+        listEl.innerHTML =
+          "<p style='margin: 20px; color: #aaa;'>Failed to load movies for this category.</p>";
+      }
+    });
+  } catch (err) {
+    console.error("Failed to load genres:", err);
+    // Hide the whole section if genres fail
+    const row = document.getElementById("browse-category-row");
+    if (row) row.style.display = "none";
+  }
+}
      
 
     autoRotateBanner(movies);
@@ -452,6 +530,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

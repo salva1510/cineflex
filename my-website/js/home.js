@@ -257,22 +257,6 @@ function closeSearchModal() {
 /* =========================
    INIT
 ========================= */
-async function init() {
-  try {
-    const [movies, tvShows, anime] = await Promise.all([
-      fetchTrending("movie"),
-      fetchTrending("tv"),
-      fetchTrendingAnime()
-    ]);
-
-    autoRotateBanner(movies);
-    displayList(movies, "movies-list");
-    displayList(tvShows, "tvshows-list");
-    displayList(anime, "anime-list");
-  } catch (err) {
-    console.error("Failed to load content:", err);
-  }
-   initGenreBrowse();
 async function initGenreBrowse() {
   const select = document.getElementById("genre-select");
   const containerId = "genre-movies-list";
@@ -373,6 +357,8 @@ async function initGenreBrowse() {
     if (row) row.style.display = "none";
   }
 }
+   initGenreBrowse();
+
   // Initialize Browse by Category (after main content)
 
 
@@ -633,6 +619,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

@@ -201,6 +201,30 @@ function attachTrailerHover(img, item) {
     }
   });
 }
+function displayList(items, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  items.forEach((item, i) => {
+    const img = document.createElement("img");
+
+    img.src = `${IMG_URL}${item.poster_path}`;
+    img.alt = item.title || item.name;
+    img.loading = "lazy";
+    img.style.animationDelay = `${i * 40}ms`;
+    img.classList.add("poster-item");
+
+    // Click: open details modal
+    img.onclick = () => showDetails(item);
+
+    // Hover: show trailer (IMPORTANT)
+    attachTrailerHover(img, item);
+
+    container.appendChild(img);
+  });
+}
 
 /* =========================
    MODAL
@@ -585,6 +609,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

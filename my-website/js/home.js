@@ -117,6 +117,39 @@ function autoRotateBanner(items) {
 /* =========================
    LIST RENDERING
 ========================= */
+// Get trailer URL from TMDB
+async function getTrailer(id, type) {
+  const data = await fetchJSON(
+    `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
+  );
+  const trailer = data.results.find(v => v.type === "Trailer");
+  return trailer
+    ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`
+    : null;
+}
+
+// Add hover behavior to one poster image
+async function attachTrailerHover(img, item) {
+  let iframe;
+
+  img.addEventListener("mouseenter", async () => {
+    const url = await getTrailer(item.id, item.media_type || "movie");
+    if (!url) return;
+
+    iframe = document.createElement("iframe");
+    iframe.src = url;
+    iframe.className = "hover-trailer";
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allow", "autoplay; encrypted-media");
+    iframe.setAttribute("allowfullscreen", "true");
+
+    img.parentElement.appendChild(iframe);
+  });
+
+  img.addEventListener("mouseleave", () => {
+    if (iframe) iframe.remove();
+  });
+}
 function displayList(items, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";
@@ -519,6 +552,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

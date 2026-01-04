@@ -427,40 +427,6 @@ body {
 .logo:hover {
   text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
-.genre-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin: 15px 0 5px;
-}
-
-.genre-pagination button {
-  background: #e50914;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.genre-pagination button:hover {
-  background: #f6121d;
-  transform: scale(1.03);
-}
-
-.genre-pagination button:disabled {
-  background: #444;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.genre-pagination span {
-  color: #ccc;
-  font-size: 14px;
-}
 .category-controls {
   margin: 10px 20px;
   display: flex;
@@ -537,7 +503,6 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
-
 
 
 

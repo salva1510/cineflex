@@ -369,6 +369,12 @@ body {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
 }
+.list {
+  display: flex;
+  overflow-x: auto;
+  position: relative; /* NEW */
+}
+
 .hover-trailer {
   position: absolute;
   width: 320px;
@@ -376,6 +382,7 @@ body {
   z-index: 20;
   border-radius: 10px;
   pointer-events: none;
+  top: -190px;  /* move it above posters */
 }
 .logo {
   font-size: 26px;
@@ -503,6 +510,7 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+
 
 
 

@@ -513,24 +513,26 @@ body {
 .running-text {
   width: 100%;
   overflow: hidden;
-  background: #111;         /* background color */
+  background: #060606;        /* darker for contrast */
   border-top: 1px solid #333;
   border-bottom: 1px solid #333;
-  padding: 6px 0;
-  margin-top: 10px;         /* adjust as you like */
+  padding: 8px 0;
+  margin-top: 10px;
 }
 
 .running-text-inner {
   display: inline-block;
   white-space: nowrap;
-  color: #f5f5f5;
-  font-size: 14px;
+  color: #f8f8f8;             /* bright text */
+  font-size: 16px;            /* bigger text */
+  line-height: 1.6;
   font-weight: 500;
-  padding-left: 100%;       /* start off-screen to the right */
-  animation: runningText 20s linear infinite;
+  padding-left: 100%;         /* start off-screen to the right */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);  /* helps on bright posters */
+  animation: runningText 25s linear infinite;  /* slower = more readable */
 }
 
-/* Animation: move from right to left */
+/* Animation: smooth left scroll */
 @keyframes runningText {
   0% {
     transform: translateX(0);
@@ -540,13 +542,8 @@ body {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
+/* Optional: pause on hover so users can read easily */
+.running-text-inner:hover {
+  animation-play-state: paused;
+  cursor: default;
+}

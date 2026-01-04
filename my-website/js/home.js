@@ -284,22 +284,23 @@ function closeSearchModal() {
 ========================= */
 async function init() {
   try {
-    const [movies, tvShows, anime] = await Promise.all([
+    const [movies, tvShows, anime, kdramas] = await Promise.all([
       fetchTrending("movie"),
       fetchTrending("tv"),
-      fetchTrendingAnime()
+      fetchTrendingAnime(),
+      fetchKoreanDramas() // NEW
     ]);
 
     autoRotateBanner(movies);
     displayList(movies, "movies-list");
     displayList(tvShows, "tvshows-list");
     displayList(anime, "anime-list");
+    displayList(kdramas, "kdrama-list"); // NEW
   } catch (err) {
     console.error("Failed to load content:", err);
   }
 
-  // Initialize Browse by Category (after main content)
-  initGenreBrowse();
+  // if you already call initGenreBrowse() or other things, keep them here
 }
 
 init();
@@ -560,6 +561,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

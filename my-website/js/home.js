@@ -272,9 +272,8 @@ async function init() {
   } catch (err) {
     console.error("Failed to load content:", err);
   }
-
-  // Initialize Browse by Category (after main content)
-  async function initGenreBrowse() {
+   initGenreBrowse();
+async function initGenreBrowse() {
   const select = document.getElementById("genre-select");
   const containerId = "genre-movies-list";
   const paginationEl = document.getElementById("genre-pagination");
@@ -374,6 +373,8 @@ async function init() {
     if (row) row.style.display = "none";
   }
 }
+  // Initialize Browse by Category (after main content)
+
 
 init();
      /* =========================
@@ -632,6 +633,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

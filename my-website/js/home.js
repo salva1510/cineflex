@@ -165,6 +165,7 @@ function displayList(items, containerId) {
     img.classList.add("poster-item");
 
     img.onclick = () => showDetails(item);
+     attachTrailerHover(img, item);
     container.appendChild(img);
   });
 }
@@ -552,6 +553,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

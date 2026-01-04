@@ -436,21 +436,6 @@ async function getTrailer(id, type) {
     if (iframe) iframe.remove();
   });
 }
-function personalizedGreeting() {
-  const hour = new Date().getHours();
-  let greeting = "Welcome";
-
-  if (hour < 12) greeting = "Good Morning";
-  else if (hour < 18) greeting = "Good Afternoon";
-  else greeting = "Good Evening";
-
-  let visits = Number(localStorage.getItem("visits") || 0) + 1;
-  localStorage.setItem("visits", visits);
-
-  document.getElementById("banner-title").textContent =
-    `${greeting}! Visit #${visits}`;
-}
-attachTrailerHover(img, item);
 window.addEventListener("load", () => {
   const logo = document.querySelector(".logo");
   logo.classList.add("netflix-intro");
@@ -534,6 +519,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

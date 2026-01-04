@@ -456,6 +456,7 @@ body {
   .category-controls select {
     width: 100%;
   }
+} 
 .season-selector {
   text-align: left;
   margin: 15px 0;
@@ -502,6 +503,7 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+
 
 
 

@@ -86,6 +86,31 @@ async function fetchTrendingAnime() {
 
   return anime;
 }
+// Get Korean TV dramas (K-Drama)
+async function fetchKoreanDramas() {
+  let kdramas = [];
+
+  for (let page = 1; page <= 3; page++) {
+    const data = await fetchJSON(
+      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&page=${page}`
+    );
+
+    const filtered = data.results.filter(
+      item =>
+        item.original_language === "ko" && // Korean language
+        item.poster_path
+    );
+
+    // Make sure each item has media_type "tv" for your player logic
+    filtered.forEach(item => {
+      item.media_type = "tv";
+    });
+
+    kdramas.push(...filtered);
+  }
+
+  return kdramas;
+}
 
 /* =========================
    BANNER
@@ -535,6 +560,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

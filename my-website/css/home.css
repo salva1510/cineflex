@@ -427,6 +427,35 @@ body {
 .logo:hover {
   text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
+.category-controls {
+  margin: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-controls label {
+  font-weight: bold;
+}
+
+.category-controls select {
+  background: #111;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+/* Optional mobile tweak */
+@media (max-width: 768px) {
+  .category-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .category-controls select {
+    width: 100%;
+  }
 .season-selector {
   text-align: left;
   margin: 15px 0;
@@ -473,6 +502,7 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
+
 
 
 

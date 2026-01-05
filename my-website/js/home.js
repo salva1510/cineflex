@@ -305,12 +305,8 @@ function showDetails(item) {
 ========================= */
 function changeServer() {
   const server = document.getElementById("server").value;
-  if (!currentItem) return;
-
-  const embedURL = getEmbedURL(server, currentItem);
-
-  const iframe = document.getElementById("modal-video");
-  iframe.src = embedURL;
+  const type = currentItem.media_type === "movie" ? "movie" : "tv";
+  let embedURL = "";
 
   // keep download button synced
   updateDownloadLink(embedURL);
@@ -640,6 +636,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

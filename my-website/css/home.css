@@ -11,6 +11,13 @@
     .nav-links a { color: white; text-decoration: none; margin: 0 5px; }
 /* 🟩 Sticky Category Bar */
 .browse-bar {
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.browse-bar.is-sticky {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+}
+.browse-bar {
   position: sticky;           /* makes it stick when scrolled */
   top: 60px;                  /* just below your navbar height */
   z-index: 50;                /* above other content */
@@ -619,6 +626,7 @@ body {
   flex-wrap: wrap;
   gap: 16px;
 }
+
 
 
 

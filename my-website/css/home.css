@@ -543,6 +543,36 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+#browse-category-row {
+  background: #181818;
+  padding: 40px 20px;
+  border-radius: 10px;
+  margin: 40px 20px;
+}
+
+#browse-category-row h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #e50914;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.category-controls {
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#genre-movies-list {
+  display: flex;
+  justify-content: center; /* centers all movies */
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
 
 
 

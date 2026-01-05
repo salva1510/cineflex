@@ -1,108 +1,52 @@
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open("cineflex-cache").then(cache => {
-      return cache.addAll([
-        "/",
-        "/index.html",
-        "/css/home.css",
-        "/js/home.js",
-        "/manifest.json"
-      ]);
-    })
-  );
-});
+const CACHE_NAME = "cineflex-cache-v1";
+const OFFLINE_URL = "/offline.html";
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
-});
-// sw.js
-const CACHE_NAME = "cineflex-v1";
-const ASSETS_TO_CACHE = [
+// List of core assets to cache
+const CORE_ASSETS = [
   "/",
   "/index.html",
   "/css/home.css",
   "/js/home.js",
-  "/manifest.json",
   "/icons/icon-192.png",
-  // Add other static assets
+  "/icons/icon-512.png",
+  OFFLINE_URL,
 ];
 
-// Install event: cache core assets
+// 1️⃣ Install—cache core files
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return cache.addAll(CORE_ASSETS);
     })
   );
+  self.skipWaiting();
 });
 
-// Fetch event: Network-and-cache for videos, cache-or-network for assets
-self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-
-  // Cache video embeds (e.g., vidsrc.cc, vsrc.su, etc.)
-  if (
-    url.hostname.includes("vidsrc.cc") ||
-    url.hostname.includes("vsrc.su") ||
-    url.hostname.includes("player.videasy.net")
-  ) {
-    event.respondWith(
-      caches.open("cineflex-videos").then((cache) => {
-        return cache.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse; // Serve cached video
-          }
-          // Not cached? Fetch from network and cache it
-          return fetch(event.request).then((networkResponse) => {
-            // Only cache successful responses (status 200)
-            if (networkResponse && networkResponse.status === 200) {
-              // Clone because response streams can't be reused
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          });
-        });
-      })
-    );
-  } 
-  // For static assets: cache-or-network
-  else {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        return (
-          cachedResponse ||
-          fetch(event.request).then((networkResponse) => {
-            // Cache new static assets
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, networkResponse.clone());
-              });
-            }
-            return networkResponse;
-          })
-        );
-      })
-    );
-  }
-});
-
-// Optional: Clean old caches
+// 2️⃣ Activate—clean old caches
 self.addEventListener("activate", (event) => {
-  const allowedCaches = [CACHE_NAME, "cineflex-videos"];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!allowedCaches.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
+// 3️⃣ Fetch requests—network first, fallback to cache
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        const cloned = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
+        return response;
+      })
+      .catch(() =>
+        caches.match(event.request).then(
+          (cached) => cached || caches.match(OFFLINE_URL)
+        )
+      )
+  );
+});

@@ -67,13 +67,6 @@ async function fetchJSON(url) {
   return res.json();
 }
 
-async function fetchTrending(type) {
-  const data = await fetchJSON(
-    `${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`
-  );
-  return data.results.filter(i => i.poster_path);
-}
-
 async function fetchTrendingAnime() {
   let anime = [];
 
@@ -609,6 +602,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

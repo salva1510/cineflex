@@ -94,28 +94,6 @@ async function fetchTrendingAnime() {
 
   return anime;
 }
-function getEmbedURL(server, item) {
-  const type = item.media_type === "movie" ? "movie" : "tv";
-
-  if (server === "vidsrc.cc") return `https://vidsrc.cc/v2/embed/${type}/${item.id}`;
-  if (server === "vsrc.su") return `https://vsrc.su/embed/${type}/${item.id}`;
-  if (server === "player.videasy.net") return `https://player.videasy.net/${type}/${item.id}`;
-
-  return "";
-
-async function updateDownloadLinkForLegalSource(item) {
-  const a = document.getElementById("downloadLink");
-  a.textContent = "Download / Watch legally";
-  a.href = "#";
-  a.setAttribute("aria-disabled", "true");
-
-  const providerURL = await fetchWatchProviders(item);
-  if (providerURL) {
-    a.href = providerURL;
-    a.removeAttribute("aria-disabled");
-  a.setAttribute("aria-disabled", "false");
-  a.href = url;
-}
 
 /* =========================
    BANNER
@@ -631,14 +609,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-
-
-
-
-
-
-
-
 
 
 

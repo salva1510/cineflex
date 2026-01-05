@@ -102,7 +102,6 @@ function getEmbedURL(server, item) {
   if (server === "player.videasy.net") return `https://player.videasy.net/${type}/${item.id}`;
 
   return "";
-}
 
 async function updateDownloadLinkForLegalSource(item) {
   const a = document.getElementById("downloadLink");
@@ -632,6 +631,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

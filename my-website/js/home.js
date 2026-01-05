@@ -201,10 +201,6 @@ function attachTrailerHover(img, item) {
     }
   });
 }
-window.addEventListener("scroll", () => {
-  const bar = document.querySelector(".browse-bar");
-  bar.classList.toggle("is-sticky", window.scrollY > 100);
-});
 function displayList(items, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -613,9 +609,6 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-
-
-
 
 
 

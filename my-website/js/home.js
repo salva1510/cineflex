@@ -305,8 +305,16 @@ function showDetails(item) {
 ========================= */
 function changeServer() {
   const server = document.getElementById("server").value;
-  const type = currentItem.media_type === "movie" ? "movie" : "tv";
-  let embedURL = "";
+  if (!currentItem) return;
+
+  const embedURL = getEmbedURL(server, currentItem);
+
+  const iframe = document.getElementById("modal-video");
+  iframe.src = embedURL;
+
+  // keep download button synced
+  updateDownloadLink(embedURL);
+}
 
   if (server === "vidsrc.cc") {
     embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
@@ -632,6 +640,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

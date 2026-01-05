@@ -114,8 +114,6 @@ async function updateDownloadLinkForLegalSource(item) {
   if (providerURL) {
     a.href = providerURL;
     a.removeAttribute("aria-disabled");
-  }
-}
   a.setAttribute("aria-disabled", "false");
   a.href = url;
 }
@@ -634,6 +632,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

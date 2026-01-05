@@ -94,6 +94,29 @@ async function fetchTrendingAnime() {
 
   return anime;
 }
+function getEmbedURL(server, item) {
+  const type = item.media_type === "movie" ? "movie" : "tv";
+
+  if (server === "vidsrc.cc") return `https://vidsrc.cc/v2/embed/${type}/${item.id}`;
+  if (server === "vsrc.su") return `https://vsrc.su/embed/${type}/${item.id}`;
+  if (server === "player.videasy.net") return `https://player.videasy.net/${type}/${item.id}`;
+
+  return "";
+}
+
+function updateDownloadLink(url) {
+  const a = document.getElementById("downloadLink");
+  if (!a) return;
+
+  if (!url) {
+    a.href = "#";
+    a.setAttribute("aria-disabled", "true");
+    return;
+  }
+
+  a.setAttribute("aria-disabled", "false");
+  a.href = url;
+}
 
 /* =========================
    BANNER
@@ -609,6 +632,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

@@ -389,7 +389,7 @@ async function initGenreBrowse() {
   if (!select) return;
 
   // Show skeletons in the category list while loading genres
-  showSkeleton(containerId);
+  //showSkeleton(containerId);
 
   try {
     const genres = await fetchGenres();
@@ -602,6 +602,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

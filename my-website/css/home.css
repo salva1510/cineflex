@@ -543,6 +543,29 @@ body {
   animation-play-state: paused;
   cursor: default;
 }
+.actions{
+  display:flex;
+  justify-content:flex-start;
+  margin:10px 0;
+}
+
+.download-btn{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:8px;
+  background:#e50914;
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+}
+
+.download-btn:hover{ filter:brightness(1.1); }
+
+.download-btn[aria-disabled="true"]{
+  opacity:.6;
+  pointer-events:none;
+}
+
 
 
 

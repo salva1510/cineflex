@@ -104,16 +104,18 @@ function getEmbedURL(server, item) {
   return "";
 }
 
-function updateDownloadLink(url) {
+async function updateDownloadLinkForLegalSource(item) {
   const a = document.getElementById("downloadLink");
-  if (!a) return;
+  a.textContent = "Download / Watch legally";
+  a.href = "#";
+  a.setAttribute("aria-disabled", "true");
 
-  if (!url) {
-    a.href = "#";
-    a.setAttribute("aria-disabled", "true");
-    return;
+  const providerURL = await fetchWatchProviders(item);
+  if (providerURL) {
+    a.href = providerURL;
+    a.removeAttribute("aria-disabled");
   }
-
+}
   a.setAttribute("aria-disabled", "false");
   a.href = url;
 }
@@ -632,6 +634,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

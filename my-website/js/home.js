@@ -308,9 +308,6 @@ function changeServer() {
   const type = currentItem.media_type === "movie" ? "movie" : "tv";
   let embedURL = "";
 
-  // keep download button synced
-  updateDownloadLink(embedURL);
-
   if (server === "vidsrc.cc") {
     embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
 
@@ -635,6 +632,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

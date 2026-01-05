@@ -197,6 +197,9 @@ function attachTrailerHover(img, item) {
     if (iframe) {
       iframe.remove();
       iframe = null;
+       window.addEventListener("scroll", () => {
+  const bar = document.querySelector(".browse-bar");
+  bar.classList.toggle("is-sticky", window.scrollY > 100);
       // We do NOT unwrap img for simplicity – it still works fine
     }
   });
@@ -609,6 +612,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

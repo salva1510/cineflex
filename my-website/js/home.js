@@ -246,28 +246,6 @@ function displayList(items, containerId) {
 
   changeServer();
 }
-  document.getElementById("modal").style.display = "flex";
-}
-  currentItem = item;
-
-  document.getElementById("modal-title").textContent =
-    item.title || item.name;
-  document.getElementById("modal-description").textContent =
-    item.overview || "No description available.";
-  document.getElementById("modal-image").src =
-    `${IMG_URL}${item.poster_path}`;
-
-  const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML =
-    "★".repeat(stars) + "☆".repeat(5 - stars);
-
-  // 🔥 Bandwidth-aware server selection
-  const profile = getConnectionProfile();
-  document.getElementById("server").value = profile.server;
-
-  changeServer();
-  document.getElementById("modal").style.display = "flex";
-}
   function closeModal() {
   document.getElementById("modal").style.display = "none";
   document.getElementById("modal-video").src = "";
@@ -605,6 +583,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

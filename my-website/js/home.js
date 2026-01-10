@@ -583,7 +583,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-}
+
 async function loadEpisodes() {
   if (!currentItem || !currentItem.first_air_date) return;
   
@@ -608,6 +608,7 @@ function playEpisode(epNum) {
   let url = `https://${server}/embed/tv/${currentItem.id}/${season}/${epNum}`;
   document.getElementById("modal-video").src = url;
 }
+
 
 
 

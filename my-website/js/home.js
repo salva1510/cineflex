@@ -345,6 +345,30 @@ init();
      /* =========================
    GENRES / BROWSE BY CATEGORY
 ========================= */
+async function loadEpisodes() {
+  if (!currentItem || !currentItem.first_air_date) return;
+  
+  const seasonNum = document.getElementById("seasonSelect").value;
+  const data = await fetchJSON(`${BASE_URL}/tv/${currentItem.id}/season/${seasonNum}?api_key=${API_KEY}`);
+  
+  const episodesGrid = document.getElementById("episodes");
+  episodesGrid.innerHTML = data.episodes.map(ep => `
+    <div class="episode-card" onclick="playEpisode(${ep.episode_number})">
+      <h4>Ep ${ep.episode_number}: ${ep.name}</h4>
+      <p>${ep.air_date}</p>
+    </div>
+  `).join('');
+}
+
+function playEpisode(epNum) {
+  currentEpisode = epNum;
+  const server = document.getElementById("server").value;
+  const season = document.getElementById("seasonSelect").value;
+  
+  // Update iframe for TV show format: /tv/id/season/episode
+  let url = `https://${server}/embed/tv/${currentItem.id}/${season}/${epNum}`;
+  document.getElementById("modal-video").src = url;
+}
 async function fetchGenres() {
   const data = await fetchJSON(
     `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`
@@ -583,30 +607,8 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
-async function loadEpisodes() {
-  if (!currentItem || !currentItem.first_air_date) return;
-  
-  const seasonNum = document.getElementById("seasonSelect").value;
-  const data = await fetchJSON(`${BASE_URL}/tv/${currentItem.id}/season/${seasonNum}?api_key=${API_KEY}`);
-  
-  const episodesGrid = document.getElementById("episodes");
-  episodesGrid.innerHTML = data.episodes.map(ep => `
-    <div class="episode-card" onclick="playEpisode(${ep.episode_number})">
-      <h4>Ep ${ep.episode_number}: ${ep.name}</h4>
-      <p>${ep.air_date}</p>
-    </div>
-  `).join('');
 }
 
-function playEpisode(epNum) {
-  currentEpisode = epNum;
-  const server = document.getElementById("server").value;
-  const season = document.getElementById("seasonSelect").value;
-  
-  // Update iframe for TV show format: /tv/id/season/episode
-  let url = `https://${server}/embed/tv/${currentItem.id}/${season}/${epNum}`;
-  document.getElementById("modal-video").src = url;
-}
 
 
 

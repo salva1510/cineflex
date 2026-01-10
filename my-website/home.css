@@ -82,16 +82,54 @@ body {
 .scroll-btn.right { right: 0; }
 
 /* MODAL */
+./* Ensure the modal is a stacking context */
 .modal {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000;
+  display: none;
+  position: fixed;
+  z-index: 2000; /* Higher than navbar */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  justify-content: center;
+  align-items: center;
 }
-.modal-content {
-  background: #181818; width: 90%; max-width: 950px; border-radius: 12px;
-  overflow: hidden; position: relative;
-}
-.close { position: absolute; top: 20px; right: 25px; font-size: 35px; color: white; cursor: pointer; z-index: 10; }
 
+/* THE FIX: Fixed Close Button Position */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 3000; /* Ensure it is ABOVE the video iframe */
+  transition: transform 0.2s ease, color 0.2s ease;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent circle */
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  color: #e50914; /* CineFlex Red */
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Desktop optimization for the Modal Content */
+@media (min-width: 768px) {
+  .modal-content {
+    width: 80%;
+    max-width: 1000px;
+    position: relative;
+  }
+}
 .modal-video-wrapper { position: relative; padding-top: 56.25%; background: black; }
 .modal-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 

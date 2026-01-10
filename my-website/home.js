@@ -62,7 +62,7 @@ function displayList(items, containerId) {
     img.onclick = () => showDetails(item);
 
     // Hover effect logic
-    attachTrailerHover(img, item);
+    //attachTrailerHover(img, item);
     container.appendChild(img);
   });
 }

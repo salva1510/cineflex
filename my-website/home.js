@@ -1,7 +1,7 @@
 /* =========================
    CONFIG
 ========================= */
-const API_KEY = "742aa17a327005b91fb6602054523286"; // Note: Public keys may be rate-limited
+const API_KEY = "742aa17a327005b91fb6602054523286"; 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
 
@@ -53,16 +53,13 @@ function displayList(items, containerId) {
   if (!container) return;
   container.innerHTML = "";
 
-  items.forEach((item, i) => {
+  items.forEach((item) => {
     const img = document.createElement("img");
     img.src = `${IMG_URL}${item.poster_path}`;
     img.alt = item.title || item.name;
     img.loading = "lazy";
     img.className = "poster-item";
     img.onclick = () => showDetails(item);
-
-    // Hover effect logic
-    attachTrailerHover(img, item);
     container.appendChild(img);
   });
 }
@@ -97,50 +94,11 @@ function autoRotateBanner(items) {
 }
 
 /* =========================
-   TRAILERS (HOVER)
-========================= */
-async function getTrailerUrl(id, type) {
-  try {
-    const data = await fetchJSON(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
-    const trailer = data.results.find(v => v.site === "YouTube" && v.type === "Trailer") || data.results[0];
-    return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0` : null;
-  } catch (e) { return null; }
-}
-
-function attachTrailerHover(img, item) {
-  let iframe;
-  let timeout;
-  
-  img.addEventListener("mouseenter", () => {
-    timeout = setTimeout(async () => {
-      const type = item.media_type || "movie";
-      const url = await getTrailerUrl(item.id, type);
-      if (!url) return;
-
-      iframe = document.createElement("iframe");
-      iframe.src = url;
-      iframe.className = "hover-trailer";
-      iframe.style.position = "absolute"; 
-      iframe.style.zIndex = "50";
-      // This is a simplified hover logic
-      // Ideally you'd use a wrapper, but for this code structure:
-      // We are just preloading logic here.
-    }, 1000); // 1s delay before trailer fetch
-  });
-
-  img.addEventListener("mouseleave", () => {
-    clearTimeout(timeout);
-    if (iframe) { iframe.remove(); iframe = null; }
-  });
-}
-
-/* =========================
    MODAL & PLAYER
 ========================= */
 async function showDetails(item) {
   currentItem = item;
   
-  // UI Updates
   document.getElementById("modal-title").textContent = item.title || item.name;
   document.getElementById("modal-description").textContent = item.overview || "No description available.";
   document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
@@ -149,7 +107,6 @@ async function showDetails(item) {
   document.getElementById("modal-rating").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
   document.getElementById("modal").style.display = "flex";
 
-  // Handle TV vs Movie controls
   const isTv = item.media_type === "tv" || item.first_air_date;
   const tvControls = document.getElementById("tv-controls");
   
@@ -160,7 +117,6 @@ async function showDetails(item) {
     tvControls.style.display = "none";
   }
 
-  // Set default server
   changeServer();
 }
 
@@ -175,7 +131,7 @@ async function loadSeasons(id) {
   seasonSelect.innerHTML = "";
   
   data.seasons.forEach(s => {
-    if(s.season_number > 0) { // skip specials usually
+    if(s.season_number > 0) {
         const opt = document.createElement("option");
         opt.value = s.season_number;
         opt.textContent = s.name;
@@ -183,7 +139,6 @@ async function loadSeasons(id) {
     }
   });
   
-  // Load episodes for first season
   loadEpisodes();
 }
 
@@ -203,7 +158,6 @@ async function loadEpisodes() {
 function playEpisode(season, episode) {
     const server = document.getElementById("server").value;
     const iframe = document.getElementById("modal-video");
-    // TV Show URL Format
     if(server.includes("vidsrc")) {
         iframe.src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
     } else {
@@ -217,11 +171,9 @@ function changeServer() {
   const iframe = document.getElementById("modal-video");
   
   if (isTv) {
-      // If TV, default to S1 E1 on server change
       const season = document.getElementById("seasonSelect").value || 1;
       playEpisode(season, 1);
   } else {
-      // Movie URL Format
       if(server.includes("vidsrc")) {
           iframe.src = `https://${server}/embed/movie/${currentItem.id}`;
       } else {
@@ -290,7 +242,6 @@ toggleBtn.onclick = () => {
   document.documentElement.setAttribute("data-theme", next);
 };
 
-// Start App
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");

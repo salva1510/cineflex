@@ -222,7 +222,6 @@ function displayList(items, containerId) {
 /* =========================
    MODAL
 ========================= */
-function showDetails(item) {
    async function showDetails(item) {
   currentItem = item;
 
@@ -606,6 +605,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

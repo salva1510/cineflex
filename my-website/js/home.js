@@ -421,7 +421,6 @@ async function initGenreBrowse() {
 }
      
 
-init();
 document.querySelectorAll(".scroll-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const row = btn.parentElement.querySelector(".row-list");
@@ -608,6 +607,7 @@ function playEpisode(epNum) {
   let url = `https://${server}/embed/tv/${currentItem.id}/${season}/${epNum}`;
   document.getElementById("modal-video").src = url;
 }
+
 
 
 

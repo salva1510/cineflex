@@ -226,23 +226,27 @@ function showDetails(item) {
    async function showDetails(item) {
   currentItem = item;
 
-  document.getElementById("modal-title").textContent =
-    item.title || item.name;
-  document.getElementById("modal-description").textContent =
-    item.overview || "No description available.";
-  document.getElementById("modal-image").src =
-    `${IMG_URL}${item.poster_path}`;
+  // Set Modal Text & Image
+  document.getElementById("modal-title").textContent = item.title || item.name;
+  document.getElementById("modal-description").textContent = item.overview || "No description available.";
+  document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
 
+  // Rating Stars
   const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML =
-    "★".repeat(stars) + "☆".repeat(5 - stars);
+  document.getElementById("modal-rating").innerHTML = "★".repeat(stars) + "☆".repeat(5 - stars);
 
-  const type = item.media_type === "movie" ? "movie" : "tv";
+  // Show Modal early so user sees it loading
+  document.getElementById("modal").style.display = "flex";
+
+  // Pick Server: Try to auto-pick, fallback to bandwidth profile
+  const type = (item.media_type === "movie" || !item.first_air_date) ? "movie" : "tv";
   const fastestServer = await autoPickFastestServer(item.id, type);
+  
+  const profile = getConnectionProfile();
+  document.getElementById("server").value = fastestServer || profile.server;
 
-  document.getElementById("server").value = fastestServer || "vidsrc.cc";
   changeServer();
-
+}
   document.getElementById("modal").style.display = "flex";
 }
   currentItem = item;
@@ -602,6 +606,7 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
 
 
 

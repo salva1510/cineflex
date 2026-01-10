@@ -6,7 +6,6 @@
   <title>CINEFLEX | Premium Streaming</title>
   <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <meta name="theme-color" content="#000000">
 </head>
 <body class="premium-theme">
 
@@ -17,7 +16,7 @@
     <div class="nav-right">
       <div class="search-container">
         <i class="fas fa-search"></i>
-        <input type="text" class="search-bar" id="search-bar-trigger" placeholder="Titles, genres..." onfocus="openSearchModal()" />
+        <input type="text" class="search-bar" id="search-bar-trigger" placeholder="Search..." onfocus="openSearchModal()" />
       </div>
     </div>
   </nav>
@@ -33,6 +32,15 @@
   </div>
 
   <main class="content-wrapper">
+    <div class="row" id="continue-row" style="display: none;">
+      <h2>Continue Watching</h2>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('continue-list', -500)">‹</button>
+        <div class="list row-list" id="continue-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('continue-list', 500)">›</button>
+      </div>
+    </div>
+
     <div class="row">
       <h2>Trending Now</h2>
       <div class="row-container">
@@ -48,15 +56,6 @@
         <button class="scroll-btn left" onclick="scrollRow('tvshows-list', -500)">‹</button>
         <div class="list row-list" id="tvshows-list"></div>
         <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
-      </div>
-    </div>
-
-    <div class="row">
-      <h2>Anime Collection</h2>
-      <div class="row-container">
-        <button class="scroll-btn left" onclick="scrollRow('anime-list', -500)">‹</button>
-        <div class="list row-list" id="anime-list"></div>
-        <button class="scroll-btn right" onclick="scrollRow('anime-list', 500)">›</button>
       </div>
     </div>
 
@@ -85,20 +84,15 @@
               <span class="quality-badge">4K Ultra HD</span>
             </div>
             <p id="modal-description"></p>
-            
             <div class="player-controls">
               <div id="tv-controls" style="display:none;">
-                <div class="season-box">
-                  <label>Season:</label>
-                  <select id="seasonSelect" onchange="loadEpisodes()"></select>
-                </div>
+                <select id="seasonSelect" onchange="loadEpisodes()"></select>
                 <div id="episodes" class="episodes-grid"></div>
               </div>
               <div class="server-box">
-                <label>Streaming Server:</label>
                 <select id="server" onchange="changeServer()">
-                  <option value="vidsrc.cc">Primary Server</option>
-                  <option value="vsrc.su">Secondary Server</option>
+                  <option value="vidsrc.cc">Server 1</option>
+                  <option value="vsrc.su">Server 2</option>
                 </select>
               </div>
             </div>
@@ -110,16 +104,9 @@
 
   <div class="search-modal" id="search-modal">
     <span class="close" onclick="closeSearchModal()">&times;</span>
-    <input type="text" id="search-input" placeholder="Search movies, TV shows..." oninput="searchTMDB()" />
+    <input type="text" id="search-input" placeholder="Search..." oninput="searchTMDB()" />
     <div class="results" id="search-results"></div>
   </div>
-
-  <footer class="footer">
-    <p>&copy; 2026 CINEFLEX PREMIUM</p>
-    <div class="footer-links">
-      <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
-    </div>
-  </footer>
 
   <script src="home.js"></script>
 </body>

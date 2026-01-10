@@ -122,9 +122,9 @@ function attachTrailerHover(img, item) {
       iframe.className = "hover-trailer";
       iframe.style.position = "absolute"; 
       iframe.style.zIndex = "50";
-       This is a simplified hover logic
-       Ideally you'd use a wrapper, but for this code structure:
-       We are just preloading logic here.
+      // This is a simplified hover logic
+      // Ideally you'd use a wrapper, but for this code structure:
+      // We are just preloading logic here.
     }, 1000); // 1s delay before trailer fetch
   });
 

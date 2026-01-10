@@ -108,24 +108,24 @@ async function getTrailerUrl(id, type) {
 }
 
 function attachTrailerHover(img, item) {
-  //let iframe;
- // let timeout;
+  let iframe;
+  let timeout;
   
-  //img.addEventListener("mouseenter", () => {
-   // timeout = setTimeout(async () => {
-     // const type = item.media_type || "movie";
-     // const url = await getTrailerUrl(item.id, type);
-     // if (!url) return;
+  img.addEventListener("mouseenter", () => {
+    timeout = setTimeout(async () => {
+      const type = item.media_type || "movie";
+      const url = await getTrailerUrl(item.id, type);
+      if (!url) return;
 
-     // iframe = document.createElement("iframe");
-     // iframe.src = url;
-     // iframe.className = "hover-trailer";
-      //iframe.style.position = "absolute"; 
-     // iframe.style.zIndex = "50";
-      // This is a simplified hover logic
-      // Ideally you'd use a wrapper, but for this code structure:
-      // We are just preloading logic here.
-    }, //1000); // 1s delay before trailer fetch
+      iframe = document.createElement("iframe");
+      iframe.src = url;
+      iframe.className = "hover-trailer";
+      iframe.style.position = "absolute"; 
+      iframe.style.zIndex = "50";
+       This is a simplified hover logic
+       Ideally you'd use a wrapper, but for this code structure:
+       We are just preloading logic here.
+    }, 1000); // 1s delay before trailer fetch
   });
 
   img.addEventListener("mouseleave", () => {

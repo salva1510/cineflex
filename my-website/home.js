@@ -392,7 +392,7 @@ if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
 
 toggleBtn.onclick = () => {
   const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "light" ? "dark" : "light";
+  const next = current === "dark" ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", next);
   localStorage.setItem("theme", next);
 };
@@ -421,25 +421,6 @@ function showSkeleton(containerId, count = 8) {
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
-async function getTrailer(id, type) {
-  const data = await fetchJSON(
-    `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`
-  );
-  const trailer = data.results.find(v => v.type === "Trailer");
-  return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : null;
-}
- {
-  let iframe;
-
-  img.addEventListener("mouseenter", async () => {
-    const url = await getTrailer(item.id, item.media_type || "movie");
-    if (!url) return;
-
-    iframe = document.createElement("iframe");
-    iframe.src = url;
-    iframe.className = "hover-trailer";
-    img.parentElement.appendChild(iframe);
-  });
 
   img.addEventListener("mouseleave", () => {
     if (iframe) iframe.remove();

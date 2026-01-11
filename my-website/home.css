@@ -1,17 +1,32 @@
 /* =========================
-   RESET & VARS
+   RESET & VARS - FORCED DARK THEME
 ========================= */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root[data-theme="dark"] { --bg: #0f0f0f; --text: #ffffff; }
-:root[data-theme="light"] { --bg: #ffffff; --text: #111111; }
+/* Set variables directly on :root without the [data-theme] requirement */
+:root { 
+  --bg: #0f0f0f; 
+  --text: #ffffff; 
+  --accent: #e50914; /* Premium Red */
+  --nav-bg: #141414;
+  --card-bg: #181818;
+}
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Premium font stack */
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
 }
+
+/* Update Navbar for a cleaner look */
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 4%; background: var(--nav-bg); /* Use specific nav bg */
+  position: sticky; top: 0; z-index: 100;
+  transition: background 0.3s ease;
+}
+
 
 /* =========================
    NAVBAR

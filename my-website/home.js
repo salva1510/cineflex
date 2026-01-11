@@ -44,13 +44,11 @@ function displayList(items, containerId) {
   });
 }
 
-// Fixed showDetails to handle both movies and TV correctly
 async function showDetails(item) {
   currentItem = item;
   const isTV = item.media_type === "tv" || (!item.title && item.name);
   const modal = document.getElementById("modal");
   
-  // Set UI Elements
   document.getElementById("modal-title").textContent = item.title || item.name;
   document.getElementById("modal-description").textContent = item.overview;
   
@@ -62,32 +60,59 @@ async function showDetails(item) {
 
   if (isTV) {
     tvControls.style.display = "block";
-    // If you have a function to load episodes, call it here
-    if (typeof loadSeasons === "function") {
-        await loadSeasons(item.id);
-    }
+    videoIframe.src = ""; // Clear video until episode selected
+    await loadSeasons(item.id); 
   } else {
     tvControls.style.display = "none";
-    const server = "vidsrc.cc"; // Default premium server
+    const server = "vidsrc.cc"; 
     videoIframe.src = `https://${server}/embed/movie/${item.id}`;
-    
-    // SAVE PROGRESS IMMEDIATELY FOR MOVIES
-    saveProgress(item);
+    saveProgress(item); //
   }
 
   modal.style.display = "flex";
 }
 
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-    document.getElementById("modal-video").src = "";
+/* =========================
+   TV EPISODE LOGIC
+========================= */
+
+async function loadSeasons(tvId) {
+  const data = await fetchJSON(`${BASE_URL}/tv/${tvId}?api_key=${API_KEY}`);
+  const select = document.getElementById("seasonSelect");
+  select.innerHTML = data.seasons
+    .filter(s => s.season_number > 0)
+    .map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`)
+    .join("");
+  
+  loadEpisodes(); // Load first season by default
+}
+
+async function loadEpisodes() {
+  const tvId = currentItem.id;
+  const seasonNum = document.getElementById("seasonSelect").value;
+  const data = await fetchJSON(`${BASE_URL}/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}`);
+  
+  const container = document.getElementById("episodes");
+  container.innerHTML = data.episodes.map(ep => `
+    <div class="episode-item" onclick="playEpisode(${seasonNum}, ${ep.episode_number})">
+      <img src="${IMG_URL}${ep.still_path || currentItem.poster_path}" alt="Ep ${ep.episode_number}">
+      <span>EP ${ep.episode_number}: ${ep.name}</span>
+    </div>
+  `).join("");
+}
+
+function playEpisode(season, episode) {
+    if(!currentItem) return;
+    saveProgress(currentItem, season, episode); //
+    
+    const server = "vidsrc.cc";
+    document.getElementById("modal-video").src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
 }
 
 /* =========================
    CONTINUE WATCHING LOGIC
 ========================= */
 
-// Saves the item to LocalStorage
 function saveProgress(item, season = null, episode = null) {
     if (!item) return;
     
@@ -101,22 +126,18 @@ function saveProgress(item, season = null, episode = null) {
         overview: item.overview,
         media_type: (season || item.media_type === 'tv') ? 'tv' : 'movie',
         last_watched: new Date().getTime(),
-        season: season,
-        episode: episode
+        season: season, //
+        episode: episode //
     };
 
-    // Remove duplicates to move the item to the top of the list
     history = history.filter(i => i.id !== item.id);
-    
-    // Add to start and limit to 10 items
     history.unshift(progressData);
     if (history.length > 10) history.pop();
 
-    localStorage.setItem("cineflex_history", JSON.stringify(history));
+    localStorage.setItem("cineflex_history", JSON.stringify(history)); //
     renderContinueWatching();
 }
 
-// Renders the Continue Watching row in the UI
 function renderContinueWatching() {
     const history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
     const container = document.getElementById("continue-list");
@@ -135,9 +156,7 @@ function renderContinueWatching() {
     history.forEach(item => {
         const div = document.createElement("div");
         div.className = "continue-card";
-        
-        // Show S:E badge for TV shows
-        const badge = item.season ? `<span class="ep-badge">S${item.season}:E${item.episode}</span>` : '';
+        const badge = item.season ? `<span class="ep-badge">S${item.season}:E${item.episode}</span>` : ''; //
         
         div.innerHTML = `
             <div class="poster-wrapper">
@@ -153,15 +172,6 @@ function renderContinueWatching() {
     });
 }
 
-// Call this function when an episode is clicked in your TV menu
-function playEpisode(season, episode) {
-    if(!currentItem) return;
-    saveProgress(currentItem, season, episode);
-    
-    const server = document.getElementById("server")?.value || "vidsrc.cc";
-    document.getElementById("modal-video").src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
-}
-
 /* =========================
    INITIALIZATION
 ========================= */
@@ -174,36 +184,16 @@ async function init() {
 
     displayList(movies, "movies-list");
     displayList(tv, "tvshows-list");
-    
-    // Initial render of saved progress
     renderContinueWatching();
   } catch (err) {
-    console.error("Initialization Error:", err);
+    console.error("Init Error:", err);
   }
 }
 
-// Simple Watchlist function
-function toggleWatchlist() {
-    if(!currentItem) return;
-    let list = JSON.parse(localStorage.getItem("watchlist")) || [];
-    const index = list.findIndex(i => i.id === currentItem.id);
-    
-    if(index > -1) {
-        list.splice(index, 1);
-        alert("Removed from Watchlist");
-    } else {
-        list.push(currentItem);
-        alert("Added to Watchlist!");
-    }
-    localStorage.setItem("watchlist", JSON.stringify(list));
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+    document.getElementById("modal-video").src = "";
 }
 
-// Initialize on load
 document.addEventListener("DOMContentLoaded", init);
 
-// Navbar Scroll Effect
-window.onscroll = () => {
-    const nav = document.querySelector('.navbar');
-    if (window.scrollY > 50) nav.classList.add('scrolled');
-    else nav.classList.remove('scrolled');
-};

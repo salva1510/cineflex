@@ -22,7 +22,6 @@ async function fetchJSON(url) {
 function getConnectionProfile() {
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (!conn || conn.saveData) return { quality: "low", server: "player.videasy.net" };
-  
   if (conn.effectiveType === "4g") return { quality: "high", server: "vidsrc.cc" };
   return { quality: "medium", server: "vsrc.su" };
 }
@@ -80,7 +79,7 @@ function autoRotateBanner(items) {
 }
 
 /* =========================
-   MODAL & VIDEO LOGIC
+   MODAL & STREAMING LOGIC (NO YOUTUBE)
 ========================= */
 async function showDetails(item) {
   currentItem = item;
@@ -94,6 +93,7 @@ async function showDetails(item) {
   const type = item.media_type || (item.first_air_date ? "tv" : "movie");
   const tvControls = document.getElementById("tv-controls");
 
+  // Reset and Setup TV UI if applicable
   if (type === "tv") {
     tvControls.style.display = "block";
     await loadSeasons(item.id);
@@ -101,9 +101,11 @@ async function showDetails(item) {
     tvControls.style.display = "none";
   }
 
+  // Set default server based on internet speed
   const profile = getConnectionProfile();
   document.getElementById("server").value = profile.server;
   
+  // Go straight to the Movie/Show stream
   changeServer();
   document.getElementById("modal").style.display = "flex";
 }
@@ -127,7 +129,6 @@ async function loadEpisodes() {
     <div class="episode-card ${currentEpisode == ep.episode_number ? 'active' : ''}" 
          onclick="playEpisode(${ep.episode_number})">
       <h4>Ep ${ep.episode_number}</h4>
-      <p>${ep.name}</p>
     </div>
   `).join("");
 }
@@ -140,7 +141,7 @@ function playEpisode(epNum) {
 
 function changeServer() {
   const server = document.getElementById("server").value;
-  const type = currentItem.media_type === "movie" ? "movie" : "tv";
+  const type = (currentItem.media_type === "movie" || !currentItem.first_air_date) ? "movie" : "tv";
   let embedURL = "";
 
   if (server === "vidsrc.cc") {
@@ -162,7 +163,7 @@ function closeModal() {
 }
 
 /* =========================
-   SEARCH & THEME
+   SEARCH & INIT
 ========================= */
 async function searchTMDB() {
   const query = document.getElementById("search-input").value;
@@ -182,25 +183,25 @@ async function searchTMDB() {
 function openSearchModal() { document.getElementById("search-modal").style.display = "flex"; }
 function closeSearchModal() { document.getElementById("search-modal").style.display = "none"; }
 
-/* =========================
-   INIT
-========================= */
 async function init() {
-  const [movies, tv, anime] = await Promise.all([
-    fetchTrending("movie"),
-    fetchTrending("tv"),
-    fetchTrendingAnime()
-  ]);
-  autoRotateBanner(movies);
-  displayList(movies, "movies-list");
-  displayList(tv, "tvshows-list");
-  displayList(anime, "anime-list");
+  try {
+    const [movies, tv, anime] = await Promise.all([
+      fetchTrending("movie"),
+      fetchTrending("tv"),
+      fetchTrendingAnime()
+    ]);
+    autoRotateBanner(movies);
+    displayList(movies, "movies-list");
+    displayList(tv, "tvshows-list");
+    displayList(anime, "anime-list");
+  } catch (err) {
+    console.error("Initialization failed", err);
+  }
 }
 
 window.onload = init;
 
-// Service Worker Registration
+// Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
-   }
-
+}

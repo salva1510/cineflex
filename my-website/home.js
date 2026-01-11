@@ -130,26 +130,7 @@ async function getTrailer(id, type) {
       console.log("No videos found for", id, type);
       return null;
     }
-
-    // Prefer official Trailer
-    const trailer =
-      data.results.find(v => v.type === "Trailer" && v.site === "YouTube") ||
-      data.results.find(v => v.site === "YouTube");
-
-    if (!trailer) {
-      console.log("No YouTube trailer found for", id, type);
-      return null;
-    }
-
-    const url = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`;
-    console.log("Trailer URL:", url);
-    return url;
-  } catch (err) {
-    console.error("Error fetching trailer:", err);
-    return null;
-  }
-}
-
+    
 // 2) Add hover behavior to one poster image
 function attachTrailerHover(img, item) {
   let iframe;

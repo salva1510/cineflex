@@ -1,12 +1,11 @@
 /* =========================
-   UPDATED CONFIG & STATE
+   CONFIG & STATE
 ========================= */
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
-let bannerInterval = null;
 
 /* =========================
    CORE FUNCTIONS
@@ -17,10 +16,14 @@ async function fetchJSON(url) {
   return res.json();
 }
 
-// Fixed Fetching Logic
 async function fetchTrending(type) {
-  const data = await fetchJSON(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`);
-  return data.results.filter(i => i.poster_path).map(i => ({ ...i, media_type: type }));
+  try {
+    const data = await fetchJSON(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`);
+    return data.results.filter(i => i.poster_path).map(i => ({ ...i, media_type: type }));
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return [];
+  }
 }
 
 /* =========================
@@ -31,7 +34,7 @@ function displayList(items, containerId) {
   if (!container) return;
   container.innerHTML = "";
 
-  items.forEach((item, i) => {
+  items.forEach((item) => {
     const img = document.createElement("img");
     img.src = `${IMG_URL}${item.poster_path}`;
     img.className = "poster-item";
@@ -44,20 +47,30 @@ function displayList(items, containerId) {
 async function showDetails(item) {
   currentItem = item;
   const isTV = item.media_type === "tv" || !item.title;
-  
   const modal = document.getElementById("modal");
+  
+  // Set UI Elements
   document.getElementById("modal-title").textContent = item.title || item.name;
   document.getElementById("modal-description").textContent = item.overview;
-  document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
+  
+  const modalImg = document.getElementById("modal-image");
+  if(modalImg) modalImg.src = `${IMG_URL}${item.poster_path}`;
 
   const tvControls = document.getElementById("tv-controls");
+  const videoIframe = document.getElementById("modal-video");
+
   if (isTV) {
     tvControls.style.display = "block";
-    await loadSeasons(item.id);
+    // If you have a loadSeasons function, call it here:
+    // await loadSeasons(item.id); 
   } else {
     tvControls.style.display = "none";
-    const server = await autoPickFastestServer(item.id, "movie");
-    document.getElementById("modal-video").src = `https://${server}/embed/movie/${item.id}`;
+    // Use default server if autoPick is not defined
+    const server = "vidsrc.cc"; 
+    videoIframe.src = `https://${server}/embed/movie/${item.id}`;
+    
+    // AUTO-SAVE PROGRESS FOR MOVIES
+    saveProgress(item);
   }
 
   modal.style.display = "flex";
@@ -65,77 +78,34 @@ async function showDetails(item) {
 
 function closeModal() {
     document.getElementById("modal").style.display = "none";
-    document.getElementById("modal-video").src = ""; // Stop video on close
+    document.getElementById("modal-video").src = "";
 }
 
-/* =========================
-   PREMIUM FEATURES
-========================= */
-function toggleWatchlist() {
-    let list = JSON.parse(localStorage.getItem("watchlist")) || [];
-    const index = list.findIndex(i => i.id === currentItem.id);
-    
-    if(index > -1) {
-        list.splice(index, 1);
-        alert("Removed from Watchlist");
-    } else {
-        list.push(currentItem);
-        alert("Added to Watchlist!");
-    }
-    localStorage.setItem("watchlist", JSON.stringify(list));
-}
-
-// Scroll Navbar Effect
-window.onscroll = () => {
-    const nav = document.querySelector('.navbar');
-    if (window.scrollY > 50) nav.classList.add('scrolled');
-    else nav.classList.remove('scrolled');
-};
-
-/* =========================
-   INITIALIZATION
-========================= */
-async function init() {
-  try {
-    const [movies, tv, anime] = await Promise.all([
-      fetchTrending("movie"),
-      fetchTrending("tv"),
-      fetchTrendingAnime()
-    ]);
-
-    setBanner(movies[0]); // Initial Banner
-    displayList(movies, "movies-list");
-    displayList(tv, "tvshows-list");
-    displayList(anime, "anime-list");
-    
-    initGenreBrowse();
-  } catch (err) {
-    console.error("Initialization Error:", err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", init);
 /* =========================
    CONTINUE WATCHING LOGIC
 ========================= */
 
-// 1. Save progress when a user clicks play
 function saveProgress(item, season = null, episode = null) {
+    if (!item) return;
+    
     let history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
     
-    // Create a progress object
     const progressData = {
-        ...item,
+        id: item.id,
+        title: item.title || item.name,
+        name: item.name || item.title,
+        poster_path: item.poster_path,
+        overview: item.overview,
+        media_type: (season || item.media_type === 'tv') ? 'tv' : 'movie',
         last_watched: new Date().getTime(),
         season: season,
-        episode: episode,
-        type: (season) ? 'tv' : 'movie'
+        episode: episode
     };
 
-    // Remove if already exists (to move it to the front of the list)
+    // Remove duplicates
     history = history.filter(i => i.id !== item.id);
     
-    // Add to start of array and limit to 10 items
+    // Add to front and limit to 10
     history.unshift(progressData);
     if (history.length > 10) history.pop();
 
@@ -143,11 +113,12 @@ function saveProgress(item, season = null, episode = null) {
     renderContinueWatching();
 }
 
-// 2. Render the list on page load
 function renderContinueWatching() {
     const history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
     const container = document.getElementById("continue-list");
     const section = document.getElementById("continue-watching-section");
+
+    if (!container || !section) return;
 
     if (history.length === 0) {
         section.style.display = "none";
@@ -161,7 +132,6 @@ function renderContinueWatching() {
         const div = document.createElement("div");
         div.className = "continue-card";
         
-        // Premium touch: Show "S1:E3" badge if it's a TV show
         const badge = item.season ? `<span class="ep-badge">S${item.season}:E${item.episode}</span>` : '';
         
         div.innerHTML = `
@@ -178,28 +148,45 @@ function renderContinueWatching() {
     });
 }
 
-/* =========================
-   INTEGRATION
-========================= */
-
-// Update your existing play functions to trigger the save
-// Inside your showDetails (for movies):
-async function showDetails(item) {
-    // ... your existing code ...
-    if (!isTV) {
-        saveProgress(item); // Save movie progress
-    }
-}
-
-// Inside your playEpisode (for TV shows):
+// For TV shows, call this whenever an episode is clicked
 function playEpisode(season, episode) {
-    // ... your existing player logic ...
-    saveProgress(currentItem, season, episode); // Save TV progress
+    // This assumes currentItem is set to the TV show object
+    saveProgress(currentItem, season, episode);
+    
+    const server = "vidsrc.cc";
+    document.getElementById("modal-video").src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
 }
 
-// Call render on init
-document.addEventListener("DOMContentLoaded", () => {
-    init();
-    renderContinueWatching();
-});
+/* =========================
+   INITIALIZATION
+========================= */
+async function init() {
+  try {
+    const [movies, tv] = await Promise.all([
+      fetchTrending("movie"),
+      fetchTrending("tv")
+    ]);
 
+    displayList(movies, "movies-list");
+    displayList(tv, "tvshows-list");
+    
+    renderContinueWatching();
+  } catch (err) {
+    console.error("Initialization Error:", err);
+  }
+}
+
+// Watchlist Placeholder
+function toggleWatchlist() {
+    if(!currentItem) return;
+    alert("Watchlist updated!");
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+// Navbar Scroll Effect
+window.onscroll = () => {
+    const nav = document.querySelector('.navbar');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+};

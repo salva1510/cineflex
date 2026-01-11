@@ -118,59 +118,6 @@ function autoRotateBanner(items) {
 /* =========================
    LIST RENDERING
 ========================= */
-// Get trailer URL from TMDB
-// 1) Ask TMDB for a trailer and return a YouTube URL
-async function getTrailer(id, type) {
-  try {
-    const data = await fetchJSON(
-      `${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`
-    );
-
-    if (!data.results || !data.results.length) {
-      console.log("No videos found for", id, type);
-      return null;
-    }
-    
-// 2) Add hover behavior to one poster image
-function attachTrailerHover(img, item) {
-  let iframe;
-
-  img.addEventListener("mouseenter", async () => {
-    // Avoid creating multiple iframes if you wiggle the mouse
-    if (iframe) return;
-
-    const type = item.media_type || (item.first_air_date ? "tv" : "movie");
-    const url = await getTrailer(item.id, type);
-    if (!url) return; // no trailer, do nothing
-
-    iframe = document.createElement("iframe");
-    iframe.src = url;
-    iframe.className = "hover-trailer";
-    iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("allow", "autoplay; encrypted-media");
-    iframe.setAttribute("allowfullscreen", "true");
-
-    // SIMPLE: put trailer right under the poster for now
-    iframe.style.display = "block";
-    iframe.style.width = "100%";
-    iframe.style.height = "180px";
-    iframe.style.marginTop = "5px";
-
-    // Wrap img + iframe in a small container
-    const wrapper = document.createElement("div");
-    wrapper.style.display = "flex";
-    wrapper.style.flexDirection = "column";
-    wrapper.style.alignItems = "center";
-
-    img.parentElement.insertBefore(wrapper, img);
-    wrapper.appendChild(img);
-    wrapper.appendChild(iframe);
-  });
-
-  img.addEventListener("mouseleave", () => {
-    if (iframe) {
-      iframe.remove();
-      iframe = null;
       // We do NOT unwrap img for simplicity – it still works fine
     }
   });
@@ -194,9 +141,7 @@ function displayList(items, containerId) {
     img.onclick = () => showDetails(item);
 
     // Hover: show trailer (IMPORTANT)
-    attachTrailerHover(img, item);
-
-    container.appendChild(img);
+    
   });
 }
 

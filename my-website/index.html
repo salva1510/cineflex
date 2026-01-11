@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineFlex</title>
+  <title>CineFlex | Watch Movies & TV</title>
   <link rel="stylesheet" href="css/home.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e50914">
   <script defer src="js/home.js"></script>
 </head>
 <body>
+  
   <div class="navbar">
     <div class="logo">CINEFLEX</div>
     <div class="nav-links">
@@ -18,7 +19,9 @@
   </div>
 
   <div class="banner" id="banner">
-    <h1 id="banner-title"></h1>
+    <div class="banner-content">
+      <h1 id="banner-title"></h1>
+    </div>
   </div>
 
   <div class="row">
@@ -39,51 +42,52 @@
   <div class="modal" id="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <div class="modal-body">
-        <img id="modal-image" src="" alt="" />
+      
+      <div class="modal-header">
+        <img id="modal-image" src="" alt="poster" />
         <div class="modal-text">
           <h2 id="modal-title"></h2>
-          <div class="stars" id="modal-rating"></div>
           <p id="modal-description"></p>
         </div>
       </div>
 
-      <div id="tv-controls" style="display:none;">
-        <div class="season-selector">
-          <label>Season:</label>
-          <select id="seasonSelect" onchange="loadEpisodes()"></select>
+      <div class="player-controls">
+        <div id="tv-controls" style="display:none;">
+          <div class="season-selector">
+            <label>Season:</label>
+            <select id="seasonSelect" onchange="loadEpisodes()"></select>
+          </div>
+          <div id="episodes" class="episodes-grid"></div>
         </div>
-        <div id="episodes" class="episodes-grid"></div>
+
+        <div class="server-selector">
+          <label>Server:</label>
+          <select id="server" onchange="changeServer()">
+            <option value="vidsrc.cc">Primary Server (Fast)</option>
+            <option value="vsrc.su">Alternative Server</option>
+            <option value="player.videasy.net">Lite Server (Save Data)</option>
+          </select>
+        </div>
       </div>
 
-      <div class="server-selector">
-        <label>Server:</label>
-        <select id="server" onchange="changeServer()">
-          <option value="vidsrc.cc">Ultra High Speed</option>
-          <option value="vsrc.su">Standard Server</option>
-          <option value="player.videasy.net">Lite (Mobile Data)</option>
-        </select>
+      <div class="video-container">
+        <iframe id="modal-video" src="" frameborder="0" allowfullscreen></iframe>
       </div>
-      <iframe id="modal-video" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 
   <div class="search-modal" id="search-modal">
     <span class="close" onclick="closeSearchModal()">&times;</span>
-    <input type="text" id="search-input" placeholder="Search..." oninput="searchTMDB()" />
-    <div class="results" id="search-results"></div>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Type movie name..." oninput="searchTMDB()" />
+      <div class="results" id="search-results"></div>
+    </div>
   </div>
 
   <footer class="footer">
-    <button id="installBtn" style="display:none;">📲 Install CineFlex</button>
-    <div class="footer-content">
-      <p>&copy; 2025 CineFlex. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="copyright-policy.html">Copyright Policy</a>
-        <a href="copyright-policy.html#dmca">DMCA</a>
-      </div>
-    </div>
+    <button id="installBtn" style="display:none;">📲 Install App</button>
+    <p>&copy; 2025 CineFlex. <a href="copyright-policy.html">Policy & DMCA</a></p>
   </footer>
+
 </body>
 </html>
-

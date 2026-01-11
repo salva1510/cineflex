@@ -82,54 +82,16 @@ body {
 .scroll-btn.right { right: 0; }
 
 /* MODAL */
-./* Ensure the modal is a stacking context */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 2000; /* Higher than navbar */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.95);
-  justify-content: center;
-  align-items: center;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000;
 }
+.modal-content {
+  background: #181818; width: 90%; max-width: 950px; border-radius: 12px;
+  overflow: hidden; position: relative;
+}
+.close { position: absolute; top: 20px; right: 25px; font-size: 35px; color: white; cursor: pointer; z-index: 10; }
 
-/* THE FIX: Fixed Close Button Position */
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: #fff;
-  font-size: 40px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 3000; /* Ensure it is ABOVE the video iframe */
-  transition: transform 0.2s ease, color 0.2s ease;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent circle */
-  border-radius: 50%;
-}
-
-.close-btn:hover {
-  color: #e50914; /* CineFlex Red */
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* Desktop optimization for the Modal Content */
-@media (min-width: 768px) {
-  .modal-content {
-    width: 80%;
-    max-width: 1000px;
-    position: relative;
-  }
-}
 .modal-video-wrapper { position: relative; padding-top: 56.25%; background: black; }
 .modal-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
@@ -166,86 +128,3 @@ body {
 
 .footer { padding: 60px 4%; text-align: center; color: var(--text-dim); border-top: 1px solid #222; }
 .footer-links a { color: var(--text-dim); text-decoration: none; margin: 0 15px; font-size: 0.9rem; }
-/* Keep your existing premium styles, just add/ensure these are there */
-:root { --bg-pure: #000; --accent: #e50914; --text-main: #fff; }
-body { background: var(--bg-pure); color: var(--text-main); font-family: sans-serif; margin: 0; }
-
-.navbar { position: fixed; width: 100%; padding: 20px 4%; z-index: 100; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
-.logo { color: var(--accent); font-weight: bold; font-size: 24px; letter-spacing: 2px; }
-
-.banner { height: 80vh; background-size: cover; background-position: center; display: flex; align-items: center; padding: 4%; }
-.banner-content h1 { font-size: 4rem; margin-bottom: 20px; }
-.btn-play { background: #fff; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-.btn-info { background: rgba(109,109,110,0.7); color: #fff; border: none; padding: 10px 25px; margin-left: 10px; border-radius: 4px; cursor: pointer; }
-
-.content-wrapper { margin-top: -100px; padding-bottom: 100px; position: relative; z-index: 10; }
-.row { margin-bottom: 30px; }
-.row h2 { margin-left: 4%; font-size: 1.2rem; margin-bottom: 10px; color: #e5e5e5; }
-.row-list { display: flex; gap: 10px; overflow-x: auto; padding: 10px 4%; scrollbar-width: none; }
-.row-list::-webkit-scrollbar { display: none; }
-.poster-item { width: 180px; border-radius: 4px; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
-.poster-item:hover { transform: scale(1.1); z-index: 20; }
-
-/* Modal */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; z-index: 1000; justify-content: center; align-items: center; }
-.modal-content { background: #181818; width: 90%; max-width: 900px; border-radius: 8px; overflow: hidden; position: relative; }
-.close { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; z-index: 10; }
-.modal-video-wrapper { padding-top: 56.25%; position: relative; background: #000; }
-.modal-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-.modal-details { padding: 20px; display: flex; gap: 20px; }
-.modal-body img { width: 150px; border-radius: 4px; }
-.episodes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 15px; max-height: 150px; overflow-y: auto; }
-.episode-card { background: #333; padding: 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; }
-
-.search-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; padding-top: 100px; }
-.search-modal input { width: 80%; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: #fff; font-size: 2rem; outline: none; }
-/* Premium Category & Row Styling */
-.category-controls { padding: 0 4% 15px 4%; }
-.category-controls select {
-  background: #000;
-  color: #fff;
-  border: 1px solid #444;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  outline: none;
-}
-
-.category-controls select:hover { border-color: #e50914; }
-
-#continue-row { border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 40px; }
-/* Episode Grid Styling */
-.episodes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  gap: 10px;
-  max-height: 150px;
-  overflow-y: auto;
-  margin-top: 10px;
-}
-.episode-item {
-  background: #333;
-  padding: 8px;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-}
-.episode-item:hover { background: #e50914; }
-
-/* Fixed Desktop Close Button */
-.desktop-close {
-  position: fixed;
-  top: 20px;
-  right: 40px;
-  font-size: 50px;
-  color: white;
-  cursor: pointer;
-  z-index: 2100;
-  text-shadow: 0 0 10px rgba(0,0,0,0.8);
-}
-
-@media (max-width: 768px) {
-  .desktop-close { right: 20px; font-size: 40px; }
-}

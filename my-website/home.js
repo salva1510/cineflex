@@ -149,74 +149,57 @@ function displayList(items, containerId) {
    MODAL
 ========================= */
 function showDetails(item) {
-   async function showDetails(item) {
+async function showDetails(item) {
   currentItem = item;
+  const isTV = item.media_type === "tv" || !item.title; // TMDB TV shows use 'name', not 'title'
 
-  document.getElementById("modal-title").textContent =
-    item.title || item.name;
-  document.getElementById("modal-description").textContent =
-    item.overview || "No description available.";
-  document.getElementById("modal-image").src =
-    `${IMG_URL}${item.poster_path}`;
+  document.getElementById("modal-title").textContent = item.title || item.name;
+  document.getElementById("modal-description").textContent = item.overview || "No description available.";
+  document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
 
   const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML =
-    "★".repeat(stars) + "☆".repeat(5 - stars);
+  document.getElementById("modal-rating").innerHTML = "★".repeat(stars) + "☆".repeat(5 - stars);
 
-  const type = item.media_type === "movie" ? "movie" : "tv";
-  const fastestServer = await autoPickFastestServer(item.id, type);
-
-  document.getElementById("server").value = fastestServer || "vidsrc.cc";
-  changeServer();
+  const tvControls = document.getElementById("tv-controls");
+  
+  if (isTV) {
+    tvControls.style.display = "block";
+    await loadSeasons(item.id);
+  } else {
+    tvControls.style.display = "none";
+    const type = "movie";
+    const fastestServer = await autoPickFastestServer(item.id, type);
+    document.getElementById("server").value = fastestServer || "vidsrc.cc";
+    changeServer();
+  }
 
   document.getElementById("modal").style.display = "flex";
-}
-  currentItem = item;
-
-  document.getElementById("modal-title").textContent =
-    item.title || item.name;
-  document.getElementById("modal-description").textContent =
-    item.overview || "No description available.";
-  document.getElementById("modal-image").src =
-    `${IMG_URL}${item.poster_path}`;
-
-  const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML =
-    "★".repeat(stars) + "☆".repeat(5 - stars);
-
-  // 🔥 Bandwidth-aware server selection
-  const profile = getConnectionProfile();
-  document.getElementById("server").value = profile.server;
-
-  changeServer();
-  document.getElementById("modal").style.display = "flex";
-}
-  function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  document.getElementById("modal-video").src = "";
 }
    
 /* =========================
    VIDEO SERVERS
 ========================= */
-function changeServer() {
+function playEpisode(season, episode) {
   const server = document.getElementById("server").value;
-  const type = currentItem.media_type === "movie" ? "movie" : "tv";
   let embedURL = "";
 
+  // Update global tracking (optional)
+  currentSeason = season;
+  currentEpisode = episode;
+
   if (server === "vidsrc.cc") {
-    embedURL = `https://vidsrc.cc/v2/embed/${type}/${currentItem.id}`;
-
+    embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}`;
   } else if (server === "vsrc.su") {
-    // ✅ vsrc.su embed
-    embedURL = `https://vsrc.su/embed/${type}/${currentItem.id}`;
-
+    embedURL = `https://vsrc.su/embed/tv/${currentItem.id}/${season}/${episode}`;
   } else if (server === "player.videasy.net") {
-    embedURL = `https://player.videasy.net/${type}/${currentItem.id}`;
+    embedURL = `https://player.videasy.net/tv/${currentItem.id}/${season}/${episode}`;
   }
 
-  const iframe = document.getElementById("modal-video");
-  iframe.src = embedURL;
+  document.getElementById("modal-video").src = embedURL;
+  
+  // Highlight active episode card
+  document.querySelectorAll('.episode-card').forEach(card => card.classList.remove('active'));
+  event.currentTarget.classList.add('active');
 }
 
 
@@ -509,6 +492,59 @@ document.getElementById("installBtn")?.addEventListener("click", async () => {
 let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
+
+   async function loadSeasons(tvId) {
+  try {
+    const data = await fetchJSON(`${BASE_URL}/tv/${tvId}?api_key=${API_KEY}`);
+    const select = document.getElementById("seasonSelect");
+    select.innerHTML = "";
+
+    data.seasons.forEach(season => {
+      // Filter out 'Specials' (Season 0) if desired
+      if (season.season_number > 0) {
+        const option = document.createElement("option");
+        option.value = season.season_number;
+        option.textContent = `Season ${season.season_number}`;
+        select.appendChild(option);
+      }
+    });
+
+    // Automatically load the first season's episodes
+    if (data.seasons.length > 0) {
+      loadEpisodes();
+    }
+  } catch (err) {
+    console.error("Error fetching seasons:", err);
+  }
+}
+
+async function loadEpisodes() {
+  const tvId = currentItem.id;
+  const seasonNum = document.getElementById("seasonSelect").value;
+  const episodeContainer = document.getElementById("episodes");
+  
+  episodeContainer.innerHTML = "<p>Loading episodes...</p>";
+
+  try {
+    const data = await fetchJSON(`${BASE_URL}/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}`);
+    episodeContainer.innerHTML = "";
+
+    data.episodes.forEach(ep => {
+      const epCard = document.createElement("div");
+      epCard.className = "episode-card";
+      epCard.innerHTML = `
+        <h4>EP ${ep.episode_number}: ${ep.name}</h4>
+        <p>${ep.air_date || "N/A"}</p>
+      `;
+      
+      epCard.onclick = () => playEpisode(seasonNum, ep.episode_number);
+      episodeContainer.appendChild(epCard);
+    });
+  } catch (err) {
+    episodeContainer.innerHTML = "<p>Error loading episodes.</p>";
+  }
+}
+   
 
 
 

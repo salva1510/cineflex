@@ -44,9 +44,10 @@ function displayList(items, containerId) {
   });
 }
 
+// Fixed showDetails to handle both movies and TV correctly
 async function showDetails(item) {
   currentItem = item;
-  const isTV = item.media_type === "tv" || !item.title;
+  const isTV = item.media_type === "tv" || (!item.title && item.name);
   const modal = document.getElementById("modal");
   
   // Set UI Elements
@@ -61,15 +62,16 @@ async function showDetails(item) {
 
   if (isTV) {
     tvControls.style.display = "block";
-    // If you have a loadSeasons function, call it here:
-    // await loadSeasons(item.id); 
+    // If you have a function to load episodes, call it here
+    if (typeof loadSeasons === "function") {
+        await loadSeasons(item.id);
+    }
   } else {
     tvControls.style.display = "none";
-    // Use default server if autoPick is not defined
-    const server = "vidsrc.cc"; 
+    const server = "vidsrc.cc"; // Default premium server
     videoIframe.src = `https://${server}/embed/movie/${item.id}`;
     
-    // AUTO-SAVE PROGRESS FOR MOVIES
+    // SAVE PROGRESS IMMEDIATELY FOR MOVIES
     saveProgress(item);
   }
 
@@ -85,6 +87,7 @@ function closeModal() {
    CONTINUE WATCHING LOGIC
 ========================= */
 
+// Saves the item to LocalStorage
 function saveProgress(item, season = null, episode = null) {
     if (!item) return;
     
@@ -102,10 +105,10 @@ function saveProgress(item, season = null, episode = null) {
         episode: episode
     };
 
-    // Remove duplicates
+    // Remove duplicates to move the item to the top of the list
     history = history.filter(i => i.id !== item.id);
     
-    // Add to front and limit to 10
+    // Add to start and limit to 10 items
     history.unshift(progressData);
     if (history.length > 10) history.pop();
 
@@ -113,6 +116,7 @@ function saveProgress(item, season = null, episode = null) {
     renderContinueWatching();
 }
 
+// Renders the Continue Watching row in the UI
 function renderContinueWatching() {
     const history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
     const container = document.getElementById("continue-list");
@@ -132,6 +136,7 @@ function renderContinueWatching() {
         const div = document.createElement("div");
         div.className = "continue-card";
         
+        // Show S:E badge for TV shows
         const badge = item.season ? `<span class="ep-badge">S${item.season}:E${item.episode}</span>` : '';
         
         div.innerHTML = `
@@ -148,12 +153,12 @@ function renderContinueWatching() {
     });
 }
 
-// For TV shows, call this whenever an episode is clicked
+// Call this function when an episode is clicked in your TV menu
 function playEpisode(season, episode) {
-    // This assumes currentItem is set to the TV show object
+    if(!currentItem) return;
     saveProgress(currentItem, season, episode);
     
-    const server = "vidsrc.cc";
+    const server = document.getElementById("server")?.value || "vidsrc.cc";
     document.getElementById("modal-video").src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
 }
 
@@ -170,18 +175,30 @@ async function init() {
     displayList(movies, "movies-list");
     displayList(tv, "tvshows-list");
     
+    // Initial render of saved progress
     renderContinueWatching();
   } catch (err) {
     console.error("Initialization Error:", err);
   }
 }
 
-// Watchlist Placeholder
+// Simple Watchlist function
 function toggleWatchlist() {
     if(!currentItem) return;
-    alert("Watchlist updated!");
+    let list = JSON.parse(localStorage.getItem("watchlist")) || [];
+    const index = list.findIndex(i => i.id === currentItem.id);
+    
+    if(index > -1) {
+        list.splice(index, 1);
+        alert("Removed from Watchlist");
+    } else {
+        list.push(currentItem);
+        alert("Added to Watchlist!");
+    }
+    localStorage.setItem("watchlist", JSON.stringify(list));
 }
 
+// Initialize on load
 document.addEventListener("DOMContentLoaded", init);
 
 // Navbar Scroll Effect

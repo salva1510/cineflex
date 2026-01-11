@@ -1,29 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+ <html lang="en">  
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineFlex | Watch Movies & TV</title>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "GA4|518331318");
+  </script>
+
+  <!-- your other links & scripts -->
   <link rel="stylesheet" href="css/home.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#e50914">
   <script defer src="js/home.js"></script>
 </head>
+<script id="usercentrics-cmp" src="https://app.usercentrics.eu/browser-ui/latest/loader.js" data-settings-id="IrK8AcZTMHWB0B" async></script> 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WGQFTDMHGY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WGQFTDMHGY');
+</script>
+  <script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var z=window,q="c1bb3d7d5273875b258c3a3af3c80e65",p=[["siteId",608+747-197*691+5400815],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],l=["d3d3LmRpc3BsYXl2ZXJ0aXNpbmcuY29tL2xmUUJaL216L3Ntb2Rlc3RtYXBzLm1pbi5qcw==","ZDNtem9rdHk5NTFjNXcuY2xvdWRmcm9udC5uZXQvb25hdGl2ZS5oaXN0b3J5Lm1pbi5qcw=="],c=-1,v,g,s=function(){clearTimeout(g);c++;if(l[c]&&!(1793314992000<(new Date).getTime()&&1<c)){v=z.document.createElement("script");v.type="text/javascript";v.async=!0;var m=z.document.getElementsByTagName("script")[0];v.src="https://"+atob(l[c]);v.crossOrigin="anonymous";v.onerror=s;v.onload=function(){clearTimeout(g);z[q.slice(0,16)+q.slice(0,16)]||s()};g=setTimeout(s,5E3);m.parentNode.insertBefore(v,m)}};if(!z[q]){try{Object.freeze(z[q]=p)}catch(e){}s()}})();
+/*]]>/* */
+</script>
+  <meta name="theme-color" content="#e50914">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CineFlex">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="application-name" content="CineFlex">
+<meta name="apple-mobile-web-app-title" content="CineFlex">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineFlex</title>
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" href="css/home.css" as="style">
+  <link rel="preload" href="js/home.js" as="script">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script defer src="js/home.js"></script>
+  <script src="https://pl28389725.effectivegatecpm.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js"></script>
+</head>
 <body>
-  
   <div class="navbar">
-    <div class="logo">CINEFLEX</div>
+    <div class="logo netflix-intro">
+  <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
+</div>
     <div class="nav-links">
-      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
-    </div>
+  <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
+</div>
   </div>
-
   <div class="banner" id="banner">
-    <div class="banner-content">
-      <h1 id="banner-title"></h1>
-    </div>
+    <h1 id="banner-title"></h1>
   </div>
-
   <div class="row">
     <h2>Trending Movies</h2>
     <div class="list" id="movies-list"></div>
@@ -33,61 +66,234 @@
     <h2>Trending TV Shows</h2>
     <div class="list" id="tvshows-list"></div>
   </div>
-
   <div class="row">
     <h2>Trending Anime</h2>
     <div class="list" id="anime-list"></div>
   </div>
+  <!-- BROWSE BY CATEGORY (MOVIES) -->
+<div class="row" id="browse-category-row">
+  <h2>Browse by Category</h2>
 
+  <div class="category-controls">
+    <label for="genre-select">Genre:</label>
+    <select id="genre-select">
+      <option value="">Loading genres...</option>
+    </select>
+  </div>
+  <div class="list" id="genre-movies-list"></div>
+</div>
   <div class="modal" id="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      
-      <div class="modal-header">
-        <img id="modal-image" src="" alt="poster" />
-        <div class="modal-text">
-          <h2 id="modal-title"></h2>
-          <p id="modal-description"></p>
-        </div>
+      <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
+      <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
+  <div id="episodes" class="episodes-grid"></div>
+</div>
+      <div class="modal-body">
+  <img id="modal-image" src="" alt="" />
+  <div class="modal-text">
+    <h2 id="modal-title"></h2>
+    <div class="stars" id="modal-rating"></div>
+    <p id="modal-description"></p>
+  </div>
+</div>
+      <div class="server-selector">
+        <!-- Seasons & Episodes -->
+<div id="tv-controls" style="display:none;">
+  <div class="season-selector">
+    <label>Season</label>
+    <select id="seasonSelect" onchange="loadEpisodes()"></select>
+  </div>
+  <div id="episodes" class="episodes-grid"></div>
+</div>
+        <label for="server">Change Server:</label>
+        <select id="server" onchange="changeServer()">
+  <option value="vidsrc.cc">CineFlex Ultra</option>
+  <option value="vsrc.su">CineFlex Plus</option>
+  <option value="player.videasy.net">CineFlex Lite</option>
+</select>
       </div>
-
-      <div class="player-controls">
-        <div id="tv-controls" style="display:none;">
-          <div class="season-selector">
-            <label>Season:</label>
-            <select id="seasonSelect" onchange="loadEpisodes()"></select>
-          </div>
-          <div id="episodes" class="episodes-grid"></div>
-        </div>
-
-        <div class="server-selector">
-          <label>Server:</label>
-          <select id="server" onchange="changeServer()">
-            <option value="vidsrc.cc">Primary Server (Fast)</option>
-            <option value="vsrc.su">Alternative Server</option>
-            <option value="player.videasy.net">Lite Server (Save Data)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="video-container">
-        <iframe id="modal-video" src="" frameborder="0" allowfullscreen></iframe>
-      </div>
+      <iframe id="modal-video" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
-
   <div class="search-modal" id="search-modal">
-    <span class="close" onclick="closeSearchModal()">&times;</span>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Type movie name..." oninput="searchTMDB()" />
-      <div class="results" id="search-results"></div>
+    <span class="close" onclick="closeSearchModal()" style="color: red;">&times;</span>
+    <input type="text" id="search-input" placeholder="Search for a movie or show..." oninput="searchTMDB()" />
+    <div class="results" id="search-results"></div>
+  </div>
+<footer class="footer">
+  <button id="installBtn" style="display:none;">📲 Install App</button>
+  <div class="footer-content">
+    <div class="footer-links">
+      <!-- Removed links to Disclaimer, About Us, and Contact Us -->
     </div>
   </div>
-
   <footer class="footer">
-    <button id="installBtn" style="display:none;">📲 Install App</button>
-    <p>&copy; 2025 CineFlex. <a href="copyright-policy.html">Policy & DMCA</a></p>
-  </footer>
-
+   <button id="installBtn" style="display:none;">📲 Install App</button>
+  <div class="footer-content">
+    <p>&copy; 2025 CineFlex. All rights reserved.</p>
+    <div class="footer-links">
+      <!-- Add the copyright policy link -->
+      <a href="/copyright-policy.html">Copyright Policy</a>
+    </div>
+  </div>
+    <a href="/copyright-policy.html">Dmca Complaint</a>
+<a href="/copyright-policy.html">Dmca Contact</a>
+</footer>
+<button id="theme-toggle">🌙</button>
 </body>
-</html>
+  <div class="row">
+  <button class="scroll-btn left">‹</button>
+  <div class="row-list" id="movies-list"></div>
+  <button class="scroll-btn right">›</button>
+</div>
+  <div class="preview-card">
+  <img src="POSTER.jpg" class="poster">
+  <video
+    class="preview-video"
+    muted
+    loop
+    playsinline
+    preload="none"
+  >
+    <source src="preview-low.mp4" type="video/mp4">
+  </video>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

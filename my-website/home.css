@@ -473,35 +473,6 @@ body {
 .episode-card.active {
   border: 2px solid red;
 }
-.episodes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 10px;
-  max-height: 150px;
-  overflow-y: auto;
-  margin: 15px 0;
-  padding: 10px;
-  background: #111;
-  border-radius: 5px;
-}
-
-.episode-card {
-  background: #333;
-  padding: 8px;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.episode-card.active {
-  background: red;
-  color: white;
-}
-
-.episode-card h4 { margin-bottom: 2px; }
-.episode-card p { font-size: 10px; opacity: 0.7; }
-
 
 
 

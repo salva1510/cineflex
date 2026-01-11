@@ -115,3 +115,91 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+/* =========================
+   CONTINUE WATCHING LOGIC
+========================= */
+
+// 1. Save progress when a user clicks play
+function saveProgress(item, season = null, episode = null) {
+    let history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
+    
+    // Create a progress object
+    const progressData = {
+        ...item,
+        last_watched: new Date().getTime(),
+        season: season,
+        episode: episode,
+        type: (season) ? 'tv' : 'movie'
+    };
+
+    // Remove if already exists (to move it to the front of the list)
+    history = history.filter(i => i.id !== item.id);
+    
+    // Add to start of array and limit to 10 items
+    history.unshift(progressData);
+    if (history.length > 10) history.pop();
+
+    localStorage.setItem("cineflex_history", JSON.stringify(history));
+    renderContinueWatching();
+}
+
+// 2. Render the list on page load
+function renderContinueWatching() {
+    const history = JSON.parse(localStorage.getItem("cineflex_history")) || [];
+    const container = document.getElementById("continue-list");
+    const section = document.getElementById("continue-watching-section");
+
+    if (history.length === 0) {
+        section.style.display = "none";
+        return;
+    }
+
+    section.style.display = "block";
+    container.innerHTML = "";
+
+    history.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "continue-card";
+        
+        // Premium touch: Show "S1:E3" badge if it's a TV show
+        const badge = item.season ? `<span class="ep-badge">S${item.season}:E${item.episode}</span>` : '';
+        
+        div.innerHTML = `
+            <div class="poster-wrapper">
+                <img src="${IMG_URL}${item.poster_path}" class="poster-item">
+                ${badge}
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+            <p class="continue-title">${item.title || item.name}</p>
+        `;
+        
+        div.onclick = () => showDetails(item);
+        container.appendChild(div);
+    });
+}
+
+/* =========================
+   INTEGRATION
+========================= */
+
+// Update your existing play functions to trigger the save
+// Inside your showDetails (for movies):
+async function showDetails(item) {
+    // ... your existing code ...
+    if (!isTV) {
+        saveProgress(item); // Save movie progress
+    }
+}
+
+// Inside your playEpisode (for TV shows):
+function playEpisode(season, episode) {
+    // ... your existing player logic ...
+    saveProgress(currentItem, season, episode); // Save TV progress
+}
+
+// Call render on init
+document.addEventListener("DOMContentLoaded", () => {
+    init();
+    renderContinueWatching();
+});
+

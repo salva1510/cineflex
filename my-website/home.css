@@ -369,14 +369,6 @@ body {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
 }
-.hover-trailer {
-  position: absolute;
-  width: 320px;
-  height: 180px;
-  z-index: 20;
-  border-radius: 10px;
-  pointer-events: none;
-}
 .logo {
   font-size: 26px;
   font-weight: bold;

@@ -286,7 +286,7 @@ async function initGenreBrowse() {
 const toggleBtn = document.getElementById("theme-toggle");
 toggleBtn.onclick = () => {
   const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "dark" ? "light" : "dark";
+  const next = current === "dark" ? "light" : "light";
   document.documentElement.setAttribute("data-theme", next);
 };
 

@@ -1,73 +1,145 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Netflix Style UI</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#000;
-  --text:#fff;
-  --muted:#b3b3b3;
-  --accent:#e50914;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui;background:var(--bg);color:var(--text)}/* NAV */ .nav{position:fixed;top:0;left:0;width:100%;padding:16px 5%;z-index:50; background:linear-gradient(to bottom,rgba(0,0,0,.85),transparent); display:flex;justify-content:space-between;align-items:center} .logo{font-size:1.8rem;font-weight:800;color:var(--accent)}
-
-/* HERO */ .hero{position:relative;height:100vh;overflow:hidden} .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover} .hero::after{content:"";position:absolute;inset:0; background:linear-gradient(to top,#000 10%,transparent 60%), linear-gradient(to right,#000 10%,transparent 60%)} .hero-content{position:absolute;bottom:18%;left:5%;max-width:520px;z-index:2} .hero h1{font-size:3rem;font-weight:800;margin-bottom:12px} .hero p{color:var(--muted);margin-bottom:20px} .hero .btns{display:flex;gap:12px} .btn{padding:12px 22px;border-radius:4px;font-weight:600;cursor:pointer;border:none} .btn-play{background:#fff;color:#000} .btn-info{background:rgba(109,109,110,.7);color:#fff}
-
-/* ROWS */ .main{margin-top:-120px;position:relative;z-index:10} .row{margin-bottom:30px} .row h2{padding:0 5%;margin-bottom:10px} .row-list{display:flex;gap:14px;padding:0 5%;overflow-x:auto} .card{min-width:180px;height:270px;border-radius:8px;overflow:hidden;cursor:pointer;transition:.3s} .card img{width:100%;height:100%;object-fit:cover} .card:hover{transform:scale(1.1)}
-
-/* MODAL */ .modal{position:fixed;inset:0;display:none;z-index:100} .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.85)} .modal-box{position:relative;width:92%;max-width:1100px;margin:auto;top:6%;background:#111;border-radius:14px;overflow:hidden} .video-wrap{aspect-ratio:16/9;background:#000} .video-wrap iframe{width:100%;height:100%} .close{position:fixed;top:20px;right:20px;width:56px;height:56px;border-radius:50%; background:rgba(0,0,0,.85);font-size:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200} .close:hover{background:var(--accent)} .modal-info{padding:24px}
-
-@media(max-width:768px){ .hero h1{font-size:2.1rem} .card{min-width:140px;height:210px} } </style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineFlex | Premium Streaming</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#e50914">
 </head>
-<body><div class="nav">
-  <div class="logo">NETFLIX UI</div>
-</div><section class="hero">
-  <video autoplay muted loop playsinline>
-    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-  </video>
-  <div class="hero-content">
-    <h1>Featured Movie</h1>
-    <p>Autoplay muted background video. Real Netflix-style hero behavior.</p>
-    <div class="btns">
-      <button class="btn btn-play" onclick="openModal()">▶ Play</button>
-      <button class="btn btn-info">More Info</button>
+<body data-theme="dark">
+
+  <nav class="navbar">
+    <div class="logo netflix-intro">
+      <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
+    </div>
+    <div class="nav-actions">
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" class="search-trigger" id="search-bar-trigger" placeholder="Search movies, TV shows..." onfocus="openSearchModal()" />
+      </div>
+      
+    </div>
+  </nav>
+
+  <section class="banner" id="banner">
+    <div class="banner-content">
+      <h1 id="banner-title">Loading...</h1>
+      <p id="banner-desc">Discover the latest trending entertainment.</p>
+    </div>
+  </section>
+
+  <main class="content-wrapper">
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending Movies</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('movies-list', -500)">‹</button>
+        <div class="list row-list" id="movies-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('movies-list', 500)">›</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending TV Shows</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('tvshows-list', -500)">‹</button>
+        <div class="list row-list" id="tvshows-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending Anime</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('anime-list', -500)">‹</button>
+        <div class="list row-list" id="anime-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('anime-list', 500)">›</button>
+      </div>
+    </div>
+
+    <div class="row" id="browse-category-row">
+      <div class="row-header">
+        <h2>Browse by Genre</h2>
+        <select id="genre-select" class="premium-select">
+          <option value="">Loading genres...</option>
+        </select>
+      </div>
+      <div class="list row-list" id="genre-movies-list"></div>
+    </div>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      
+      <div class="video-container">
+        <iframe id="modal-video" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <div class="modal-details">
+        <div class="modal-info-grid">
+          <img id="modal-image" src="" alt="" class="modal-poster" />
+          <div class="modal-text">
+            <h2 id="modal-title"></h2>
+            <div class="modal-meta">
+              <span class="stars" id="modal-rating"></span>
+            </div>
+            <p id="modal-description"></p>
+            
+            <div class="selector-group">
+              <label><i class="fa-solid fa-server"></i> Server</label>
+              <select id="server" class="premium-select" onchange="changeServer()">
+                <option value="player.videasy.net"Salva</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="tv-controls" class="tv-controls" style="display:none;">
+          <div class="season-header">
+            <h3>Episodes</h3>
+            <select id="seasonSelect" class="premium-select" onchange="loadEpisodes()"></select>
+          </div>
+          <div id="episodes" class="episodes-grid"></div>
+        </div>
+      </div>
     </div>
   </div>
-</section><main class="main">
-  <div class="row">
-    <h2>Trending Now</h2>
-    <div class="row-list">
-      <div class="card" onclick="openModal()"><img src="https://image.tmdb.org/t/p/w500/8Y43POKjjKDGI9MH89NW0NAzzp8.jpg"></div>
-      <div class="card"><img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"></div>
-      <div class="card"><img src="https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg"></div>
-      <div class="card"><img src="https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg"></div>
+
+  <div class="search-modal" id="search-modal">
+    <div class="search-nav">
+      <input type="text" id="search-input" placeholder="Type title, actor, or genre..." oninput="searchTMDB()" />
+      <span class="close-search" onclick="closeSearchModal()">CLOSE <i class="fa-solid fa-xmark"></i></span>
     </div>
+    <div class="results" id="search-results"></div>
   </div>
-</main><div class="modal" id="modal">
-  <div class="modal-bg" onclick="closeModal()"></div>
-  <div class="modal-box">
-    <div class="video-wrap">
-      <iframe src="" id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="copyright-policy.html">Copyright Policy</a>
+      <a href="copyright-policy.html#dmca">DMCA Notice</a>
+      <a href="#">Terms of Use</a>
     </div>
-    <div class="modal-info">
-      <h2>Now Playing</h2>
-      <p>This is a real fullscreen modal player like Netflix.</p>
-    </div>
-  </div>
-</div><div class="close" onclick="closeModal()">×</div><script>
-function openModal(){
-  document.getElementById('modal').style.display='block';
-  document.getElementById('player').src='https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=0';
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  document.getElementById('modal').style.display='none';
-  document.getElementById('player').src='';
-  document.body.style.overflow='auto';
-}
-</script></body>
+    <p>&copy; 2026 CineFlex Premium. Powered by TMDB.</p>
+  </footer>
+
+  <script src="home.js"></script>
+</body>
 </html>
+
+
+

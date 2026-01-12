@@ -283,12 +283,6 @@ async function initGenreBrowse() {
 /* =========================
    INIT
 ========================= */
-const toggleBtn = document.getElementById("theme-toggle");
-toggleBtn.onclick = () => {
-  const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "dark" ? "dark" : "light";
-  document.documentElement.setAttribute("data-theme", next);
-};
 
 // Start App
 showSkeleton("movies-list");

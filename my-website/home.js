@@ -35,43 +35,40 @@ async function fetchTrendingAnime() {
 }
 
 /* =========================
-   UI HELPERS
+   UI HELPERS (Updated)
 ========================= */
-function showSkeleton(containerId, count = 8) {
-  const container = document.getElementById(containerId);
-  if(!container) return;
-  container.innerHTML = "";
-  for (let i = 0; i < count; i++) {
-    const div = document.createElement("div");
-    div.className = "skeleton";
-    container.appendChild(div);
-  }
-}
-
 function displayList(items, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = "";
 
-  items.forEach((item, i) => {
+  items.forEach((item) => {
     const img = document.createElement("img");
     img.src = `${IMG_URL}${item.poster_path}`;
     img.alt = item.title || item.name;
     img.loading = "lazy";
     img.className = "poster-item";
     img.onclick = () => showDetails(item);
-
-    // Hover effect logic
-    attachTrailerHover(img, item);
     container.appendChild(img);
   });
 }
 
-function scrollRow(id, amount) {
-  const row = document.getElementById(id);
-  if(row) row.scrollBy({ left: amount, behavior: "smooth" });
+function setBanner(item) {
+  const banner = document.getElementById("banner");
+  if(!banner) return;
+  
+  banner.style.opacity = 0;
+  setTimeout(() => {
+    banner.style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
+    document.getElementById("banner-title").textContent = item.title || item.name;
+    
+    // Add truncated overview for banner
+    const desc = item.overview ? item.overview.substring(0, 150) + "..." : "Watch the latest trending titles on CineFlex.";
+    document.getElementById("banner-desc").textContent = desc;
+    
+    banner.style.opacity = 1;
+  }, 300);
 }
-
 /* =========================
    BANNER
 ========================= */
@@ -134,11 +131,19 @@ function attachTrailerHover(img, item) {
   });
 }
 
+// Keep the rest of your home.js (search, fetch, etc.) as is.
 /* =========================
-   MODAL & PLAYER
+   MODAL (Improved)
 ========================= */
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-video").src = "";
+  document.body.style.overflow = "auto"; // Unlock scroll
+}
+
 async function showDetails(item) {
   currentItem = item;
+  document.body.style.overflow = "hidden"; // Lock scroll
   
   // UI Updates
   document.getElementById("modal-title").textContent = item.title || item.name;
@@ -146,10 +151,10 @@ async function showDetails(item) {
   document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
   
   const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
+  document.getElementById("modal-rating").innerHTML = "★".repeat(stars) + `<span style="opacity:0.3">${"★".repeat(5-stars)}</span>` + ` (${item.vote_average.toFixed(1)})`;
+  
   document.getElementById("modal").style.display = "flex";
 
-  // Handle TV vs Movie controls
   const isTv = item.media_type === "tv" || item.first_air_date;
   const tvControls = document.getElementById("tv-controls");
   
@@ -160,7 +165,6 @@ async function showDetails(item) {
     tvControls.style.display = "none";
   }
 
-  // Set default server
   changeServer();
 }
 

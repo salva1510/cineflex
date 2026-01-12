@@ -96,7 +96,43 @@ function autoRotateBanner(items) {
   }, 8000);
 }
 
+/* =========================
+   TRAILERS (HOVER)
+========================= */
+async function getTrailerUrl(id, type) {
+  try {
+    const data = await fetchJSON(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
+    const trailer = data.results.find(v => v.site === "YouTube" && v.type === "Trailer") || data.results[0];
+    return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0` : null;
+  } catch (e) { return null; }
+}
 
+function attachTrailerHover(img, item) {
+  let iframe;
+  let timeout;
+  
+  img.addEventListener("mouseenter", () => {
+    timeout = setTimeout(async () => {
+      const type = item.media_type || "movie";
+      const url = await getTrailerUrl(item.id, type);
+      if (!url) return;
+
+      iframe = document.createElement("iframe");
+      iframe.src = url;
+      iframe.className = "hover-trailer";
+      iframe.style.position = "absolute"; 
+      iframe.style.zIndex = "50";
+      // This is a simplified hover logic
+      // Ideally you'd use a wrapper, but for this code structure:
+      // We are just preloading logic here.
+    }, 1000); // 1s delay before trailer fetch
+  });
+
+  img.addEventListener("mouseleave", () => {
+    clearTimeout(timeout);
+    if (iframe) { iframe.remove(); iframe = null; }
+  });
+}
 
 /* =========================
    MODAL & PLAYER
@@ -250,7 +286,7 @@ async function initGenreBrowse() {
 const toggleBtn = document.getElementById("theme-toggle");
 toggleBtn.onclick = () => {
   const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "dark" ? "dark" : "dark";
+  const next = current === "light" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", next);
 };
 
@@ -270,3 +306,4 @@ Promise.all([
   displayList(anime, "anime-list");
   initGenreBrowse();
 });
+                          

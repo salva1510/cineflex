@@ -1,12 +1,12 @@
 const CACHE_NAME = "cineflex-cache-v1";
 const OFFLINE_URL = "/offline.html";
 
-// List of core assets to cache
+// List of core assets to cache (paths match how files are referenced from index.html)
 const CORE_ASSETS = [
   "/",
   "/index.html",
-  "/css/home.css",
-  "/js/home.js",
+  "/home.css",
+  "/home.js",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   OFFLINE_URL,

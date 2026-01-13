@@ -290,4 +290,4 @@ Promise.all([
   displayList(anime, "anime-list");
   initGenreBrowse();
 });
-   
+

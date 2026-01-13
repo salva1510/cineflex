@@ -1,45 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CineFlex | Watch Movies & Series</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineFlex</title>
 
-  <!-- SEO -->
-  <meta name="description" content="CineFlex – Discover trending movies, TV shows, and anime. Netflix-style streaming UI powered by TMDB.">
-  <meta name="robots" content="index, follow">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="home.css">
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#e50914">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body data-theme="dark">
+<body>
 
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="logo">CINEFLEX</div>
-
-  <div class="nav-actions">
-    <div class="search-wrapper">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input
-        type="text"
-        placeholder="Search movies, series..."
-        onfocus="openSearchModal()"
-      />
-    </div>
+  <div class="search-wrapper">
+    <i class="fa fa-search"></i>
+    <input type="text" placeholder="Search..." onfocus="openSearchModal()">
   </div>
 </nav>
 
@@ -51,81 +29,69 @@
   </div>
 </section>
 
-<!-- MAIN CONTENT -->
+<!-- CONTENT -->
 <main class="content-wrapper">
 
-  <!-- MOVIES -->
   <section class="row">
     <div class="row-header"><h2>Trending Movies</h2></div>
-    <div class="row-container">
-      <button class="scroll-btn left" onclick="scrollRow('movies-list', -500)">‹</button>
-      <div class="row-list" id="movies-list"></div>
-      <button class="scroll-btn right" onclick="scrollRow('movies-list', 500)">›</button>
-    </div>
+    <div class="row-list" id="movies-list"></div>
   </section>
 
-  <!-- TV -->
   <section class="row">
     <div class="row-header"><h2>Trending TV Shows</h2></div>
-    <div class="row-container">
-      <button class="scroll-btn left" onclick="scrollRow('tvshows-list', -500)">‹</button>
-      <div class="row-list" id="tvshows-list"></div>
-      <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
-    </div>
+    <div class="row-list" id="tvshows-list"></div>
   </section>
 
-  <!-- ANIME -->
   <section class="row">
     <div class="row-header"><h2>Trending Anime</h2></div>
-    <div class="row-container">
-      <button class="scroll-btn left" onclick="scrollRow('anime-list', -500)">‹</button>
-      <div class="row-list" id="anime-list"></div>
-      <button class="scroll-btn right" onclick="scrollRow('anime-list', 500)">›</button>
-    </div>
-  </section>
-
-  <!-- GENRE -->
-  <section class="row">
-    <div class="row-header">
-      <h2>Browse by Genre</h2>
-      <select id="genre-select" class="premium-select"></select>
-    </div>
-    <div class="row-list" id="genre-movies-list"></div>
+    <div class="row-list" id="anime-list"></div>
   </section>
 
 </main>
 
-<!-- MODAL PLAYER -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-overlay" onclick="closeModal()"></div>
 
   <div class="modal-content">
+
+    <!-- CLOSE -->
     <div class="close-modal" onclick="closeModal()">×</div>
 
+    <!-- VIDEO (TOP PRIORITY) -->
     <div class="video-container">
-      <iframe id="modal-video" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      <iframe
+        id="modal-video"
+        allowfullscreen
+        allow="autoplay; encrypted-media"
+        frameborder="0">
+      </iframe>
     </div>
 
+    <!-- DETAILS -->
     <div class="modal-details">
-      <div class="modal-info-grid">
-        <img id="modal-image" class="modal-poster">
 
-        <div>
+      <div class="modal-info-row">
+        <img id="modal-image" class="modal-poster-small">
+
+        <div class="modal-text">
           <h2 id="modal-title"></h2>
           <div id="modal-rating"></div>
           <p id="modal-description"></p>
 
           <label>Server</label>
-          <select id="server" onchange="changeServer()" class="premium-select">
+          <select id="server" onchange="changeServer()">
             <option value="player.videasy.net">Default</option>
           </select>
         </div>
       </div>
 
+      <!-- TV CONTROLS -->
       <div id="tv-controls" style="display:none;">
-        <select id="seasonSelect" onchange="loadEpisodes()" class="premium-select"></select>
+        <select id="seasonSelect" onchange="loadEpisodes()"></select>
         <div id="episodes" class="episodes-grid"></div>
       </div>
+
     </div>
   </div>
 </div>
@@ -135,17 +101,4 @@
   <input id="search-input" placeholder="Search..." oninput="searchTMDB()">
   <span onclick="closeSearchModal()">Close</span>
   <div id="search-results"></div>
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-links">
-    <a href="copyright-policy.html">Copyright</a>
-    <a href="copyright-policy.html#dmca">DMCA</a>
-  </div>
-  <p>© 2026 CineFlex – Powered by TMDB</p>
-</footer>
-
-<script src="home.js"></script>
-</body>
-</html>
+</

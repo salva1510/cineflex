@@ -1,4 +1,4 @@
-    /* =========================
+/* =========================
    CINEFLEX PREMIUM UI
 ========================= */
 :root {
@@ -238,5 +238,4 @@ body {
   .modal-info-grid {
     grid-template-columns: 1fr;
   }
-}:
-
+}

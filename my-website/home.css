@@ -1,12 +1,14 @@
 :root {
   --bg: #050505;
   --surface: #141414;
-  --text: #fff;
+  --text: #ffffff;
   --dim: #b3b3b3;
   --accent: #e50914;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -15,7 +17,7 @@ body {
   color: var(--text);
 }
 
-/* NAV */
+/* NAVBAR */
 .navbar {
   position: fixed;
   top: 0;
@@ -28,8 +30,8 @@ body {
 }
 
 .logo {
-  font-weight: 900;
   font-size: 1.8rem;
+  font-weight: 900;
   color: var(--accent);
 }
 
@@ -41,18 +43,9 @@ body {
   display: flex;
   align-items: flex-end;
   padding: 5%;
-  position: relative;
-}
-
-.banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, #050505 25%, transparent);
 }
 
 .banner-content {
-  position: relative;
   max-width: 600px;
 }
 
@@ -99,7 +92,14 @@ body {
   z-index: 3000;
 }
 
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+}
+
 .modal-content {
+  position: relative;
   width: 95%;
   max-width: 1100px;
   background: var(--surface);
@@ -107,24 +107,61 @@ body {
   overflow: hidden;
 }
 
+/* CLOSE BUTTON */
 .close-modal {
   position: fixed;
   top: 20px;
   right: 20px;
   width: 56px;
   height: 56px;
-  font-size: 36px;
-  background: rgba(0,0,0,.8);
   border-radius: 50%;
-  cursor: pointer;
+  background: rgba(0,0,0,.8);
+  font-size: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  z-index: 5000;
 }
 
-/* FOOTER */
-.footer {
-  padding: 30px;
-  text-align: center;
+/* VIDEO ALWAYS VISIBLE */
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* DETAILS */
+.modal-details {
+  padding: 20px;
+}
+
+.modal-info-row {
+  display: flex;
+  gap: 20px;
+}
+
+.modal-poster-small {
+  width: 120px;
+  border-radius: 10px;
+}
+
+.modal-text p {
   color: var(--dim);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .modal-info-row {
+    flex-direction: column;
+  }
+
+  .modal-poster-small {
+    width: 100px;
+  }
 }

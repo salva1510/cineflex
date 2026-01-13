@@ -290,4 +290,20 @@ Promise.all([
   displayList(anime, "anime-list");
   initGenreBrowse();
 });
+/* =========================
+   FOOTER NAV FUNCTIONS
+========================= */
+
+function goHome() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function toggleMenu() {
+  const menu = document.getElementById("menuDrawer");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+function openAccount() {
+  alert("Account system coming soon 🚀");
+}
 

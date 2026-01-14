@@ -1,0 +1,291 @@
+/* =========================
+   CINEFLEX PREMIUM UI
+========================= */
+:root {
+  --bg: #050505;
+  --surface: #141414;
+  --surface-light: #1f1f1f;
+  --text: #ffffff;
+  --text-dim: #b3b3b3;
+  --accent: #e50914;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 14px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+/* =========================
+   HERO BANNER
+========================= */
+.banner {
+  height: 42vh;
+  min-height: 320px;
+  max-height: 480px;
+  background-size: cover;
+  background-position: center top;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 5% 80px;
+  transition: opacity 0.5s ease;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, #050505 25%, transparent 65%),
+    linear-gradient(to right, #050505 12%, transparent 70%);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+
+.banner h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   CONTENT ROWS
+========================= */
+.content-wrapper {
+  margin-top: -90px;
+  padding-bottom: 70px;
+  position: relative;
+  z-index: 5;
+}
+
+.row-header {
+  padding: 0 5%;
+  margin-bottom: 10px;
+}
+
+.row-list {
+  display: flex;
+  gap: 16px;
+  padding: 10px 5% 35px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.poster-item {
+  width: 170px;
+  height: 255px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.poster-item:hover {
+  transform: scale(1.12);
+}
+
+/* =========================
+   FIXED MODAL & SCROLLING
+========================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: flex-start; /* Start at top for better mobile scrolling */
+  z-index: 3000;
+  padding: 10px 0;
+  overflow-y: auto; /* This allows you to swipe/scroll through the details */
+  background: rgba(0,0,0,0.92);
+}
+
+.modal-content {
+  position: relative;
+  width: 96%;
+  max-width: 1000px;
+  background: var(--surface);
+  border-radius: 16px;
+  margin: 40px auto; 
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sticky Video Player */
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid var(--accent);
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-details {
+  padding: 20px;
+  background: var(--surface);
+}
+
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 26px;
+}
+
+.modal-poster {
+  width: 100%;
+  border-radius: 14px;
+}
+
+/* =========================
+   PREMIUM EPISODE UI
+========================= */
+.tv-controls {
+  margin-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 20px;
+}
+
+.season-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.episode-card {
+  background: var(--surface-light);
+  padding: 12px 8px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.2s ease;
+}
+
+.episode-card:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.episode-card strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.episode-card:hover strong {
+  color: white;
+}
+
+.episode-card span {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Big Close Button */
+.close-modal {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 45px;
+  height: 45px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 5001;
+  cursor: pointer;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .modal-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .modal-poster {
+    display: none; /* Hide large poster on phone to save space */
+  }
+}
+
+/* =========================
+   MOBILE FOOTER NAV
+========================= */
+.mobile-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(10,10,10,0.95);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 5000;
+}
+
+.mobile-footer button {
+  background: none;
+  border: none;
+  color: #bbb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  }
+

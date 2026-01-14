@@ -308,3 +308,67 @@ body {
 .menu-drawer a:hover {
   color: var(--accent);
 }
+/* =========================
+   MODAL MOBILE FIX
+========================= */
+.modal-content {
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Video always visible */
+.video-container {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Scrollable details */
+.modal-details {
+  overflow-y: auto;
+  max-height: calc(92vh - 220px);
+  padding-bottom: 80px;
+}
+
+/* Smaller poster on mobile */
+@media (max-width: 768px) {
+  .modal-poster {
+    max-width: 140px;
+    margin: 0 auto;
+  }
+}
+
+/* =========================
+   EPISODES GRID (FIXED)
+========================= */
+.episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+@media (min-width: 768px) {
+  .episodes-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-height: 420px;
+  }
+}
+
+.episode-card {
+  background: #1c1c1c;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.episode-card:hover {
+  background: var(--accent);
+  transform: scale(1.05);
+}

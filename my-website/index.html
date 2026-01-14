@@ -124,34 +124,35 @@
       </div>
 
       <div class="modal-details">
-        <div class="modal-info-grid">
-          <img id="modal-image" src="" alt="" class="modal-poster" />
-          <div class="modal-text">
-            <h2 id="modal-title"></h2>
-            <div class="modal-meta">
-              <span class="stars" id="modal-rating"></span>
-            </div>
-            <p id="modal-description"></p>
-            
-            <div class="selector-group">
-              <label><i class="fa-solid fa-server"></i> Server</label>
-              <select id="server" class="premium-select" onchange="changeServer()">
-                <option value="player.videasy.net">player.videasy.net</option>
-              </select>
-            </div>
-          </div>
-        </div>
 
-        <div id="tv-controls" class="tv-controls" style="display:none;">
-          <div class="season-header">
-            <h3>Episodes</h3>
-            <select id="seasonSelect" class="premium-select" onchange="loadEpisodes()"></select>
-          </div>
-          <div id="episodes" class="episodes-grid"></div>
-        </div>
+  <div class="modal-info-grid">
+    <img id="modal-image" class="modal-poster" />
+
+    <div class="modal-text">
+      <h2 id="modal-title"></h2>
+      <div id="modal-rating"></div>
+      <p id="modal-description"></p>
+
+      <div class="selector-group">
+        <label>Server</label>
+        <select id="server" onchange="changeServer()">
+          <option value="player.videasy.net">player.videasy.net</option>
+        </select>
       </div>
     </div>
   </div>
+
+  <!-- TV ONLY -->
+  <div id="tv-controls" style="display:none;">
+    <div class="season-header">
+      <h3>Episodes</h3>
+      <select id="seasonSelect" onchange="loadEpisodes()"></select>
+    </div>
+
+    <div id="episodes" class="episodes-grid"></div>
+  </div>
+
+</div>
 
   <div class="search-modal" id="search-modal">
     <div class="search-nav">

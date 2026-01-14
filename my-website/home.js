@@ -193,6 +193,60 @@ function changeServer() {
       iframe.src = `https://${server}/movie/${currentItem.id}`;
   }
 }
+/* =========================
+   SEARCH SYSTEM
+========================= */
+
+function openSearchModal() {
+  const modal = document.getElementById("search-modal");
+  const input = document.getElementById("search-input");
+
+  modal.style.display = "block";
+  document.body.style.overflow = "hidden";
+
+  setTimeout(() => input.focus(), 300);
+}
+
+function closeSearchModal() {
+  document.getElementById("search-modal").style.display = "none";
+  document.getElementById("search-results").innerHTML = "";
+  document.getElementById("search-input").value = "";
+  document.body.style.overflow = "auto";
+}
+
+async function searchTMDB() {
+  const query = document.getElementById("search-input").value.trim();
+  const resultsBox = document.getElementById("search-results");
+
+  if (query.length < 2) {
+    resultsBox.innerHTML = "";
+    return;
+  }
+
+  const url = `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+  const data = await fetchJSON(url);
+
+  if (!data || !data.results) return;
+
+  const filtered = data.results.filter(
+    i => i.poster_path && (i.media_type === "movie" || i.media_type === "tv")
+  );
+
+  resultsBox.innerHTML = filtered.map(item => `
+    <div class="search-card" onclick='selectSearchItem(${JSON.stringify(item)})'>
+      <img src="${IMG_URL + item.poster_path}" />
+      <div>
+        <h4>${item.title || item.name}</h4>
+        <span>${item.media_type.toUpperCase()}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function selectSearchItem(item) {
+  closeSearchModal();
+  showDetails(item);
+}
 
 /* =========================
    INITIALIZE

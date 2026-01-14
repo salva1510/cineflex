@@ -396,3 +396,7 @@ async function resumeWatching(saved) {
     }
   }, 300);
 }
+function clearContinueWatching() {
+  localStorage.removeItem("continueWatching");
+  renderContinueWatching();
+}

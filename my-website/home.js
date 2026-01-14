@@ -201,7 +201,7 @@ function openSearchModal() {
   const modal = document.getElementById("search-modal");
   const input = document.getElementById("search-input");
 
-  modal.style.display = "block";
+  modal.style.display = "flex";
   document.body.style.overflow = "hidden";
 
   setTimeout(() => input.focus(), 300);

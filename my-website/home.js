@@ -189,7 +189,8 @@ async function loadEpisodes() {
   `).join('');
   
   // Auto-play first episode
-  playEpisode(seasonNum, 1);
+  if (data.episodes.length > 0) {
+  playEpisode(seasonNum, data.episodes[0].episode_number);
 }
 
 function playEpisode(season, episode) {

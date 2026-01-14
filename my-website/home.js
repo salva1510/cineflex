@@ -126,6 +126,7 @@ function autoRotateBanner(items) {
 renderContinueWatching();
 async function showDetails(item) {
   currentItem = item;
+  // Prevent the background page from scrolling while modal is open
   document.body.style.overflow = "hidden"; 
   
   const modal = document.getElementById("modal");
@@ -137,7 +138,7 @@ async function showDetails(item) {
   const stars = Math.round(item.vote_average / 2);
   document.getElementById("modal-rating").innerHTML = "★".repeat(stars) + `<span style="opacity:0.3">${"★".repeat(5-stars)}</span>` + ` (${item.vote_average.toFixed(1)})`;
   
-  modal.style.display = "flex";
+  modal.style.display = "block"; // Changed from flex to block for proper scrolling
 
   const isTv = item.media_type === "tv" || item.first_air_date;
   const tvControls = document.getElementById("tv-controls");
@@ -151,29 +152,6 @@ async function showDetails(item) {
   }
 }
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  document.getElementById("modal-video").src = "";
-  document.body.style.overflow = "auto";
-}
-
-async function loadSeasons(id) {
-  const data = await fetchJSON(`${BASE_URL}/tv/${id}?api_key=${API_KEY}`);
-  const seasonSelect = document.getElementById("seasonSelect");
-  if(!data || !seasonSelect) return;
-  
-  seasonSelect.innerHTML = "";
-  data.seasons.forEach(s => {
-    if(s.season_number > 0) { 
-        const opt = document.createElement("option");
-        opt.value = s.season_number;
-        opt.textContent = s.name;
-        seasonSelect.appendChild(opt);
-    }
-  });
-  loadEpisodes();
-}
-
 async function loadEpisodes() {
   if (!currentItem) return;
   const seasonNum = document.getElementById("seasonSelect").value || 1;
@@ -182,11 +160,18 @@ async function loadEpisodes() {
   
   if(!data || !episodesGrid) return;
   
+  // Cleaner episode card generation
   episodesGrid.innerHTML = data.episodes.map(ep => `
     <div class="episode-card" onclick="playEpisode(${seasonNum}, ${ep.episode_number})">
-      <strong>Ep ${ep.episode_number}</strong>: ${ep.name}
+      <strong>EPISODE ${ep.episode_number}</strong>
+      <span>${ep.name}</span>
     </div>
   `).join('');
+  
+  // Focus back to top of modal when changing seasons
+  document.getElementById("modal").scrollTo({ top: 0, behavior: 'smooth' });
+}
+
   
   // Auto-play first episode
   playEpisode(seasonNum, 1);

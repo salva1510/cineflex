@@ -334,33 +334,28 @@ function openAccount() {
 function saveContinueWatching(item, season = null, episode = null) {
   let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
 
-  // Remove duplicates
   list = list.filter(i => i.id !== item.id);
 
   list.unshift({
     id: item.id,
-    title: item.title || item.name,
-    poster: item.poster_path,
-    backdrop: item.backdrop_path,
-    overview: item.overview,
     media_type: item.media_type || (item.first_air_date ? "tv" : "movie"),
     season,
     episode,
-    time: Date.now()
+    poster: item.poster_path
   });
 
-  // Limit to 12 items
   localStorage.setItem("continueWatching", JSON.stringify(list.slice(0, 12)));
 
   renderContinueWatching();
+}
 }
 function renderContinueWatching() {
   const row = document.getElementById("continue-row");
   const listEl = document.getElementById("continue-list");
 
-  let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+  const list = JSON.parse(localStorage.getItem("continueWatching")) || [];
   if (!row || list.length === 0) {
-    if(row) row.style.display = "none";
+    if (row) row.style.display = "none";
     return;
   }
 
@@ -375,18 +370,28 @@ function renderContinueWatching() {
     listEl.appendChild(img);
   });
 }
-function resumeWatching(item) {
+async function resumeWatching(saved) {
   closeModal();
 
+  const url =
+    saved.media_type === "tv"
+      ? `${BASE_URL}/tv/${saved.id}?api_key=${API_KEY}`
+      : `${BASE_URL}/movie/${saved.id}?api_key=${API_KEY}`;
+
+  const item = await fetchJSON(url);
+  if (!item) return;
+
+  item.media_type = saved.media_type;
+
   setTimeout(() => {
-    currentItem = item;
     showDetails(item);
 
-    if (item.media_type === "tv" && item.season && item.episode) {
+    // Resume TV episode
+    if (saved.media_type === "tv" && saved.season && saved.episode) {
       setTimeout(() => {
-        document.getElementById("seasonSelect").value = item.season;
+        document.getElementById("seasonSelect").value = saved.season;
         loadEpisodes();
-        playEpisode(item.season, item.episode);
+        playEpisode(saved.season, saved.episode);
       }, 600);
     }
   }, 300);

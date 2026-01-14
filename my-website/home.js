@@ -123,6 +123,7 @@ function autoRotateBanner(items) {
 /* =========================
    MODAL & PLAYER
 ========================= */
+renderContinueWatching();
 async function showDetails(item) {
   currentItem = item;
   document.body.style.overflow = "hidden"; 
@@ -198,6 +199,7 @@ function playEpisode(season, episode) {
         iframe.src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
     } else {
         iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+       saveContinueWatching(currentItem, season, episode);
     }
 }
 
@@ -215,6 +217,7 @@ function changeServer() {
       } else {
           iframe.src = `https://${server}/movie/${currentItem.id}`;
       }
+     saveContinueWatching(currentItem);
   }
 }
 
@@ -328,4 +331,63 @@ function toggleMenu() {
 function openAccount() {
   alert("Account system coming soon 🚀");
 }
+function saveContinueWatching(item, season = null, episode = null) {
+  let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
 
+  // Remove duplicates
+  list = list.filter(i => i.id !== item.id);
+
+  list.unshift({
+    id: item.id,
+    title: item.title || item.name,
+    poster: item.poster_path,
+    backdrop: item.backdrop_path,
+    overview: item.overview,
+    media_type: item.media_type || (item.first_air_date ? "tv" : "movie"),
+    season,
+    episode,
+    time: Date.now()
+  });
+
+  // Limit to 12 items
+  localStorage.setItem("continueWatching", JSON.stringify(list.slice(0, 12)));
+
+  renderContinueWatching();
+}
+function renderContinueWatching() {
+  const row = document.getElementById("continue-row");
+  const listEl = document.getElementById("continue-list");
+
+  let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+  if (!row || list.length === 0) {
+    if(row) row.style.display = "none";
+    return;
+  }
+
+  row.style.display = "block";
+  listEl.innerHTML = "";
+
+  list.forEach(item => {
+    const img = document.createElement("img");
+    img.src = `${IMG_URL}${item.poster}`;
+    img.className = "poster-item";
+    img.onclick = () => resumeWatching(item);
+    listEl.appendChild(img);
+  });
+}
+function resumeWatching(item) {
+  closeModal();
+
+  setTimeout(() => {
+    currentItem = item;
+    showDetails(item);
+
+    if (item.media_type === "tv" && item.season && item.episode) {
+      setTimeout(() => {
+        document.getElementById("seasonSelect").value = item.season;
+        loadEpisodes();
+        playEpisode(item.season, item.episode);
+      }, 600);
+    }
+  }, 300);
+}

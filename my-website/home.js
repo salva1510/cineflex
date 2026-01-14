@@ -174,33 +174,41 @@ async function loadSeasons(id) {
   loadEpisodes();
 }
 
-async function loadEpisodes() {
-  if (!currentItem) return;
-  const seasonNum = document.getElementById("seasonSelect").value || 1;
-  const data = await fetchJSON(`${BASE_URL}/tv/${currentItem.id}/season/${seasonNum}?api_key=${API_KEY}`);
-  const episodesGrid = document.getElementById("episodes");
-  
-  if(!data || !episodesGrid) return;
-  
-  episodesGrid.innerHTML = data.episodes.map(ep => `
-    <div class="episode-card" onclick="playEpisode(${seasonNum}, ${ep.episode_number})">
+const progress = JSON.parse(localStorage.getItem("episodeProgress")) || {};
+const key = `${currentItem.id}-S${seasonNum}`;
+const lastEp = progress[key]?.episode || 0;
+
+episodesGrid.innerHTML = data.episodes.map(ep => {
+  const watched = ep.episode_number < lastEp;
+  const current = ep.episode_number === lastEp;
+
+  return `
+    <div class="episode-card ${watched ? "watched" : ""} ${current ? "current" : ""}"
+         onclick="playEpisode(${seasonNum}, ${ep.episode_number})">
       <strong>Ep ${ep.episode_number}</strong>: ${ep.name}
     </div>
-  `).join('');
+  `;
+}).join('');
   
   // Auto-play first episode
-  playEpisode(seasonNum, 1);
-}
+  const progress = JSON.parse(localStorage.getItem("episodeProgress")) || {};
+const key = `${currentItem.id}-S${seasonNum}`;
+const resumeEp = progress[key]?.episode || 1;
 
+playEpisode(seasonNum, resumeEp);
 function playEpisode(season, episode) {
-    const server = document.getElementById("server").value;
-    const iframe = document.getElementById("modal-video");
-    if(server.includes("vidsrc")) {
-        iframe.src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
-    } else {
-        iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
-       saveContinueWatching(currentItem, season, episode);
-    }
+  const server = document.getElementById("server").value;
+  const iframe = document.getElementById("modal-video");
+
+  if (server.includes("vidsrc")) {
+    iframe.src = `https://${server}/embed/tv/${currentItem.id}/${season}/${episode}`;
+  } else {
+    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+  }
+
+  // 🔥 SAVE PROGRESS
+  saveContinueWatching(currentItem, season, episode);
+  saveEpisodeProgress(currentItem, season, episode);
 }
 
 function changeServer() {
@@ -403,4 +411,14 @@ async function resumeWatching(savedItem) {
       }, 700);
     }
   }, 300);
+}
+function saveEpisodeProgress(item, season, episode) {
+  let progress = JSON.parse(localStorage.getItem("episodeProgress")) || {};
+
+  progress[`${item.id}-S${season}`] = {
+    episode,
+    updated: Date.now()
+  };
+
+  localStorage.setItem("episodeProgress", JSON.stringify(progress));
 }

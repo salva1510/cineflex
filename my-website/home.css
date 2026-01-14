@@ -276,3 +276,62 @@ body {
 
 .mobile-footer button i { font-size: 20px; margin-bottom: 4px; }
 .mobile-footer button:hover { color: var(--accent); }
+/* =========================
+   SEARCH MODAL
+========================= */
+
+.search-modal {
+  position: fixed;
+  inset: 0;
+  background: #050505;
+  z-index: 6000;
+  display: none;
+}
+
+.search-nav {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  background: #111;
+}
+
+.search-nav input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.close-search {
+  color: var(--accent);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.results {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.search-card {
+  cursor: pointer;
+}
+
+.search-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.search-card h4 {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.search-card span {
+  font-size: 11px;
+  color: #aaa;
+}

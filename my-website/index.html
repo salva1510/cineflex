@@ -1,206 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CineFlex | Premium Streaming</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="home.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#e50914">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineFlex</title>
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body data-theme="dark">
+<body>
 
-  <nav class="navbar">
-    <div class="logo netflix-intro">
-      <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
-    </div>
-    <div class="nav-actions">
-      <div class="search-wrapper">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" class="search-trigger" id="search-bar-trigger" placeholder="Search movies, TV shows..." onfocus="openSearchModal()" />
-      </div>
-      
-    </div>
-  </nav>
+<nav class="navbar">
+  <div class="logo">CINEFLEX</div>
+</nav>
 
-  <section class="banner" id="banner">
-    <div class="banner-content">
-      <h1 id="banner-title">Loading...</h1>
-      <p id="banner-desc">Discover the latest trending entertainment.</p>
-    </div>
-  </section>
+<section class="banner" id="banner">
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+  </div>
+</section>
 
-  <main class="content-wrapper">
-    <!-- CONTINUE WATCHING -->
+<main class="content-wrapper">
+
 <div class="row" id="continue-row" style="display:none;">
-  <div class="row-header">
-    <h2>Continue Watching</h2>
-  </div>
-  <div class="row-container">
-    <button class="scroll-btn left" onclick="scrollRow('continue-list', -500)">‹</button>
-    <div class="list row-list" id="continue-list"></div>
-    <button class="scroll-btn right" onclick="scrollRow('continue-list', 500)">›</button>
-  </div>
+  <h2>Continue Watching</h2>
+  <div class="row-list" id="continue-list"></div>
 </div>
-    <!-- TOP RATED MOVIES -->
+
 <div class="row">
-  <div class="row-header">
-    <h2>Top Rated Movies</h2>
-  </div>
-  <div class="row-container">
-    <button class="scroll-btn left" onclick="scrollRow('top-rated-list', -500)">‹</button>
-    <div class="list row-list" id="top-rated-list"></div>
-    <button class="scroll-btn right" onclick="scrollRow('top-rated-list', 500)">›</button>
-  </div>
+  <h2>Trending Movies</h2>
+  <div class="row-list" id="movies-list"></div>
 </div>
-    <!-- LATEST MOVIES -->
+
 <div class="row">
-  <div class="row-header">
-    <h2>Latest Movies</h2>
-  </div>
-  <div class="row-container">
-    <button class="scroll-btn left" onclick="scrollRow('latest-movies-list', -500)">‹</button>
-    <div class="list row-list" id="latest-movies-list"></div>
-    <button class="scroll-btn right" onclick="scrollRow('latest-movies-list', 500)">›</button>
-  </div>
-</div>
-    <div class="row">
-      <div class="row-header">
-        <h2>Trending Movies</h2>
-      </div>
-      <div class="row-container">
-        <button class="scroll-btn left" onclick="scrollRow('movies-list', -500)">‹</button>
-        <div class="list row-list" id="movies-list"></div>
-        <button class="scroll-btn right" onclick="scrollRow('movies-list', 500)">›</button>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="row-header">
-        <h2>Trending TV Shows</h2>
-      </div>
-      <div class="row-container">
-        <button class="scroll-btn left" onclick="scrollRow('tvshows-list', -500)">‹</button>
-        <div class="list row-list" id="tvshows-list"></div>
-        <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="row-header">
-        <h2>Trending Anime</h2>
-      </div>
-      <div class="row-container">
-        <button class="scroll-btn left" onclick="scrollRow('anime-list', -500)">‹</button>
-        <div class="list row-list" id="anime-list"></div>
-        <button class="scroll-btn right" onclick="scrollRow('anime-list', 500)">›</button>
-      </div>
-    </div>
-
-    <div class="row" id="browse-category-row">
-      <div class="row-header">
-        <h2>Browse by Genre</h2>
-        <select id="genre-select" class="premium-select">
-          <option value="">Loading genres...</option>
-        </select>
-      </div>
-      <div class="list row-list" id="genre-movies-list"></div>
-    </div>
-  </main>
-
-  <div class="modal" id="modal">
-    <div class="modal-overlay" onclick="closeModal()"></div>
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeModal()">&times;</span>
-      
-      <div class="video-container">
-        <iframe id="modal-video" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-      </div>
-
-      <div class="modal-details">
-        <div class="modal-info-grid">
-          <img id="modal-image" src="" alt="" class="modal-poster" />
-          <div class="modal-text">
-            <h2 id="modal-title"></h2>
-            <div class="modal-meta">
-              <span class="stars" id="modal-rating"></span>
-            </div>
-            <p id="modal-description"></p>
-            
-            <div class="selector-group">
-              <label><i class="fa-solid fa-server"></i> Server</label>
-              <select id="server" class="premium-select" onchange="changeServer()">
-                <option value="player.videasy.net">player.videasy.net</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div id="tv-controls" class="tv-controls" style="display:none;">
-          <div class="season-header">
-            <h3>Episodes</h3>
-            <select id="seasonSelect" class="premium-select" onchange="loadEpisodes()"></select>
-          </div>
-          <div id="episodes" class="episodes-grid"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="search-modal" id="search-modal">
-    <div class="search-nav">
-      <input type="text" id="search-input" placeholder="Type title, actor, or genre..." oninput="searchTMDB()" />
-      <span class="close-search" onclick="closeSearchModal()">CLOSE <i class="fa-solid fa-xmark"></i></span>
-    </div>
-    <div class="results" id="search-results"></div>
-  </div>
-
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="copyright-policy.html">Copyright Policy</a>
-      <a href="copyright-policy.html#dmca">DMCA Notice</a>
-      <a href="#">Terms of Use</a>
-    </div>
-    <p>&copy; 2026 CineFlex Premium. Powered by TMDB.</p>
-    <!-- MOBILE FOOTER NAV -->
-<div class="mobile-footer">
-  <button onclick="goHome()">
-    <i class="fa-solid fa-house"></i>
-    <span>Home</span>
-  </button>
-
-  <button onclick="openSearchModal()">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span>Search</span>
-  </button>
-
-  <button onclick="toggleMenu()">
-    <i class="fa-solid fa-bars"></i>
-    <span>Menu</span>
-  </button>
-
-  <button onclick="openAccount()">
-    <i class="fa-solid fa-user"></i>
-    <span>Account</span>
-  </button>
+  <h2>Trending TV</h2>
+  <div class="row-list" id="tvshows-list"></div>
 </div>
 
-<!-- SIMPLE MENU DRAWER -->
-<div class="menu-drawer" id="menuDrawer">
-  <a href="index.html">🏠 Home</a>
-  <a href="#movies">🎬 Movies</a>
-  <a href="#tv">📺 TV Shows</a>
-  <a href="copyright-policy.html">📜 Copyright</a>
-</div>
-  </footer>
-  
+</main>
 
-  <script src="home.js"></script>
+<div class="modal" id="modal">
+  <div class="modal-overlay" onclick="closeModal()"></div>
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal()">×</span>
+
+    <div class="video-container">
+      <iframe id="modal-video" allowfullscreen></iframe>
+    </div>
+
+    <div class="modal-details">
+      <h2 id="modal-title"></h2>
+      <p id="modal-description"></p>
+
+      <select id="server" onchange="changeServer()">
+        <option value="player.videasy.net">player.videasy.net</option>
+      </select>
+
+      <div id="tv-controls" style="display:none;">
+        <select id="seasonSelect" onchange="loadEpisodes()"></select>
+        <div id="episodes" class="episodes-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="home.js"></script>
 </body>
 </html>

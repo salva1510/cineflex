@@ -137,32 +137,140 @@ body {
 }
 
 /* =========================
-   MODAL
+/* =========================
+   FIXED MODAL & SCROLLING
 ========================= */
 .modal {
   position: fixed;
   inset: 0;
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Aligns to top for better mobile scrolling */
   z-index: 3000;
-}
-
-.modal-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.88);
+  padding: 10px 0;
+  overflow-y: auto; /* Allows the entire modal to scroll */
+  background: rgba(0,0,0,0.92);
 }
 
 .modal-content {
   position: relative;
-  width: 94%;
-  max-width: 1050px;
+  width: 96%;
+  max-width: 1000px;
   background: var(--surface);
-  border-radius: 18px;
+  border-radius: 16px;
+  margin: 40px auto; 
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
 }
+
+/* Sticky Video: Stays at the top while you scroll text below */
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid var(--accent);
+}
+
+.modal-details {
+  padding: 20px;
+  background: var(--surface);
+}
+
+/* =========================
+   PREMIUM EPISODE UI
+========================= */
+.tv-controls {
+  margin-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 20px;
+}
+
+.season-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.episode-card {
+  background: var(--surface-light);
+  padding: 12px 8px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.2s ease;
+}
+
+.episode-card:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.episode-card strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.episode-card:hover strong {
+  color: white;
+}
+
+.episode-card span {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.episode-card:hover span {
+  color: white;
+}
+
+/* Big Close Button Position */
+.close-modal {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 45px;
+  height: 45px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 5001;
+  cursor: pointer;
+}
+
+/* Mobile Fixes */
+@media (max-width: 768px) {
+  .modal-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .modal-poster {
+    display: none; /* Hides large poster on mobile to save space */
+  }
+}
+
 
 /* =========================
    VIDEO PLAYER

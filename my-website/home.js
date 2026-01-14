@@ -283,17 +283,20 @@ if(toggleBtn) {
 }
 
 // Start Application
+showSkeleton("latest-movies-list");
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
 
 Promise.all([
   fetchTrending("movie"),
+  fetchLatestMovies(),
   fetchTrending("tv"),
   fetchTrendingAnime()
-]).then(([movies, tv, anime]) => {
+]).then(([movies, latest, tv, anime]) => {
   autoRotateBanner(movies);
   displayList(movies, "movies-list");
+  displayList(latest, "latest-movies-list");
   displayList(tv, "tvshows-list");
   displayList(anime, "anime-list");
   initGenreBrowse();

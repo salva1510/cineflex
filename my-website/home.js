@@ -11,6 +11,14 @@ let bannerInterval = null;
 /* =========================
    FETCH HELPERS
 ========================= */
+async function fetchTopRatedMovies() {
+  const data = await fetchJSON(
+    `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`
+  );
+  return data
+    ? data.results.filter(m => m.poster_path).map(m => ({ ...m, media_type: "movie" }))
+    : [];
+}
 async function fetchLatestMovies() {
   const data = await fetchJSON(
     `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
@@ -283,6 +291,7 @@ if(toggleBtn) {
 }
 
 // Start Application
+showSkeleton("top-rated-list");
 showSkeleton("latest-movies-list");
 showSkeleton("movies-list");
 showSkeleton("tvshows-list");
@@ -291,12 +300,14 @@ showSkeleton("anime-list");
 Promise.all([
   fetchTrending("movie"),
   fetchLatestMovies(),
+  fetchTopRatedMovies(),
   fetchTrending("tv"),
   fetchTrendingAnime()
-]).then(([movies, latest, tv, anime]) => {
+]).then(([movies, latest, topRated, tv, anime]) => {
   autoRotateBanner(movies);
   displayList(movies, "movies-list");
   displayList(latest, "latest-movies-list");
+  displayList(topRated, "top-rated-list");
   displayList(tv, "tvshows-list");
   displayList(anime, "anime-list");
   initGenreBrowse();

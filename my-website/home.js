@@ -375,19 +375,32 @@ function renderContinueWatching() {
     listEl.appendChild(img);
   });
 }
-function resumeWatching(item) {
+async function resumeWatching(savedItem) {
   closeModal();
 
-  setTimeout(() => {
-    currentItem = item;
-    showDetails(item);
+  // Fetch FULL TMDB data again
+  const url = savedItem.media_type === "tv"
+    ? `${BASE_URL}/tv/${savedItem.id}?api_key=${API_KEY}`
+    : `${BASE_URL}/movie/${savedItem.id}?api_key=${API_KEY}`;
 
-    if (item.media_type === "tv" && item.season && item.episode) {
+  const fullItem = await fetchJSON(url);
+  if (!fullItem) return;
+
+  // Restore needed fields
+  fullItem.media_type = savedItem.media_type;
+  fullItem.season = savedItem.season;
+  fullItem.episode = savedItem.episode;
+
+  setTimeout(() => {
+    showDetails(fullItem);
+
+    // Resume episode correctly
+    if (fullItem.media_type === "tv" && savedItem.season && savedItem.episode) {
       setTimeout(() => {
-        document.getElementById("seasonSelect").value = item.season;
+        document.getElementById("seasonSelect").value = savedItem.season;
         loadEpisodes();
-        playEpisode(item.season, item.episode);
-      }, 600);
+        playEpisode(savedItem.season, savedItem.episode);
+      }, 700);
     }
   }, 300);
 }

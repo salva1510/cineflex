@@ -1,17 +1,310 @@
-body{margin:0;background:#000;color:#fff;font-family:Arial}
-.navbar{padding:15px;background:#111;position:fixed;width:100%;z-index:10}
-.logo{color:#e50914;font-weight:bold}
-.banner{height:40vh;background:#222;display:flex;align-items:end;padding:20px}
-.row{padding:20px}
-.row-list{display:flex;gap:10px;overflow-x:auto}
-.poster-item{width:140px;border-radius:8px;cursor:pointer}
-.modal{position:fixed;inset:0;display:none;justify-content:center;align-items:center;z-index:100}
-.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.8)}
-.modal-content{background:#111;width:95%;max-width:900px;z-index:2}
-.video-container{aspect-ratio:16/9;background:black}
-.video-container iframe{width:100%;height:100%}
-.close-modal{position:absolute;right:10px;top:10px;font-size:30px;cursor:pointer}
-.episodes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-.episode-card{background:#222;padding:10px;border-radius:6px;cursor:pointer}
-.episode-card.watched{opacity:.4}
-.episode-card.current{border-left:4px solid #e50914}
+/* =========================
+   CINEFLEX PREMIUM UI
+========================= */
+:root {
+  --bg: #050505;
+  --surface: #141414;
+  --surface-light: #1f1f1f;
+  --text: #ffffff;
+  --text-dim: #b3b3b3;
+  --accent: #e50914;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 14px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+/* =========================
+   HERO BANNER (NETFLIX STYLE)
+========================= */
+.banner {
+  height: 42vh;
+  min-height: 320px;
+  max-height: 480px;
+  background-size: cover;
+  background-position: center top;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 5% 80px;
+  transition: opacity 0.5s ease;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, #050505 25%, transparent 65%),
+    linear-gradient(to right, #050505 12%, transparent 70%);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+
+.banner h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.banner p {
+  font-size: 1rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* =========================
+   CONTENT ROWS
+========================= */
+.content-wrapper {
+  margin-top: -90px;
+  padding-bottom: 70px;
+  position: relative;
+  z-index: 5;
+}
+
+.row-header {
+  padding: 0 5%;
+  margin-bottom: 10px;
+}
+
+.row-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.row-list {
+  display: flex;
+  gap: 16px;
+  padding: 10px 5% 35px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.row-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================
+   POSTER CARDS
+========================= */
+.poster-item {
+  width: 170px;
+  height: 255px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poster-item:hover {
+  transform: scale(1.12);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+  z-index: 10;
+}
+
+/* =========================
+   MODAL
+========================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+}
+
+.modal-content {
+  position: relative;
+  width: 94%;
+  max-width: 1050px;
+  background: var(--surface);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+}
+
+/* =========================
+   VIDEO PLAYER
+========================= */
+.video-container {
+  aspect-ratio: 16 / 9;
+  background: black;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================
+   BIG CLOSE BUTTON (FIXED)
+========================= */
+.close-modal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5000;
+}
+
+.close-modal:hover {
+  background: var(--accent);
+  transform: scale(1.05);
+}
+
+/* =========================
+   MODAL DETAILS
+========================= */
+.modal-details {
+  padding: 26px;
+}
+
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 26px;
+}
+
+.modal-poster {
+  width: 100%;
+  border-radius: 14px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+  .banner {
+    height: 36vh;
+    padding-bottom: 60px;
+  }
+
+  .poster-item {
+    width: 140px;
+    height: 210px;
+  }
+
+  .modal-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================
+   MOBILE FOOTER NAV
+========================= */
+.mobile-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(10,10,10,0.95);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 5000;
+}
+
+.mobile-footer button {
+  background: none;
+  border: none;
+  color: #bbb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.mobile-footer i {
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+
+.mobile-footer button:hover {
+  color: var(--accent);
+}
+
+/* Hide footer on desktop */
+@media (min-width: 768px) {
+  .mobile-footer {
+    display: none;
+  }
+}
+
+/* =========================
+   MENU DRAWER
+========================= */
+.menu-drawer {
+  position: fixed;
+  bottom: 64px;
+  left: 0;
+  right: 0;
+  background: #111;
+  padding: 15px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 4999;
+}
+
+.menu-drawer a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.menu-drawer a:hover {
+  color: var(--accent);
+}

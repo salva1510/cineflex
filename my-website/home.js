@@ -11,6 +11,14 @@ let bannerInterval = null;
 /* =========================
    FETCH HELPERS
 ========================= */
+async function fetchLatestMovies() {
+  const data = await fetchJSON(
+    `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
+  );
+  return data
+    ? data.results.filter(m => m.poster_path).map(m => ({ ...m, media_type: "movie" }))
+    : [];
+}
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);

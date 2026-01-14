@@ -1,7 +1,6 @@
 /* =========================
    CONFIG
 ========================= */
-renderContinueWatching();
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
@@ -124,6 +123,7 @@ function autoRotateBanner(items) {
 /* =========================
    MODAL & PLAYER
 ========================= */
+renderContinueWatching();
 async function showDetails(item) {
   currentItem = item;
   document.body.style.overflow = "hidden"; 

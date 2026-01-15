@@ -285,8 +285,7 @@ body {
   inset: 0;
   background: #050505;
   z-index: 6000;
-  display: none;
-  display: flex;
+  display: none;          /* ✅ hidden by default */
   flex-direction: column;
 }
 

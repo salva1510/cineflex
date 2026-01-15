@@ -425,44 +425,54 @@ body {
   }
 }
 /* =========================
-   MENU DRAWER (ACTIVATED)
+   MENU DRAWER + OVERLAY
 ========================= */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+  z-index: 5900;
+  display: none;
+}
+
 .menu-drawer {
   position: fixed;
-  bottom: 65px; /* above footer */
+  bottom: 65px;
   left: 0;
   right: 0;
 
   background: rgba(15,15,15,0.98);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 
   display: none;
   flex-direction: column;
-
-  padding: 15px;
   gap: 12px;
 
+  padding: 16px;
   z-index: 6000;
-  animation: slideUp 0.25s ease;
+
+  animation: menuSlideUp 0.25s ease;
 }
 
 .menu-drawer a {
   color: white;
   text-decoration: none;
   font-size: 16px;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
   background: #1a1a1a;
+  text-align: center;
 }
 
 .menu-drawer a:hover {
   background: var(--accent);
 }
 
-/* Slide animation */
-@keyframes slideUp {
+@keyframes menuSlideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(30px);
     opacity: 0;
   }
   to {

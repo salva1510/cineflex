@@ -375,6 +375,11 @@ function logoutAccount() {
   document.getElementById("logoutBtn").style.display = "none";
   highlightAccount(false);
 }
+auth.onAuthStateChanged(user => {
+  if (user) {
+    handleGoogleUser(user);
+  }
+});
 
 /* AUTO CHECK ON LOAD */
 window.addEventListener("load", () => {

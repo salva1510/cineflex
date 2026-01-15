@@ -176,9 +176,11 @@ async function loadEpisodes() {
 }
 
 function playEpisode(season, episode) {
-    const server = document.getElementById("server").value;
-    const iframe = document.getElementById("modal-video");
-    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+  const server = document.getElementById("server").value;
+  const iframe = document.getElementById("modal-video");
+
+  iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+  saveContinueWatching(season, episode);
 }
 
 function changeServer() {
@@ -352,3 +354,21 @@ function resumeContinue(item) {
       .classList.add("video-playing");
   }, 600);
 }
+function startPlayback() {
+  const iframe = document.getElementById("modal-video");
+  const server = document.getElementById("server").value;
+  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
+
+  document.querySelector(".video-container")
+    .classList.add("video-playing");
+
+  if (isTv) {
+    const season = document.getElementById("seasonSelect").value || 1;
+    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
+    saveContinueWatching(season, 1);
+  } else {
+    iframe.src = `https://${server}/movie/${currentItem.id}`;
+    saveContinueWatching();
+  }
+}
+renderContinueWatching();

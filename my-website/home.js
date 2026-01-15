@@ -193,6 +193,30 @@ function changeServer() {
       iframe.src = `https://${server}/movie/${currentItem.id}`;
   }
 }
+function saveContinueWatching(season = null, episode = null) {
+  if (!currentItem) return;
+
+  let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+
+  // Remove duplicate
+  list = list.filter(i => i.id !== currentItem.id);
+
+  list.unshift({
+    id: currentItem.id,
+    title: currentItem.title || currentItem.name,
+    poster: currentItem.poster_path,
+    type: currentItem.media_type === "tv" || currentItem.first_air_date ? "tv" : "movie",
+    season,
+    episode,
+    server: document.getElementById("server").value
+  });
+
+  // Limit to 10 items
+  list = list.slice(0, 10);
+
+  localStorage.setItem("continueWatching", JSON.stringify(list));
+  renderContinueWatching();
+}
 /* =========================
    SEARCH SYSTEM
 ========================= */

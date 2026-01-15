@@ -285,3 +285,70 @@ function toggleMenu() {
   menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 function openAccount() { alert("Account system coming soon 🚀"); }
+/* =========================
+   CONTINUE WATCHING (FINAL)
+========================= */
+
+function saveContinueWatching(season = null, episode = null) {
+  if (!currentItem) return;
+
+  let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+
+  // Remove duplicate
+  list = list.filter(item => item.id !== currentItem.id);
+
+  list.unshift({
+    id: currentItem.id,
+    title: currentItem.title || currentItem.name,
+    poster: currentItem.poster_path,
+    type: currentItem.media_type === "tv" || currentItem.first_air_date ? "tv" : "movie",
+    season,
+    episode,
+    server: document.getElementById("server").value
+  });
+
+  if (list.length > 10) list.pop();
+
+  localStorage.setItem("continueWatching", JSON.stringify(list));
+  renderContinueWatching();
+}
+
+function renderContinueWatching() {
+  const row = document.getElementById("continue-row");
+  const listBox = document.getElementById("continue-list");
+  const list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+
+  if (list.length === 0) {
+    row.style.display = "none";
+    return;
+  }
+
+  row.style.display = "block";
+  listBox.innerHTML = "";
+
+  list.forEach(item => {
+    const img = document.createElement("img");
+    img.src = "https://image.tmdb.org/t/p/original" + item.poster;
+    img.className = "poster-item";
+    img.onclick = () => resumeContinue(item);
+    listBox.appendChild(img);
+  });
+}
+
+function resumeContinue(item) {
+  currentItem = item;
+  showDetails(item);
+
+  setTimeout(() => {
+    const iframe = document.getElementById("modal-video");
+
+    if (item.type === "tv") {
+      iframe.src = `https://${item.server}/tv/${item.id}/${item.season}/${item.episode}`;
+    } else {
+      iframe.src = `https://${item.server}/movie/${item.id}`;
+    }
+
+    document.querySelector(".video-container")
+      .classList.add("video-playing");
+  }, 600);
+}

@@ -222,8 +222,9 @@ function closeSearchModal() {
 }
 
 async function searchTMDB() {
-  const query = document.getElementById("search-input").value.trim();
+  const input = document.getElementById("search-input");
   const resultsBox = document.getElementById("search-results");
+  const query = input.value.trim();
 
   if (query.length < 2) {
     resultsBox.innerHTML = "";
@@ -235,25 +236,34 @@ async function searchTMDB() {
 
   if (!data || !data.results) return;
 
-  const filtered = data.results.filter(
-    i => i.poster_path && (i.media_type === "movie" || i.media_type === "tv")
+  const items = data.results.filter(
+    item =>
+      item.poster_path &&
+      (item.media_type === "movie" || item.media_type === "tv")
   );
 
-  resultsBox.innerHTML = filtered.map(item => `
-    <div class="search-card" onclick='selectSearchItem(${JSON.stringify(item)})'>
-      <img src="${IMG_URL + item.poster_path}" />
-      <div>
-        <h4>${item.title || item.name}</h4>
-        <span>${item.media_type.toUpperCase()}</span>
-      </div>
-    </div>
-  `).join("");
+  resultsBox.innerHTML = "";
+
+  items.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "search-card";
+
+    card.innerHTML = `
+      <img src="${IMG_URL}${item.poster_path}">
+      <h4>${item.title || item.name}</h4>
+      <span>${item.media_type.toUpperCase()}</span>
+    `;
+
+    // ✅ SAFE CLICK (same as rows)
+    card.onclick = () => {
+      closeSearchModal();
+      showDetails(item);
+    };
+
+    resultsBox.appendChild(card);
+  });
 }
 
-function selectSearchItem(item) {
-  closeSearchModal();
-  showDetails(item);
-}
 
 /* =========================
    INITIALIZE

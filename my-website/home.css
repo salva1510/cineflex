@@ -362,3 +362,8 @@ body {
   font-size: 11px;
   color: #aaa;
 }
+.search-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}

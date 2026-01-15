@@ -14,6 +14,42 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e50914">
 </head>
+  <!-- ACCOUNT MODAL -->
+<div class="modal" id="accountModal">
+  <div class="modal-overlay" onclick="closeAccount()"></div>
+
+  <div class="modal-content" style="max-width:420px;">
+    <span class="close-modal" onclick="closeAccount()">&times;</span>
+
+    <div class="modal-details" style="text-align:center;">
+      <h2 id="accountTitle">Account</h2>
+      <p id="accountStatus" style="opacity:.7;margin-bottom:20px;">
+        Login to continue
+      </p>
+
+      <input
+        id="usernameInput"
+        type="text"
+        placeholder="Enter username"
+        style="width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:15px;"
+      />
+
+      <button
+        id="loginBtn"
+        onclick="loginAccount()"
+        style="width:100%;padding:12px;border-radius:10px;border:none;background:#e50914;color:white;font-weight:bold;">
+        LOGIN
+      </button>
+
+      <button
+        id="logoutBtn"
+        onclick="logoutAccount()"
+        style="width:100%;padding:12px;border-radius:10px;border:none;background:#333;color:white;font-weight:bold;display:none;margin-top:10px;">
+        LOGOUT
+      </button>
+    </div>
+  </div>
+</div>
 <body data-theme="dark">
 
   <nav class="navbar">

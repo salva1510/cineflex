@@ -323,7 +323,9 @@ function startPlayback() {
   if (isTv) {
     const season = document.getElementById("seasonSelect").value || 1;
     iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
+    saveContinueWatching(season, 1);
   } else {
     iframe.src = `https://${server}/movie/${currentItem.id}`;
+    saveContinueWatching();
   }
 }

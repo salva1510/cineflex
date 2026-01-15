@@ -197,12 +197,15 @@
   </button>
 </div>
 
-<!-- SIMPLE MENU DRAWER -->
+<!-- MENU OVERLAY -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<!-- MENU DRAWER -->
 <div class="menu-drawer" id="menuDrawer">
-  <a href="index.html">🏠 Home</a>
-  <a href="#movies">🎬 Movies</a>
-  <a href="#tv">📺 TV Shows</a>
-  <a href="copyright-policy.html">📜 Copyright</a>
+  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+  <a href="#movies" onclick="closeMenu()">🎬 Movies</a>
+  <a href="#tv" onclick="closeMenu()">📺 TV Shows</a>
+  <a href="copyright-policy.html" onclick="closeMenu()">📜 Copyright</a>
 </div>
   </footer>
   

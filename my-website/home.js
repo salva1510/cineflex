@@ -199,16 +199,26 @@ function changeServer() {
 
 function openSearchModal() {
   const modal = document.getElementById("search-modal");
+  modal.classList.add("active");
 
-  modal.style.display = "flex";
   document.body.style.overflow = "hidden";
+
+  // Netflix-style instant focus
+  setTimeout(() => {
+    document.getElementById("search-input").focus();
+  }, 250);
 }
 
 function closeSearchModal() {
-  document.getElementById("search-modal").style.display = "none";
-  document.getElementById("search-results").innerHTML = "";
-  document.getElementById("search-input").value = "";
+  const modal = document.getElementById("search-modal");
+  modal.classList.remove("active");
+
   document.body.style.overflow = "auto";
+
+  setTimeout(() => {
+    document.getElementById("search-results").innerHTML = "";
+    document.getElementById("search-input").value = "";
+  }, 300);
 }
 
 async function searchTMDB() {

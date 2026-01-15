@@ -346,6 +346,35 @@ function highlightAccount(active) {
     accountBtn.style.color = "#888";
   }
 }
+function googleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => handleGoogleUser(result.user))
+    .catch(err => alert(err.message));
+}
+
+function handleGoogleUser(user) {
+  localStorage.setItem("cineflexUser", JSON.stringify({
+    name: user.displayName,
+    email: user.email,
+    photo: user.photoURL,
+    uid: user.uid
+  }));
+
+  document.getElementById("accountStatus").textContent =
+    `Logged in as ${user.displayName}`;
+
+  document.getElementById("logoutBtn").style.display = "block";
+  highlightAccount(true);
+}
+
+function logoutAccount() {
+  auth.signOut();
+  localStorage.removeItem("cineflexUser");
+  document.getElementById("accountStatus").textContent = "Logged out";
+  document.getElementById("logoutBtn").style.display = "none";
+  highlightAccount(false);
+}
 
 /* AUTO CHECK ON LOAD */
 window.addEventListener("load", () => {

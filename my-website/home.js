@@ -285,3 +285,21 @@ function toggleMenu() {
   menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 function openAccount() { alert("Account system coming soon 🚀"); }
+function startPlayback() {
+  const container = document.querySelector(".video-container");
+  const iframe = document.getElementById("modal-video");
+
+  if (!currentItem) return;
+
+  container.classList.add("video-playing");
+
+  const server = document.getElementById("server").value;
+  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
+
+  if (isTv) {
+    const season = document.getElementById("seasonSelect").value || 1;
+    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
+  } else {
+    iframe.src = `https://${server}/movie/${currentItem.id}`;
+  }
+}

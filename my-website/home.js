@@ -1,3 +1,12 @@
+// 🔥 FIREBASE CONFIG (GOOGLE ONLY)
+const firebaseConfig = {
+  apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
+  authDomain: "cineflex-login-b8380.firebaseapp.com",
+  projectId: "cineflex-login-b8380",
+  appId: "1:453926417888:web:4c13aefa06f5aed559e785"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 /* =========================
    CONFIG
 ========================= */

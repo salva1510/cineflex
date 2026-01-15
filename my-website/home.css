@@ -367,3 +367,60 @@ body {
   inset: 0;
   background: transparent;
 }
+/* =========================
+   PREMIUM PLAY BUTTON
+========================= */
+.premium-play-btn {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 90px;
+  height: 90px;
+  background: rgba(229, 9, 20, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  cursor: pointer;
+  box-shadow:
+    0 0 30px rgba(229,9,20,0.8),
+    0 0 60px rgba(229,9,20,0.5);
+  animation: playPulse 2s infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.premium-play-btn i {
+  color: #fff;
+  font-size: 34px;
+  margin-left: 4px;
+}
+
+.premium-play-btn:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 40px rgba(229,9,20,1),
+    0 0 80px rgba(229,9,20,0.7);
+}
+
+@keyframes playPulse {
+  0% { box-shadow: 0 0 20px rgba(229,9,20,0.6); }
+  50% { box-shadow: 0 0 50px rgba(229,9,20,1); }
+  100% { box-shadow: 0 0 20px rgba(229,9,20,0.6); }
+}
+
+/* Hide button once playing */
+.video-playing .premium-play-btn {
+  display: none;
+}
+
+/* Mobile size */
+@media (max-width: 768px) {
+  .premium-play-btn {
+    width: 70px;
+    height: 70px;
+  }
+  .premium-play-btn i {
+    font-size: 26px;
+  }
+}

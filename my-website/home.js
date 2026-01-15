@@ -297,7 +297,62 @@ function closeMenu() {
   document.getElementById("menuOverlay").style.display = "none";
   document.body.style.overflow = "auto";
 }
-function openAccount() { alert("Account system coming soon 🚀"); }
+function openAccount() {
+  document.getElementById("accountModal").style.display = "block";
+  document.body.style.overflow = "hidden";
+  updateAccountUI();
+}
+
+function closeAccount() {
+  document.getElementById("accountModal").style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+function loginAccount() {
+  const username = document.getElementById("usernameInput").value.trim();
+  if (!username) return alert("Enter username");
+
+  localStorage.setItem("cineflexUser", username);
+  updateAccountUI();
+  highlightAccount(true);
+}
+
+function logoutAccount() {
+  localStorage.removeItem("cineflexUser");
+  updateAccountUI();
+  highlightAccount(false);
+}
+
+function updateAccountUI() {
+  const user = localStorage.getItem("cineflexUser");
+
+  document.getElementById("loginBtn").style.display = user ? "none" : "block";
+  document.getElementById("logoutBtn").style.display = user ? "block" : "none";
+
+  document.getElementById("accountStatus").textContent = user
+    ? `Logged in as ${user}`
+    : "Login to continue";
+
+  document.getElementById("usernameInput").style.display = user ? "none" : "block";
+}
+
+function highlightAccount(active) {
+  const buttons = document.querySelectorAll(".mobile-footer button");
+  const accountBtn = buttons[3]; // account button
+
+  if (active) {
+    accountBtn.style.color = "#e50914";
+  } else {
+    accountBtn.style.color = "#888";
+  }
+}
+
+/* AUTO CHECK ON LOAD */
+window.addEventListener("load", () => {
+  if (localStorage.getItem("cineflexUser")) {
+    highlightAccount(true);
+  }
+});
 function startPlayback() {
   const container = document.querySelector(".video-container");
   const iframe = document.getElementById("modal-video");

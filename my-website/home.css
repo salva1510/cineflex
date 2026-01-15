@@ -148,6 +148,19 @@ body {
 .poster-item:hover {
   transform: scale(1.1);
 }
+/* CONTINUE WATCHING FIX */
+#continue-row {
+  margin-top: 20px;
+}
+
+#continue-row img {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#continue-row img:hover {
+  transform: scale(1.08);
+}
 
 /* =========================
    MODAL (VIDEO & DETAILS)

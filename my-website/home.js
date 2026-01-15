@@ -282,7 +282,20 @@ Promise.all([
 function goHome() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 function toggleMenu() {
   const menu = document.getElementById("menuDrawer");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+  const overlay = document.getElementById("menuOverlay");
+
+  const isOpen = menu.style.display === "flex";
+
+  menu.style.display = isOpen ? "none" : "flex";
+  overlay.style.display = isOpen ? "none" : "block";
+
+  document.body.style.overflow = isOpen ? "auto" : "hidden";
+}
+
+function closeMenu() {
+  document.getElementById("menuDrawer").style.display = "none";
+  document.getElementById("menuOverlay").style.display = "none";
+  document.body.style.overflow = "auto";
 }
 function openAccount() { alert("Account system coming soon 🚀"); }
 function startPlayback() {

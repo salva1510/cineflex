@@ -313,9 +313,9 @@ body {
   gap: 10px;
   padding: 15px;
   background: #111;
-  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  z-index: 5;
 }
-
 .search-nav input {
   flex: 1;
   padding: 12px;

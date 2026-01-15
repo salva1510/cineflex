@@ -480,3 +480,6 @@ body {
     opacity: 1;
   }
 }
+.mobile-footer button.active {
+  color: var(--accent);
+}

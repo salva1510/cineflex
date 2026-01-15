@@ -1,6 +1,7 @@
 /* =========================
    CONFIG
 ========================= */
+renderContinueWatching();
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
@@ -176,9 +177,11 @@ async function loadEpisodes() {
 }
 
 function playEpisode(season, episode) {
-    const server = document.getElementById("server").value;
-    const iframe = document.getElementById("modal-video");
-    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+  const server = document.getElementById("server").value;
+  const iframe = document.getElementById("modal-video");
+
+  iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
+  saveContinueWatching(season, episode);
 }
 
 function changeServer() {
@@ -216,6 +219,46 @@ function saveContinueWatching(season = null, episode = null) {
 
   localStorage.setItem("continueWatching", JSON.stringify(list));
   renderContinueWatching();
+     }
+function renderContinueWatching() {
+  const row = document.getElementById("continue-row");
+  const listBox = document.getElementById("continue-list");
+
+  const list = JSON.parse(localStorage.getItem("continueWatching")) || [];
+
+  if (list.length === 0) {
+    row.style.display = "none";
+    return;
+  }
+
+  row.style.display = "block";
+  listBox.innerHTML = "";
+
+  list.forEach(item => {
+    const img = document.createElement("img");
+    img.src = `https://image.tmdb.org/t/p/original${item.poster}`;
+    img.className = "poster-item";
+    img.onclick = () => resumeContinue(item);
+    listBox.appendChild(img);
+  });
+}
+function resumeContinue(item) {
+  currentItem = item;
+  showDetails(item);
+
+  setTimeout(() => {
+    const iframe = document.getElementById("modal-video");
+    const server = item.server;
+
+    if (item.type === "tv") {
+      iframe.src = `https://${server}/tv/${item.id}/${item.season}/${item.episode}`;
+    } else {
+      iframe.src = `https://${server}/movie/${item.id}`;
+    }
+
+    document.querySelector(".video-container").classList.add("video-playing");
+  }, 600);
+}
 }
 /* =========================
    SEARCH SYSTEM

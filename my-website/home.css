@@ -280,13 +280,31 @@ body {
    SEARCH MODAL (FIXED SCROLL)
 ========================= */
 
+/* =========================
+   NETFLIX-LIKE SEARCH ANIMATION
+========================= */
+
 .search-modal {
   position: fixed;
   inset: 0;
   background: #050505;
   z-index: 6000;
-  display: none;          /* ✅ hidden by default */
+
+  display: flex;
   flex-direction: column;
+
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+/* ACTIVE STATE */
+.search-modal.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* TOP SEARCH BAR */

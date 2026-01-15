@@ -483,3 +483,19 @@ body {
 .mobile-footer button.active {
   color: var(--accent);
 }
+#accountBtn {
+  position: relative;
+}
+
+#accountAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 4px;
+  border: 2px solid var(--accent);
+}
+
+#accountIcon {
+  font-size: 20px;
+}

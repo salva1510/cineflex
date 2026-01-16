@@ -268,7 +268,6 @@ async function searchTMDB() {
 /* =========================
    INITIALIZE
 ========================= */
-showSkeleton("continuewatching-list");
 showSkeleton("movies-list");
 showSkeleton("latest-movies-list");
 showSkeleton("top-rated-list");

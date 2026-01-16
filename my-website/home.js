@@ -196,29 +196,34 @@ function changeServer() {
 /* =========================
    SEARCH SYSTEM
 ========================= */
-
-function openSearchModal() {
-  const modal = document.getElementById("search-modal");
-  modal.classList.add("active");
-
-  document.body.style.overflow = "hidden";
-
-  // Netflix-style instant focus
-  setTimeout(() => {
-    document.getElementById("search-input").focus();
-  }, 250);
+function lockScroll(lock){
+  document.body.style.overflow = lock ? "hidden" : "auto";
 }
 
-function closeSearchModal() {
-  const modal = document.getElementById("search-modal");
-  modal.classList.remove("active");
+function openSearchModal(){
+  document.getElementById("search-modal").classList.add("active");
+  lockScroll(true);
+}
 
-  document.body.style.overflow = "auto";
+function closeSearchModal(){
+  document.getElementById("search-modal").classList.remove("active");
+  lockScroll(false);
+}
 
-  setTimeout(() => {
-    document.getElementById("search-results").innerHTML = "";
-    document.getElementById("search-input").value = "";
-  }, 300);
+function openAccount(){
+  document.getElementById("accountModal").style.display="block";
+  lockScroll(true);
+}
+
+function closeAccount(){
+  document.getElementById("accountModal").style.display="none";
+  lockScroll(false);
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+  document.getElementById("modal-video").src="";
+  lockScroll(false);
 }
 
 async function searchTMDB() {

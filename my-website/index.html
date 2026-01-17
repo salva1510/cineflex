@@ -299,10 +299,29 @@ Sign in with Google
 
 <!-- MENU DRAWER -->
 <div class="menu-drawer" id="menuDrawer">
-  <a href="index.html" onclick="closeMenu()">🏠 Home</a>
-  <a href="#movies" onclick="closeMenu()">🎬 Movies</a>
-  <a href="#tv" onclick="closeMenu()">📺 TV Shows</a>
-  <a href="copyright-policy.html" onclick="closeMenu()">📜 Copyright</a>
+  <a onclick="scrollToSection('movies-list')">
+    <i class="fa-solid fa-fire"></i> Trending Now
+  </a>
+
+  <a onclick="scrollToSection('latest-movies-list')">
+    <i class="fa-solid fa-clock"></i> Latest Movies
+  </a>
+
+  <a onclick="scrollToSection('top-rated-list')">
+    <i class="fa-solid fa-star"></i> Top Rated
+  </a>
+
+  <a onclick="scrollToSection('tvshows-list')">
+    <i class="fa-solid fa-tv"></i> TV Shows
+  </a>
+
+  <a onclick="scrollToSection('anime-list')">
+    <i class="fa-solid fa-dragon"></i> Anime
+  </a>
+
+  <a onclick="scrollToSection('continue-row')">
+    <i class="fa-solid fa-play"></i> Continue Watching
+  </a>
 </div>
   </footer>
   

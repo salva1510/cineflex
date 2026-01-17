@@ -460,3 +460,40 @@ window.addEventListener("load", () => {
     highlightAccount(true);
   }
 });
+/* =========================
+   FOOTER ACTIVE ANIMATION
+========================= */
+
+const footerButtons = document.querySelectorAll(".mobile-footer button");
+
+function setActiveFooter(index) {
+  footerButtons.forEach(btn => btn.classList.remove("active"));
+  if (footerButtons[index]) {
+    footerButtons[index].classList.add("active");
+  }
+}
+
+/* HOME */
+footerButtons[0].addEventListener("click", () => {
+  setActiveFooter(0);
+});
+
+/* SEARCH */
+footerButtons[1].addEventListener("click", () => {
+  setActiveFooter(1);
+});
+
+/* MENU */
+footerButtons[2].addEventListener("click", () => {
+  setActiveFooter(2);
+});
+
+/* ACCOUNT */
+footerButtons[3].addEventListener("click", () => {
+  setActiveFooter(3);
+});
+
+/* Default active on load */
+window.addEventListener("load", () => {
+  setActiveFooter(0);
+});

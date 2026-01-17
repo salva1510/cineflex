@@ -7,6 +7,7 @@ const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
 let bannerInterval = null;
+let bannerCurrentItem = null;
 let bannerItems = [];
 let bannerIndex = 0;
 let bannerLocked = false;
@@ -86,12 +87,24 @@ function scrollRow(id, amount) {
 function setBanner(item) {
   const banner = document.getElementById("banner");
   if (!banner || !item) return;
+
+  bannerCurrentItem = item;   // ✅ TRACK BANNER ITEM
+  currentItem = item;         // ✅ SYNC FOR PLAYBACK
+
   banner.style.opacity = 0;
+
   setTimeout(() => {
     banner.style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
-    document.getElementById("banner-title").textContent = item.title || item.name;
+    document.getElementById("banner-title").textContent =
+      item.title || item.name;
+
     const bannerDesc = document.getElementById("banner-desc");
-    if(bannerDesc) bannerDesc.textContent = item.overview ? item.overview.substring(0, 150) + "..." : "";
+    if (bannerDesc) {
+      bannerDesc.textContent = item.overview
+        ? item.overview.substring(0, 150) + "..."
+        : "";
+    }
+
     banner.style.opacity = 1;
   }, 300);
 }
@@ -542,14 +555,15 @@ function activateBanner() {
 }
 
 function playBanner(event) {
-  event.stopPropagation(); // prevent re-toggle
-  if (!currentItem) return;
+  event.stopPropagation();
 
-  showDetails(currentItem);
+  if (!bannerCurrentItem) return;
+
+  showDetails(bannerCurrentItem);
 
   setTimeout(() => {
     startPlayback();
-  }, 500);
+  }, 600);
 }
 /* =========================
    SWIPE BANNER (MOBILE)

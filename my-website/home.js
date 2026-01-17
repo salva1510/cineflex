@@ -449,7 +449,7 @@ function startPlayback() {
   // 🔒 BLOCK IF NOT LOGGED IN
   if (!user) {
     openAccount(); // show login modal
-    alert("Please login with Google to play this video.");
+    alert("Join CineFlex to start watching.");
     return;
   }
 

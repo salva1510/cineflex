@@ -526,3 +526,22 @@ function playBanner() {
     startPlayback();
   }, 600);
 }
+/* =========================
+   BANNER TAP LOGIC
+========================= */
+
+function activateBanner() {
+  const banner = document.getElementById("banner");
+  banner.classList.toggle("active");
+}
+
+function playBanner(event) {
+  event.stopPropagation(); // prevent re-toggle
+  if (!currentItem) return;
+
+  showDetails(currentItem);
+
+  setTimeout(() => {
+    startPlayback();
+  }, 500);
+}

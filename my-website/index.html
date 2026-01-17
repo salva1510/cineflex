@@ -61,6 +61,21 @@ if ("serviceWorker" in navigator) {
     </div>
   </div>
 </div>
+  <!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
+    authDomain: "cineflex-login-b8380.firebaseapp.com",
+    projectId: "cineflex-login-b8380",
+    appId: "1:453926417888:web:4c13aefa06f5aed559e785"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+</script>
 <body data-theme="dark">
 
   <nav class="navbar">

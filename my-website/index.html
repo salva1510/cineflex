@@ -40,8 +40,21 @@ if ("serviceWorker" in navigator) {
 
 
       <button id="googleLoginBtn" onclick="googleLogin()"
-        <button
-  id="logoutBtn"
+        style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+background:white;
+color:black;
+font-weight:bold;
+margin-top:14px;
+">
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+style="width:18px;vertical-align:middle;margin-right:8px;">
+Sign in with Google
+        
+ <button id="logoutBtn"
   onclick="logoutAccount()"
   style="
     width:100%;
@@ -55,20 +68,7 @@ if ("serviceWorker" in navigator) {
     display:none;
   ">
   Logout
-      </button>
-style="
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-background:white;
-color:black;
-font-weight:bold;
-margin-top:14px;
-">
-<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-style="width:18px;vertical-align:middle;margin-right:8px;">
-Sign in with Google
+
 </button>
     </div>
   </div>

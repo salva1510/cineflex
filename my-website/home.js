@@ -461,43 +461,53 @@ window.addEventListener("load", () => {
   }
 });
 /* =========================
-   FLOATING FOOTER ACTIVE
+   SLIDING FOOTER INDICATOR
 ========================= */
 
-const footerBtns = document.querySelectorAll(".mobile-footer button");
+const footerButtons = document.querySelectorAll(".mobile-footer button");
+const indicator = document.querySelector(".footer-indicator");
 
-function activateFooter(index) {
-  footerBtns.forEach(btn => btn.classList.remove("active"));
-  if (footerBtns[index]) {
-    footerBtns[index].classList.add("active");
-  }
+function moveIndicator(index) {
+  footerButtons.forEach(btn => btn.classList.remove("active"));
+
+  const btn = footerButtons[index];
+  if (!btn) return;
+
+  btn.classList.add("active");
+
+  const btnRect = btn.getBoundingClientRect();
+  const footerRect = btn.parentElement.getBoundingClientRect();
+
+  const centerX = btnRect.left - footerRect.left + btnRect.width / 2 - 26;
+
+  indicator.style.transform = `translateX(${centerX}px)`;
 }
 
-/* Home */
-footerBtns[0].onclick = () => {
-  activateFooter(0);
+/* HOME */
+footerButtons[0].onclick = () => {
+  moveIndicator(0);
   goHome();
 };
 
-/* Search */
-footerBtns[1].onclick = () => {
-  activateFooter(1);
+/* SEARCH */
+footerButtons[1].onclick = () => {
+  moveIndicator(1);
   openSearchModal();
 };
 
-/* Menu */
-footerBtns[2].onclick = () => {
-  activateFooter(2);
+/* MENU */
+footerButtons[2].onclick = () => {
+  moveIndicator(2);
   toggleMenu();
 };
 
-/* Account */
-footerBtns[3].onclick = () => {
-  activateFooter(3);
+/* ACCOUNT */
+footerButtons[3].onclick = () => {
+  moveIndicator(3);
   openAccount();
 };
 
-/* Default */
+/* DEFAULT */
 window.addEventListener("load", () => {
-  activateFooter(0);
+  moveIndicator(0);
 });

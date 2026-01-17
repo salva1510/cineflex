@@ -461,39 +461,43 @@ window.addEventListener("load", () => {
   }
 });
 /* =========================
-   FOOTER ACTIVE ANIMATION
+   FLOATING FOOTER ACTIVE
 ========================= */
 
-const footerButtons = document.querySelectorAll(".mobile-footer button");
+const footerBtns = document.querySelectorAll(".mobile-footer button");
 
-function setActiveFooter(index) {
-  footerButtons.forEach(btn => btn.classList.remove("active"));
-  if (footerButtons[index]) {
-    footerButtons[index].classList.add("active");
+function activateFooter(index) {
+  footerBtns.forEach(btn => btn.classList.remove("active"));
+  if (footerBtns[index]) {
+    footerBtns[index].classList.add("active");
   }
 }
 
-/* HOME */
-footerButtons[0].addEventListener("click", () => {
-  setActiveFooter(0);
-});
+/* Home */
+footerBtns[0].onclick = () => {
+  activateFooter(0);
+  goHome();
+};
 
-/* SEARCH */
-footerButtons[1].addEventListener("click", () => {
-  setActiveFooter(1);
-});
+/* Search */
+footerBtns[1].onclick = () => {
+  activateFooter(1);
+  openSearchModal();
+};
 
-/* MENU */
-footerButtons[2].addEventListener("click", () => {
-  setActiveFooter(2);
-});
+/* Menu */
+footerBtns[2].onclick = () => {
+  activateFooter(2);
+  toggleMenu();
+};
 
-/* ACCOUNT */
-footerButtons[3].addEventListener("click", () => {
-  setActiveFooter(3);
-});
+/* Account */
+footerBtns[3].onclick = () => {
+  activateFooter(3);
+  openAccount();
+};
 
-/* Default active on load */
+/* Default */
 window.addEventListener("load", () => {
-  setActiveFooter(0);
+  activateFooter(0);
 });

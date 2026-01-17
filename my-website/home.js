@@ -511,3 +511,18 @@ footerButtons[3].onclick = () => {
 window.addEventListener("load", () => {
   moveIndicator(0);
 });
+/* =========================
+   PLAY BANNER MOVIE
+========================= */
+
+function playBanner() {
+  if (!currentItem) return;
+
+  // Open details modal
+  showDetails(currentItem);
+
+  // Auto start playback
+  setTimeout(() => {
+    startPlayback();
+  }, 600);
+}

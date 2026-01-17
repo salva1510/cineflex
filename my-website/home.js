@@ -324,43 +324,26 @@ function closeAccount() {
   document.body.style.overflow = "auto";
 }
 
-function loginAccount() {
-  const username = document.getElementById("usernameInput").value.trim();
-  if (!username) return alert("Enter username");
+function googleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
 
-  localStorage.setItem("cineflexUser", username);
-  updateAccountUI();
-  highlightAccount(true);
-}
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
 
-function logoutAccount() {
-  localStorage.removeItem("cineflexUser");
-  updateAccountUI();
-  highlightAccount(false);
-}
+      localStorage.setItem("cineflexUser", JSON.stringify({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }));
 
-function updateAccountUI() {
-  const user = localStorage.getItem("cineflexUser");
-
-  document.getElementById("loginBtn").style.display = user ? "none" : "block";
-  document.getElementById("logoutBtn").style.display = user ? "block" : "none";
-
-  document.getElementById("accountStatus").textContent = user
-    ? `Logged in as ${user}`
-    : "Login to continue";
-
-  document.getElementById("usernameInput").style.display = user ? "none" : "block";
-}
-
-function highlightAccount(active) {
-  const buttons = document.querySelectorAll(".mobile-footer button");
-  const accountBtn = buttons[3]; // account button
-
-  if (active) {
-    accountBtn.style.color = "#e50914";
-  } else {
-    accountBtn.style.color = "#888";
-  }
+      updateAccountUI();
+      highlightAccount(true);
+      closeAccount();
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
 }
 
 /* AUTO CHECK ON LOAD */

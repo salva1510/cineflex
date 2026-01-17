@@ -388,3 +388,13 @@ function startPlayback() {
     iframe.src = `https://${server}/movie/${currentItem.id}`;
   }
 }
+let searchTimer;
+
+function searchTMDB() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(runSearch, 400);
+}
+
+async function runSearch() {
+  ...
+}

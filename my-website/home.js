@@ -385,19 +385,24 @@ function updateAccountUI() {
 
   const logoutBtn = document.getElementById("logoutBtn");
   const accountStatus = document.getElementById("accountStatus");
+  const googleBtn = document.getElementById("googleLoginBtn");
 
   if (!accountStatus) return;
 
   if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
+  if (googleBtn) googleBtn.style.display = user ? "none" : "block";
 
-  accountStatus.innerHTML = user
-    ? `
-      <img src="${user.photo}" 
-           style="width:48px;height:48px;border-radius:50%;margin-bottom:8px;">
-      <div style="font-weight:bold">${user.name}</div>
-      <div style="font-size:12px;opacity:.7">${user.email}</div>
-    `
-    : "Login with Google to continue";
+  if (!user) {
+    accountStatus.textContent = "Login with Google to continue";
+    return;
+  }
+
+  accountStatus.innerHTML = `
+    <img src="${user.photo}" 
+         style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
+    <div style="font-weight:bold">${user.name}</div>
+    ${user.email ? `<div style="font-size:12px;opacity:.7">${user.email}</div>` : ""}
+  `;
 }
 function logoutAccount() {
   auth.signOut();

@@ -615,3 +615,10 @@ function closeLoginPopup() {
   const popup = document.getElementById("loginPopup");
   if (popup) popup.style.display = "none";
 }
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  closeMenu();
+}

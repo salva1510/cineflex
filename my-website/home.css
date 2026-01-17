@@ -903,3 +903,27 @@ body {
     opacity: 1;
   }
 }
+.menu-drawer a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  transition: all 0.25s ease;
+}
+
+.menu-drawer a i {
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.menu-drawer a:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.menu-drawer a:hover i {
+  color: white;
+}

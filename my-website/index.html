@@ -96,18 +96,16 @@ Sign in with Google
     </div>
   </nav>
 
-  <section class="banner" id="banner">
-  <div class="banner-overlay"></div>
-
+  <section class="banner" id="banner" onclick="activateBanner()">
   <div class="banner-content">
     <h1 id="banner-title">Loading...</h1>
     <p id="banner-desc">Discover the latest trending entertainment.</p>
 
-    <button class="banner-play-btn" onclick="playBanner()">
-      <i class="fa-solid fa-play"></i> Play Now
+    <button class="banner-play-btn" onclick="playBanner(event)">
+      <i class="fa-solid fa-play"></i> Play
     </button>
 
-    <span class="banner-ready">READY TO PLAY</span>
+    <div class="banner-ready">READY TO PLAY</div>
   </div>
 </section>
 

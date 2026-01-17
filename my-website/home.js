@@ -380,15 +380,24 @@ function googleLogin() {
     });
 }
 function updateAccountUI() {
-  const user = JSON.parse(localStorage.getItem("cineflexUser"));
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
 
-  document.getElementById("loginBtn").style.display = user ? "none" : "block";
-  document.getElementById("logoutBtn").style.display = user ? "block" : "none";
-  document.getElementById("usernameInput").style.display = "none";
+  const logoutBtn = document.getElementById("logoutBtn");
+  const accountStatus = document.getElementById("accountStatus");
 
-  document.getElementById("accountStatus").innerHTML = user
-    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;"><br>${user.name}`
-    : "Login to continue";
+  if (!accountStatus) return;
+
+  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
+
+  accountStatus.innerHTML = user
+    ? `
+      <img src="${user.photo}" 
+           style="width:48px;height:48px;border-radius:50%;margin-bottom:8px;">
+      <div style="font-weight:bold">${user.name}</div>
+      <div style="font-size:12px;opacity:.7">${user.email}</div>
+    `
+    : "Login with Google to continue";
 }
 function logoutAccount() {
   auth.signOut();
@@ -422,3 +431,9 @@ function startPlayback() {
     iframe.src = `https://${server}/movie/${currentItem.id}`;
   }
 }
+window.addEventListener("load", () => {
+  if (localStorage.getItem("cineflexUser")) {
+    updateAccountUI();
+    highlightAccount(true);
+  }
+});

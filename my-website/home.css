@@ -483,3 +483,74 @@ body {
 .mobile-footer button.active {
   color: var(--accent);
 }
+/* =========================
+   MOBILE FOOTER BUTTON ANIMATION
+========================= */
+
+.mobile-footer button {
+  position: relative;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Tap animation */
+.mobile-footer button:active {
+  transform: scale(0.88);
+}
+
+/* ICON bounce */
+.mobile-footer button i {
+  transition: transform 0.3s ease;
+}
+
+.mobile-footer button.active i {
+  transform: translateY(-4px) scale(1.1);
+}
+
+/* Active glow */
+.mobile-footer button.active {
+  color: var(--accent);
+}
+
+.mobile-footer button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulseDot 1.2s infinite;
+}
+
+/* Ripple effect */
+.mobile-footer button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: rgba(229, 9, 20, 0.25);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.mobile-footer button:active::before {
+  animation: ripple 0.4s ease-out;
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.6); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}

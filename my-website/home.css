@@ -815,3 +815,91 @@ body {
   touch-action: pan-y;
   transition: background-position 0.4s ease;
 }
+/* =========================
+   NETFLIX STYLE LOGIN POPUP
+========================= */
+
+.login-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 9000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-popup {
+  background: #141414;
+  padding: 28px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  animation: popupFadeIn 0.3s ease;
+}
+
+.login-popup-icon {
+  width: 70px;
+  height: 70px;
+  background: #e50914;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 26px;
+  color: white;
+  box-shadow: 0 0 25px rgba(229,9,20,0.7);
+}
+
+.login-popup h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.login-popup p {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 18px;
+}
+
+.login-popup-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.login-popup-btn img {
+  width: 18px;
+}
+
+.login-popup-close {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 13px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+@keyframes popupFadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

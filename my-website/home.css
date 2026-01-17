@@ -644,3 +644,93 @@ body {
   opacity: 0;
   transform: translateY(6px);
 }
+/* =========================
+   SLIDE HOVER BANNER
+========================= */
+
+.banner {
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* SLIDING IMAGE EFFECT */
+.banner:hover {
+  background-position: center 15%;
+}
+
+/* DARK OVERLAY */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(5,5,5,0.85),
+    rgba(5,5,5,0.4),
+    rgba(5,5,5,0.1)
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+.banner:hover .banner-overlay {
+  opacity: 1;
+}
+
+/* CONTENT ABOVE OVERLAY */
+.banner-content {
+  position: relative;
+  z-index: 2;
+  transform: translateX(0);
+  transition: transform 0.35s ease;
+}
+
+.banner:hover .banner-content {
+  transform: translateX(14px);
+}
+
+/* PLAY BUTTON */
+.banner-play-btn {
+  margin-top: 18px;
+  padding: 14px 26px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(229,9,20,0.7);
+}
+
+.banner:hover .banner-play-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* READY TEXT */
+.banner-ready {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.banner:hover .banner-ready {
+  opacity: 0.85;
+}
+
+/* MOBILE TAP SUPPORT */
+@media (max-width: 768px) {
+  .banner:active .banner-overlay,
+  .banner:active .banner-play-btn,
+  .banner:active .banner-ready {
+    opacity: 1;
+  }
+}

@@ -25,6 +25,24 @@ if ("serviceWorker" in navigator) {
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e50914">
 </head>
+  <!-- LOGIN REQUIRED POPUP -->
+<div class="login-popup-overlay" id="loginPopup">
+  <div class="login-popup">
+    <div class="login-popup-icon">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+
+    <h2>Join CineFlex</h2>
+    <p>Join CineFlex to unlock this content</p>
+
+    <button class="login-popup-btn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+      Sign in with Google
+    </button>
+
+    <span class="login-popup-close" onclick="closeLoginPopup()">Not now</span>
+  </div>
+</div>
   <!-- ACCOUNT MODAL -->
 <div class="modal" id="accountModal">
   <div class="modal-overlay" onclick="closeAccount()"></div>

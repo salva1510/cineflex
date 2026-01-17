@@ -384,31 +384,39 @@ function updateAccountUI() {
   const user = userRaw ? JSON.parse(userRaw) : null;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  const accountStatus = document.getElementById("accountStatus");
   const googleBtn = document.getElementById("googleLoginBtn");
+  const accountStatus = document.getElementById("accountStatus");
 
   if (!accountStatus) return;
 
-  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
-  if (googleBtn) googleBtn.style.display = user ? "none" : "block";
+  if (user) {
+    if (logoutBtn) logoutBtn.style.display = "block";
+    if (googleBtn) googleBtn.style.display = "none";
 
-  if (!user) {
+    accountStatus.innerHTML = `
+      <img src="${user.photo}"
+           style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
+      <div style="font-weight:bold">${user.name}</div>
+      ${user.email ? `<div style="font-size:12px;opacity:.7">${user.email}</div>` : ""}
+    `;
+  } else {
+    if (logoutBtn) logoutBtn.style.display = "none";
+    if (googleBtn) googleBtn.style.display = "block";
+
     accountStatus.textContent = "Login with Google to continue";
-    return;
   }
-
-  accountStatus.innerHTML = `
-    <img src="${user.photo}" 
-         style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
-    <div style="font-weight:bold">${user.name}</div>
-    ${user.email ? `<div style="font-size:12px;opacity:.7">${user.email}</div>` : ""}
-  `;
 }
 function logoutAccount() {
-  auth.signOut();
+  // Firebase logout
+  if (typeof auth !== "undefined") {
+    auth.signOut().catch(() => {});
+  }
+
   localStorage.removeItem("cineflexUser");
+
   updateAccountUI();
   highlightAccount(false);
+}
 }
 
 /* AUTO CHECK ON LOAD */

@@ -7,6 +7,9 @@ const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 let currentItem = null;
 let bannerInterval = null;
+let bannerItems = [];
+let bannerIndex = 0;
+let bannerLocked = false;
 
 /* =========================
    FETCH HELPERS
@@ -95,15 +98,17 @@ function setBanner(item) {
 
 function autoRotateBanner(items) {
   if (!items || items.length === 0) return;
-  let index = 0;
-  setBanner(items[index]);
+
+  bannerIndex = 0;
+  setBanner(items[bannerIndex]);
+
   clearInterval(bannerInterval);
   bannerInterval = setInterval(() => {
-    index = (index + 1) % items.length;
-    setBanner(items[index]);
+    if (bannerLocked) return;
+    bannerIndex = (bannerIndex + 1) % items.length;
+    setBanner(items[bannerIndex]);
   }, 8000);
 }
-
 /* =========================
    MODAL & PLAYER
 ========================= */
@@ -287,7 +292,8 @@ Promise.all([
   fetchTrending("tv"),
   fetchTrendingAnime()
 ]).then(([trending, latest, top, tv, anime]) => {
-  autoRotateBanner(trending);
+  bannerItems = trending;
+autoRotateBanner(trending);
   displayList(trending, "movies-list");
   displayList(latest, "latest-movies-list");
   displayList(top, "top-rated-list");
@@ -544,4 +550,44 @@ function playBanner(event) {
   setTimeout(() => {
     startPlayback();
   }, 500);
+}
+/* =========================
+   SWIPE BANNER (MOBILE)
+========================= */
+
+const bannerEl = document.getElementById("banner");
+let touchStartX = 0;
+let touchEndX = 0;
+
+bannerEl.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+bannerEl.addEventListener("touchend", (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleBannerSwipe();
+});
+
+function handleBannerSwipe() {
+  if (!bannerItems.length) return;
+
+  const diff = touchStartX - touchEndX;
+
+  if (Math.abs(diff) < 50) return; // ignore small swipes
+
+  bannerLocked = true; // ⛔ stop auto slide
+
+  if (diff > 0) {
+    // 👉 Swipe LEFT (next)
+    bannerIndex = (bannerIndex + 1) % bannerItems.length;
+  } else {
+    // 👈 Swipe RIGHT (prev)
+    bannerIndex =
+      (bannerIndex - 1 + bannerItems.length) % bannerItems.length;
+  }
+
+  setBanner(bannerItems[bannerIndex]);
+
+  // reset active state
+  document.getElementById("banner").classList.remove("active");
 }

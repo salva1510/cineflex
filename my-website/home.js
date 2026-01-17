@@ -364,6 +364,7 @@ window.addEventListener("load", () => {
   }
 });
 function startPlayback() {
+   localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
   const container = document.querySelector(".video-container");
   const iframe = document.getElementById("modal-video");
 

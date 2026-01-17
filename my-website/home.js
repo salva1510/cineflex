@@ -268,6 +268,12 @@ async function searchTMDB() {
 /* =========================
    INITIALIZE
 ========================= */
+const saved = localStorage.getItem("continueWatchingItem");
+if (saved) {
+  const item = JSON.parse(saved);
+  document.getElementById("continue-row").style.display = "block";
+  displayList([item], "continue-list");
+}
 showSkeleton("movies-list");
 showSkeleton("latest-movies-list");
 showSkeleton("top-rated-list");

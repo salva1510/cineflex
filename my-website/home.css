@@ -790,3 +790,8 @@ body {
 .banner-content {
   transition: transform 0.35s ease;
 }
+/* Smooth swipe feel */
+.banner {
+  touch-action: pan-y;
+  transition: background-position 0.4s ease;
+}

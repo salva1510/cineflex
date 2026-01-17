@@ -337,9 +337,43 @@ function googleLogin() {
         photo: user.photoURL
       }));
 
-      updateAccountUI();
-      highlightAccount(true);
-      closeAccount();
+      function updateAccountUI() {
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const usernameInput = document.getElementById("usernameInput");
+  const accountStatus = document.getElementById("accountStatus");
+
+  if (!accountStatus) return;
+
+  if (loginBtn) loginBtn.style.display = user ? "none" : "block";
+  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
+  if (usernameInput) usernameInput.style.display = "none";
+
+  accountStatus.innerHTML = user
+    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;margin-bottom:6px;"><br>${user.name}`
+    : "Login to continue";
+}
+      function highlightAccount(active) {
+  const buttons = document.querySelectorAll(".mobile-footer button");
+
+  // SAFETY CHECK
+  if (!buttons || buttons.length < 4) return;
+
+  const accountBtn = buttons[3];
+  if (!accountBtn) return;
+
+  accountBtn.style.color = active ? "#e50914" : "#888";
+}
+      function closeAccount() {
+  const modal = document.getElementById("accountModal");
+  if (!modal) return;
+
+  modal.style.display = "none";
+  document.body.style.overflow = "auto";
+}
     })
     .catch((error) => {
       alert(error.message);

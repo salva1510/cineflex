@@ -345,6 +345,23 @@ function googleLogin() {
       alert(error.message);
     });
 }
+function updateAccountUI() {
+  const user = JSON.parse(localStorage.getItem("cineflexUser"));
+
+  document.getElementById("loginBtn").style.display = user ? "none" : "block";
+  document.getElementById("logoutBtn").style.display = user ? "block" : "none";
+  document.getElementById("usernameInput").style.display = "none";
+
+  document.getElementById("accountStatus").innerHTML = user
+    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;"><br>${user.name}`
+    : "Login to continue";
+}
+function logoutAccount() {
+  auth.signOut();
+  localStorage.removeItem("cineflexUser");
+  updateAccountUI();
+  highlightAccount(false);
+}
 
 /* AUTO CHECK ON LOAD */
 window.addEventListener("load", () => {

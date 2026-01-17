@@ -554,3 +554,60 @@ body {
   50% { transform: scale(1.6); opacity: 1; }
   100% { transform: scale(1); opacity: 0.7; }
 }
+/* =========================
+   FLOATING ACTIVE ICON
+========================= */
+
+.mobile-footer {
+  position: fixed;
+  bottom: 0;
+}
+
+.mobile-footer button {
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+/* ICON BASE */
+.mobile-footer button i {
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+/* FLOAT EFFECT */
+.mobile-footer button.active i {
+  transform: translateY(-10px) scale(1.15);
+  filter: drop-shadow(0 6px 10px rgba(229,9,20,0.6));
+}
+
+/* LABEL FADE */
+.mobile-footer button span {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.mobile-footer button.active span {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* FLOATING GLOW CIRCLE */
+.mobile-footer button.active::after {
+  content: "";
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  background: rgba(229,9,20,0.15);
+  border-radius: 50%;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow:
+    0 0 20px rgba(229,9,20,0.8),
+    0 0 40px rgba(229,9,20,0.4);
+  animation: floatPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes floatPulse {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+  50% { transform: translateX(-50%) scale(1.25); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+}

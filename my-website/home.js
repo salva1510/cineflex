@@ -344,6 +344,7 @@ function closeAccount() {
 }
 
 function googleLogin() {
+   closeLoginPopup();
   const provider = new firebase.auth.GoogleAuthProvider();
 
   auth.signInWithPopup(provider)
@@ -449,7 +450,7 @@ function startPlayback() {
   // 🔒 BLOCK IF NOT LOGGED IN
   if (!user) {
     openAccount(); // show login modal
-    alert("Join CineFlex to start watching.");
+    openLoginPopup();
     return;
   }
 
@@ -604,4 +605,13 @@ function handleBannerSwipe() {
 
   // reset active state
   document.getElementById("banner").classList.remove("active");
+}
+function openLoginPopup() {
+  const popup = document.getElementById("loginPopup");
+  if (popup) popup.style.display = "flex";
+}
+
+function closeLoginPopup() {
+  const popup = document.getElementById("loginPopup");
+  if (popup) popup.style.display = "none";
 }

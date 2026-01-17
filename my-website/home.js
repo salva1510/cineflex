@@ -425,11 +425,22 @@ window.addEventListener("load", () => {
   }
 });
 function startPlayback() {
-   localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
+  const user = localStorage.getItem("cineflexUser");
+
+  // 🔒 BLOCK IF NOT LOGGED IN
+  if (!user) {
+    openAccount(); // show login modal
+    alert("Please login with Google to play this video.");
+    return;
+  }
+
+  // ✅ USER LOGGED IN — ALLOW PLAY
+  localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
+
   const container = document.querySelector(".video-container");
   const iframe = document.getElementById("modal-video");
 
-  if (!currentItem) return;
+  if (!currentItem || !container || !iframe) return;
 
   container.classList.add("video-playing");
 

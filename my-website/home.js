@@ -4,6 +4,8 @@
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
+const db = firebase.firestore();
+
 
 let currentItem = null;
 let bannerInterval = null;
@@ -282,6 +284,39 @@ async function searchTMDB() {
   });
 }
 
+
+// Fetch and display the Watchlist row
+async function loadWatchlist() {
+  const user = auth.currentUser;
+  const row = document.getElementById("watchlist-row");
+  const container = document.getElementById("watchlist-list");
+
+  if (!user) {
+    row.style.display = "none";
+    return;
+  }
+
+  const snapshot = await db.collection("users").doc(user.uid).collection("watchlist").orderBy("addedAt", "desc").get();
+  
+  if (snapshot.empty) {
+    row.style.display = "none";
+    return;
+  }
+
+  row.style.display = "block";
+  const items = snapshot.docs.map(doc => doc.data());
+  displayList(items, "watchlist-list");
+}
+
+// Hook into existing Auth state change
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    loadWatchlist();
+  } else {
+    document.getElementById("watchlist-row").style.display = "none";
+  }
+});
+       
 
 /* =========================
    INITIALIZE

@@ -244,6 +244,31 @@ body {
   z-index: 5001;
   cursor: pointer;
 }
+.similar-container {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+}
+
+.similar-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.similar-container::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+/* Make sure modal cards are a bit smaller than the main ones */
+#similar-list .card {
+  width: 120px;
+  height: 180px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
 
 /* MOBILE FIXES */
 @media (max-width: 768px) {

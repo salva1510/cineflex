@@ -927,3 +927,35 @@ body {
 .menu-drawer a:hover i {
   color: white;
 }
+.genre-container {
+  padding: 20px 5%;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.genre-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.genre-pill {
+  background: var(--surface-light);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 20px;
+  border-radius: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.genre-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.genre-pill:hover {
+  background: rgba(255,255,255,0.2);
+}
+

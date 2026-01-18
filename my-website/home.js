@@ -5,7 +5,6 @@ const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
 
-
 let currentItem = null;
 let bannerInterval = null;
 let bannerCurrentItem = null;
@@ -16,62 +15,6 @@ let bannerLocked = false;
 /* =========================
    FETCH HELPERS
 ========================= */
-// 1. YOUR FIREBASE CONFIG (Make sure this matches your Firebase project settings)
-const firebaseConfig = {
-  apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
-  authDomain: "cineflex-login-b8380.firebaseapp.com",
-  projectId: "cineflex-login-b8380",
-  storageBucket: "cineflex-login-b8380.firebasestorage.app ",
-  messagingSenderId: "...",
-  appId: "..."
-};
-
-// 2. Initialize Firebase & Firestore
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const auth = firebase.auth();
-const db = firebase.firestore(); // This is the line that connects to the DB
-
-// 3. The Toggle Function (Fixed for your UI)
-async function toggleWatchlist() {
-  const user = auth.currentUser;
-  
-  // If not logged in, show your existing login popup
-  if (!user) {
-    openLoginPopup(); 
-    return;
-  }
-
-  if (!currentItem) return;
-
-  const btn = document.getElementById("watchlist-btn");
-  const itemRef = db.collection("users").doc(user.uid).collection("watchlist").doc(currentItem.id.toString());
-
-  try {
-    const doc = await itemRef.get();
-    if (doc.exists) {
-      await itemRef.delete();
-      btn.innerHTML = `<i class="fa-solid fa-plus"></i> My List`;
-      console.log("Removed from list");
-    } else {
-      await itemRef.set({
-        id: currentItem.id,
-        title: currentItem.title || currentItem.name,
-        poster_path: currentItem.poster_path,
-        media_type: currentItem.media_type || "movie",
-        addedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> In List`;
-      console.log("Added to list");
-    }
-    loadWatchlist(); // Refresh the horizontal row on the home screen
-  } catch (error) {
-    console.error("Error updating watchlist:", error);
-    alert("Database error. Make sure Firestore is enabled in 'Test Mode'.");
-  }
-}
-
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);

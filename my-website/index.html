@@ -94,8 +94,7 @@ Sign in with Google
   <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  
+
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
@@ -140,17 +139,6 @@ Sign in with Google
     <button class="scroll-btn right" onclick="scrollRow('continue-list', 500)">›</button>
   </div>
 </div>
-    <div class="row" id="watchlist-row" style="display:none;">
-  <div class="row-header">
-    <h2>My List</h2>
-  </div>
-  <div class="row-container">
-    <button class="scroll-btn left" onclick="scrollRow('watchlist-list', -500)">‹</button>
-    <div class="list row-list" id="watchlist-list"></div>
-    <button class="scroll-btn right" onclick="scrollRow('watchlist-list', 500)">›</button>
-  </div>
-    </div>
-    
     <!-- TOP RATED MOVIES -->
 <div class="row">
   <div class="row-header">
@@ -232,13 +220,6 @@ Sign in with Google
           <div class="modal-text">
             <h2 id="modal-title"></h2>
             <div class="modal-meta">
-              <div class="modal-meta">
-  <span class="stars" id="modal-rating"></span>
-  <button id="watchlist-btn" onclick="toggleWatchlist()" style="background:none; border:1px solid white; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:15px;">
-    <i class="fa-solid fa-plus"></i> My List
-  </button>
-              </div>
-              
               <span class="stars" id="modal-rating"></span>
             </div>
             <p id="modal-description"></p>

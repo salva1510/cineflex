@@ -15,24 +15,6 @@ let bannerLocked = false;
 /* =========================
    FETCH HELPERS
 ========================= */
-async function fetchSimilar(id, type) {
-  const container = document.getElementById("similar-list");
-  container.innerHTML = "<p>Loading recommendations...</p>";
-
-  // Determine if it's a movie or tv show to use the correct API endpoint
-  const mediaType = type === "tv" ? "tv" : "movie";
-  const url = `${BASE_URL}/${mediaType}/${id}/similar?api_key=${API_KEY}`;
-  
-  const data = await fetchJSON(url);
-  
-  if (data && data.results && data.results.length > 0) {
-    // Reuse your existing displayList function!
-    displayList(data.results.slice(0, 10), "similar-list");
-  } else {
-    container.innerHTML = "<p style='opacity:0.5'>No similar titles found.</p>";
-  }
-}
-
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);
@@ -188,10 +170,13 @@ async function showDetails(item) {
   
   modal.style.display = "block";
 
-  // NEW: Fetch similar content based on the current item's ID
-  const type = item.media_type || (item.first_air_date ? "tv" : "movie");
-  fetchSimilar(item.id, type);
-} else {
+  const isTv = item.media_type === "tv" || item.first_air_date;
+  const tvControls = document.getElementById("tv-controls");
+  
+  if (isTv) {
+    tvControls.style.display = "block";
+    await loadSeasons(item.id);
+  } else {
     tvControls.style.display = "none";
     changeServer();
   }

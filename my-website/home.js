@@ -181,6 +181,26 @@ async function showDetails(item) {
     changeServer();
   }
 }
+  // --- START OF SIMILAR MOVIES CODE ---
+  const similarContainer = document.getElementById("similar-list");
+  similarContainer.innerHTML = "Loading..."; // Show loading text
+
+  const type = item.media_type || (item.first_air_date ? "tv" : "movie");
+  const similarUrl = `${BASE_URL}/${type}/${item.id}/similar?api_key=${API_KEY}`;
+
+  fetch(similarUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (data.results && data.results.length > 0) {
+        // This uses your existing displayList function to show the cards
+        displayList(data.results.slice(0, 10), "similar-list");
+      } else {
+        similarContainer.innerHTML = "No similar titles found.";
+      }
+    })
+    .catch(err => console.error("Error fetching similar:", err));
+  // --- END OF SIMILAR MOVIES CODE ---
+
 
 function closeModal() {
   document.getElementById("modal").style.display = "none";

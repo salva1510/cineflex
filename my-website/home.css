@@ -1,0 +1,74 @@
+/* ========================= CINEFLEX PREMIUM UI ========================= */ :root { --bg: #050505; --surface: #141414; --surface-light: #1f1f1f; --text: #ffffff; --text-dim: #b3b3b3; --accent: #e50914; }
+
+{ margin: 0; padding: 0; box-sizing: border-box; }
+
+
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+/* ========================= NAVBAR ========================= */ .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
+
+.logo { font-size: 1.8rem; font-weight: 900; color: var(--accent); }
+
+/* ========================= HERO BANNER ========================= */ .banner { height: 50vh; min-height: 400px; background-size: cover; background-position: center top; position: relative; display: flex; align-items: flex-end; padding: 0 5% 100px; transition: opacity 0.5s ease; }
+
+.banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #050505 15%, transparent 60%), linear-gradient(to right, #050505 10%, transparent 70%); }
+
+.banner-content { position: relative; z-index: 2; max-width: 600px; }
+
+.banner h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 12px; }
+
+.banner p { color: var(--text-dim); font-size: 1rem; line-height: 1.5; }
+
+/* ========================= CONTENT ROWS & SKELETONS ========================= */ .content-wrapper { margin-top: -60px; padding-bottom: 100px; position: relative; z-index: 5; }
+
+.row { margin-bottom: 30px; }
+
+.row-header { padding: 0 5%; margin-bottom: 15px; }
+
+.row-header h2 { font-size: 1.4rem; font-weight: 700; }
+
+.row-list { display: flex; gap: 16px; padding: 0 5% 20px; overflow-x: auto; scrollbar-width: none; }
+
+.row-list::-webkit-scrollbar { display: none; }
+
+.skeleton { width: 170px; height: 255px; background: #1a1a1a; border-radius: 12px; flex-shrink: 0; animation: pulse 1.5s infinite ease-in-out; }
+
+@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+.poster-item { width: 170px; height: 255px; border-radius: 12px; object-fit: cover; cursor: pointer; transition: transform 0.3s ease; }
+
+.poster-item:hover { transform: scale(1.1); }
+
+/* ========================= MODAL ========================= */ .modal { position: fixed; inset: 0; display: none; z-index: 3000; background: rgba(0,0,0,0.95); overflow-y: auto; }
+
+/* ========================= MENU DRAWER ========================= */ .menu-drawer { position: fixed; bottom: 65px; left: 0; right: 0; background: rgba(15,15,15,0.98); backdrop-filter: blur(12px); display: none; flex-direction: column; gap: 12px; padding: 16px; z-index: 6000; animation: menuSlideUp 0.25s ease; }
+
+.menu-drawer a { display: flex; align-items: center; gap: 12px; font-size: 16px; padding: 14px; border-radius: 12px; background: #1a1a1a; transition: all 0.25s ease; text-decoration: none; color: white; }
+
+.menu-drawer a i { color: var(--accent); font-size: 18px; }
+
+.menu-drawer a:hover { background: var(--accent); transform: translateY(-2px); }
+
+.menu-drawer a:hover i { color: white; }
+
+@keyframes menuSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ========================= NETFLIX STYLE LOGIN POPUP ========================= */
+
+.login-popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 9000; display: none; align-items: center; justify-content: center; }
+
+.login-popup { background: #141414; padding: 28px; border-radius: 16px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.8); animation: popupFadeIn 0.3s ease; }
+
+.login-popup-icon { width: 70px; height: 70px; background: #e50914; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 26px; color: white; box-shadow: 0 0 25px rgba(229,9,20,0.7); }
+
+.login-popup h2 { font-size: 22px; margin-bottom: 8px; }
+
+.login-popup p { font-size: 14px; opacity: 0.8; margin-bottom: 18px; }
+
+.login-popup-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: white; color: black; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+
+.login-popup-btn img { width: 18px; }
+
+.login-popup-close { display: inline-block; margin-top: 14px; font-size: 13px; opacity: 0.6; cursor: pointer; }
+
+@keyframes popupFadeIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }

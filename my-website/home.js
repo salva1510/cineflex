@@ -4,6 +4,8 @@
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/original";
+const db = firebase.firestore();
+
 
 let currentItem = null;
 let bannerInterval = null;
@@ -125,19 +127,96 @@ function autoRotateBanner(items) {
 /* =========================
    MODAL & PLAYER
 ========================= */
+// Check if current item is in user's watchlist
+async function updateWatchlistButton(item) {
+  const user = auth.currentUser;
+  const btn = document.getElementById("watchlist-btn");
+  if (!user || !item) {
+    btn.style.display = "none";
+    return;
+  }
+  
+  btn.style.display = "inline-block";
+  const doc = await db.collection("users").doc(user.uid).collection("watchlist").doc(item.id.toString()).get();
+  
+  if (doc.exists) {
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> Remove from List`;
+  } else {
+    btn.innerHTML = `<i class="fa-solid fa-plus"></i> My List`;
+  }
+}
+
+// Add or Remove from Firestore
+async function toggleWatchlist() {
+  const user = auth.currentUser;
+  if (!user) {
+    openAccount();
+    return;
+  }
+
+  const itemRef = db.collection("users").doc(user.uid).collection("watchlist").doc(currentItem.id.toString());
+  const doc = await itemRef.get();
+
+  if (doc.exists) {
+    await itemRef.delete();
+  } else {
+    await itemRef.set({
+      id: currentItem.id,
+      title: currentItem.title || currentItem.name,
+      poster_path: currentItem.poster_path,
+      media_type: currentItem.media_type || (currentItem.first_air_date ? "tv" : "movie"),
+      vote_average: currentItem.vote_average,
+      overview: currentItem.overview,
+      addedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+  
+  updateWatchlistButton(currentItem);
+  loadWatchlist(); // Refresh the row on the home screen
+}
+
+// Fetch and display the Watchlist row
+async function loadWatchlist() {
+  const user = auth.currentUser;
+  const row = document.getElementById("watchlist-row");
+  const container = document.getElementById("watchlist-list");
+
+  if (!user) {
+    row.style.display = "none";
+    return;
+  }
+
+  const snapshot = await db.collection("users").doc(user.uid).collection("watchlist").orderBy("addedAt", "desc").get();
+  
+  if (snapshot.empty) {
+    row.style.display = "none";
+    return;
+  }
+
+  row.style.display = "block";
+  const items = snapshot.docs.map(doc => doc.data());
+  displayList(items, "watchlist-list");
+}
+
+// Hook into existing Auth state change
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    loadWatchlist();
+  } else {
+    document.getElementById("watchlist-row").style.display = "none";
+  }
+});
+
 async function showDetails(item) {
   currentItem = item;
-  document.body.style.overflow = "hidden"; 
+  // ... (existing code to set titles/images) ...
   
-  const modal = document.getElementById("modal");
-  document.getElementById("modal-title").textContent = item.title || item.name;
-  document.getElementById("modal-description").textContent = item.overview || "No description available.";
-  document.getElementById("modal-image").src = `${IMG_URL}${item.poster_path}`;
-  
-  const stars = Math.round(item.vote_average / 2);
-  document.getElementById("modal-rating").innerHTML = "★".repeat(stars) + `<span style="opacity:0.2">${"★".repeat(5-stars)}</span>` + ` (${item.vote_average.toFixed(1)})`;
+  updateWatchlistButton(item); // Update the button state
   
   modal.style.display = "block";
+  // ... (rest of your function) ...
+}
+
 
   const isTv = item.media_type === "tv" || item.first_air_date;
   const tvControls = document.getElementById("tv-controls");

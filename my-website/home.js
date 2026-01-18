@@ -180,8 +180,7 @@ async function showDetails(item) {
     tvControls.style.display = "none";
     changeServer();
   }
-}
-  // --- START OF SIMILAR MOVIES CODE ---
+   // --- START OF SIMILAR MOVIES CODE ---
   const similarContainer = document.getElementById("similar-list");
   similarContainer.innerHTML = "Loading..."; // Show loading text
 
@@ -200,7 +199,7 @@ async function showDetails(item) {
     })
     .catch(err => console.error("Error fetching similar:", err));
   // --- END OF SIMILAR MOVIES CODE ---
-
+}
 
 function closeModal() {
   document.getElementById("modal").style.display = "none";

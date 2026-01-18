@@ -52,6 +52,37 @@ async function fetchTrendingAnime() {
   }
   return anime.map(i => ({ ...i, media_type: "tv" }));
 }
+async function filterByGenre(genreId, element) {
+  // 1. UI Update: Change active button
+  document.querySelectorAll('.genre-pill').forEach(btn => btn.classList.remove('active'));
+  element.classList.add('active');
+
+  // 2. Clear current rows to show the results
+  const mainContent = document.querySelector('main');
+  
+  if (genreId === 'all') {
+      location.reload(); // Simplest way to go back to default
+      return;
+  }
+
+  // 3. Fetch from TMDB by Genre
+  const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genreId}`;
+  const data = await fetchJSON(url);
+
+  if (data && data.results) {
+    // We will clear and repurpose the first row to show results
+    const trendingList = document.getElementById("movies-list");
+    const trendingHeader = trendingList.parentElement.querySelector('h2');
+    
+    trendingHeader.innerText = element.innerText + " Movies";
+    displayList(data.results, "movies-list");
+    
+    // Hide other rows to make it look like a filtered view
+    document.getElementById("tvshows-list").parentElement.parentElement.style.display = 'none';
+    document.getElementById("top-rated-list").parentElement.parentElement.style.display = 'none';
+  }
+}
+
 
 /* =========================
    UI HELPERS

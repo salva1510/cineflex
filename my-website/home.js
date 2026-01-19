@@ -180,25 +180,6 @@ async function showDetails(item) {
     tvControls.style.display = "none";
     changeServer();
   }
-   // --- START OF SIMILAR MOVIES CODE ---
-  const similarContainer = document.getElementById("similar-list");
-  similarContainer.innerHTML = "Loading..."; // Show loading text
-
-  const type = item.media_type || (item.first_air_date ? "tv" : "movie");
-  const similarUrl = `${BASE_URL}/${type}/${item.id}/similar?api_key=${API_KEY}`;
-
-  fetch(similarUrl)
-    .then(res => res.json())
-    .then(data => {
-      if (data.results && data.results.length > 0) {
-        // This uses your existing displayList function to show the cards
-        displayList(data.results.slice(0, 10), "similar-list");
-      } else {
-        similarContainer.innerHTML = "No similar titles found.";
-      }
-    })
-    .catch(err => console.error("Error fetching similar:", err));
-  // --- END OF SIMILAR MOVIES CODE ---
 }
 
 function closeModal() {
@@ -392,8 +373,6 @@ function closeAccount() {
   document.getElementById("accountModal").style.display = "none";
   document.body.style.overflow = "auto";
 }
-let isLoggingIn = false; // This is our Gatekeeper
-
 
 function googleLogin() {
    closeLoginPopup();
@@ -409,45 +388,25 @@ function googleLogin() {
         photo: user.photoURL
       }));
 
-      async function googleLogin() {
-  // 1. Check if the Gatekeeper is already busy
-  if (isLoggingIn) {
-    return; // Stop here! Don't do anything else.
-  }
+      function updateAccountUI() {
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
 
-  // 2. Lock the door so no more clicks get through
-  isLoggingIn = true;
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const usernameInput = document.getElementById("usernameInput");
+  const accountStatus = document.getElementById("accountStatus");
 
-  const provider = new firebase.auth.GoogleAuthProvider();
+  if (!accountStatus) return;
 
-  try {
-    // Start the Firebase popup
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
+  if (loginBtn) loginBtn.style.display = user ? "none" : "block";
+  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
+  if (usernameInput) usernameInput.style.display = "none";
 
-    // Save user data to the browser
-    localStorage.setItem("cineflexUser", JSON.stringify({
-      name: user.displayName,
-      email: user.email,
-      photo: user.photoURL
-    }));
-
-    // Update your website look (UI)
-    updateAccountUI(); 
-    closeLoginPopup();
-
-  } catch (error) {
-    // 3. Handle the error silently if it's just a double-click/cancel
-    if (error.code !== 'auth/cancelled-popup-request') {
-      console.error("Login Error:", error.message);
-      alert("Login failed. Please try again.");
-    }
-  } finally {
-    // 4. UNLOCK the door so the user can try again later
-    isLoggingIn = false;
-  }
+  accountStatus.innerHTML = user
+    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;margin-bottom:6px;"><br>${user.name}`
+    : "Login to continue";
 }
-
       function highlightAccount(active) {
   const buttons = document.querySelectorAll(".mobile-footer button");
 
@@ -694,27 +653,3 @@ function scrollToSection(id) {
   el.scrollIntoView({ behavior: "smooth", block: "start" });
   closeMenu();
 }
-let isSigningIn = false;
-
-function googleLogin() {
-  if (isSigningIn) return; // block duplicate popups
-
-  isSigningIn = true;
-
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      isSigningIn = false;
-      closeLoginPopup();
-      updateUIAfterLogin(result.user);
-    })
-    .catch((error) => {
-      isSigningIn = false;
-
-      if (error.code !== "auth/cancelled-popup-request") {
-        console.error(error);
-      }
-    });
-}
-

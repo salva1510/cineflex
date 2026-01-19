@@ -958,4 +958,15 @@ body {
 .genre-pill:hover {
   background: rgba(255,255,255,0.2);
 }
+/* Similar Movies Styling */
+.similar-container::-webkit-scrollbar {
+  display: none; /* Keeps it clean on mobile */
+}
+
+#similar-list .card {
+  width: 130px; /* Slightly smaller cards for the modal */
+  height: 190px;
+  flex-shrink: 0;
+}
+
 

@@ -392,6 +392,8 @@ function closeAccount() {
   document.getElementById("accountModal").style.display = "none";
   document.body.style.overflow = "auto";
 }
+let isLoggingIn = false; // This is our Gatekeeper
+
 
 function googleLogin() {
    closeLoginPopup();
@@ -407,25 +409,45 @@ function googleLogin() {
         photo: user.photoURL
       }));
 
-      function updateAccountUI() {
-  const userRaw = localStorage.getItem("cineflexUser");
-  const user = userRaw ? JSON.parse(userRaw) : null;
+      async function googleLogin() {
+  // 1. Check if the Gatekeeper is already busy
+  if (isLoggingIn) {
+    return; // Stop here! Don't do anything else.
+  }
 
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const usernameInput = document.getElementById("usernameInput");
-  const accountStatus = document.getElementById("accountStatus");
+  // 2. Lock the door so no more clicks get through
+  isLoggingIn = true;
 
-  if (!accountStatus) return;
+  const provider = new firebase.auth.GoogleAuthProvider();
 
-  if (loginBtn) loginBtn.style.display = user ? "none" : "block";
-  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
-  if (usernameInput) usernameInput.style.display = "none";
+  try {
+    // Start the Firebase popup
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
 
-  accountStatus.innerHTML = user
-    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;margin-bottom:6px;"><br>${user.name}`
-    : "Login to continue";
+    // Save user data to the browser
+    localStorage.setItem("cineflexUser", JSON.stringify({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    }));
+
+    // Update your website look (UI)
+    updateAccountUI(); 
+    closeLoginPopup();
+
+  } catch (error) {
+    // 3. Handle the error silently if it's just a double-click/cancel
+    if (error.code !== 'auth/cancelled-popup-request') {
+      console.error("Login Error:", error.message);
+      alert("Login failed. Please try again.");
+    }
+  } finally {
+    // 4. UNLOCK the door so the user can try again later
+    isLoggingIn = false;
+  }
 }
+
       function highlightAccount(active) {
   const buttons = document.querySelectorAll(".mobile-footer button");
 

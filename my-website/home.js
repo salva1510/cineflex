@@ -694,3 +694,27 @@ function scrollToSection(id) {
   el.scrollIntoView({ behavior: "smooth", block: "start" });
   closeMenu();
 }
+let isSigningIn = false;
+
+function googleLogin() {
+  if (isSigningIn) return; // block duplicate popups
+
+  isSigningIn = true;
+
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      isSigningIn = false;
+      closeLoginPopup();
+      updateUIAfterLogin(result.user);
+    })
+    .catch((error) => {
+      isSigningIn = false;
+
+      if (error.code !== "auth/cancelled-popup-request") {
+        console.error(error);
+      }
+    });
+}
+

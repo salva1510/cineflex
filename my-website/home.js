@@ -11,6 +11,8 @@ let bannerCurrentItem = null;
 let bannerItems = [];
 let bannerIndex = 0;
 let bannerLocked = false;
+let isLoggingIn = false; // This is our Gatekeeper
+
 
 /* =========================
    FETCH HELPERS

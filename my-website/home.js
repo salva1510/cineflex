@@ -395,35 +395,44 @@ function closeAccount() {
   document.body.style.overflow = "auto";
 }
 
-function googleLogin() {
-  closeLoginPopup(); // Close the initial login prompt
+async function googleLogin() {
+  // 1. Check if the Gatekeeper is already busy
+  if (isLoggingIn) {
+    return; // Stop here! Don't do anything else.
+  }
+
+  // 2. Lock the door so no more clicks get through
+  isLoggingIn = true;
+
   const provider = new firebase.auth.GoogleAuthProvider();
 
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
+  try {
+    // Start the Firebase popup
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
 
-      // Save user data to localStorage
-      localStorage.setItem("cineflexUser", JSON.stringify({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      }));
+    // Save user data to the browser
+    localStorage.setItem("cineflexUser", JSON.stringify({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    }));
 
-      // Call the global helper functions to update the UI
-      updateAccountUI(); 
-      highlightAccount(true);
-      closeAccount();
-    })
-    .catch((error) => {
-      // Handle actual errors, but ignore the "cancelled" error we discussed earlier
-      if (error.code !== 'auth/cancelled-popup-request') {
-        console.error("Login Error:", error.message);
-        alert("Login failed: " + error.message);
-      }
-    });
+    // Update your website look (UI)
+    updateAccountUI(); 
+    closeLoginPopup();
+
+  } catch (error) {
+    // 3. Handle the error silently if it's just a double-click/cancel
+    if (error.code !== 'auth/cancelled-popup-request') {
+      console.error("Login Error:", error.message);
+      alert("Login failed. Please try again.");
+    }
+  } finally {
+    // 4. UNLOCK the door so the user can try again later
+    isLoggingIn = false;
+  }
 }
-
 
 function updateAccountUI() {
   const userRaw = localStorage.getItem("cineflexUser");

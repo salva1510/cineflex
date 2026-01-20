@@ -13,6 +13,7 @@ let bannerIndex = 0;
 let bannerLocked = false;
 let isLoggingIn = false; // This is our Gatekeeper
 
+
 /* =========================
    FETCH HELPERS
 ========================= */
@@ -399,10 +400,112 @@ function closeMenu() {
   document.getElementById("menuOverlay").style.display = "none";
   document.body.style.overflow = "auto";
 }
+function openAccount() {
+  document.getElementById("accountModal").style.display = "block";
+  document.body.style.overflow = "hidden";
+  updateAccountUI();
+}
 
+function closeAccount() {
+  document.getElementById("accountModal").style.display = "none";
+  document.body.style.overflow = "auto";
+}
 
+async function googleLogin() {
+  // 1. Check if the Gatekeeper is already busy
+  if (isLoggingIn) {
+    return; // Stop here! Don't do anything else.
+  }
+
+  // 2. Lock the door so no more clicks get through
+  isLoggingIn = true;
+
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  try {
+    // Start the Firebase popup
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+
+    // Save user data to the browser
+    localStorage.setItem("cineflexUser", JSON.stringify({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    }));
+
+    // Update your website look (UI)
+    updateAccountUI(); 
+    closeLoginPopup();
+
+  } catch (error) {
+    // 3. Handle the error silently if it's just a double-click/cancel
+    if (error.code !== 'auth/cancelled-popup-request') {
+      console.error("Login Error:", error.message);
+      alert("Login failed. Please try again.");
+    }
+  } finally {
+    // 4. UNLOCK the door so the user can try again later
+    isLoggingIn = false;
+  }
+}
+
+function updateAccountUI() {
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  const googleBtn = document.getElementById("googleLoginBtn");
+  const accountStatus = document.getElementById("accountStatus");
+
+  if (!accountStatus) return;
+
+  if (user) {
+    if (logoutBtn) logoutBtn.style.display = "block";
+    if (googleBtn) googleBtn.style.display = "none";
+
+    accountStatus.innerHTML = `
+      <img src="${user.photo}"
+           style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
+      <div style="font-weight:bold">${user.name}</div>
+      ${user.email ? `<div style="font-size:12px;opacity:.7">${user.email}</div>` : ""}
+    `;
+  } else {
+    if (logoutBtn) logoutBtn.style.display = "none";
+    if (googleBtn) googleBtn.style.display = "block";
+
+    accountStatus.textContent = "Login with Google to continue";
+  }
+}
+function logoutAccount() {
+  // Firebase logout
+  if (typeof auth !== "undefined") {
+    auth.signOut().catch(() => {});
+  }
+
+  localStorage.removeItem("cineflexUser");
+
+  updateAccountUI();
+  highlightAccount(false);
+}
+
+/* AUTO CHECK ON LOAD */
+window.addEventListener("load", () => {
+  if (localStorage.getItem("cineflexUser")) {
+    highlightAccount(true);
+  }
+});
 function startPlayback() {
-  // Save to "Continue Watching" immediately
+  const user = localStorage.getItem("cineflexUser");
+
+  // 🔒 BLOCK IF NOT LOGGED IN
+  if (!user) {
+    openAccount(); // show login modal
+    openLoginPopup();
+    return;
+  }
+
+  // ✅ USER LOGGED IN — ALLOW PLAY
   localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
 
   const container = document.querySelector(".video-container");
@@ -422,7 +525,6 @@ function startPlayback() {
     iframe.src = `https://${server}/movie/${currentItem.id}`;
   }
 }
-
 window.addEventListener("load", () => {
   if (localStorage.getItem("cineflexUser")) {
     updateAccountUI();

@@ -12,11 +12,91 @@ let bannerItems = [];
 let bannerIndex = 0;
 let bannerLocked = false;
 let isLoggingIn = false; // This is our Gatekeeper
+let watchlist = JSON.parse(localStorage.getItem("cineflex_watchlist")) || [];
+
+function toggleWatchlist() {
+  const index = watchlist.findIndex(i => i.id === currentItem.id);
+  
+  if (index === -1) {
+    watchlist.push(currentItem);
+    alert("Added to My List!");
+  } else {
+    watchlist.splice(index, 1);
+    alert("Removed from My List.");
+  }
+  
+  localStorage.setItem("cineflex_watchlist", JSON.stringify(watchlist));
+  updateWatchlistUI();
+  renderWatchlistRow();
+}
+
+function renderWatchlistRow() {
+  const container = document.getElementById("watchlist-list");
+  if (!container) return;
+  
+  container.innerHTML = "";
+  if (watchlist.length === 0) {
+    container.innerHTML = `<p style="padding: 20px; color: var(--text-dim);">Your list is empty.</p>`;
+    return;
+  }
+
+  watchlist.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "movie-card";
+    card.innerHTML = `<img src="${IMG_URL}${item.poster_path}" alt="${item.title || item.name}">`;
+    card.onclick = () => showDetails(item);
+    container.appendChild(card);
+  });
+}
+
+// Call this on page load
+document.addEventListener("DOMContentLoaded", () => {
+  renderWatchlistRow();
+});
+
 
 
 /* =========================
    FETCH HELPERS
 ========================= */
+// 1. New Helper to fetch trailer
+async function fetchTrailer(id, type) {
+  const data = await fetchJSON(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
+  if (data && data.results) {
+    // Find the first official trailer on YouTube
+    const trailer = data.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    return trailer ? trailer.key : null;
+  }
+  return null;
+}
+
+// 2. Modify your existing showDetails function
+async function showDetails(item) {
+  currentItem = item;
+  const type = item.media_type || (item.title ? 'movie' : 'tv');
+  
+  // Set basic info (Title, Overview, etc.) as you already do...
+  document.getElementById("modalTitle").innerText = item.title || item.name;
+  document.getElementById("modalOverview").innerText = item.overview;
+
+  // FETCH TRAILER KEY
+  const trailerKey = await fetchTrailer(item.id, type);
+  const trailerBtn = document.getElementById("trailerBtn");
+
+  if (trailerKey) {
+    trailerBtn.style.display = "block";
+    trailerBtn.onclick = () => {
+      // Replace the poster/video area with the YouTube Iframe
+      const videoContainer = document.querySelector(".modal-video");
+      videoContainer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${trailerKey}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+    };
+  } else {
+    trailerBtn.style.display = "none";
+  }
+
+  document.getElementById("movieModal").style.display = "flex";
+}
+
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);
@@ -158,6 +238,12 @@ function autoRotateBanner(items) {
 /* =========================
    MODAL & PLAYER
 ========================= */
+<div class="modal-actions">
+  <button class="btn-play" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play</button>
+  <button id="trailerBtn" class="btn-trailer" style="display:none;"><i class="fa-solid fa-clapperboard"></i> Watch Trailer</button>
+  <button id="watchlistBtn" onclick="toggleWatchlist()"><i class="fa-solid fa-plus"></i> My List</button>
+</div>
+
 async function showDetails(item) {
   currentItem = item;
   document.body.style.overflow = "hidden"; 

@@ -968,5 +968,57 @@ body {
   height: 190px;
   flex-shrink: 0;
 }
+/* Container for poster + rating */
+.poster-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.poster-wrapper:hover {
+  transform: scale(1.08);
+  z-index: 10;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+/* Rating Badge Style */
+.poster-rating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  color: #ffc107; /* Gold color for star */
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  z-index: 2;
+}
+
+.poster-rating i {
+  font-size: 10px;
+}
+
+/* Remove old hover effect from the image itself */
+.poster-item:hover {
+  transform: none;
+}
+
+/* Ensure search images fit the new wrapper */
+.search-card .poster-wrapper {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
 
 

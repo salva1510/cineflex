@@ -480,41 +480,7 @@ window.addEventListener("load", () => {
   }
 });
 function startPlayback() {
-  if (!currentItem) return;
-
-  // 1. Get the existing history from localStorage (or an empty list if none exists)
-  let history = JSON.parse(localStorage.getItem("cineflexHistory") || "[]");
-
-  // 2. If the movie is already in the list, remove it (so we can move it to the top)
-  history = history.filter(item => item.id !== currentItem.id);
-
-  // 3. Add the current movie to the START of the list
-  history.unshift(currentItem);
-
-  // 4. Only keep the last 10 movies
-  if (history.length > 10) {
-    history.pop();
-  }
-
-  // 5. Save the updated list back to localStorage
-  localStorage.setItem("cineflexHistory", JSON.stringify(history));
-
-  // Open the video player
-  const videoContainer = document.getElementById("videoContainer");
-  const videoPlayer = document.getElementById("videoPlayer");
-  
-  // (Using your existing player logic here...)
-  const isTV = currentItem.media_type === "tv";
-  videoPlayer.src = isTV 
-    ? `https://vidsrc.icu/embed/tv/${currentItem.id}/1/1`
-    : `https://vidsrc.icu/embed/movie/${currentItem.id}`;
-
-  videoContainer.style.display = "block";
-  
-  // Refresh the "Continue Watching" row on the home page
-  updateContinueRow();
-}
-
+  const user = localStorage.getItem("cineflexUser");
 
   // 🔒 BLOCK IF NOT LOGGED IN
   if (!user) {

@@ -99,13 +99,22 @@ function displayList(items, containerId) {
   const container = document.getElementById(containerId);
   if (!container || !items) return;
   container.innerHTML = "";
+  
   items.forEach((item) => {
-    const img = document.createElement("img");
-    img.src = `${IMG_URL}${item.poster_path}`;
-    img.className = "poster-item";
-    img.loading = "lazy";
-    img.onclick = () => showDetails(item);
-    container.appendChild(img);
+    const wrapper = document.createElement("div");
+    wrapper.className = "poster-wrapper";
+    wrapper.onclick = () => showDetails(item);
+
+    const rating = item.vote_average ? item.vote_average.toFixed(1) : "N/A";
+    
+    wrapper.innerHTML = `
+      <img src="${IMG_URL}${item.poster_path}" class="poster-item" loading="lazy">
+      <div class="poster-rating">
+        <i class="fa-solid fa-star"></i>
+        <span>${rating}</span>
+      </div>
+    `;
+    container.appendChild(wrapper);
   });
 }
 
@@ -314,24 +323,31 @@ async function searchTMDB() {
 
   resultsBox.innerHTML = "";
 
-  items.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "search-card";
+  // Find this section inside searchTMDB items.forEach loop:
+items.forEach(item => {
+  const card = document.createElement("div");
+  card.className = "search-card";
+  const rating = item.vote_average ? item.vote_average.toFixed(1) : "N/A";
 
-    card.innerHTML = `
+  card.innerHTML = `
+    <div class="poster-wrapper">
       <img src="${IMG_URL}${item.poster_path}">
-      <h4>${item.title || item.name}</h4>
-      <span>${item.media_type.toUpperCase()}</span>
-    `;
+      <div class="poster-rating">
+        <i class="fa-solid fa-star"></i>
+        <span>${rating}</span>
+      </div>
+    </div>
+    <h4>${item.title || item.name}</h4>
+    <span>${item.media_type.toUpperCase()}</span>
+  `;
+  
+  card.onclick = () => {
+    closeSearchModal();
+    showDetails(item);
+  };
+  resultsBox.appendChild(card);
+});
 
-    // ✅ SAFE CLICK (same as rows)
-    card.onclick = () => {
-      closeSearchModal();
-      showDetails(item);
-    };
-
-    resultsBox.appendChild(card);
-  });
 }
 
 

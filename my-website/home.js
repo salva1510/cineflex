@@ -480,35 +480,41 @@ window.addEventListener("load", () => {
   }
 });
 function startPlayback() {
-  const user = localStorage.getItem("cineflexUser");
+  if (!currentItem) return;
 
-  // 🔒 BLOCK IF NOT LOGGED IN
-  if (!user) {
-    openAccount(); // show login modal
-    openLoginPopup();
-    return;
+  // 1. Get the existing history from localStorage (or an empty list if none exists)
+  let history = JSON.parse(localStorage.getItem("cineflexHistory") || "[]");
+
+  // 2. If the movie is already in the list, remove it (so we can move it to the top)
+  history = history.filter(item => item.id !== currentItem.id);
+
+  // 3. Add the current movie to the START of the list
+  history.unshift(currentItem);
+
+  // 4. Only keep the last 10 movies
+  if (history.length > 10) {
+    history.pop();
   }
 
-  // ✅ USER LOGGED IN — ALLOW PLAY
-  localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
+  // 5. Save the updated list back to localStorage
+  localStorage.setItem("cineflexHistory", JSON.stringify(history));
 
-  const container = document.querySelector(".video-container");
-  const iframe = document.getElementById("modal-video");
+  // Open the video player
+  const videoContainer = document.getElementById("videoContainer");
+  const videoPlayer = document.getElementById("videoPlayer");
+  
+  // (Using your existing player logic here...)
+  const isTV = currentItem.media_type === "tv";
+  videoPlayer.src = isTV 
+    ? `https://vidsrc.icu/embed/tv/${currentItem.id}/1/1`
+    : `https://vidsrc.icu/embed/movie/${currentItem.id}`;
 
-  if (!currentItem || !container || !iframe) return;
-
-  container.classList.add("video-playing");
-
-  const server = document.getElementById("server").value;
-  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
-
-  if (isTv) {
-    const season = document.getElementById("seasonSelect").value || 1;
-    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
-  } else {
-    iframe.src = `https://${server}/movie/${currentItem.id}`;
-  }
+  videoContainer.style.display = "block";
+  
+  // Refresh the "Continue Watching" row on the home page
+  updateContinueRow();
 }
+
 window.addEventListener("load", () => {
   if (localStorage.getItem("cineflexUser")) {
     updateAccountUI();

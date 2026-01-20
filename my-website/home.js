@@ -395,62 +395,45 @@ function closeAccount() {
   document.body.style.overflow = "auto";
 }
 
-function googleLogin() {
-   closeLoginPopup();
+async function googleLogin() {
+  // 1. Check if the Gatekeeper is already busy
+  if (isLoggingIn) {
+    return; // Stop here! Don't do anything else.
+  }
+
+  // 2. Lock the door so no more clicks get through
+  isLoggingIn = true;
+
   const provider = new firebase.auth.GoogleAuthProvider();
 
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
+  try {
+    // Start the Firebase popup
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
 
-      localStorage.setItem("cineflexUser", JSON.stringify({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      }));
+    // Save user data to the browser
+    localStorage.setItem("cineflexUser", JSON.stringify({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    }));
 
-      function updateAccountUI() {
-  const userRaw = localStorage.getItem("cineflexUser");
-  const user = userRaw ? JSON.parse(userRaw) : null;
+    // Update your website look (UI)
+    updateAccountUI(); 
+    closeLoginPopup();
 
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const usernameInput = document.getElementById("usernameInput");
-  const accountStatus = document.getElementById("accountStatus");
-
-  if (!accountStatus) return;
-
-  if (loginBtn) loginBtn.style.display = user ? "none" : "block";
-  if (logoutBtn) logoutBtn.style.display = user ? "block" : "none";
-  if (usernameInput) usernameInput.style.display = "none";
-
-  accountStatus.innerHTML = user
-    ? `<img src="${user.photo}" style="width:40px;border-radius:50%;margin-bottom:6px;"><br>${user.name}`
-    : "Login to continue";
+  } catch (error) {
+    // 3. Handle the error silently if it's just a double-click/cancel
+    if (error.code !== 'auth/cancelled-popup-request') {
+      console.error("Login Error:", error.message);
+      alert("Login failed. Please try again.");
+    }
+  } finally {
+    // 4. UNLOCK the door so the user can try again later
+    isLoggingIn = false;
+  }
 }
-      function highlightAccount(active) {
-  const buttons = document.querySelectorAll(".mobile-footer button");
 
-  // SAFETY CHECK
-  if (!buttons || buttons.length < 4) return;
-
-  const accountBtn = buttons[3];
-  if (!accountBtn) return;
-
-  accountBtn.style.color = active ? "#e50914" : "#888";
-}
-      function closeAccount() {
-  const modal = document.getElementById("accountModal");
-  if (!modal) return;
-
-  modal.style.display = "none";
-  document.body.style.overflow = "auto";
-}
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-}
 function updateAccountUI() {
   const userRaw = localStorage.getItem("cineflexUser");
   const user = userRaw ? JSON.parse(userRaw) : null;

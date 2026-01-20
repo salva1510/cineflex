@@ -13,6 +13,8 @@ let bannerIndex = 0;
 let bannerLocked = false;
 let isLoggingIn = false; // This is our Gatekeeper
 
+<script src="https://pl28389725.effectivegatecpm.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js"></script>
+
 
 /* =========================
    FETCH HELPERS

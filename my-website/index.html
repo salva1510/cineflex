@@ -147,6 +147,17 @@ Sign in with Google
     <button class="scroll-btn right" onclick="scrollRow('continue-list', 500)">›</button>
   </div>
 </div>
+    <section class="row">
+  <div class="row-header">
+    <h2>Pinoy Movies</h2>
+    <div class="row-nav">
+      <button onclick="scrollRow('pinoy-list', -300)"><i class="fa-solid fa-chevron-left"></i></button>
+      <button onclick="scrollRow('pinoy-list', 300)"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+  <div class="card-container" id="pinoy-list">
+    </div>
+</section>
     <!-- TOP RATED MOVIES -->
 <div class="row">
   <div class="row-header">
@@ -312,6 +323,10 @@ Sign in with Google
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
 <!-- MENU DRAWER -->
+    <a onclick="scrollToSection('pinoy-list')">
+  <i class="fa-solid fa-film"></i> Pinoy Movies
+    </a>
+    
 <div class="menu-drawer" id="menuDrawer">
   <a onclick="scrollToSection('movies-list')">
     <i class="fa-solid fa-fire"></i> Trending Now

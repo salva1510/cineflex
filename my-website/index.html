@@ -190,6 +190,16 @@ Sign in with Google
         <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
       </div>
     </div>
+        <div class="row">
+      <div class="row-header">
+        <h2>Pinoy Movies</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('pinoy-list', -500)">‹</button>
+        <div class="list row-list" id="pinoy-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('pinoy-list', 500)">›</button>
+      </div>
+        </div>
 
     <div class="row">
       <div class="row-header">
@@ -313,6 +323,10 @@ Sign in with Google
 
 <!-- MENU DRAWER -->
 <div class="menu-drawer" id="menuDrawer">
+  <a onclick="scrollToSection('pinoy-list')">
+  <i class="fa-solid fa-film"></i> Pinoy Movies
+  </a>
+  
   <a onclick="scrollToSection('movies-list')">
     <i class="fa-solid fa-fire"></i> Trending Now
   </a>

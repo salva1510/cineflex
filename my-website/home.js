@@ -384,8 +384,8 @@ Promise.all([
   fetchTrendingAnime(),
   fetchPinoyMovies() // <--- Add this
 ]).then(([trending, latest, top, tv, anime, pinoy]) => { // <--- Add pinoy here
-  bannerItems = trending;
-  autoRotateBanner(trending);
+  bannerItems = pinoy;
+  autoRotateBanner(pinoy);
   displayList(trending, "movies-list");
   displayList(latest, "latest-movies-list");
   displayList(top, "top-rated-list");

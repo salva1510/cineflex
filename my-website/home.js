@@ -27,6 +27,12 @@ async function fetchJSON(url) {
     return null;
   }
 }
+async function fetchPinoyMovies() {
+  // Using 'tl' (Tagalog) as the original language filter for Filipino movies
+  const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=tl&sort_by=popularity.desc`;
+  const data = await fetchJSON(url);
+  return data ? data.results.filter(m => m.poster_path).map(m => ({ ...m, media_type: "movie" })) : [];
+}
 
 async function fetchTrending(type) {
   const data = await fetchJSON(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`);
@@ -360,27 +366,34 @@ if (saved) {
   document.getElementById("continue-row").style.display = "block";
   displayList([item], "continue-list");
 }
+showSkeleton("pinoy-list");
 showSkeleton("movies-list");
 showSkeleton("latest-movies-list");
 showSkeleton("top-rated-list");
 showSkeleton("tvshows-list");
 showSkeleton("anime-list");
 
+// Add the skeleton for the new list
+showSkeleton("pinoy-list");
+
 Promise.all([
   fetchTrending("movie"),
   fetchLatestMovies(),
   fetchTopRatedMovies(),
   fetchTrending("tv"),
-  fetchTrendingAnime()
-]).then(([trending, latest, top, tv, anime]) => {
+  fetchTrendingAnime(),
+  fetchPinoyMovies() // <--- Add this
+]).then(([trending, latest, top, tv, anime, pinoy]) => { // <--- Add pinoy here
   bannerItems = trending;
-autoRotateBanner(trending);
+  autoRotateBanner(trending);
   displayList(trending, "movies-list");
   displayList(latest, "latest-movies-list");
   displayList(top, "top-rated-list");
   displayList(tv, "tvshows-list");
   displayList(anime, "anime-list");
+  displayList(pinoy, "pinoy-list"); // <--- Add this
 });
+
 
 function goHome() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 function toggleMenu() {

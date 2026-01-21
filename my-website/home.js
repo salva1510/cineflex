@@ -132,19 +132,23 @@ function scrollRow(id, amount) {
 /* =========================
    BANNER LOGIC
 ========================= */
+/* =========================
+   UPDATED BANNER LOGIC
+========================= */
 function setBanner(item) {
   const banner = document.getElementById("banner");
   if (!banner || !item) return;
 
-  bannerCurrentItem = item;   // ✅ TRACK BANNER ITEM
-  currentItem = item;         // ✅ SYNC FOR PLAYBACK
+  bannerCurrentItem = item;
+  currentItem = item;
 
   banner.style.opacity = 0;
 
   setTimeout(() => {
-    banner.style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
-    document.getElementById("banner-title").textContent =
-      item.title || item.name;
+    // UPDATED: Apply both a gradient and the dynamic image
+    banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 50%), url(${IMG_URL}${item.backdrop_path})`;
+    
+    document.getElementById("banner-title").textContent = item.title || item.name;
 
     const bannerDesc = document.getElementById("banner-desc");
     if (bannerDesc) {

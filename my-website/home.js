@@ -27,6 +27,11 @@ async function fetchJSON(url) {
     return null;
   }
 }
+async function fetchPinoyMovies() {
+  const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=tl&sort_by=popularity.desc`;
+  const data = await fetchJSON(url);
+  return data ? data.results.filter(m => m.poster_path).map(m => ({ ...m, media_type: "movie" })) : [];
+}
 
 async function fetchTrending(type) {
   const data = await fetchJSON(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`);
@@ -367,6 +372,8 @@ showSkeleton("tvshows-list");
 showSkeleton("anime-list");
 
 Promise.all([
+   // Example placement within your existing loading sequence
+fetchPinoyMovies().then(data => displayList(data, "pinoy-list"));
   fetchTrending("movie"),
   fetchLatestMovies(),
   fetchTopRatedMovies(),

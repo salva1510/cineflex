@@ -540,39 +540,47 @@ function playNextEpisode() {
   console.log(`Playing Season ${currentS}, Episode ${currentE}`);
 }
 
-// Update your existing startPlayback to include a "Next" button in the UI if it's a TV show
 function startPlayback() {
   const container = document.getElementById("player-container");
-  const season = document.getElementById("season-select")?.value || 1;
-  const episode = document.getElementById("episode-select")?.value || 1;
+  // Look for the selectors, default to 1 if they don't exist yet
+  const sSelect = document.getElementById("season-select");
+  const eSelect = document.getElementById("episode-select");
+  
+  const season = sSelect ? sSelect.value : 1;
+  const episode = eSelect ? eSelect.value : 1;
 
-  if (!currentItem) return;
+  if (!currentItem) {
+    console.error("No item selected to play");
+    return;
+  }
 
   let embedUrl = "";
+  
+  // Logic for TV Shows (K-Dramas/Series)
   if (currentItem.media_type === "tv") {
     embedUrl = `https://vidsrc.me/embed/tv?tmdb=${currentItem.id}&season=${season}&episode=${episode}`;
     
-    // Add a "Next Episode" overlay button if it doesn't exist
+    // Add the Next Button if it's a TV show
     addNextButton();
   } else {
+    // Logic for Movies
     embedUrl = `https://vidsrc.me/embed/movie?tmdb=${currentItem.id}`;
+    
+    // Remove next button if it's a movie
+    const oldBtn = document.getElementById("auto-next-btn");
+    if (oldBtn) oldBtn.remove();
   }
 
-  container.innerHTML = `<iframe src="${embedUrl}" allowfullscreen frameborder="0"></iframe>`;
+  // Update the iframe
+  container.innerHTML = `
+    <iframe 
+      src="${embedUrl}" 
+      style="width:100%; height:100%; border:none;" 
+      allowfullscreen 
+      referrerpolicy="origin">
+    </iframe>`;
 }
 
-function addNextButton() {
-  // Check if button already exists
-  if (document.getElementById("auto-next-btn")) return;
-
-  const btn = document.createElement("button");
-  btn.id = "auto-next-btn";
-  btn.innerHTML = '<i class="fa-solid fa-forward-step"></i> Next Episode';
-  btn.className = "next-episode-overlay"; // Style this in CSS
-  btn.onclick = playNextEpisode;
-
-  document.getElementById("player-container").appendChild(btn);
-}
 
 window.addEventListener("load", () => {
   if (localStorage.getItem("cineflexUser")) {

@@ -15,7 +15,7 @@ let isLoggingIn = false; // This is our Gatekeeper
 let currentSeason = 1;
 let currentEpisode = 1;
 let autoNextTimer = null;
-
+letplayer = null;
 
 /* =========================
    FETCH HELPERS
@@ -278,24 +278,35 @@ if (saved && saved.id === currentItem.id && saved.season === seasonNum) {
 }
 
 function playEpisode(season, episode) {
-  const server = document.getElementById("server").value;
-  const iframe = document.getElementById("modal-video");
-
-  // Save current position
   currentSeason = season;
   currentEpisode = episode;
 
-  // Save progress (for Continue Watching + Auto Next)
+  function getEpisodeSource(showId, season, episode) {
+  // 🔴 CHANGE THIS TO YOUR REAL VIDEO LINKS
+  return `https://yourcdn.com/${showId}/s${season}/e${episode}.mp4`;
+}
+  if (!player) {
+    player = videojs("modal-video", {
+      autoplay: true,
+      controls: true,
+      fluid: true
+    });
+  }
+
+  player.src({
+    src: videoUrl,
+    type: videoUrl.includes(".m3u8")
+      ? "application/x-mpegURL"
+      : "video/mp4"
+  });
+
+  player.play();
+
   localStorage.setItem("lastEpisode", JSON.stringify({
     id: currentItem.id,
     season,
     episode
   }));
-
-  iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
-
-  // 🔥 AUTO-NEXT FALLBACK TIMER (fake Netflix style)
-  startAutoNextCountdown();
 }
 function startAutoNextCountdown() {
   clearTimeout(autoNextTimer);
@@ -324,6 +335,16 @@ function playNextEpisode() {
   }
 
   playEpisode(currentSeason, nextEpisode);
+}
+function playNextEpisode() {
+  const next = currentEpisode + 1;
+
+  const exists = [...document.querySelectorAll(".episode-card")]
+    .some(card => card.textContent.includes(`EPISODE ${next}`));
+
+  if (!exists) return;
+
+  playEpisode(currentSeason, next);
 }
 function changeServer() {
   const server = document.getElementById("server").value;
@@ -600,6 +621,16 @@ window.addEventListener("load", () => {
     updateAccountUI();
     highlightAccount(true);
   }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const checkPlayer = setInterval(() => {
+    if (player) {
+      player.on("ended", () => {
+        playNextEpisode();
+      });
+      clearInterval(checkPlayer);
+    }
+  }, 300);
 });
 /* =========================
    SLIDING FOOTER INDICATOR

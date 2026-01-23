@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var l=window,h="c1bb3d7d5273875b258c3a3af3c80e65",q=[["siteId",542*475-877+5009470],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],r=["d3d3LmRpc3BsYXl2ZXJ0aXNpbmcuY29tL3hmb3VuZGF0aW9uLm1pbi5jc3M=","ZDNtem9rdHk5NTFjNXcuY2xvdWRmcm9udC5uZXQvb3JzU0hNL2VzaW1wbGUtamVreWxsLXNlYXJjaC5taW4uanM="],c=-1,m,w,a=function(){clearTimeout(w);c++;if(r[c]&&!(1794516513000<(new Date).getTime()&&1<c)){m=l.document.createElement("script");m.type="text/javascript";m.async=!0;var k=l.document.getElementsByTagName("script")[0];m.src="https://"+atob(r[c]);m.crossOrigin="anonymous";m.onerror=a;m.onload=function(){clearTimeout(w);l[h.slice(0,16)+h.slice(0,16)]||a()};w=setTimeout(a,5E3);k.parentNode.insertBefore(m,k)}};if(!l[h]){try{Object.freeze(l[h]=q)}catch(e){}a()}})();
+/*]]>/* */
+  </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+  </script>
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineFlex | Premium Streaming</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#e50914">
+</head>
+  <!-- LOGIN REQUIRED POPUP -->
+<div class="login-popup-overlay" id="loginPopup">
+  <div class="login-popup">
+    <div class="login-popup-icon">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+
+    <h2>Join CineFlex</h2>
+    <p>Join CineFlex to unlock this content</p>
+
+    <button class="login-popup-btn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+      Sign in with Google
+    </button>
+
+    <span class="login-popup-close" onclick="closeLoginPopup()">Not now</span>
+  </div>
+</div>
+  <!-- ACCOUNT MODAL -->
+<div class="modal" id="accountModal">
+  <div class="modal-overlay" onclick="closeAccount()"></div>
+
+  <div class="modal-content" style="max-width:420px;">
+    <span class="close-modal" onclick="closeAccount()">&times;</span>
+
+    <div class="modal-details" style="text-align:center;">
+      <h2 id="accountTitle">Account</h2>
+      <p id="accountStatus" style="opacity:.7;margin-bottom:20px;">
+        Login to continue
+      </p>
+
+
+      <button id="googleLoginBtn" onclick="googleLogin()"
+        style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+background:white;
+color:black;
+font-weight:bold;
+margin-top:14px;
+">
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+style="width:18px;vertical-align:middle;margin-right:8px;">
+Sign in with Google
+        
+ <button id="logoutBtn"
+  onclick="logoutAccount()"
+  style="
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#333;
+    color:white;
+    font-weight:bold;
+    margin-top:12px;
+    display:none;
+  ">
+  Logout
+
+</button>
+    </div>
+  </div>
+</div>
+  <!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
+    authDomain: "cineflex-login-b8380.firebaseapp.com",
+    projectId: "cineflex-login-b8380",
+    appId: "1:453926417888:web:4c13aefa06f5aed559e785"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+</script>
+<body data-theme="dark">
+
+  <nav class="navbar">
+    <div class="logo netflix-intro">
+      <span>C</span><span>I</span><span>N</span><span>E</span><span>F</span><span>L</span><span>E</span><span>X</span>
+    </div>
+  </nav>
+
+  <section class="banner" id="banner" onclick="activateBanner()">
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc">Discover the latest trending entertainment.</p>
+    <button class="banner-play-btn" onclick="playBanner(event)">
+      <i class="fa-solid fa-play"></i> Play
+    </button>
+    <div class="banner-ready"ENJOY WATCHING</div>
+  </div>
+    <div class="genre-container">
+  <div class="genre-wrapper">
+    <button class="genre-pill active" onclick="filterByGenre('all', this)">All</button>
+    <button class="genre-pill" onclick="filterByGenre(28, this)">Action</button>
+    <button class="genre-pill" onclick="filterByGenre(35, this)">Comedy</button>
+    <button class="genre-pill" onclick="filterByGenre(27, this)">Horror</button>
+    <button class="genre-pill" onclick="filterByGenre(10749, this)">Romance</button>
+    <button class="genre-pill" onclick="filterByGenre(878, this)">Sci-Fi</button>
+  </div>
+    </div>
+</section>
+
+  <main class="content-wrapper">
+    <!-- CONTINUE WATCHING -->
+<div class="row" id="continue-row" style="display:none;">
+  <div class="row-header">
+    <h2>Continue Watching</h2>
+  </div>
+  <div class="row-container">
+    <button class="scroll-btn left" onclick="scrollRow('continue-list', -500)">‹</button>
+    <div class="list row-list" id="continue-list"></div>
+    <button class="scroll-btn right" onclick="scrollRow('continue-list', 500)">›</button>
+  </div>
+</div>
+    <section class="category">
+  <h2 class="category-title">Korean Dramas</h2>
+  <div class="row" id="kdrama-list">
+    </div>
+    </section>
+    
+    <!-- TOP RATED MOVIES -->
+<div class="row">
+  <div class="row-header">
+    <h2>Top Rated Movies</h2>
+  </div>
+  <div class="row-container">
+    <button class="scroll-btn left" onclick="scrollRow('top-rated-list', -500)">‹</button>
+    <div class="list row-list" id="top-rated-list"></div>
+    <button class="scroll-btn right" onclick="scrollRow('top-rated-list', 500)">›</button>
+  </div>
+</div>
+    <!-- LATEST MOVIES -->
+<div class="row">
+  <div class="row-header">
+    <h2>Latest Movies</h2>
+  </div>
+  <div class="row-container">
+    <button class="scroll-btn left" onclick="scrollRow('latest-movies-list', -500)">‹</button>
+    <div class="list row-list" id="latest-movies-list"></div>
+    <button class="scroll-btn right" onclick="scrollRow('latest-movies-list', 500)">›</button>
+  </div>
+</div>
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending Movies</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('movies-list', -500)">‹</button>
+        <div class="list row-list" id="movies-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('movies-list', 500)">›</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending TV Shows</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('tvshows-list', -500)">‹</button>
+        <div class="list row-list" id="tvshows-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('tvshows-list', 500)">›</button>
+      </div>
+    </div>
+        <div class="row">
+      <div class="row-header">
+        <h2>Pinoy Movies</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('pinoy-list', -500)">‹</button>
+        <div class="list row-list" id="pinoy-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('pinoy-list', 500)">›</button>
+      </div>
+        </div>
+
+    <div class="row">
+      <div class="row-header">
+        <h2>Trending Anime</h2>
+      </div>
+      <div class="row-container">
+        <button class="scroll-btn left" onclick="scrollRow('anime-list', -500)">‹</button>
+        <div class="list row-list" id="anime-list"></div>
+        <button class="scroll-btn right" onclick="scrollRow('anime-list', 500)">›</button>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      
+      <div class="video-container">
+  <div class="premium-play-btn" onclick="startPlayback()">
+    <i class="fa-solid fa-play"></i>
+  </div>
+
+  <iframe
+    id="modal-video"
+    frameborder="0"
+    allowfullscreen
+    allow="autoplay; encrypted-media">
+  </iframe>
+</div>
+
+      <div class="modal-details">
+        <div class="modal-info-grid">
+          <img id="modal-image" src="" alt="" class="modal-poster" />
+          <div class="modal-text">
+            <h2 id="modal-title"></h2>
+            <div class="modal-meta">
+              <span class="stars" id="modal-rating"></span>
+            </div>
+            <p id="modal-description"></p>
+            
+            <div class="selector-group">
+              <label><i class="fa-solid fa-server"></i> Server</label>
+              <select id="server" class="premium-select" onchange="changeServer()">
+                <option value="player.videasy.net">salva</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="tv-controls" class="tv-controls" style="display:none;">
+          <div class="season-header">
+            <h3>Episodes</h3>
+            <select id="seasonSelect" class="premium-select" onchange="loadEpisodes()"></select>
+          </div>
+          <div id="episodes" class="episodes-grid"></div>
+        </div>
+      </div>
+    </div>
+    <hr style="opacity: 0.1; margin: 20px 0;">
+<h3 style="margin-bottom: 15px; font-size: 1.1rem; padding-left: 10px;">More Like This</h3>
+<div class="similar-container" style="overflow-x: auto; padding-bottom: 10px;">
+  <div id="similar-list" class="row-list">
+    </div>
+</div>
+  </div>
+
+  <!-- SEARCH MODAL -->
+  <div class="search-overlay" onclick="closeSearchModal()"></div>
+<div class="search-modal" id="search-modal">
+  <div class="search-nav">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Type title, actor, or genre..."
+      oninput="searchTMDB()"
+      inputmode="search"
+    />
+    <span class="close-search" onclick="closeSearchModal()">
+      CLOSE <i class="fa-solid fa-xmark"></i>
+    </span>
+  </div>
+
+  <div class="results" id="search-results"></div>
+</div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="copyright-policy.html">Copyright Policy</a>
+      <a href="copyright-policy.html#dmca">DMCA Notice</a>
+      <a href="#">Terms of Use</a>
+    </div>
+    <p>&copy; 2026 CineFlex Premium. Powered by TMDB.</p>
+    <!-- MOBILE FOOTER NAV -->
+<div class="mobile-footer">
+  <div class="footer-indicator"></div>
+  <button onclick="goHome()">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </button>
+
+  <button onclick="openSearchModal()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>Search</span>
+  </button>
+
+  <button onclick="toggleMenu()">
+    <i class="fa-solid fa-bars"></i>
+    <span>Menu</span>
+  </button>
+
+  <button onclick="openAccount()">
+    <i class="fa-solid fa-user"></i>
+    <span>Account</span>
+  </button>
+</div>
+
+<!-- MENU OVERLAY -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<!-- MENU DRAWER -->
+<div class="menu-drawer" id="menuDrawer">
+  <a onclick="scrollToSection('pinoy-list')">
+  <i class="fa-solid fa-film"></i> Pinoy Movies
+  </a>
+  
+  <a onclick="scrollToSection('movies-list')">
+    <i class="fa-solid fa-fire"></i> Trending Now
+  </a>
+
+  <a onclick="scrollToSection('latest-movies-list')">
+    <i class="fa-solid fa-clock"></i> Latest Movies
+  </a>
+
+  <a onclick="scrollToSection('top-rated-list')">
+    <i class="fa-solid fa-star"></i> Top Rated
+  </a>
+
+  <a onclick="scrollToSection('tvshows-list')">
+    <i class="fa-solid fa-tv"></i> TV Shows
+  </a>
+
+  <a onclick="scrollToSection('anime-list')">
+    <i class="fa-solid fa-dragon"></i> Anime
+  </a>
+
+  <a onclick="scrollToSection('continue-row')">
+    <i class="fa-solid fa-play"></i> Continue Watching
+  </a>
+</div>
+  </footer>
+  
+
+  <script src="home.js"></script>
+</body>
+</html>

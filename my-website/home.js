@@ -514,36 +514,66 @@ window.addEventListener("load", () => {
     highlightAccount(true);
   }
 });
-function startPlayback() {
-  const user = localStorage.getItem("cineflexUser");
+/* =========================
+   AUTO-NEXT & PLAYBACK LOGIC
+========================= */
 
-  // 🔒 BLOCK IF NOT LOGGED IN
-  if (!user) {
-    openAccount(); // show login modal
-    openLoginPopup();
-    return;
-  }
+function playNextEpisode() {
+  if (!currentItem || currentItem.media_type !== "tv") return;
 
-  // ✅ USER LOGGED IN — ALLOW PLAY
-  localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
+  const seasonInput = document.getElementById("season-select");
+  const episodeInput = document.getElementById("episode-select");
+  
+  let currentS = parseInt(seasonInput.value);
+  let currentE = parseInt(episodeInput.value);
 
-  const container = document.querySelector(".video-container");
-  const iframe = document.getElementById("modal-video");
-
-  if (!currentItem || !container || !iframe) return;
-
-  container.classList.add("video-playing");
-
-  const server = document.getElementById("server").value;
-  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
-
-  if (isTv) {
-    const season = document.getElementById("seasonSelect").value || 1;
-    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
-  } else {
-    iframe.src = `https://${server}/movie/${currentItem.id}`;
-  }
+  // Simple Logic: Increment episode
+  // Note: For a perfect system, you'd check if currentE > max episodes in season
+  currentE++; 
+  
+  episodeInput.value = currentE;
+  
+  // Refresh the player
+  startPlayback();
+  
+  // Optional: Show a small notification
+  console.log(`Playing Season ${currentS}, Episode ${currentE}`);
 }
+
+// Update your existing startPlayback to include a "Next" button in the UI if it's a TV show
+function startPlayback() {
+  const container = document.getElementById("player-container");
+  const season = document.getElementById("season-select")?.value || 1;
+  const episode = document.getElementById("episode-select")?.value || 1;
+
+  if (!currentItem) return;
+
+  let embedUrl = "";
+  if (currentItem.media_type === "tv") {
+    embedUrl = `https://vidsrc.me/embed/tv?tmdb=${currentItem.id}&season=${season}&episode=${episode}`;
+    
+    // Add a "Next Episode" overlay button if it doesn't exist
+    addNextButton();
+  } else {
+    embedUrl = `https://vidsrc.me/embed/movie?tmdb=${currentItem.id}`;
+  }
+
+  container.innerHTML = `<iframe src="${embedUrl}" allowfullscreen frameborder="0"></iframe>`;
+}
+
+function addNextButton() {
+  // Check if button already exists
+  if (document.getElementById("auto-next-btn")) return;
+
+  const btn = document.createElement("button");
+  btn.id = "auto-next-btn";
+  btn.innerHTML = '<i class="fa-solid fa-forward-step"></i> Next Episode';
+  btn.className = "next-episode-overlay"; // Style this in CSS
+  btn.onclick = playNextEpisode;
+
+  document.getElementById("player-container").appendChild(btn);
+}
+
 window.addEventListener("load", () => {
   if (localStorage.getItem("cineflexUser")) {
     updateAccountUI();

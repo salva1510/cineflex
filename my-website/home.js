@@ -596,3 +596,33 @@ function scrollToSection(id) {
   highlightAccount(true);
   closeAccount();
    }
+   function updateAccountUI() {
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  const accountStatus = document.getElementById("accountStatus");
+
+  if (!accountStatus) return;
+
+  if (user) {
+    if (logoutBtn) logoutBtn.style.display = "block";
+
+    accountStatus.innerHTML = `
+      <img src="${user.photo}"
+           style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
+      <div style="font-weight:bold">${user.name}</div>
+    `;
+
+    updateFooterAvatar(user);
+  } else {
+    if (logoutBtn) logoutBtn.style.display = "none";
+    accountStatus.textContent = "Login to continue";
+    updateFooterAvatar(null);
+  }
+   }
+   function logoutAccount() {
+  localStorage.removeItem("cineflexUser");
+  updateAccountUI();
+  highlightAccount(false);
+}

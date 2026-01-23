@@ -1019,6 +1019,33 @@ body {
   width: 100%;
   margin-bottom: 8px;
 }
+.next-episode-overlay {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  background: rgba(229, 9, 20, 0.9); /* CineFlex Red */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.next-episode-overlay:hover {
+  transform: scale(1.1);
+  background: #ff0a16;
+}
+
+#player-container {
+  position: relative; /* Needed for the absolute button */
+}
+
 
 
 

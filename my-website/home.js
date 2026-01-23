@@ -12,10 +12,7 @@ let bannerItems = [];
 let bannerIndex = 0;
 let bannerLocked = false;
 let isLoggingIn = false; // This is our Gatekeeper
-let currentSeason = 1;
-let currentEpisode = 1;
-let autoNextTimer = null;
-letplayer = null;
+
 
 /* =========================
    FETCH HELPERS
@@ -268,84 +265,15 @@ async function loadEpisodes() {
   `).join('');
   
   document.getElementById("modal").scrollTo({ top: 0, behavior: 'smooth' });
-  const saved = JSON.parse(localStorage.getItem("lastEpisode"));
-
-if (saved && saved.id === currentItem.id && saved.season === seasonNum) {
-  playEpisode(seasonNum, saved.episode);
-} else {
   playEpisode(seasonNum, 1);
-}
 }
 
 function playEpisode(season, episode) {
-  currentSeason = season;
-  currentEpisode = episode;
-
-  function getEpisodeSource(showId, season, episode) {
-  // 🔴 CHANGE THIS TO YOUR REAL VIDEO LINKS
-  return `https://yourcdn.com/${showId}/s${season}/e${episode}.mp4`;
+    const server = document.getElementById("server").value;
+    const iframe = document.getElementById("modal-video");
+    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/${episode}`;
 }
-  if (!player) {
-    player = videojs("modal-video", {
-      autoplay: true,
-      controls: true,
-      fluid: true
-    });
-  }
 
-  player.src({
-    src: videoUrl,
-    type: videoUrl.includes(".m3u8")
-      ? "application/x-mpegURL"
-      : "video/mp4"
-  });
-
-  player.play();
-
-  localStorage.setItem("lastEpisode", JSON.stringify({
-    id: currentItem.id,
-    season,
-    episode
-  }));
-}
-function startAutoNextCountdown() {
-  clearTimeout(autoNextTimer);
-
-  // ⏱️ Average episode length fallback (45 minutes)
-  // You can change this to 40 * 60 * 1000 if you want
-  const EPISODE_DURATION = 45 * 60 * 1000;
-
-  autoNextTimer = setTimeout(() => {
-    playNextEpisode();
-  }, EPISODE_DURATION);
-}
-function playNextEpisode() {
-  const nextEpisode = currentEpisode + 1;
-
-  // Check if next episode exists
-  const episodeCards = document.querySelectorAll(".episode-card");
-
-  const exists = [...episodeCards].some(card =>
-    card.textContent.includes(`EPISODE ${nextEpisode}`)
-  );
-
-  if (!exists) {
-    console.log("No more episodes");
-    return;
-  }
-
-  playEpisode(currentSeason, nextEpisode);
-}
-function playNextEpisode() {
-  const next = currentEpisode + 1;
-
-  const exists = [...document.querySelectorAll(".episode-card")]
-    .some(card => card.textContent.includes(`EPISODE ${next}`));
-
-  if (!exists) return;
-
-  playEpisode(currentSeason, next);
-}
 function changeServer() {
   const server = document.getElementById("server").value;
   const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
@@ -621,16 +549,6 @@ window.addEventListener("load", () => {
     updateAccountUI();
     highlightAccount(true);
   }
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const checkPlayer = setInterval(() => {
-    if (player) {
-      player.on("ended", () => {
-        playNextEpisode();
-      });
-      clearInterval(checkPlayer);
-    }
-  }, 300);
 });
 /* =========================
    SLIDING FOOTER INDICATOR

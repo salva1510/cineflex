@@ -132,23 +132,19 @@ function scrollRow(id, amount) {
 /* =========================
    BANNER LOGIC
 ========================= */
-/* =========================
-   UPDATED BANNER LOGIC
-========================= */
 function setBanner(item) {
   const banner = document.getElementById("banner");
   if (!banner || !item) return;
 
-  bannerCurrentItem = item;
-  currentItem = item;
+  bannerCurrentItem = item;   // ✅ TRACK BANNER ITEM
+  currentItem = item;         // ✅ SYNC FOR PLAYBACK
 
   banner.style.opacity = 0;
 
   setTimeout(() => {
-    // UPDATED: Apply both a gradient and the dynamic image
-    banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 50%), url(${IMG_URL}${item.backdrop_path})`;
-    
-    document.getElementById("banner-title").textContent = item.title || item.name;
+    banner.style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
+    document.getElementById("banner-title").textContent =
+      item.title || item.name;
 
     const bannerDesc = document.getElementById("banner-desc");
     if (bannerDesc) {
@@ -428,9 +424,83 @@ function closeAccount() {
   document.body.style.overflow = "auto";
 }
 
+async function googleLogin() {
+  // 1. Check if the Gatekeeper is already busy
+  if (isLoggingIn) {
+    return; // Stop here! Don't do anything else.
+  }
 
+  // 2. Lock the door so no more clicks get through
+  isLoggingIn = true;
 
+  const provider = new firebase.auth.GoogleAuthProvider();
 
+  try {
+    // Start the Firebase popup
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+
+    // Save user data to the browser
+    localStorage.setItem("cineflexUser", JSON.stringify({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL
+    }));
+
+    // Update your website look (UI)
+    updateAccountUI(); 
+    closeLoginPopup();
+
+  } catch (error) {
+    // 3. Handle the error silently if it's just a double-click/cancel
+    if (error.code !== 'auth/cancelled-popup-request') {
+      console.error("Login Error:", error.message);
+      alert("Login failed. Please try again.");
+    }
+  } finally {
+    // 4. UNLOCK the door so the user can try again later
+    isLoggingIn = false;
+  }
+}
+
+function updateAccountUI() {
+  const userRaw = localStorage.getItem("cineflexUser");
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  const googleBtn = document.getElementById("googleLoginBtn");
+  const accountStatus = document.getElementById("accountStatus");
+
+  if (!accountStatus) return;
+
+  if (user) {
+    if (logoutBtn) logoutBtn.style.display = "block";
+    if (googleBtn) googleBtn.style.display = "none";
+
+    accountStatus.innerHTML = `
+      <img src="${user.photo}"
+           style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
+      <div style="font-weight:bold">${user.name}</div>
+      ${user.email ? `<div style="font-size:12px;opacity:.7">${user.email}</div>` : ""}
+    `;
+  } else {
+    if (logoutBtn) logoutBtn.style.display = "none";
+    if (googleBtn) googleBtn.style.display = "block";
+
+    accountStatus.textContent = "Login with Google to continue";
+  }
+}
+function logoutAccount() {
+  // Firebase logout
+  if (typeof auth !== "undefined") {
+    auth.signOut().catch(() => {});
+  }
+
+  localStorage.removeItem("cineflexUser");
+
+  updateAccountUI();
+  highlightAccount(false);
+}
 
 /* AUTO CHECK ON LOAD */
 window.addEventListener("load", () => {
@@ -441,9 +511,39 @@ window.addEventListener("load", () => {
 function startPlayback() {
   const user = localStorage.getItem("cineflexUser");
 
+  // 🔒 BLOCK IF NOT LOGGED IN
+  if (!user) {
+    openAccount(); // show login modal
+    openLoginPopup();
+    return;
+  }
 
+  // ✅ USER LOGGED IN — ALLOW PLAY
+  localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
 
+  const container = document.querySelector(".video-container");
+  const iframe = document.getElementById("modal-video");
 
+  if (!currentItem || !container || !iframe) return;
+
+  container.classList.add("video-playing");
+
+  const server = document.getElementById("server").value;
+  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
+
+  if (isTv) {
+    const season = document.getElementById("seasonSelect").value || 1;
+    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
+  } else {
+    iframe.src = `https://${server}/movie/${currentItem.id}`;
+  }
+}
+window.addEventListener("load", () => {
+  if (localStorage.getItem("cineflexUser")) {
+    updateAccountUI();
+    highlightAccount(true);
+  }
+});
 /* =========================
    SLIDING FOOTER INDICATOR
 ========================= */
@@ -585,44 +685,4 @@ function scrollToSection(id) {
 
   el.scrollIntoView({ behavior: "smooth", block: "start" });
   closeMenu();
-}
-   function localLogin() {
-  localStorage.setItem("cineflexUser", JSON.stringify({
-    name: "Guest User",
-    photo: "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff"
-  }));
-
-  updateAccountUI();
-  highlightAccount(true);
-  closeAccount();
-   }
-   function updateAccountUI() {
-  const userRaw = localStorage.getItem("cineflexUser");
-  const user = userRaw ? JSON.parse(userRaw) : null;
-
-  const logoutBtn = document.getElementById("logoutBtn");
-  const accountStatus = document.getElementById("accountStatus");
-
-  if (!accountStatus) return;
-
-  if (user) {
-    if (logoutBtn) logoutBtn.style.display = "block";
-
-    accountStatus.innerHTML = `
-      <img src="${user.photo}"
-           style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;">
-      <div style="font-weight:bold">${user.name}</div>
-    `;
-
-    updateFooterAvatar(user);
-  } else {
-    if (logoutBtn) logoutBtn.style.display = "none";
-    accountStatus.textContent = "Login to continue";
-    updateFooterAvatar(null);
-  }
-   }
-   function logoutAccount() {
-  localStorage.removeItem("cineflexUser");
-  updateAccountUI();
-  highlightAccount(false);
 }

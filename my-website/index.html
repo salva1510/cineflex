@@ -25,22 +25,25 @@ if ("serviceWorker" in navigator) {
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e50914">
 </head>
+  <!-- LOGIN REQUIRED POPUP -->
+<div class="login-popup-overlay" id="loginPopup">
+  <div class="login-popup">
+    <div class="login-popup-icon">
+      <i class="fa-solid fa-lock"></i>
+    </div>
 
+    <h2>Join CineFlex</h2>
+    <p>Join CineFlex to unlock this content</p>
+
+    <button class="login-popup-btn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+      Sign in with Google
+    </button>
+
+    <span class="login-popup-close" onclick="closeLoginPopup()">Not now</span>
+  </div>
 </div>
   <!-- ACCOUNT MODAL -->
-  <button onclick="localLogin()"
-style="
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-background:#e50914;
-color:white;
-font-weight:bold;
-margin-top:12px;
-">
-Continue as Guest
-  </button>
 <div class="modal" id="accountModal">
   <div class="modal-overlay" onclick="closeAccount()"></div>
 
@@ -52,11 +55,57 @@ Continue as Guest
       <p id="accountStatus" style="opacity:.7;margin-bottom:20px;">
         Login to continue
       </p>
+
+
+      <button id="googleLoginBtn" onclick="googleLogin()"
+        style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+background:white;
+color:black;
+font-weight:bold;
+margin-top:14px;
+">
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+style="width:18px;vertical-align:middle;margin-right:8px;">
+Sign in with Google
         
+ <button id="logoutBtn"
+  onclick="logoutAccount()"
+  style="
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#333;
+    color:white;
+    font-weight:bold;
+    margin-top:12px;
+    display:none;
+  ">
+  Logout
+
+</button>
     </div>
   </div>
 </div>
-  
+  <!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
+    authDomain: "cineflex-login-b8380.firebaseapp.com",
+    projectId: "cineflex-login-b8380",
+    appId: "1:453926417888:web:4c13aefa06f5aed559e785"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+</script>
 <body data-theme="dark">
 
   <nav class="navbar">

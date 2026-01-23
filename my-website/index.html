@@ -12,6 +12,23 @@ if ("serviceWorker" in navigator) {
   </script>
   
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	</head>
+	<div class="offer_holder">Loading Offers..</div>
+	<script type="text/javascript">
+		$(function() {
+			$.getJSON("https://www.cpagrip.com/common/offer_feed_json.php?user_id=2491367&pubkey=f9e0c162572d2027e8249a622931596b",
+			function(json_data){
+				var offer_text = '';
+				$.each(json_data.offers, function(key, offer){
+					//lets use a custom tracking domain for the links :)
+					offer.offerlink = offer.offerlink.replace('www.cpagrip.com','motifiles.com');
+					offer_text += '<a href="'+offer.offerlink+'" target="_blank" class="offer_item">'+offer.title+'</a><br/>';
+				});
+				$(".offer_holder").html(offer_text);
+			});
+		});
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CineFlex | Premium Streaming</title>

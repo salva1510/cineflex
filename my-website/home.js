@@ -27,6 +27,14 @@ async function fetchJSON(url) {
     return null;
   }
 }
+async function fetchKDramas() {
+  // We use 'ko' (Korean) and 'tv' type because K-Dramas are typically series
+  const url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`;
+  const data = await fetchJSON(url);
+  // Ensure we map the media_type to "tv" so the details modal works correctly
+  return data ? data.results.filter(m => m.poster_path).map(m => ({ ...m, media_type: "tv" })) : [];
+}
+
 async function fetchPinoyMovies() {
   // Using 'tl' (Tagalog) as the original language filter for Filipino movies
   const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=tl&sort_by=popularity.desc`;
@@ -360,21 +368,7 @@ items.forEach(item => {
 /* =========================
    INITIALIZE
 ========================= */
-const saved = localStorage.getItem("continueWatchingItem");
-if (saved) {
-  const item = JSON.parse(saved);
-  document.getElementById("continue-row").style.display = "block";
-  displayList([item], "continue-list");
-}
-showSkeleton("pinoy-list");
-showSkeleton("movies-list");
-showSkeleton("latest-movies-list");
-showSkeleton("top-rated-list");
-showSkeleton("tvshows-list");
-showSkeleton("anime-list");
-
-// Add the skeleton for the new list
-showSkeleton("pinoy-list");
+// ... (existing skeleton/localStorage logic)
 
 Promise.all([
   fetchTrending("movie"),
@@ -382,17 +376,29 @@ Promise.all([
   fetchTopRatedMovies(),
   fetchTrending("tv"),
   fetchTrendingAnime(),
-  fetchPinoyMovies() // <--- Add this
-]).then(([trending, latest, top, tv, anime, pinoy]) => { // <--- Add pinoy here
-  bannerItems = pinoy;
-  autoRotateBanner(pinoy);
+  fetchPinoyMovies(),
+  fetchKDramas() // 1. Add the new fetch call here
+]).then(([trending, latest, top, tv, anime, pinoy, kdrama]) => { 
+  
+  // 2. Change the banner source to kdrama
+  bannerItems = kdrama; 
+  autoRotateBanner(kdrama); 
+
+  // 3. (Optional) If you want to display the K-Dramas in a list on the page
+  // Make sure you have a <div id="kdrama-list"> in your index.html
+  if(document.getElementById("kdrama-list")) {
+      displayList(kdrama, "kdrama-list");
+  }
+
+  // Keep your existing lists
   displayList(trending, "movies-list");
   displayList(latest, "latest-movies-list");
   displayList(top, "top-rated-list");
   displayList(tv, "tvshows-list");
   displayList(anime, "anime-list");
-  displayList(pinoy, "pinoy-list"); // <--- Add this
+  displayList(pinoy, "pinoy-list");
 });
+
 
 
 function goHome() { window.scrollTo({ top: 0, behavior: "smooth" }); }

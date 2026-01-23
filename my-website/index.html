@@ -9,24 +9,7 @@
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
-  </script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-	</head>
-	<div class="offer_holder">Loading Offers..</div>
-	<script type="text/javascript">
-		$(function() {
-			$.getJSON("https://www.cpagrip.com/common/offer_feed_json.php?user_id=2491367&pubkey=f9e0c162572d2027e8249a622931596b",
-			function(json_data){
-				var offer_text = '';
-				$.each(json_data.offers, function(key, offer){
-					//lets use a custom tracking domain for the links :)
-					offer.offerlink = offer.offerlink.replace('www.cpagrip.com','motifiles.com');
-					offer_text += '<a href="'+offer.offerlink+'" target="_blank" class="offer_item">'+offer.title+'</a><br/>';
-				});
-				$(".offer_holder").html(offer_text);
-			});
-		});
-	</script>
+  {"general":[{"ua_method":"ua auto (Mozilla\/5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/137.0.0.0 Mobile Safari\/537.36)"},{"ua_ismobile":"true"},{"country_detection_ip":"2405:8d40:4896:fa59:18ad:1121:ca5f:2262"},{"country_detection_status":"found"},{"country_detection_method":"FROM_REMOTE"},{"country_code":"PH"},{"tracking_id_found":"false"},{"tracking_id":""}],"offers":[{"offer_id":"58533","title":"Enter for Your Samsung Galaxy A53 Now!","description":"Enter your information now for a chance to win.","payout":"0.12","netepc":"0.005","type":"mobile_droid","accepted_countries":"PH","category":"Email\/Zip Submit","offerlink":"https:\/\/www.cpagrip.com\/show.php?l=0&u=2491367&id=58533","offerphoto":"https:\/\/www.cpagrip.com\/admin\/media\/offers\/b2c4ec6b8e94589a2604e0fe52aa8ada.png"},{"offer_id":"65461","title":"Get a Fabulous Reward after these Questions!","description":"Enter your information now for a chance to win.","payout":"0.09","netepc":"0.003","type":"mobile_droid","accepted_countries":"PH","category":"Email\/Zip Submit","offerlink":"https:\/\/www.cpagrip.com\/show.php?l=0&u=2491367&id=65461","offerphoto":"https:\/\/www.cpagrip.com\/admin\/media\/offers\/65cdeb01dd6d896fde7e753367c021f0.png"},{"offer_id":"73502","title":"Try Spinning the Wheel to be Rewarded!","description":"Enter your information now for a chance to win.","payout":"0.17","netepc":"0.000","type":"mobile_droid","accepted_countries":"PH","category":"Email\/Zip Submit","offerlink":"https:\/\/www.cpagrip.com\/show.php?l=0&u=2491367&id=73502","offerphoto":"https:\/\/www.cpagrip.com\/admin\/media\/offers\/cece3788caabf15b15266836179a219e.png"},{"offer_id":"72104","title":"See how you can get a Smart Watch Now!","description":"Enter your information now for a chance to win.","payout":"0.19","netepc":"0.000","type":"mobile_droid","accepted_countries":"PH","category":"Email\/Zip Submit","offerlink":"https:\/\/www.cpagrip.com\/show.php?l=0&u=2491367&id=72104","offerphoto":"https:\/\/www.cpagrip.com\/admin\/media\/offers\/56490d0b3ea66209aca71d293de214ae.png"},{"offer_id":"71588","title":"Open the Lumos VPN App Now!","description":"Install and open.","payout":"0.12","netepc":"0.005","type":"mobile_droid","accepted_countries":"PH","category":"Mobile Install","offerlink":"https:\/\/www.cpagrip.com\/show.php?l=0&u=2491367&id=71588","offerphoto":"https:\/\/www.cpagrip.com\/admin\/media\/offers\/f9874f68ed77f8f6d5e19f934625e876.png"}]}
   
 <head>
   <meta charset="UTF-8" />

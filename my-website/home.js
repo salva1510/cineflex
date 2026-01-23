@@ -586,3 +586,13 @@ function scrollToSection(id) {
   el.scrollIntoView({ behavior: "smooth", block: "start" });
   closeMenu();
 }
+   function localLogin() {
+  localStorage.setItem("cineflexUser", JSON.stringify({
+    name: "Guest User",
+    photo: "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff"
+  }));
+
+  updateAccountUI();
+  highlightAccount(true);
+  closeAccount();
+   }

@@ -89,6 +89,16 @@
   </main>
 
   <div id="details-modal" class="modal">
+    <div id="episode-selector" class="episode-controls" style="display:none;">
+    <div class="selector-group">
+        <label>Season</label>
+        <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+    </div>
+    <div class="selector-group">
+        <label>Episode</label>
+        <select id="episode-select"></select>
+    </div>
+    </div>
     <div class="modal-content">
       <div class="modal-banner" id="modal-banner">
         <span class="close-modal" onclick="closeModal()">&times;</span>

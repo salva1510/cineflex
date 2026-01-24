@@ -89,14 +89,6 @@
   </main>
 
   <div id="details-modal" class="modal">
-    <div id="episode-selector" class="episode-controls" style="display:none;">
-    <div class="selector-group">
-        <label>Season</label>
-        <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
-    </div>
-    <div class="selector-group">
-        <label>Episode</label>
-        <select id="episode-select"></select>
     <div class="modal-content">
       <div class="modal-banner" id="modal-banner">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -109,6 +101,14 @@
             <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
             <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
             <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
+          <div id="episode-selector" class="episode-controls" style="display:none;">
+    <div class="selector-group">
+        <label>Season</label>
+        <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+    </div>
+    <div class="selector-group">
+        <label>Episode</label>
+        <select id="episode-select"></select>
         </div>
       </div>
     </div>

@@ -54,11 +54,28 @@ function setBanner(item) {
 
 function displayCards(data, containerId) {
   const container = document.getElementById(containerId);
-  container.innerHTML = data.filter(i => i.poster_path).map(item => `
-    <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-      <img src="${IMG_URL}${item.poster_path}">
-    </div>
-  `).join('');
+  
+  container.innerHTML = data.filter(i => i.poster_path).map(item => {
+    // Extract year from release_date (movies) or first_air_date (TV)
+    const date = item.release_date || item.first_air_date || "";
+    const year = date ? date.split('-')[0] : "N/A";
+    
+    // Format the rating to one decimal place
+    const rating = item.vote_average ? item.vote_average.toFixed(1) : "NR";
+
+    return `
+      <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+        <div class="card-badges">
+          <span class="badge-rating"><i class="fa-solid fa-star"></i> ${rating}</span>
+          <span class="badge-year">${year}</span>
+        </div>
+        <img src="${IMG_URL}${item.poster_path}" alt="${item.title || item.name}">
+        <div class="card-info-overlay">
+           <p class="card-title">${item.title || item.name}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 /* GENRE FILTER LOGIC */

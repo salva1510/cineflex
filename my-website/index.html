@@ -53,49 +53,38 @@
   </div>
 
   <div id="player-container" class="player-wrapper" style="display:none;">
-    <div class="player-header">
-      <span id="player-title-display">Now Playing</span>
-      <button onclick="closePlayer()" class="close-player-btn">× Close</button>
-    </div>
-    <div class="iframe-container">
-      <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
+  <div class="player-header">
+    <span id="player-title-display">Now Playing</span>
+    <div class="player-controls">
+        <button id="download-btn" class="download-btn" onclick="openDownload()">
+            <i class="fa-solid fa-download"></i> Download
+        </button>
+        <button onclick="closePlayer()" class="close-player-btn">× Close</button>
     </div>
   </div>
+  <div class="iframe-container">
+    <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
+  </div>
+</div>
 
-  <main class="content">
-    <section class="row" id="my-list-section" style="display: none;">
-      <h2>My List</h2>
-      <div class="scroller" id="my-list"></div>
-    </section>
-
-    <section class="row">
-      <h2 id="row-title">Trending Now</h2>
-      <div class="scroller" id="main-list"></div>
-    </section>
-    
-    <section class="row" id="tv-section">
-      <h2>Popular TV Shows</h2>
-      <div class="scroller" id="tv-list"></div>
-    </section>
-  </main>
-
-  <div id="details-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-banner" id="modal-banner">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-      </div>
-      <div class="modal-body">
-        <h2 id="modal-title"></h2>
-        <p id="modal-desc"></p>
-        <div class="modal-actions">
-            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
-            <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()">
-                <i class="fa-solid fa-plus"></i> My List
-            </button>
-        </div>
+<div id="details-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-banner" id="modal-banner">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <h2 id="modal-title"></h2>
+      <div id="modal-meta-row"></div>
+      <p id="modal-desc"></p>
+      <div class="modal-actions">
+          <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+          <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
+          <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
       </div>
     </div>
   </div>
+</div>
+
 
   <script src="home.js"></script>
 </body>

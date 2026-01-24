@@ -5,6 +5,67 @@ const IMG_URL = "https://image.tmdb.org/t/p/w500";
 let currentItem = null;
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
+// Add these variables to the top of home.js
+let currentGenreType = 'movie';
+
+const GENRES = {
+  movie: [
+    { id: 'all', name: 'All' }, { id: 28, name: 'Action' }, { id: 35, name: 'Comedy' },
+    { id: 18, name: 'Drama' }, { id: 27, name: 'Horror' }, { id: 878, name: 'Sci-Fi' }
+  ],
+  tv: [
+    { id: 'all', name: 'All' }, { id: 10759, name: 'Action & Adventure' }, { id: 35, name: 'Comedy' },
+    { id: 18, name: 'Drama' }, { id: 10765, name: 'Sci-Fi & Fantasy' }, { id: 9648, name: 'Mystery' }
+  ]
+};
+
+// Call this in your init() function
+function renderGenrePills() {
+  const container = document.getElementById("genre-list");
+  container.innerHTML = GENRES[currentGenreType].map(g => `
+    <button class="genre-pill ${g.id === 'all' ? 'active' : ''}" 
+            onclick="filterByGenre('${g.id}', this)">${g.name}</button>
+  `).join('');
+}
+
+function setGenreType(type) {
+  currentGenreType = type;
+  document.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
+  document.getElementById(`btn-${type}-type`).classList.add('active');
+  renderGenrePills();
+  
+  // Refresh the main list based on the new type
+  if (type === 'tv') {
+    document.getElementById("tv-section").style.display = "block";
+    init(); // Or your custom fetch for TV
+  } else {
+    init();
+  }
+}
+
+async function getRandomMovie() {
+  const page = Math.floor(Math.random() * 10) + 1;
+  const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&page=${page}`).then(r => r.json());
+  const randomItem = res.results[Math.floor(Math.random() * res.results.length)];
+  showDetails(randomItem);
+}
+
+// Update your filterByGenre function to use currentGenreType
+async function filterByGenre(id, el) {
+  document.querySelectorAll('.genre-pill').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  
+  if (id === 'all') return init();
+  
+  showSkeletons("main-list");
+  const data = await fetch(`${BASE_URL}/discover/${currentGenreType}?api_key=${API_KEY}&with_genres=${id}`).then(r => r.json());
+  displayCards(data.results, "main-list");
+  
+  // Hide other sections to focus on filtered results
+  document.getElementById("tv-section").style.display = "none";
+  document.getElementById("continue-watching-section").style.display = "none";
+}
+
 
 async function init() {
   // Show Skeletons while loading

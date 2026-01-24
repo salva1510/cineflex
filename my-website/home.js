@@ -82,7 +82,7 @@ async function showDetails(item) {
 function startPlayback() {
   const id = currentItem.id;
   const isTV = currentItem.first_air_date || currentItem.name;
-  const embedUrl = isTV ? `https://zxcstream.xyz/embed/tv/${id}/1/1` : `https://zxcstream.xyz/embed/movie/${id}`;
+  const embedUrl = isTV ? `https://zxcstream.xyz/player/tv/{tmdb-Id}/{season}/{episode}/{language}?autoplay=false&back=true&server=0` : `https://zxcstream.xyz/player/movie/{tmdb-Id}/{language}?autoplay=false&back=true&server=0`;
 
   document.getElementById("video-player").src = embedUrl;
   document.getElementById("player-container").style.display = "block";

@@ -6,6 +6,84 @@ let currentItem = null;
 let currentTVState = { season: 1, episode: 1 };
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
+/* ADD THESE AT THE TOP WITH OTHER VARIABLES */
+let autoplayTimer = null;
+
+/* UPDATE startPlayback() */
+function startPlayback() {
+  const id = currentItem.id;
+  const isTV = currentItem.first_air_date || currentItem.name;
+  const nextBtn = document.getElementById("next-ep-btn");
+  const autoContainer = document.getElementById("autoplay-container");
+  
+  // Clear any existing timer
+  clearTimeout(autoplayTimer);
+  document.getElementById("next-timer").innerText = "";
+
+  if (isTV) {
+      const s = parseInt(document.getElementById("season-select").value) || 1;
+      const e = parseInt(document.getElementById("episode-select").value) || 1;
+      currentTVState.season = s;
+      currentTVState.episode = e;
+      
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
+      nextBtn.style.display = "block";
+      autoContainer.style.display = "flex";
+      
+      // Start checking for autoplay if enabled
+      startAutoplayCheck();
+  } else {
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
+      nextBtn.style.display = "none";
+      autoContainer.style.display = "none";
+  }
+
+  document.getElementById("player-container").style.display = "block";
+  document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);
+  closeModal();
+}
+
+/* ADD THIS NEW FUNCTION */
+function playNextEpisode() {
+    clearTimeout(autoplayTimer);
+    currentTVState.episode++;
+    const id = currentItem.id;
+    document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${currentTVState.season}/${currentTVState.episode}`;
+    document.getElementById("player-title-display").innerText = `Playing: ${currentItem.name} (S${currentTVState.season} E${currentTVState.episode})`;
+    document.getElementById("next-timer").innerText = "";
+    
+    // Restart the timer logic for the new episode
+    startAutoplayCheck();
+}
+
+/* SIMULATED AUTOPLAY LOGIC */
+function startAutoplayCheck() {
+    // Since we can't know exactly when the video ends, 
+    // we set a safety timer or simply allow the "Next" button to handle it.
+    // However, if the user toggles Autoplay ON, we can show a prompt after ~20 mins (typical episode length)
+    // or just leave it for the user to trigger. 
+    // To actually AUTO-trigger, we'll wait 45 minutes for drama or 22 for sitcoms:
+    
+    const isSitcom = currentItem.overview.length < 200; // Rough guess
+    const duration = isSitcom ? 22 * 60 * 1000 : 45 * 60 * 1000;
+
+    autoplayTimer = setTimeout(() => {
+        if (document.getElementById("autoplay-toggle").checked) {
+            let countdown = 10;
+            const timerEl = document.getElementById("next-timer");
+            
+            const interval = setInterval(() => {
+                timerEl.innerText = `Next in ${countdown}s...`;
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(interval);
+                    playNextEpisode();
+                }
+            }, 1000);
+        }
+    }, duration);
+}
+
 
 async function init() {
   showSkeletons("main-list");

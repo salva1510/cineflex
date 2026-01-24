@@ -151,4 +151,69 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
     color: #ffd700; /* Gold color to make My List stand out */
     font-size: 1.4rem;
 }
+/* CARD BADGE SYSTEM */
+.card {
+  position: relative; /* Necessary for absolute badges */
+  min-width: 150px;
+  height: 225px;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card-badges {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  z-index: 5;
+  pointer-events: none; /* Allows clicks to pass through to the card */
+}
+
+.badge-rating {
+  background: rgba(229, 9, 20, 0.9); /* Netflix Red */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 3px 7px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.badge-year {
+  background: rgba(0, 0, 0, 0.7);
+  color: #ddd;
+  font-size: 0.7rem;
+  padding: 3px 7px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* CARD HOVER INFO */
+.card-info-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 10px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .card-info-overlay {
+  opacity: 1;
+}
+
+.card-title {
+  font-size: 0.8rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 

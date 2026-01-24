@@ -2,6 +2,7 @@ const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
+let currentTVState = { season: 1, episode: 1, totalEpisodes: 0 };
 let currentItem = null;
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
@@ -110,14 +111,22 @@ async function loadEpisodes(seriesId, seasonNum) {
 function startPlayback() {
   const id = currentItem.id;
   const isTV = currentItem.first_air_date || currentItem.name;
+  const nextBtn = document.getElementById("next-ep-btn");
   
   let embedUrl;
   if (isTV) {
-      const s = document.getElementById("season-select").value || 1;
-      const e = document.getElementById("episode-select").value || 1;
+      const s = parseInt(document.getElementById("season-select").value) || 1;
+      const e = parseInt(document.getElementById("episode-select").value) || 1;
+      
+      // Update global state for the "Next" button
+      currentTVState.season = s;
+      currentTVState.episode = e;
+      
       embedUrl = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
+      nextBtn.style.display = "block"; 
   } else {
       embedUrl = `https://zxcstream.xyz/embed/movie/${id}`;
+      nextBtn.style.display = "none";
   }
 
   document.getElementById("video-player").src = embedUrl;
@@ -128,6 +137,24 @@ function startPlayback() {
   closeModal();
   document.getElementById("player-container").scrollIntoView({ behavior: 'smooth' });
 }
+
+async function playNextEpisode() {
+    const id = currentItem.id;
+    currentTVState.episode++;
+    
+    // Construct the new URL
+    const embedUrl = `https://zxcstream.xyz/embed/tv/${id}/${currentTVState.season}/${currentTVState.episode}`;
+    
+    // Update player
+    document.getElementById("video-player").src = embedUrl;
+    document.getElementById("player-title-display").innerText = 
+        `Playing: ${currentItem.name} (S${currentTVState.season} E${currentTVState.episode})`;
+    
+    // Optional: Sync the modal selectors in the background
+    const epSelect = document.getElementById("episode-select");
+    if(epSelect) epSelect.value = currentTVState.episode;
+}
+
 
 
 /* HISTORY & FAVORITES */

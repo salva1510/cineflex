@@ -57,14 +57,19 @@
     <div class="player-header">
       <span id="player-title-display">Now Playing</span>
       <div class="player-controls">
-        <button id="skip-intro-btn" class="skip-btn" onclick="skipIntro()" style="display:none;">
-          <i class="fa-solid fa-forward"></i> Skip Intro
-        </button>
-        <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
-          <i class="fa-solid fa-forward-step"></i> Next
-        </button>
-        <button onclick="closePlayer()" class="close-player-btn">×</button>
-      </div>
+  <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
+    <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
+    <label class="switch">
+      <input type="checkbox" id="autoplay-toggle" checked>
+      <span class="slider"></span>
+    </label>
+    <span style="font-size: 0.7rem; color: #888;">Auto-play</span>
+  </div>
+  <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
+    <i class="fa-solid fa-forward-step"></i> Next
+  </button>
+  <button onclick="closePlayer()" class="close-player-btn">×</button>
+</div>
     </div>
     <div class="iframe-container">
       <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
@@ -102,6 +107,7 @@
         <h2 id="modal-title"></h2>
         <div id="modal-meta-row"></div>
         <p id="modal-desc"></p>
+        
         <div id="episode-selector" class="episode-controls" style="display:none;">
             <div class="selector-group">
                 <label>Season</label>
@@ -112,6 +118,7 @@
                 <select id="episode-select"></select>
             </div>
         </div>
+
         <div class="modal-actions">
             <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
             <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
@@ -123,5 +130,5 @@
 
   <script src="home.js"></script>
 </body>
-</html>
+  </html>
 

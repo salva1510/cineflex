@@ -515,35 +515,30 @@ window.addEventListener("load", () => {
   }
 });
 function startPlayback() {
-  const user = localStorage.getItem("cineflexUser");
+  if (!currentItem) return;
 
-  // 🔒 BLOCK IF NOT LOGGED IN
-  if (!user) {
-    openAccount(); // show login modal
-    openLoginPopup();
-    return;
+  const playerIframe = document.getElementById("movie-player"); // Ensure your iframe has this ID
+  const id = currentItem.id;
+  const type = currentItem.media_type; // "movie" or "tv"
+
+  let embedUrl = "";
+
+  if (type === "movie") {
+    // Standard Embed for Movies
+    embedUrl = `https://zxcstream.xyz/embed/movie/${id}`;
+  } else {
+    // Standard Embed for TV Shows (Defaulting to Season 1, Episode 1)
+    // You can update these variables dynamically if you have an episode selector
+    const season = 1; 
+    const episode = 1;
+    embedUrl = `https://zxcstream.xyz/embed/tv/${id}/${season}/${episode}`;
   }
 
-  // ✅ USER LOGGED IN — ALLOW PLAY
-  localStorage.setItem("continueWatchingItem", JSON.stringify(currentItem));
-
-  const container = document.querySelector(".video-container");
-  const iframe = document.getElementById("modal-video");
-
-  if (!currentItem || !container || !iframe) return;
-
-  container.classList.add("video-playing");
-
-  const server = document.getElementById("server").value;
-  const isTv = currentItem.media_type === "tv" || currentItem.first_air_date;
-
-  if (isTv) {
-    const season = document.getElementById("seasonSelect").value || 1;
-    iframe.src = `https://${server}/tv/${currentItem.id}/${season}/1`;
-  } else {
-    iframe.src = `https://${server}/movie/${currentItem.id}`;
+  if (playerIframe) {
+    playerIframe.src = embedUrl;
   }
 }
+
 window.addEventListener("load", () => {
   if (localStorage.getItem("cineflexUser")) {
     updateAccountUI();

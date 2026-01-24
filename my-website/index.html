@@ -36,19 +36,21 @@
       <div class="banner-buttons">
         <button class="play-btn" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play</button>
         <button class="info-btn" onclick="showDetails(currentItem)"><i class="fa-solid fa-circle-info"></i> More Info</button>
-        <button class="random-btn" onclick="getRandomMovie()"><i class="fa-solid fa-shuffle"></i> Random</button>
       </div>
     </div>
     <div class="banner-fade"></div>
   </header>
 
   <div class="genre-wrapper">
-    <div class="type-toggle">
-      <button id="btn-movie-type" class="type-pill active" onclick="setGenreType('movie')">Movies</button>
-      <button id="btn-tv-type" class="type-pill" onclick="setGenreType('tv')">TV Shows</button>
-    </div>
     <div class="genre-container" id="genre-list">
-      </div>
+      <button class="genre-pill active" onclick="filterByGenre('all', this)">All</button>
+      <button class="genre-pill" onclick="filterByGenre('28', this)">Action</button>
+      <button class="genre-pill" onclick="filterByGenre('35', this)">Comedy</button>
+      <button class="genre-pill" onclick="filterByGenre('18', this)">Drama</button>
+      <button class="genre-pill" onclick="filterByGenre('27', this)">Horror</button>
+      <button class="genre-pill" onclick="filterByGenre('10749', this)">Romance</button>
+      <button class="genre-pill" onclick="filterByGenre('878', this)">Sci-Fi</button>
+    </div>
   </div>
 
   <div id="player-container" class="player-wrapper" style="display:none;">
@@ -66,12 +68,12 @@
 
   <main class="content">
     <section class="row" id="continue-watching-section" style="display: none;">
-      <h2 class="section-heading"><i class="fa-solid fa-clock-rotate-left"></i> Continue Watching</h2>
+      <h2 style="color: #4cd137;"><i class="fa-solid fa-clock-rotate-left"></i> Continue Watching</h2>
       <div class="scroller" id="continue-list"></div>
     </section>
 
     <section class="row" id="my-list-section" style="display: none;">
-      <h2 class="section-heading"><i class="fa-solid fa-star"></i> My List</h2>
+      <h2 style="color: #ffd700;"><i class="fa-solid fa-star"></i> My List</h2>
       <div class="scroller" id="my-list"></div>
     </section>
 

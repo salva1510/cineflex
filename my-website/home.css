@@ -316,5 +316,30 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
     border-radius: 4px;
     outline: none;
 }
+/* Add to home.css */
+.next-btn {
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.next-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.next-btn i {
+    font-size: 0.9rem;
+}
+
 
 

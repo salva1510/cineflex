@@ -225,17 +225,19 @@ Sign in with Google
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal()">&times;</span>
       
-      <div class="video-container">
-  <div class="premium-play-btn" onclick="startPlayback()">
-    <i class="fa-solid fa-play"></i>
+      <div id="video-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="video-wrapper">
+      <iframe 
+        id="movie-player" 
+        src="" 
+        frameborder="0" 
+        allowfullscreen 
+        scrolling="no">
+      </iframe>
+    </div>
   </div>
-
-  <iframe
-    id="modal-video"
-    frameborder="0"
-    allowfullscreen
-    allow="autoplay; encrypted-media">
-  </iframe>
 </div>
 
       <div class="modal-details">

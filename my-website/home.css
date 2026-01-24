@@ -285,5 +285,36 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
     font-size: 0.9rem;
     margin-bottom: 10px;
 }
+.episode-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.selector-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.selector-group label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: bold;
+}
+
+.selector-group select {
+    background: #333;
+    color: white;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 4px;
+    outline: none;
+}
 
 

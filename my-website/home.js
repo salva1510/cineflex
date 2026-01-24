@@ -104,30 +104,33 @@ async function filterByGenre(genreId, element) {
   displayCards(data.results, "main-list");
 }
 
-/* SEARCH & MODAL LOGIC */
-async function showDetails(item) {
-  currentItem = item;
-  const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+/* TRAILER LOGIC */
+async function playTrailer() {
+  if (!currentItem) return;
+  const type = currentItem.media_type || (currentItem.first_air_date ? 'tv' : 'movie');
   
-  // Fetch extra details (like runtime)
-  const detailRes = await fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json());
+  // Fetch videos from TMDB
+  const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(res => res.json());
   
-  const runtime = detailRes.runtime ? `${detailRes.runtime} min` : (detailRes.episode_run_time ? `${detailRes.episode_run_time[0]} min` : "");
+  // Find the first YouTube trailer
+  const trailer = data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
   
-  document.getElementById("modal-title").innerText = item.title || item.name;
-  document.getElementById("modal-desc").innerHTML = `
-    <div class="modal-meta">
-        <span class="meta-rating">Rating: ${item.vote_average.toFixed(1)}</span>
-        <span class="meta-duration">${runtime}</span>
-    </div>
-    <p>${item.overview}</p>
-  `;
-  
-  document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
-  document.getElementById("details-modal").style.display = "flex";
+  if (trailer) {
+    window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+  } else {
+    alert("Trailer not available for this title.");
+  }
 }
 
-/* PLAYER LOGIC */
+/* DOWNLOAD LOGIC */
+function openDownload() {
+  if (!currentItem) return;
+  // Using a popular third-party downloader tool
+  const downloadUrl = `https://getpvid.com/download/${currentItem.id}`;
+  window.open(downloadUrl, '_blank');
+}
+
+/* UPDATED PLAYER LOGIC */
 function startPlayback() {
   if (!currentItem) return;
   const id = currentItem.id;
@@ -141,6 +144,7 @@ function startPlayback() {
   closeModal();
   document.getElementById("player-container").scrollIntoView({ behavior: 'smooth' });
 }
+
 
 function openSearch() { document.getElementById("search-overlay").style.display = "block"; document.getElementById("search-input").focus(); }
 function closeSearch() { document.getElementById("search-overlay").style.display = "none"; }

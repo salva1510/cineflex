@@ -63,6 +63,12 @@
     </div>
     <div class="iframe-container">
       <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
+      <div class="player-controls">
+  <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
+    <i class="fa-solid fa-forward-step"></i> Next Episode
+  </button>
+  <button class="download-btn" onclick="openDownload()"><i class="fa-solid fa-download"></i> Download</button>
+  <button onclick="closePlayer()" class="close-player-btn">× Close</button>
     </div>
   </div>
 

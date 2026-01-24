@@ -105,17 +105,25 @@ async function filterByGenre(genreId, element) {
 }
 
 /* SEARCH & MODAL LOGIC */
-function showDetails(item) {
+async function showDetails(item) {
   currentItem = item;
+  const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+  
+  // Fetch extra details (like runtime)
+  const detailRes = await fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json());
+  
+  const runtime = detailRes.runtime ? `${detailRes.runtime} min` : (detailRes.episode_run_time ? `${detailRes.episode_run_time[0]} min` : "");
+  
   document.getElementById("modal-title").innerText = item.title || item.name;
-  document.getElementById("modal-desc").innerText = item.overview;
+  document.getElementById("modal-desc").innerHTML = `
+    <div class="modal-meta">
+        <span class="meta-rating">Rating: ${item.vote_average.toFixed(1)}</span>
+        <span class="meta-duration">${runtime}</span>
+    </div>
+    <p>${item.overview}</p>
+  `;
+  
   document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
-  
-  // Update My List button state
-  const btn = document.getElementById("mylist-btn");
-  const isInList = myFavorites.some(fav => fav.id === item.id);
-  btn.innerHTML = isInList ? `<i class="fa-solid fa-check"></i> In List` : `<i class="fa-solid fa-plus"></i> My List`;
-  
   document.getElementById("details-modal").style.display = "flex";
 }
 

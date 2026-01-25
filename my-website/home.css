@@ -400,6 +400,17 @@ input:checked + .slider:before { transform: translateX(14px); }
 .banner-nav.next { right: 0; }
 
 .banner-buttons { display: flex; gap: 10px; }
+#trailer-container iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Para hindi matakpan ng banner-fade ang video */
+#trailer-container {
+    z-index: 5 !important;
+}
+
 
 
 

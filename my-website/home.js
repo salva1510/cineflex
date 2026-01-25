@@ -14,33 +14,34 @@ function startPlayback() {
   const id = currentItem.id;
   const isTV = currentItem.first_air_date || currentItem.name;
   const nextBtn = document.getElementById("next-ep-btn");
+  const autoContainer = document.getElementById("autoplay-container");
   
-  let embedUrl;
+  // Clear any existing timer
+  clearTimeout(autoplayTimer);
+  document.getElementById("next-timer").innerText = "";
+
   if (isTV) {
       const s = parseInt(document.getElementById("season-select").value) || 1;
       const e = parseInt(document.getElementById("episode-select").value) || 1;
       currentTVState.season = s;
       currentTVState.episode = e;
-      // Updated TV URL structure (adjust if the provider uses /player/ for TV too)
-      embedUrl = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}?back=true&autoplay=true`;
+      
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
       nextBtn.style.display = "block";
+      autoContainer.style.display = "flex";
+      
+      // Start checking for autoplay if enabled
+      startAutoplayCheck();
   } else {
-      // Updated Movie URL structure based on your link
-      embedUrl = `https://www.zxcstream.xyz/player/movie/${id}?back=true&autoplay=true`;
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
       nextBtn.style.display = "none";
+      autoContainer.style.display = "none";
   }
 
-  const playerEl = document.getElementById("video-player");
-  playerEl.src = embedUrl;
-  
   document.getElementById("player-container").style.display = "block";
   document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);
-  
-  addToContinueWatching(currentItem);
   closeModal();
-  document.getElementById("player-container").scrollIntoView({ behavior: 'smooth' });
 }
-
 
 /* ADD THIS NEW FUNCTION */
 function playNextEpisode() {

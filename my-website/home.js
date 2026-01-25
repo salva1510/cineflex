@@ -408,5 +408,27 @@ function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.sty
 
 // ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
 setTimeout(loadExtraCountrySections, 1500);
+// ===== ADD-ONLY: LOAD SUGGESTED MOVIES =====
+async function loadSuggested(type, id) {
+  try {
+    const url = `${BASE_URL}/${type}/${id}/recommendations?api_key=${API_KEY}`;
+    const data = await fetch(url).then(r=>r.json());
+
+    if (!data || !data.results) return;
+    if (!document.getElementById('suggested-list')) return;
+
+    displayCards(data.results, 'suggested-list');
+  } catch (e) {
+    console.error('SUGGESTED LOAD ERROR', e);
+  }
+}
+// example: kapag binuksan ang details
+openDetails(item) {
+  // existing code mo dito (HINDI gagalawin)
+
+  // ADD ONLY
+  loadSuggested(item.media_type || 'movie', item.id);
+}
+
 
   

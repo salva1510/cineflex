@@ -257,12 +257,52 @@ async function filterByGenre(id, el) {
   if(tvSection) tvSection.style.display = "none";
 }
 
+// Palitan ang dating playTrailer function
 async function playTrailer() {
   const type = currentItem.first_air_date ? 'tv' : 'movie';
   const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
+  
+  // Hanapin ang YouTube Trailer
   const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-  if (trailer) window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+  
+  if (trailer) {
+    const container = document.getElementById("trailer-container");
+    container.style.display = "block";
+    
+    // I-render ang YouTube Iframe sa loob ng banner
+    document.getElementById("player").innerHTML = `
+      <iframe 
+        width="100%" 
+        height="100%" 
+        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="position:absolute; top:0; left:0;">
+      </iframe>`;
+  } else {
+    alert("Pasensya na, walang trailer na available.");
+  }
 }
+
+// Function para isara ang trailer at ibalik ang background image
+function closeTrailer() {
+  const container = document.getElementById("trailer-container");
+  container.style.display = "none";
+  document.getElementById("player").innerHTML = ""; // Stop the video
+}
+
+// Mahalaga: I-update din ang changeBanner para isara ang trailer kapag nag-swipe
+function changeBanner(direction) {
+    closeTrailer(); // Isara ang trailer kung sakaling naka-play
+    if (trendingItems.length === 0) return;
+    currentBannerIndex += direction;
+    if (currentBannerIndex < 0) currentBannerIndex = trendingItems.length - 1;
+    else if (currentBannerIndex >= trendingItems.length) currentBannerIndex = 0;
+    currentItem = trendingItems[currentBannerIndex];
+    setBanner(currentItem);
+}
+
 
 function openDownload() { window.open(`https://getpvid.com/download/${currentItem.id}`, '_blank'); }
 function openSearch() { document.getElementById("search-overlay").style.display = "block"; }

@@ -31,7 +31,11 @@ const trending = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`)
 const tvShows = await fetch(`${BASE_URL}/tv/popular?api_key=${API_KEY}`).then(res => res.json());
 const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
 const filipino = await fetch(
-  `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=tl`
+  `${BASE_URL}/discover/movie?` +
+  `api_key=${API_KEY}` +
+  `&region=PH` +
+  `&with_origin_country=PH` +
+  `&sort_by=popularity.desc`
 ).then(r => r.json());
 
 const korean = await fetch(

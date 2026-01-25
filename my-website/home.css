@@ -454,6 +454,72 @@ input:checked + .slider:before { transform: translateX(14px); }
     height: 100%;
     border: none;
 }
+/* Container ng buttons */
+.banner-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Premium Watch Now Button */
+.play-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ffffff; /* Puting-puti para lumitaw */
+    color: #000000;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.play-btn:hover {
+    background-color: var(--accent); /* Nagiging pula (Cineflex red) kapag hinover */
+    color: #ffffff;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+}
+
+/* Premium Glassmorphism Trailer Button */
+.info-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(109, 109, 110, 0.4); /* Semi-transparent */
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); /* Blur effect sa likod */
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.info-btn:hover {
+    background: rgba(109, 109, 110, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+/* Icon size adjustment */
+.play-btn i, .info-btn i {
+    font-size: 1.2rem;
+}
+
+/* Mobile responsive buttons */
+@media (max-width: 768px) {
+    .play-btn, .info-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
 
 
 

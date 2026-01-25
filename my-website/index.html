@@ -30,16 +30,20 @@
   </div>
 
   <header class="banner" id="banner">
-    <div class="banner-content">
-      <h1 id="banner-title">Loading...</h1>
-      <p id="banner-desc"></p>
-      <div class="banner-buttons">
-        <button class="play-btn" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play</button>
-        <button class="info-btn" onclick="showDetails(currentItem)"><i class="fa-solid fa-circle-info"></i> More Info</button>
-      </div>
+  <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
+
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+    <div class="banner-buttons">
+      <button class="play-btn" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+      <button class="info-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
     </div>
-    <div class="banner-fade"></div>
-  </header>
+  </div>
+  <div class="banner-fade"></div>
+</header>
+
 
   <div class="genre-wrapper">
     <div class="genre-container" id="genre-list">

@@ -1,0 +1,226 @@
+:root { 
+    --bg: #050505; 
+    --accent: #e50914; 
+    --text: #ffffff; 
+    --card-w: 160px; 
+    --card-h: 240px; 
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background: var(--bg); 
+    color: var(--text); 
+    margin: 0; 
+    overflow-x: hidden; 
+    padding-bottom: 80px;
+}
+
+/* --- NAVIGATION --- */
+.navbar { 
+    position: fixed; 
+    width: 100%; 
+    padding: 15px 5%; 
+    z-index: 1000; 
+    display: flex; 
+    justify-content: space-between; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); 
+    box-sizing: border-box; 
+}
+
+.logo { 
+    color: var(--accent); 
+    font-weight: 900; 
+    font-size: 1.8rem; 
+    letter-spacing: -1px; 
+}
+
+/* --- SEARCH OVERLAY (FIXED) --- */
+.search-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.98);
+    z-index: 15000; /* Pinakamataas para clickable */
+    display: none;
+    padding: 80px 5% 40px;
+    overflow-y: auto;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a;
+    padding: 15px 25px;
+    border-radius: 50px;
+    max-width: 800px;
+    margin: 0 auto 30px;
+    border: 1px solid #333;
+}
+
+.search-input-wrapper input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    margin: 0 15px;
+    font-size: 1.1rem;
+}
+
+.search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.search-card {
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.search-card img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.search-card:hover {
+    transform: translateY(-5px);
+}
+
+/* --- BANNER --- */
+.banner { 
+    height: 75vh; 
+    background-size: cover; 
+    background-position: center top; 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    padding: 0 5%; 
+}
+
+.banner-content { max-width: 600px; z-index: 2; }
+
+.banner-fade { 
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: linear-gradient(to top, var(--bg) 5%, transparent 70%); 
+}
+
+/* --- CARDS & SCROLLERS --- */
+.row { padding: 20px 5%; }
+
+.scroller { 
+    display: flex; 
+    gap: 15px; 
+    overflow-x: auto; 
+    padding: 15px 0; 
+    scrollbar-width: none; 
+}
+
+.scroller::-webkit-scrollbar { display: none; }
+
+.card { 
+    min-width: var(--card-w); 
+    height: var(--card-h); 
+    border-radius: 10px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1); 
+    position: relative;
+    flex-shrink: 0;
+}
+
+.card img { width: 100%; height: 100%; object-fit: cover; }
+.card:hover { transform: scale(1.08); z-index: 10; }
+
+/* --- MODAL / DETAILS --- */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 12000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #181818;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    animation: modalFade 0.4s ease;
+}
+
+@keyframes modalFade {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- BOTTOM NAV --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 11000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.7rem;
+    gap: 4px;
+}
+
+.nav-item.active, .nav-item:hover { color: var(--accent); }
+.nav-item i { font-size: 1.3rem; }
+
+/* --- DRAWER --- */
+.drawer {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    height: 50vh;
+    background: #111;
+    z-index: 16000;
+    transition: 0.4s ease;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.drawer.open { bottom: 0; }
+
+/* --- SKELETON ANIMATION --- */
+.skeleton {
+    background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 10px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+             }
+  

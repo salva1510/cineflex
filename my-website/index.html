@@ -11,43 +11,73 @@
 <body>
 
   <nav class="navbar">
-    <div class="logo">CINEFLEX</div>
-  </nav>
+  <div class="logo">CINEFLEX</div>
+</nav>
 
-  <div id="search-overlay" class="search-overlay">
-    <div class="search-input-wrapper">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="search-input" placeholder="Search movies or TV shows..." oninput="processSearch(this.value)">
-      <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeSearch()"></i>
-    </div>
-    <div class="search-results-grid" id="search-results"></div>
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
   </div>
+  <div class="nav-item" onclick="openSearch()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>Search</span>
+  </div>
+  <div class="nav-item" onclick="openMenuDrawer()">
+    <i class="fa-solid fa-bars"></i>
+    <span>Menu</span>
+  </div>
+  <div class="nav-item" onclick="showBannerInfo()">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>Info</span>
+  </div>
+  <div class="nav-item" onclick="openAccount()">
+    <i class="fa-solid fa-user"></i>
+    <span>Account</span>
+  </div>
+</div>
+
+<div id="menu-drawer" class="drawer">
+  <div class="drawer-header">
+    <h3>Menu</h3>
+    <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()"></i>
+  </div>
+  <div class="drawer-content">
+    <p onclick="filterByGenre('all', this)">All Movies</p>
+    <p onclick="filterByGenre('28', this)">Action</p>
+    <p onclick="filterByGenre('35', this)">Comedy</p>
+    <p onclick="filterByGenre('27', this)">Horror</p>
+  </div>
+</div>
+
 
   <header class="banner" id="banner">
-    <div id="trailer-container" class="trailer-overlay">
-      <div id="player"></div> 
-      <button class="close-trailer-btn" onclick="closeTrailer()">
+  <div id="trailer-container" class="trailer-overlay">
+    <div id="player"></div> <button class="close-trailer-btn" onclick="closeTrailer()">
         <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
+    </button>
+  </div>
 
-    <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
+  <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
 
-    <div class="banner-content">
-      <h1 id="banner-title">Loading...</h1>
-      <p id="banner-desc"></p>
-      <div class="banner-buttons">
-        <button class="play-btn" onclick="startPlayback()">
-          <i class="fa-solid fa-play"></i> Watch Now
-        </button>
-        <button class="info-btn" onclick="playTrailer()">
-          <i class="fa-solid fa-circle-info"></i> Trailer
-        </button>
-      </div>
-    </div>
-    <div class="banner-fade"></div>
-  </header>
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+    <div class="banner-buttons">
+  <button class="play-btn" onclick="startPlayback()">
+    <i class="fa-solid fa-play"></i> Watch Now
+  </button>
+  
+  <button class="info-btn" onclick="playTrailer()">
+    <i class="fa-solid fa-circle-info"></i> Trailer
+  </button>
+</div>
+  </div>
+  <div class="banner-fade"></div>
+</header>
+
+
 
   <div class="genre-wrapper">
     <div class="genre-container" id="genre-list">
@@ -56,6 +86,8 @@
       <button class="genre-pill" onclick="filterByGenre('35', this)">Comedy</button>
       <button class="genre-pill" onclick="filterByGenre('18', this)">Drama</button>
       <button class="genre-pill" onclick="filterByGenre('27', this)">Horror</button>
+      <button class="genre-pill" onclick="filterByGenre('10749', this)">Romance</button>
+      <button class="genre-pill" onclick="filterByGenre('878', this)">Sci-Fi</button>
     </div>
   </div>
 
@@ -63,18 +95,19 @@
     <div class="player-header">
       <span id="player-title-display">Now Playing</span>
       <div class="player-controls">
-        <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
-          <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
-          <label class="switch">
-            <input type="checkbox" id="autoplay-toggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-        <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
-          <i class="fa-solid fa-forward-step"></i> Next
-        </button>
-        <button onclick="closePlayer()" class="close-player-btn">×</button>
-      </div>
+  <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
+    <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
+    <label class="switch">
+      <input type="checkbox" id="autoplay-toggle" checked>
+      <span class="slider"></span>
+    </label>
+    <span style="font-size: 0.7rem; color: #888;">Auto-play</span>
+  </div>
+  <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
+    <i class="fa-solid fa-forward-step"></i> Next
+  </button>
+  <button onclick="closePlayer()" class="close-player-btn">×</button>
+</div>
     </div>
     <div class="iframe-container">
       <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
@@ -83,21 +116,24 @@
 
   <main class="content">
     <section class="row">
-      <h2>Trending Now</h2>
+      <h2 id="row-title">Trending Now</h2>
       <div class="scroller" id="main-list"></div>
     </section>
-    <section class="row" id="continue-watching-section" style="display: none;">
-      <h2>Continue Watching</h2>
+    
+    <section class="row" id="tv-section">
+      <h2>Popular TV Shows</h2>
+      <div class="scroller" id="tv-list"></div>
+    </section>
+<section class="row" id="continue-watching-section" style="display: none;">
+      <h2 style="color: #4cd137;"><i class="fa-solid fa-clock-rotate-left"></i> Continue Watching</h2>
       <div class="scroller" id="continue-list"></div>
     </section>
-  </main>
 
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></div>
-    <div class="nav-item" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
-    <div class="nav-item" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></div>
-    <div class="nav-item" onclick="showBannerInfo()"><i class="fa-solid fa-circle-info"></i><span>Info</span></div>
-  </div>
+    <section class="row" id="my-list-section" style="display: none;">
+      <h2 style="color: #ffd700;"><i class="fa-solid fa-star"></i> My List</h2>
+      <div class="scroller" id="my-list"></div>
+    </section>
+  </main>
 
   <div id="details-modal" class="modal">
     <div class="modal-content">
@@ -108,13 +144,22 @@
         <h2 id="modal-title"></h2>
         <div id="modal-meta-row"></div>
         <p id="modal-desc"></p>
+        
         <div id="episode-selector" class="episode-controls" style="display:none;">
-          <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
-          <select id="episode-select"></select>
+            <div class="selector-group">
+                <label>Season</label>
+                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            </div>
+            <div class="selector-group">
+                <label>Episode</label>
+                <select id="episode-select"></select>
+            </div>
         </div>
+
         <div class="modal-actions">
-          <button class="play-btn-large" onclick="startPlayback()">Watch Now</button>
-          <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
+            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+            <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
+            <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
         </div>
       </div>
     </div>
@@ -122,5 +167,5 @@
 
   <script src="home.js"></script>
 </body>
-    </html>
+  </html>
 

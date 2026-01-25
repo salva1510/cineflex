@@ -377,5 +377,36 @@ function openDMCA() {
 function closeDMCA() {
   document.getElementById("dmca-modal").style.display = "none";
 }
+// ===== ADD-ONLY: SAFE LOAD HELPERS =====
+async function safeLoadSection(id, url) {
+  try {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const data = await fetch(url).then(r=>r.json());
+    if (data && data.results) displayCards(data.results, id);
+  } catch (e) { console.error('LOAD FAIL', id, e); }
+}
+
+// ===== ADD-ONLY: EXTRA SECTIONS LOADER =====
+async function loadExtraCountrySections() {
+  // 🇵🇭 PINOY
+  safeLoadSection('pinoy-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=PH&region=PH&sort_by=popularity.desc`);
+  safeLoadSection('pinoy-classics-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=PH&primary_release_date.lte=2015-12-31&sort_by=vote_average.desc`);
+  safeLoadSection('pinoy-romance-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=PH&with_genres=10749`);
+  safeLoadSection('pinoy-horror-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=PH&with_genres=27`);
+  safeLoadSection('pinoy-comedy-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=PH&with_genres=35`);
+
+  // 🇰🇷 KOREAN
+  safeLoadSection('korean-list', `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=KR&sort_by=popularity.desc`);
+  safeLoadSection('korean-tv-list', `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_origin_country=KR&sort_by=popularity.desc`);
+}
+
+// ===== ADD-ONLY: DMCA HOOKS =====
+function showBannerInfo(){ openDMCA(); }
+function openDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.style.display='flex'; }
+function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.style.display='none'; }
+
+// ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
+setTimeout(loadExtraCountrySections, 1500);
 
   

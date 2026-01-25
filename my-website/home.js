@@ -377,5 +377,6 @@ function openDMCA() {
 function closeDMCA() {
   document.getElementById("dmca-modal").style.display = "none";
 }
-
+// ===== ADD-ONLY: SAFE LOAD HELPERS =====
+async function safeLoadSection(id,
   

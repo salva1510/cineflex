@@ -410,6 +410,51 @@ input:checked + .slider:before { transform: translateX(14px); }
 #trailer-container {
     z-index: 5 !important;
 }
+/* Container ng Trailer */
+.trailer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 10000; /* Mataas para matakpan ang banner content */
+    background: #000;
+}
+
+/* Ang Close Button */
+.close-trailer-btn {
+    position: absolute;
+    top: 80px; /* Binabaan natin para hindi matakpan ng Navbar/Account icon */
+    right: 30px;
+    z-index: 10001; /* Pinakamataas na layer */
+    background: rgba(229, 9, 20, 0.9); /* Kulay Cineflex Red para madaling makita */
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease;
+}
+
+.close-trailer-btn:hover {
+    transform: scale(1.1);
+    background: #ff0000;
+}
+
+/* Siguraduhin na ang video ay full screen sa loob ng banner */
+#player iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 
 
 

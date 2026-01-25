@@ -336,10 +336,4 @@ function openAccount() {
     alert("Account settings coming soon!");
 }
 
-// I-update ang closeSearch para gumana sa bagong flow
-function closeSearch() {
-    document.getElementById("search-overlay").style.display = "none";
-}
-
-
   

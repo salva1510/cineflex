@@ -57,19 +57,19 @@
     <div class="player-header">
       <span id="player-title-display">Now Playing</span>
       <div class="player-controls">
-        <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
-          <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
-          <label class="switch">
-            <input type="checkbox" id="autoplay-toggle" checked>
-            <span class="slider"></span>
-          </label>
-          <span style="font-size: 0.7rem; color: #888;">Auto-play</span>
-        </div>
-        <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
-          <i class="fa-solid fa-forward-step"></i> Next
-        </button>
-        <button onclick="closePlayer()" class="close-player-btn">×</button>
-      </div>
+  <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
+    <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
+    <label class="switch">
+      <input type="checkbox" id="autoplay-toggle" checked>
+      <span class="slider"></span>
+    </label>
+    <span style="font-size: 0.7rem; color: #888;">Auto-play</span>
+  </div>
+  <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
+    <i class="fa-solid fa-forward-step"></i> Next
+  </button>
+  <button onclick="closePlayer()" class="close-player-btn">×</button>
+</div>
     </div>
     <div class="iframe-container">
       <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
@@ -130,5 +130,5 @@
 
   <script src="home.js"></script>
 </body>
-          </html>
+  </html>
 

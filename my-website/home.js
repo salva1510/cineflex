@@ -37,6 +37,46 @@ const filipino = await fetch(
   `&with_origin_country=PH` +
   `&sort_by=popularity.desc`
 ).then(r => r.json());
+    // 🇵🇭 PINOY MAIN
+const pinoy = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=PH&region=PH&sort_by=popularity.desc`
+).then(r => r.json());
+
+// 🇵🇭 PINOY CLASSICS
+const pinoyClassics = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=PH&primary_release_date.lte=2015-12-31` +
+  `&sort_by=vote_average.desc`
+).then(r => r.json());
+
+// 🇵🇭 PINOY GENRES
+const pinoyRomance = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=PH&with_genres=10749`
+).then(r => r.json());
+
+const pinoyHorror = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=PH&with_genres=27`
+).then(r => r.json());
+
+const pinoyComedy = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=PH&with_genres=35`
+).then(r => r.json());
+
+// 🇰🇷 KOREAN MOVIES
+const korean = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
+  `&with_origin_country=KR&sort_by=popularity.desc`
+).then(r => r.json());
+
+// 🇰🇷 KOREAN DRAMAS (TV)
+const koreanTV = await fetch(
+  `${BASE_URL}/discover/tv?api_key=${API_KEY}` +
+  `&with_origin_country=KR&sort_by=popularity.desc`
+).then(r => r.json());
 
 const korean = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ko`
@@ -55,7 +95,13 @@ displayCards(asian.results, "asian-list");
 displayCards(trending.results, "main-list");
 displayCards(tvShows.results, "tv-list"); 
 displayCards(filipino.results, "filipino-list");
-displayCards(korean.results, "korean-list"); 
+displayCards(pinoy.results, "pinoy-list");
+displayCards(pinoyClassics.results, "pinoy-classics-list");
+displayCards(pinoyRomance.results, "pinoy-romance-list");
+displayCards(pinoyHorror.results, "pinoy-horror-list");
+displayCards(pinoyComedy.results, "pinoy-comedy-list");
+displayCards(korean.results, "korean-list");
+displayCards(koreanTV.results, "korean-tv-list"); 
     // I-save ang trending results para sa slider
     trendingItems = trending.results; 
     currentItem = trendingItems[0];

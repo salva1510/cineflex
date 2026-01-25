@@ -304,15 +304,39 @@ function changeBanner(direction) {
 }
 
 
-function openDownload() { window.open(`https://getpvid.com/download/${currentItem.id}`, '_blank'); }
-function openSearch() { document.getElementById("search-overlay").style.display = "block"; }
-function closeSearch() { document.getElementById("search-overlay").style.display = "none"; }
-function closeModal() { document.getElementById("details-modal").style.display = "none"; }
-function closePlayer() { 
-    document.getElementById("video-player").src = ""; 
-    document.getElementById("player-container").style.display = "none"; 
-    clearTimeout(autoplayTimer);
+// Siguraduhin na ang input ay nakukuha ang focus pagbukas
+function openSearch() {
+    document.getElementById("search-overlay").style.display = "block";
+    document.getElementById("search-input").focus(); 
 }
+
+function closeSearch() {
+    document.getElementById("search-overlay").style.display = "none";
+    document.getElementById("search-input").value = ""; // I-clear ang input
+    document.getElementById("search-results").innerHTML = ""; // I-clear ang results
+}
+
+// Ang handleSearch ay kailangan i-update ang tamang container
+async function handleSearch(q) {
+  if (q.length < 2) {
+    document.getElementById("search-results").innerHTML = "";
+    return;
+  }
+  try {
+    const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${q}`).then(r => r.json());
+    document.getElementById("search-results").innerHTML = res.results
+      .filter(i => i.poster_path)
+      .map(item => `
+        <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+          <img src="${IMG_URL}${item.poster_path}">
+          <p>${item.title || item.name}</p>
+        </div>
+      `).join('');
+  } catch (err) {
+    console.error("Search error:", err);
+  }
+}
+
 
 init();
 // Function para sa Menu Drawer

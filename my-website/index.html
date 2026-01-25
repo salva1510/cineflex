@@ -30,6 +30,12 @@
   </div>
 
   <header class="banner" id="banner">
+  <div id="trailer-container" style="position:absolute; top:0; left:0; width:100%; height:100%; display:none; z-index:1; background:#000;">
+      <div id="player"></div> <button onclick="closeTrailer()" style="position:absolute; top:20px; right:20px; z-index:10; background:rgba(0,0,0,0.5); color:white; border:none; padding:10px; cursor:pointer; border-radius:50%;">
+          <i class="fa-solid fa-xmark"></i>
+      </button>
+  </div>
+
   <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
   <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
 
@@ -43,6 +49,7 @@
   </div>
   <div class="banner-fade"></div>
 </header>
+
 
 
   <div class="genre-wrapper">

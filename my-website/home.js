@@ -315,4 +315,31 @@ function closePlayer() {
 }
 
 init();
+// Function para sa Menu Drawer
+function openMenuDrawer() {
+    document.getElementById("menu-drawer").classList.add("open");
+}
+
+function closeMenuDrawer() {
+    document.getElementById("menu-drawer").classList.remove("open");
+}
+
+// Function para sa More Info (ipapakita ang details ng nasa banner)
+function showBannerInfo() {
+    if (currentItem) {
+        showDetails(currentItem);
+    }
+}
+
+// Placeholder para sa Account
+function openAccount() {
+    alert("Account settings coming soon!");
+}
+
+// I-update ang closeSearch para gumana sa bagong flow
+function closeSearch() {
+    document.getElementById("search-overlay").style.display = "none";
+}
+
+
   

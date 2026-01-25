@@ -11,23 +11,45 @@
 <body>
 
   <nav class="navbar">
-    <div class="logo">CINEFLEX</div>
-    <div class="nav-icons">
-      <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
-      <i class="fa-solid fa-user"></i>
-    </div>
-  </nav>
+  <div class="logo">CINEFLEX</div>
+</nav>
 
-  <div id="search-overlay" class="search-overlay">
-    <div class="search-container">
-      <div class="search-input-wrapper">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Search movies or TV shows..." oninput="processSearch(this.value)">
-        <i class="fa-solid fa-xmark" onclick="closeSearch()"></i>
-      </div>
-      <div id="search-results" class="search-results-grid"></div>
-    </div>
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
   </div>
+  <div class="nav-item" onclick="openSearch()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>Search</span>
+  </div>
+  <div class="nav-item" onclick="openMenuDrawer()">
+    <i class="fa-solid fa-bars"></i>
+    <span>Menu</span>
+  </div>
+  <div class="nav-item" onclick="showBannerInfo()">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>Info</span>
+  </div>
+  <div class="nav-item" onclick="openAccount()">
+    <i class="fa-solid fa-user"></i>
+    <span>Account</span>
+  </div>
+</div>
+
+<div id="menu-drawer" class="drawer">
+  <div class="drawer-header">
+    <h3>Menu</h3>
+    <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()"></i>
+  </div>
+  <div class="drawer-content">
+    <p onclick="filterByGenre('all', this)">All Movies</p>
+    <p onclick="filterByGenre('28', this)">Action</p>
+    <p onclick="filterByGenre('35', this)">Comedy</p>
+    <p onclick="filterByGenre('27', this)">Horror</p>
+  </div>
+</div>
+
 
   <header class="banner" id="banner">
   <div id="trailer-container" class="trailer-overlay">

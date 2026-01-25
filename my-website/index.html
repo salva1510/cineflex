@@ -36,7 +36,23 @@
     <span>Account</span>
   </div>
 </div>
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay" class="search-overlay">
+  
+  <div class="search-input-wrapper">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input 
+      type="text" 
+      placeholder="Search movies or TV shows..."
+      oninput="processSearch(this.value)"
+      autofocus
+    >
+    <i class="fa-solid fa-xmark" onclick="closeSearch()" style="cursor:pointer;"></i>
+  </div>
 
+  <div id="search-results" class="search-results-grid"></div>
+
+</div>
 <div id="menu-drawer" class="drawer">
   <div class="drawer-header">
     <h3>Menu</h3>

@@ -1,0 +1,42 @@
+:root { --bg: #050505; --accent: #e50914; --text: #ffffff; --card-w: 160px; --card-h: 240px; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
+
+.navbar { position: fixed; width: 100%; padding: 15px 5%; z-index: 1000; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); box-sizing: border-box; }
+.logo { color: var(--accent); font-weight: 900; font-size: 1.8rem; }
+
+.banner { height: 75vh; background-size: cover; background-position: center top; position: relative; display: flex; align-items: center; padding: 0 5%; }
+.banner-fade { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg) 5%, transparent 70%); }
+.play-btn { background: white; color: black; border: none; padding: 12px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+.genre-wrapper { padding: 20px 5%; margin-top: -20px; position: relative; z-index: 10; }
+.genre-container { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+.genre-pill { background: #1a1a1a; border: 1px solid #333; color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; }
+.genre-pill.active { background: var(--accent); border-color: var(--accent); }
+
+.search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; display: none; padding: 40px 5%; overflow-y: auto; }
+.search-input-wrapper { display: flex; background: #111; padding: 15px; border-radius: 50px; border: 1px solid #333; max-width: 600px; margin: 0 auto 30px; align-items: center; }
+.search-input-wrapper input { background: transparent; border: none; color: white; width: 100%; outline: none; padding-left: 10px; font-size: 1rem; }
+.search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+
+.player-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; }
+.player-header { padding: 10px 20px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; }
+.close-player-btn { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+.iframe-container { flex-grow: 1; position: relative; }
+.iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+.scroller { display: flex; gap: 15px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
+.card { min-width: var(--card-w); height: var(--card-h); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; transition: 0.3s; }
+.card img { width: 100%; height: 100%; object-fit: cover; }
+
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 4000; }
+.modal-content { background: #181818; width: 90%; max-width: 600px; border-radius: 15px; overflow: hidden; max-height: 90vh; overflow-y: auto; }
+.modal-banner { height: 250px; background-size: cover; background-position: center; position: relative; }
+.modal-body { padding: 20px; }
+.episode-controls { display: flex; gap: 10px; margin-bottom: 20px; }
+.episode-controls select { background: #333; color: white; border: none; padding: 10px; border-radius: 5px; flex: 1; }
+.play-btn-large { background: var(--accent); color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    #player-container:fullscreen .iframe-container { width: 100vh; height: 100vw; transform: rotate(90deg); transform-origin: center; }
+  }
+

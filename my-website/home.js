@@ -335,5 +335,12 @@ function showBannerInfo() {
 function openAccount() {
     alert("Account settings coming soon!");
 }
+function openDMCA() {
+  document.getElementById("dmca-modal").style.display = "flex";
+}
+
+function closeDMCA() {
+  document.getElementById("dmca-modal").style.display = "none";
+}
 
   

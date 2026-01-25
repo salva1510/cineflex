@@ -376,6 +376,31 @@ input:checked + .slider:before { transform: translateX(14px); }
   font-family: monospace;
   letter-spacing: 1px;
 }
+.banner { position: relative; }
+
+/* Style para sa arrows */
+.banner-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.3s;
+    border-radius: 50%; /* Pabilog na arrow buttons */
+    margin: 0 15px;
+}
+
+.banner-nav:hover { background: var(--accent); }
+.banner-nav.prev { left: 0; }
+.banner-nav.next { right: 0; }
+
+.banner-buttons { display: flex; gap: 10px; }
+
 
 
 

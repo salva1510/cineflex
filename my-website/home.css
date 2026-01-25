@@ -521,6 +521,20 @@ input:checked + .slider:before { transform: translateX(14px); }
     }
 }
 
+.banner {
+    /* Existing properties mo... */
+    background-image: linear-gradient(
+        to right, 
+        rgba(0, 0, 0, 0.8) 0%, 
+        rgba(0, 0, 0, 0.3) 50%, 
+        transparent 100%
+    ), 
+    linear-gradient(
+        to top, 
+        var(--bg) 0%, 
+        transparent 20%
+    );
+}
 
 
 

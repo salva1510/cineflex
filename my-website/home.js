@@ -17,11 +17,10 @@ async function init() {
   updateContinueUI();
 
   try {
-    const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
+const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
 const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
 const nowPlaying = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`).then(r=>r.json());
 const upcoming = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`).then(r=>r.json());
-
 const action = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`).then(r=>r.json());
 const comedy = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`).then(r=>r.json());
 const horror = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`).then(r=>r.json());
@@ -30,56 +29,49 @@ const scifi = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_ge
 const trending = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`).then(res => res.json());
 const tvShows = await fetch(`${BASE_URL}/tv/popular?api_key=${API_KEY}`).then(res => res.json());
 const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
-const filipino = await fetch(
-  `${BASE_URL}/discover/movie?` +
-  `api_key=${API_KEY}` +
-  `&region=PH` +
-  `&with_origin_country=PH` +
-  `&sort_by=popularity.desc`
-).then(r => r.json());
     // 🇵🇭 PINOY MAIN
 const pinoy = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=PH&region=PH&sort_by=popularity.desc`
 ).then(r => r.json());
-
 // 🇵🇭 PINOY CLASSICS
 const pinoyClassics = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=PH&primary_release_date.lte=2015-12-31` +
   `&sort_by=vote_average.desc`
 ).then(r => r.json());
-
 // 🇵🇭 PINOY GENRES
 const pinoyRomance = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=PH&with_genres=10749`
 ).then(r => r.json());
-
 const pinoyHorror = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=PH&with_genres=27`
 ).then(r => r.json());
-
 const pinoyComedy = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=PH&with_genres=35`
 ).then(r => r.json());
-
 // 🇰🇷 KOREAN MOVIES
 const korean = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}` +
   `&with_origin_country=KR&sort_by=popularity.desc`
 ).then(r => r.json());
-
 // 🇰🇷 KOREAN DRAMAS (TV)
 const koreanTV = await fetch(
   `${BASE_URL}/discover/tv?api_key=${API_KEY}` +
   `&with_origin_country=KR&sort_by=popularity.desc`
 ).then(r => r.json());
-
 const korean = await fetch(
   `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ko`
+).then(r => r.json());
+const filipino = await fetch(
+  `${BASE_URL}/discover/movie?` +
+  `api_key=${API_KEY}` +
+  `&region=PH` +
+  `&with_origin_country=PH` +
+  `&sort_by=popularity.desc`
 ).then(r => r.json());
 // DISPLAY
 displayCards(popular.results, "popular-list");

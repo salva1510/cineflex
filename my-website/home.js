@@ -313,6 +313,30 @@ function closePlayer() {
     document.getElementById("player-container").style.display = "none"; 
     clearTimeout(autoplayTimer);
 }
+const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
+const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
+const nowPlaying = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`).then(r=>r.json());
+const upcoming = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`).then(r=>r.json());
+
+const action = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`).then(r=>r.json());
+const comedy = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`).then(r=>r.json());
+const horror = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`).then(r=>r.json());
+const romance = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10749`).then(r=>r.json());
+const scifi = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=878`).then(r=>r.json());
+
+const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
+
+// DISPLAY
+displayCards(popular.results, "popular-list");
+displayCards(topRated.results, "toprated-list");
+displayCards(nowPlaying.results, "nowplaying-list");
+displayCards(upcoming.results, "upcoming-list");
+displayCards(action.results, "action-list");
+displayCards(comedy.results, "comedy-list");
+displayCards(horror.results, "horror-list");
+displayCards(romance.results, "romance-list");
+displayCards(scifi.results, "scifi-list");
+displayCards(asian.results, "asian-list");
 
 init();
 // Function para sa Menu Drawer

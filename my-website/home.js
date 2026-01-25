@@ -30,7 +30,13 @@ const scifi = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_ge
 const trending = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`).then(res => res.json());
 const tvShows = await fetch(`${BASE_URL}/tv/popular?api_key=${API_KEY}`).then(res => res.json());
 const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
+const filipino = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=tl`
+).then(r => r.json());
 
+const korean = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ko`
+).then(r => r.json());
 // DISPLAY
 displayCards(popular.results, "popular-list");
 displayCards(topRated.results, "toprated-list");
@@ -44,7 +50,8 @@ displayCards(scifi.results, "scifi-list");
 displayCards(asian.results, "asian-list");
 displayCards(trending.results, "main-list");
 displayCards(tvShows.results, "tv-list"); 
-    
+displayCards(filipino.results, "filipino-list");
+displayCards(korean.results, "korean-list"); 
     // I-save ang trending results para sa slider
     trendingItems = trending.results; 
     currentItem = trendingItems[0];

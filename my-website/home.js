@@ -340,6 +340,18 @@ function openAccount() {
 function closeSearch() {
     document.getElementById("search-overlay").style.display = "none";
 }
+<div id="search-overlay" class="search-overlay">
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="search-input" placeholder="Mag-search ng movies o TV shows..." oninput="processSearch(this.value)" autofocus>
+      <i class="fa-solid fa-xmark" onclick="closeSearch()"></i>
+    </div>
+    <div id="search-results" class="search-results-grid"></div>
+  </div>
+</div>
+
+
 
 
   

@@ -91,31 +91,30 @@ function setBanner(item) {
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
 }
 
-function startPlayback() {
+// Replace the hardcoded URL in your startPlayback function
+function startPlayback(server = "primary") {
   const id = currentItem.id;
   const isTV = currentItem.first_air_date || currentItem.name;
-  const nextBtn = document.getElementById("next-ep-btn");
-  const autoContainer = document.getElementById("autoplay-container");
+  const player = document.getElementById("video-player");
   
-  clearTimeout(autoplayTimer);
-  document.getElementById("next-timer").innerText = "";
-
+  let sourceUrl = "";
+  
   if (isTV) {
       const s = parseInt(document.getElementById("season-select")?.value) || 1;
       const e = parseInt(document.getElementById("episode-select")?.value) || 1;
-      currentTVState.season = s;
-      currentTVState.episode = e;
-      
-      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
-      if(nextBtn) nextBtn.style.display = "block";
-      if(autoContainer) autoContainer.style.display = "flex";
-      
-      startAutoplayCheck();
+      // Primary: zxcstream, Secondary: vidsrc
+      sourceUrl = server === "primary" 
+        ? `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`
+        : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}`;
   } else {
-      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
-      if(nextBtn) nextBtn.style.display = "none";
-      if(autoContainer) autoContainer.style.display = "none";
+      sourceUrl = server === "primary"
+        ? `https://zxcstream.xyz/embed/movie/${id}`
+        : `https://vidsrc.me/embed/movie?tmdb=${id}`;
   }
+
+  player.src = sourceUrl;
+  // ... rest of your existing startPlayback code
+}
 
   document.getElementById("player-container").style.display = "block";
   document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);

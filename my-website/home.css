@@ -260,20 +260,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
     gap: 15px;
 }
 
-.download-btn {
-    background: #2ecc71; /* Green for download */
-    color: white;
-    border: none;
-    padding: 6px 15px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
 
-.download-btn:hover {
-    background: #27ae60;
-}
 
 /* Meta Data row inside Modal */
 #modal-meta-row {
@@ -395,11 +382,7 @@ input:checked + .slider:before { transform: translateX(14px); }
     margin: 0 15px;
 }
 
-.banner-nav:hover { background: var(--accent); }
-.banner-nav.prev { left: 0; }
-.banner-nav.next { right: 0; }
-
-.banner-buttons { display: flex; gap: 10px; }
+.
 #trailer-container iframe {
     width: 100%;
     height: 100%;

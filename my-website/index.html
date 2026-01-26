@@ -76,6 +76,15 @@
     </div>
   </div>
 </div>
+  <!-- DMCA MODAL (ADD ONLY) -->
+<div id="dmca-modal" class="modal" style="display:none">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeDMCA()">&times;</span>
+    <h2>DMCA Policy</h2>
+    <p>This site does not host files. Content is embedded from third parties.</p>
+    <p>Email: <b>dmca@cineflex.app</b></p>
+  </div>
+</div>
 <!-- SEARCH OVERLAY -->
 <div id="search-overlay" class="search-overlay">
   
@@ -108,7 +117,6 @@
 
 
   <header class="banner" id="banner">
-    <div id="banner-dots" class="banner-dots"></div>
   <div id="trailer-container" class="trailer-overlay">
     <div id="player"></div> <button class="close-trailer-btn" onclick="closeTrailer()">
         <i class="fa-solid fa-xmark"></i>
@@ -132,11 +140,6 @@
 </div>
   </div>
   <div class="banner-fade"></div>
-    <select id="server-select" onchange="startPlayback(this.value)" style="background:#333; color:white; border:none; border-radius:4px; padding:2px 5px; font-size:0.7rem;">
-  <option value="primary">Server 1 (Default)</option>
-  <option value="secondary">Server 2 (Backup)</option>
-</select>
-
 </header>
 
 

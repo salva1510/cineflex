@@ -89,55 +89,33 @@ function setBanner(item) {
   banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   document.getElementById("banner-title").innerText = item.title || item.name;
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
-  
-  updateDots(); // Add this line
 }
 
-function updateDots() {
-    const dotsContainer = document.getElementById("banner-dots");
-    if (!dotsContainer) return;
-    
-    // We only show dots for the first 10 items to keep it clean
-    const maxDots = Math.min(trendingItems.length, 10);
-    let dotsHtml = "";
-    
-    for (let i = 0; i < maxDots; i++) {
-        dotsHtml += `<div class="dot ${i === currentBannerIndex ? 'active' : ''}" onclick="goToBanner(${i})"></div>`;
-    }
-    dotsContainer.innerHTML = dotsHtml;
-}
-
-function goToBanner(index) {
-    currentBannerIndex = index;
-    currentItem = trendingItems[currentBannerIndex];
-    setBanner(currentItem);
-}
-
-
-// Replace the hardcoded URL in your startPlayback function
-function startPlayback(server = "primary") {
+function startPlayback() {
   const id = currentItem.id;
   const isTV = currentItem.first_air_date || currentItem.name;
-  const player = document.getElementById("video-player");
+  const nextBtn = document.getElementById("next-ep-btn");
+  const autoContainer = document.getElementById("autoplay-container");
   
-  let sourceUrl = "";
-  
+  clearTimeout(autoplayTimer);
+  document.getElementById("next-timer").innerText = "";
+
   if (isTV) {
       const s = parseInt(document.getElementById("season-select")?.value) || 1;
       const e = parseInt(document.getElementById("episode-select")?.value) || 1;
-      // Primary: zxcstream, Secondary: vidsrc
-      sourceUrl = server === "primary" 
-        ? `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`
-        : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}`;
+      currentTVState.season = s;
+      currentTVState.episode = e;
+      
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
+      if(nextBtn) nextBtn.style.display = "block";
+      if(autoContainer) autoContainer.style.display = "flex";
+      
+      startAutoplayCheck();
   } else {
-      sourceUrl = server === "primary"
-        ? `https://zxcstream.xyz/embed/movie/${id}`
-        : `https://vidsrc.me/embed/movie?tmdb=${id}`;
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
+      if(nextBtn) nextBtn.style.display = "none";
+      if(autoContainer) autoContainer.style.display = "none";
   }
-
-  player.src = sourceUrl;
-  // ... rest of your existing startPlayback code
-}
 
   document.getElementById("player-container").style.display = "block";
   document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);

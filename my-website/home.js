@@ -114,12 +114,47 @@ function changeBanner(direction) {
     setBanner(currentItem);
 }
 
-function setBanner(item) {
+async function setBanner(item) {
   const banner = document.getElementById("banner");
   banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   document.getElementById("banner-title").innerText = item.title || item.name;
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
+
+  // Awtomatikong i-play ang trailer
+  autoPlayBannerTrailer(item);
 }
+
+async function autoPlayBannerTrailer(item) {
+  const type = item.first_air_date ? 'tv' : 'movie';
+  try {
+    const data = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`).then(r => r.json());
+    const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+
+    const container = document.getElementById("trailer-container");
+    const playerDiv = document.getElementById("player");
+
+    if (trailer) {
+      container.style.display = "block";
+      // Muted autoplay para payagan ng mga browsers (Chrome/Safari)
+      playerDiv.innerHTML = `
+        <iframe 
+          width="100%" 
+          height="100%" 
+          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&showinfo=0" 
+          frameborder="0" 
+          allow="autoplay; encrypted-media" 
+          style="pointer-events: none;">
+        </iframe>`;
+    } else {
+      // Kung walang trailer, itago ang container at ipakita lang ang image
+      container.style.display = "none";
+      playerDiv.innerHTML = "";
+    }
+  } catch (err) {
+    console.error("Trailer error:", err);
+  }
+}
+
 
 function startPlayback() {
   const id = currentItem.id;

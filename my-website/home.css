@@ -610,10 +610,6 @@ input:checked + .slider:before { transform: translateX(14px); }
 body {
     padding-bottom: 80px;
 }
-.card {
-  width: 100%; /* Let the container/scroller define width */
-  aspect-ratio: 2 / 3;
-}
 
 
 

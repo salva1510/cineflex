@@ -9,6 +9,36 @@ let currentTVState = { season: 1, episode: 1 };
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let autoplayTimer = null;
+// Idagdag ang variables na ito sa taas ng home.js
+let touchstartX = 0;
+let touchendX = 0;
+
+const bannerElement = document.getElementById('banner');
+
+// Function para i-handle ang swipe direction
+function handleGesture() {
+    const swipeThreshold = 50; // Minimum pixels para ituring na swipe
+    if (touchendX < touchstartX - swipeThreshold) {
+        // Swipe Left -> Next Banner
+        changeBanner(1);
+    }
+    if (touchendX > touchstartX + swipeThreshold) {
+        // Swipe Right -> Previous Banner
+        changeBanner(-1);
+    }
+}
+
+// Event Listeners para sa touch events sa Banner
+bannerElement.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
+
+bannerElement.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleGesture();
+});
+
+
 
 async function init() {
   showSkeletons("main-list");

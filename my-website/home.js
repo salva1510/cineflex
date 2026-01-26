@@ -89,7 +89,30 @@ function setBanner(item) {
   banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   document.getElementById("banner-title").innerText = item.title || item.name;
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
+  
+  updateDots(); // Add this line
 }
+
+function updateDots() {
+    const dotsContainer = document.getElementById("banner-dots");
+    if (!dotsContainer) return;
+    
+    // We only show dots for the first 10 items to keep it clean
+    const maxDots = Math.min(trendingItems.length, 10);
+    let dotsHtml = "";
+    
+    for (let i = 0; i < maxDots; i++) {
+        dotsHtml += `<div class="dot ${i === currentBannerIndex ? 'active' : ''}" onclick="goToBanner(${i})"></div>`;
+    }
+    dotsContainer.innerHTML = dotsHtml;
+}
+
+function goToBanner(index) {
+    currentBannerIndex = index;
+    currentItem = trendingItems[currentBannerIndex];
+    setBanner(currentItem);
+}
+
 
 // Replace the hardcoded URL in your startPlayback function
 function startPlayback(server = "primary") {

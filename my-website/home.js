@@ -116,9 +116,6 @@ function changeBanner(direction) {
     setBanner(currentItem);
 }
 
-let touchstartX = 0;
-let touchendX = 0;
-
 
 // Palitan ang iyong setBanner function
 function setBanner(item) {

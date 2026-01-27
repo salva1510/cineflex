@@ -232,36 +232,51 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   text-overflow: ellipsis;
 }
 /* Siguraduhin na ang banner content ay laging nasa unahan */
-.banner-content {
+/* Siguraduhin na ang banner ay may overflow hidden */
+.banner {
     position: relative;
-    z-index: 100; /* Taasan natin para sigurado */
-    pointer-events: auto; /* Siguraduhin na naki-click ang mga buttons */
+    overflow: hidden; /* Importante ito para hindi lumabas ang video sa banner */
 }
 
-.banner-buttons {
-    position: relative;
-    z-index: 101;
-    display: flex;
-    gap: 12px;
-    margin-top: 25px;
-}
-
-/* Ang trailer ay dapat nasa likod lang ng text at buttons */
 .trailer-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Mababa lang dapat ito */
+    z-index: 1;
     background: #000;
-    overflow: hidden;
 }
 
-/* Overlay para mas lalong lumitaw ang Watch button habang may video */
-.banner-fade {
-    z-index: 2; /* Sa pagitan ng video at ng text */
+#player {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
+
+/* Eto ang magic para laging fit ang video sa background */
+#player iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 115vw; /* Gawing mas malapad sa screen para walang black bars */
+    height: 115vh; /* Gawing mas mataas sa banner */
+    transform: translate(-50%, -50%); /* I-center ang video */
+    pointer-events: none;
+    border: none;
+}
+
+/* Siguraduhin na ang content (text at buttons) ay nasa harap */
+.banner-content {
+    position: relative;
+    z-index: 10; /* Mas mataas sa video */
+}
+
+.banner-fade {
+    z-index: 5; /* Sa pagitan ng video at text */
+    pointer-events: none; /* Para hindi maharangan ang click sa button */
+}
+
 
 
 

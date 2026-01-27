@@ -231,43 +231,36 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* NEW BUTTON STYLES */
-/* I-update ang trailer-overlay */
+/* Siguraduhin na ang banner content ay laging nasa unahan */
+.banner-content {
+    position: relative;
+    z-index: 100; /* Taasan natin para sigurado */
+    pointer-events: auto; /* Siguraduhin na naki-click ang mga buttons */
+}
+
+.banner-buttons {
+    position: relative;
+    z-index: 101;
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Ang trailer ay dapat nasa likod lang ng text at buttons */
 .trailer-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: none;
-    z-index: 1; 
+    z-index: 1; /* Mababa lang dapat ito */
     background: #000;
-    overflow: hidden; /* Mahalaga ito para hindi lumabas ang video sa banner */
+    overflow: hidden;
 }
 
-/* Siguraduhin na ang YouTube iframe ay laging Fit/Cover */
-#player {
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-#player iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw; /* 100% ng viewport width */
-    height: 56.25vw; /* 16:9 ratio calculation */
-    min-height: 100vh; 
-    min-width: 177.77vh; /* 16:9 ratio (1.77 * height) */
-    transform: translate(-50%, -50%); /* I-center ang video */
-    object-fit: cover;
-}
-
-/* Dagdagan ang gradient para mas madaling mabasa ang text sa ibabaw ng video */
+/* Overlay para mas lalong lumitaw ang Watch button habang may video */
 .banner-fade {
-    z-index: 2; /* Mas mataas sa trailer pero mas mababa sa content */
-    background: linear-gradient(to top, var(--bg) 5%, rgba(5, 5, 5, 0.5) 50%, rgba(5, 5, 5, 0.8) 100%);
+    z-index: 2; /* Sa pagitan ng video at ng text */
 }
 
 

@@ -232,33 +232,29 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   text-overflow: ellipsis;
 }
 /* NEW BUTTON STYLES */
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+..trailer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 1; /* Mababa para nasa likod ng buttons at text */
+    background: #000;
+    overflow: hidden;
 }
 
-.trailer-btn {
-    flex: 1;
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+/* Siguraduhin na ang content ay nasa ibabaw ng video */
+.banner-content {
+    position: relative;
+    z-index: 10;
 }
 
-.trailer-btn:hover {
-    background: #cccccc;
+/* Itago ang close button dahil auto-play na ito sa background */
+.close-trailer-btn {
+    display: none !important;
 }
 
-.player-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
 
 
 

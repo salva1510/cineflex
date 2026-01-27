@@ -232,28 +232,44 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   text-overflow: ellipsis;
 }
 /* NEW BUTTON STYLES */
-..trailer-overlay {
+/* I-update ang trailer-overlay */
+.trailer-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     display: none;
-    z-index: 1; /* Mababa para nasa likod ng buttons at text */
+    z-index: 1; 
     background: #000;
-    overflow: hidden;
+    overflow: hidden; /* Mahalaga ito para hindi lumabas ang video sa banner */
 }
 
-/* Siguraduhin na ang content ay nasa ibabaw ng video */
-.banner-content {
-    position: relative;
-    z-index: 10;
+/* Siguraduhin na ang YouTube iframe ay laging Fit/Cover */
+#player {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
-/* Itago ang close button dahil auto-play na ito sa background */
-.close-trailer-btn {
-    display: none !important;
+#player iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw; /* 100% ng viewport width */
+    height: 56.25vw; /* 16:9 ratio calculation */
+    min-height: 100vh; 
+    min-width: 177.77vh; /* 16:9 ratio (1.77 * height) */
+    transform: translate(-50%, -50%); /* I-center ang video */
+    object-fit: cover;
 }
+
+/* Dagdagan ang gradient para mas madaling mabasa ang text sa ibabaw ng video */
+.banner-fade {
+    z-index: 2; /* Mas mataas sa trailer pero mas mababa sa content */
+    background: linear-gradient(to top, var(--bg) 5%, rgba(5, 5, 5, 0.5) 50%, rgba(5, 5, 5, 0.8) 100%);
+}
+
 
 
 

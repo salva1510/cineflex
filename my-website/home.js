@@ -131,18 +131,17 @@ async function autoPlayBannerTrailer(item) {
   const type = item.first_air_date ? 'tv' : 'movie';
   try {
     const data = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`).then(r => r.json());
-    const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+    const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
     const container = document.getElementById("trailer-container");
     const playerDiv = document.getElementById("player");
 
     if (trailer) {
       container.style.display = "block";
-      // Dagdag parameters: modestbranding=1 at iv_load_policy=3 para malinis ang UI
+      // Nilagyan natin ng &fill-layout=1 at pinalitan ang structure
       playerDiv.innerHTML = `
         <iframe 
-          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&fs=0" 
-          frameborder="0" 
+          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0" 
           allow="autoplay; encrypted-media">
         </iframe>`;
     } else {
@@ -153,6 +152,7 @@ async function autoPlayBannerTrailer(item) {
     console.error("Trailer error:", err);
   }
 }
+
 
 
 

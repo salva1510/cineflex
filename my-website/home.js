@@ -135,18 +135,14 @@ async function autoPlayBannerTrailer(item) {
 
     if (trailer) {
       container.style.display = "block";
-      // Muted autoplay para payagan ng mga browsers (Chrome/Safari)
+      // Dagdag parameters: modestbranding=1 at iv_load_policy=3 para malinis ang UI
       playerDiv.innerHTML = `
         <iframe 
-          width="100%" 
-          height="100%" 
-          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&showinfo=0" 
+          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&fs=0" 
           frameborder="0" 
-          allow="autoplay; encrypted-media" 
-          style="pointer-events: none;">
+          allow="autoplay; encrypted-media">
         </iframe>`;
     } else {
-      // Kung walang trailer, itago ang container at ipakita lang ang image
       container.style.display = "none";
       playerDiv.innerHTML = "";
     }
@@ -154,6 +150,7 @@ async function autoPlayBannerTrailer(item) {
     console.error("Trailer error:", err);
   }
 }
+
 
 
 function startPlayback() {

@@ -13,6 +13,8 @@ let autoplayTimer = null;
 let touchstartX = 0;
 let touchendX = 0;
 
+
+
 const bannerElement = document.getElementById('banner');
 
 // Function para i-handle ang swipe direction
@@ -114,18 +116,18 @@ function changeBanner(direction) {
     setBanner(currentItem);
 }
 
-async function setBanner(item) {
+
+// Palitan ang iyong setBanner function
+function setBanner(item) {
     const banner = document.getElementById("banner");
     banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
     document.getElementById("banner-title").innerText = item.title || item.name;
     document.getElementById("banner-desc").innerText = item.overview;
     
-    // I-update ang current global item para sa Play button
-    currentItem = item;
-
     autoPlayBannerTrailer(item);
 }
 
+// Bagong Auto-play logic
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
@@ -138,21 +140,25 @@ async function autoPlayBannerTrailer(item) {
 
         if (trailer) {
             container.style.display = "block";
-            // Clean UI: No controls, no branding, autoplay, loop
             playerDiv.innerHTML = `
                 <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" 
-                    frameborder="0" 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
                     allow="autoplay; encrypted-media">
                 </iframe>`;
         } else {
             container.style.display = "none";
-            playerDiv.innerHTML = "";
         }
-    } catch (e) {
-        container.style.display = "none";
-    }
+    } catch (e) { container.style.display = "none"; }
 }
+
+// SWIPE LOGIC para sa Banner
+const bannerEl = document.getElementById('banner');
+bannerEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+bannerEl.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    if (touchendX < touchstartX - 50) changeBanner(1); // Swipe Left
+    if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
+});
 
 
 

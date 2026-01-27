@@ -114,15 +114,18 @@ function changeBanner(direction) {
     setBanner(currentItem);
 }
 
-async function setBanner(item) {
+function setBanner(item) {
   const banner = document.getElementById("banner");
   banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   document.getElementById("banner-title").innerText = item.title || item.name;
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
+  
+  // I-reset ang position ng content para lumitaw sa taas
+  document.querySelector(".banner-content").style.display = "block";
 
-  // Awtomatikong i-play ang trailer
   autoPlayBannerTrailer(item);
 }
+
 
 async function autoPlayBannerTrailer(item) {
   const type = item.first_air_date ? 'tv' : 'movie';

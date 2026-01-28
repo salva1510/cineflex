@@ -127,7 +127,11 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-// Bagong Auto-play logic
+// Variable para sa Swipe
+let touchstartX = 0;
+let touchendX = 0;
+
+// Palitan ang iyong autoPlayBannerTrailer function
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
@@ -140,25 +144,33 @@ async function autoPlayBannerTrailer(item) {
 
         if (trailer) {
             container.style.display = "block";
+            // Extra parameters para sa malinis na UI
             playerDiv.innerHTML = `
                 <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" 
                     allow="autoplay; encrypted-media">
                 </iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) { container.style.display = "none"; }
+    } catch (e) {
+        container.style.display = "none";
+    }
 }
 
-// SWIPE LOGIC para sa Banner
+// I-bind ang Swipe Gestures sa Banner
 const bannerEl = document.getElementById('banner');
-bannerEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-bannerEl.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    if (touchendX < touchstartX - 50) changeBanner(1); // Swipe Left
-    if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
-});
+if (bannerEl) {
+    bannerEl.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    bannerEl.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left -> Next
+        if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right -> Prev
+    }, {passive: true});
+}
 
 
 

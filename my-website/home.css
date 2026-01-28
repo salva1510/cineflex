@@ -209,7 +209,49 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   backdrop-filter: blur(4px);
 }
 
-/* CARD HOVER INFO */
+//* --- SIMPLE FULL-SCREEN VIDEO FIX --- */
+.banner {
+    height: 80vh;
+    position: relative;
+    overflow: hidden; /* Mahalaga ito */
+    background: #000;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5% 60px 5%;
+}
+
+.trailer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#player iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250vw; /* Sobrang lapad para mawala ang black bars */
+    height: 150vh; /* Sobrang taas para mawala ang black bars */
+    transform: translate(-50%, -50%); /* I-center ang video */
+    pointer-events: none;
+    border: none;
+}
+
+.banner-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #050505 10%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    z-index: 2;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 5; /* Para mapindot ang button */
+}
+* CARD HOVER INFO */
 .card-info-overlay {
   position: absolute;
   bottom: 0;
@@ -232,53 +274,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   text-overflow: ellipsis;
 }
 
-    /* --- ULTIMATE VIDEO FILL FIX --- */
-.banner {
-    height: 80vh; /* Taas sa mobile */
-    position: relative;
-    overflow: hidden; /* Importante para ma-crop ang lumalampas na video */
-    background: #000;
-}
-
-#player {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Para hindi ma-click ang video, buttons lang */
-}
-
-#player iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Pinilit na gawing mas malaki ang iframe kesa sa screen */
-    width: 115vw; 
-    height: 115vh; 
-    /* Ang scale(1.4) ang mag-zo-zoom para mawala ang mga black bars */
-    transform: translate(-50%, -50%) scale(1.4); 
-    border: none;
-    object-fit: cover;
-}
-
-/* Gradient Overlay para lumutang ang text */
-.banner-fade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, 
-        #050505 10%, 
-        rgba(5, 5, 5, 0.4) 50%, 
-        transparent 100%);
-    z-index: 5;
-    pointer-events: none;
-}
-
-.banner-content {
-    position: relative;
-    z-index: 10; /* Mas mataas sa lahat para mapindot ang Watch button */
-    padding-bottom: 50px;
-}
+    
 
 
 /* Meta Data row inside Modal */

@@ -647,6 +647,50 @@ input:checked + .slider:before { transform: translateX(14px); }
 body {
     padding-bottom: 80px;
 }
+/* --- CINEMATIC AUTO-FILL BANNER --- */
+.banner {
+    height: 80vh; 
+    position: relative;
+    overflow: hidden !important; /* Pinipigilan nito ang pagkasira ng layout */
+    background: #000;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5% 80px 5%;
+}
+
+.trailer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#player iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Nilakihan para ma-crop ang black bars kahit anong size */
+    width: 250vw; 
+    height: 150vh;
+    transform: translate(-50%, -50%) scale(1.2);
+    pointer-events: none;
+    border: none;
+}
+
+.banner-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #050505 10%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 10;
+}
 
 
 

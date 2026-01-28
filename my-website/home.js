@@ -12,6 +12,7 @@ let autoplayTimer = null;
 // Idagdag ang variables na ito sa taas ng home.js
 let touchstartX = 0;
 let touchendX = 0;
+let autoSlideInterval = setInterval(() => changeBanner(1), 10000);
 
 
 

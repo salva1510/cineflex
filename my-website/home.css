@@ -654,6 +654,18 @@ body {
     position: relative;
     z-index: 10; /* Mas mataas sa video para clickable ang Watch button */
 }
+.banner {
+    transition: background-image 0.8s ease-in-out; /* Smooth transition ng image */
+}
+
+.banner-content {
+    animation: fadeIn 1s ease-in-out; /* Fade in animation para sa text */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 
 

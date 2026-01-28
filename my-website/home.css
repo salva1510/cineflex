@@ -231,54 +231,85 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* --- ULTIMATE VIDEO FILL FIX --- */
+/* --- CINEMATIC FULL-SCREEN BANNER --- */
 .banner {
-    height: 80vh; /* Taas sa mobile */
+    height: 85vh; /* Taas ng banner sa mobile */
     position: relative;
-    overflow: hidden; /* Importante para ma-crop ang lumalampas na video */
-    background: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end; /* Text sa bottom part gaya ng nasa picture */
+    padding: 0 5% 100px 5%;
+    background-color: #000;
 }
 
-#player {
+.trailer-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Para hindi ma-click ang video, buttons lang */
+    z-index: 1; /* Pinaka-ilalim */
 }
 
 #player iframe {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* Pinilit na gawing mas malaki ang iframe kesa sa screen */
-    width: 115vw; 
-    height: 115vh; 
-    /* Ang scale(1.4) ang mag-zo-zoom para mawala ang mga black bars */
-    transform: translate(-50%, -50%) scale(1.4); 
+    width: 180vw; /* Malapad para ma-crop ang black bars */
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Hindi mahaharangan ang clicks sa buttons */
     border: none;
-    object-fit: cover;
 }
 
-/* Gradient Overlay para lumutang ang text */
 .banner-fade {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, 
-        #050505 10%, 
-        rgba(5, 5, 5, 0.4) 50%, 
-        transparent 100%);
-    z-index: 5;
+    /* Gradient: Itim sa baba (para sa text) at gilid */
+    background: linear-gradient(to top, #050505 15%, transparent 60%),
+                linear-gradient(to right, rgba(0,0,0,0.4) 0%, transparent 50%);
+    z-index: 2;
     pointer-events: none;
 }
 
 .banner-content {
     position: relative;
-    z-index: 10; /* Mas mataas sa lahat para mapindot ang Watch button */
-    padding-bottom: 50px;
+    z-index: 10; /* Mas mataas sa video para mapindot ang button */
+    width: 100%;
 }
 
+#banner-title {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+    font-weight: 900;
+    margin-bottom: 8px;
+    line-height: 1.1;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+}
+
+#banner-desc {
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 1px 1px 5px rgba(0,0,0,1);
+}
+
+.play-btn {
+    background: #fff;
+    color: #000;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 
 

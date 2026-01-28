@@ -480,10 +480,6 @@ function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.sty
 
 // ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
 setTimeout(loadExtraCountrySections, 1500);
-// Variable Settings
-let touchstartX = 0;
-let touchendX = 0;
-let autoSlideInterval = setInterval(() => changeBanner(1), 10000);
 
 // Function para sa Auto-Play Trailer
 async function autoPlayBannerTrailer(item) {

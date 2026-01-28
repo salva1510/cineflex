@@ -523,6 +523,28 @@ if (bannerElement) {
         if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
     }, {passive: true});
 }
+// --- AUTO SLIDE LOGIC (10 SECONDS) ---
+let bannerAutoSlide = setInterval(nextBannerAuto, 10000);
+
+function nextBannerAuto() {
+    // Lilipat sa susunod na banner (Index + 1)
+    changeBanner(1);
+}
+
+// Function para i-reset ang timer kapag nag-manual swipe ang user
+function resetAutoSlide() {
+    clearInterval(bannerAutoSlide); // Ihinto ang dating timer
+    bannerAutoSlide = setInterval(nextBannerAuto, 10000); // Simulan ulit ang 10 seconds
+}
+
+// I-update ang iyong swipe event para tawagin ang resetAutoSlide
+const bannerEl = document.getElementById('banner');
+if (bannerEl) {
+    bannerEl.addEventListener('touchend', () => {
+        resetAutoSlide(); // I-reset ang timer pagkatapos mag-swipe
+    }, {passive: true});
+}
+
 
 
 

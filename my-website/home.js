@@ -127,38 +127,37 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-// Bagong Auto-play logic
+// Function para sa Auto-Play Trailer
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
-    const container = document.getElementById("trailer-container");
-    const playerDiv = document.getElementById("player");
-
     try {
         const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
         const data = await res.json();
         const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
+        const container = document.getElementById("trailer-container");
+        const playerDiv = document.getElementById("player");
+
         if (trailer) {
             container.style.display = "block";
-            playerDiv.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
-                    allow="autoplay; encrypted-media">
-                </iframe>`;
+            playerDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media"></iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) { container.style.display = "none"; }
+    } catch (e) { console.log("Trailer Error"); }
 }
 
-// SWIPE LOGIC para sa Banner
-const bannerEl = document.getElementById('banner');
-bannerEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-bannerEl.addEventListener('touchend', e => {
+// Swipe Detector para sa Banner
+document.getElementById('banner').addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('banner').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX;
-    if (touchendX < touchstartX - 50) changeBanner(1); // Swipe Left
+    if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left
     if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
 });
+
 
 
 
@@ -480,5 +479,51 @@ function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.sty
 
 // ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
 setTimeout(loadExtraCountrySections, 1500);
+// Variable para sa Swipe Gestures
+let touchstartX = 0;
+let touchendX = 0;
+
+// Function para sa Auto-Play Trailer (Force Fit)
+async function autoPlayBannerTrailer(item) {
+    const type = item.first_air_date ? 'tv' : 'movie';
+    const container = document.getElementById("trailer-container");
+    const playerDiv = document.getElementById("player");
+
+    try {
+        const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
+        const data = await res.json();
+        const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
+
+        if (trailer) {
+            container.style.display = "block";
+            playerDiv.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" 
+                    allow="autoplay; encrypted-media">
+                </iframe>`;
+        } else {
+            container.style.display = "none";
+        }
+    } catch (e) {
+        container.style.display = "none";
+    }
+}
+
+// Swipe Detector para sa Banner
+const bannerElement = document.getElementById('banner');
+if (bannerElement) {
+    bannerElement.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    bannerElement.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        // Logic: Kung lumampas sa 50 pixels ang swipe
+        if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left
+        if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
+    }, {passive: true});
+}
+
+
 
   

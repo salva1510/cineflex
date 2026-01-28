@@ -127,46 +127,37 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-// Palitan ang iyong autoPlayBannerTrailer function
+// Function para sa Auto-Play Trailer
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
-    const container = document.getElementById("trailer-container");
-    const playerDiv = document.getElementById("player");
-
     try {
         const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
         const data = await res.json();
         const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
+        const container = document.getElementById("trailer-container");
+        const playerDiv = document.getElementById("player");
+
         if (trailer) {
             container.style.display = "block";
-            // Extra parameters para sa malinis na UI
-            playerDiv.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" 
-                    allow="autoplay; encrypted-media">
-                </iframe>`;
+            playerDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media"></iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) {
-        container.style.display = "none";
-    }
+    } catch (e) { console.log("Trailer Error"); }
 }
 
-// I-bind ang Swipe Gestures sa Banner
-const bannerEl = document.getElementById('banner');
-if (bannerEl) {
-    bannerEl.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].screenX;
-    }, {passive: true});
+// Swipe Detector para sa Banner
+document.getElementById('banner').addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
 
-    bannerEl.addEventListener('touchend', e => {
-        touchendX = e.changedTouches[0].screenX;
-        if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left -> Next
-        if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right -> Prev
-    }, {passive: true});
-}
+document.getElementById('banner').addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left
+    if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
+});
+
 
 
 

@@ -691,6 +691,32 @@ body {
     position: relative;
     z-index: 10;
 }
+.mute-btn {
+    position: absolute;
+    bottom: 120px; /* Itaas ng kaunti para hindi takpan ng content */
+    right: 5%;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.mute-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.mute-btn i {
+    font-size: 1.1rem;
+}
 
 
 

@@ -15,7 +15,8 @@ let touchendX = 0;
 let autoSlideInterval = setInterval(() => changeBanner(1), 20000);
 let isBannerMuted = true; // Default state
 let currentTrailerKey = ""; // Para matandaan ang video key
-
+let ytPlayer; // Dito ise-save ang YouTube player instance
+let isBannerMuted = true;
 
 
 const bannerElement = document.getElementById('banner');
@@ -131,28 +132,72 @@ function setBanner(item) {
 }
 
 
+
+
+// Ito ay automatic na tatawagin ng YouTube API pagka-load ng script
+function onYouTubeIframeAPIReady() {
+    console.log("YouTube API Ready");
+}
+
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
-    const playerDiv = document.getElementById("player");
-
+    
     try {
         const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
         const data = await res.json();
         const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
         if (trailer) {
-            currentTrailerKey = trailer.key; // I-save ang key
             container.style.display = "block";
-            renderBannerIframe(); // Tawagin ang render function
+            
+            // Burahin ang lumang player kung meron man
+            document.getElementById("player").innerHTML = '<div id="yt-frame"></div>';
+
+            // Gawa ng bagong YT Player
+            ytPlayer = new YT.Player('yt-frame', {
+                videoId: trailer.key,
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1, // Start as muted para payagan ng browser ang autoplay
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': trailer.key,
+                    'modestbranding': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': (event) => {
+                        event.target.playVideo();
+                    }
+                }
+            });
         } else {
             container.style.display = "none";
         }
     } catch (e) { 
-        console.log("Trailer fail"); 
-        container.style.display = "none";
+        container.style.display = "none"; 
     }
 }
+
+// Bagong Toggle Function: Hindi na nagre-reload!
+function toggleBannerMute() {
+    if (!ytPlayer || typeof ytPlayer.unMute !== 'function') return;
+
+    const muteIcon = document.querySelector("#banner-mute-btn i");
+
+    if (isBannerMuted) {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(80); // Siguraduhing may volume
+        muteIcon.className = "fa-solid fa-volume-high";
+    } else {
+        ytPlayer.mute();
+        muteIcon.className = "fa-solid fa-volume-xmark";
+    }
+    
+    isBannerMuted = !isBannerMuted;
+}
+
 
 // Function para i-render ang Iframe (para reusable sa mute toggle)
 function renderBannerIframe() {

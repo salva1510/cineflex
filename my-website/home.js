@@ -13,10 +13,7 @@ let autoplayTimer = null;
 let touchstartX = 0;
 let touchendX = 0;
 let autoSlideInterval = setInterval(() => changeBanner(1), 20000);
-let isBannerMuted = true; // Default state
-let currentTrailerKey = ""; // Para matandaan ang video key
-let ytPlayer; // Dito ise-save ang YouTube player instance
-let isBannerMuted = true;
+
 
 
 const bannerElement = document.getElementById('banner');
@@ -131,18 +128,12 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-
-
-
-// Ito ay automatic na tatawagin ng YouTube API pagka-load ng script
-function onYouTubeIframeAPIReady() {
-    console.log("YouTube API Ready");
-}
-
+// Bagong Auto-play logic
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
-    
+    const playerDiv = document.getElementById("player");
+
     try {
         const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
         const data = await res.json();
@@ -150,80 +141,16 @@ async function autoPlayBannerTrailer(item) {
 
         if (trailer) {
             container.style.display = "block";
-            
-            // Burahin ang lumang player kung meron man
-            document.getElementById("player").innerHTML = '<div id="yt-frame"></div>';
-
-            // Gawa ng bagong YT Player
-            ytPlayer = new YT.Player('yt-frame', {
-                videoId: trailer.key,
-                playerVars: {
-                    'autoplay': 1,
-                    'mute': 1, // Start as muted para payagan ng browser ang autoplay
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': trailer.key,
-                    'modestbranding': 1,
-                    'rel': 0
-                },
-                events: {
-                    'onReady': (event) => {
-                        event.target.playVideo();
-                    }
-                }
-            });
+            playerDiv.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
+                    allow="autoplay; encrypted-media">
+                </iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) { 
-        container.style.display = "none"; 
-    }
+    } catch (e) { container.style.display = "none"; }
 }
-
-// Bagong Toggle Function: Hindi na nagre-reload!
-function toggleBannerMute() {
-    if (!ytPlayer || typeof ytPlayer.unMute !== 'function') return;
-
-    const muteIcon = document.querySelector("#banner-mute-btn i");
-
-    if (isBannerMuted) {
-        ytPlayer.unMute();
-        ytPlayer.setVolume(80); // Siguraduhing may volume
-        muteIcon.className = "fa-solid fa-volume-high";
-    } else {
-        ytPlayer.mute();
-        muteIcon.className = "fa-solid fa-volume-xmark";
-    }
-    
-    isBannerMuted = !isBannerMuted;
-}
-
-
-// Function para i-render ang Iframe (para reusable sa mute toggle)
-function renderBannerIframe() {
-    const playerDiv = document.getElementById("player");
-    const muteIcon = document.querySelector("#banner-mute-btn i");
-    
-    const muteValue = isBannerMuted ? 1 : 0;
-    
-    // Palitan ang icon base sa state
-    if (muteIcon) {
-        muteIcon.className = isBannerMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
-    }
-
-    playerDiv.innerHTML = `
-        <iframe 
-            src="https://www.youtube.com/embed/${currentTrailerKey}?autoplay=1&mute=${muteValue}&controls=0&loop=1&playlist=${currentTrailerKey}&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" 
-            allow="autoplay; encrypted-media">
-        </iframe>`;
-}
-
-// Function para sa Button Click
-function toggleBannerMute() {
-    isBannerMuted = !isBannerMuted; // Baligtarin ang state
-    renderBannerIframe(); // I-reload ang iframe gamit ang bagong settings
-}
-
 
 // SWIPE LOGIC para sa Banner
 const bannerEl = document.getElementById('banner');

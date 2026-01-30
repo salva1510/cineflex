@@ -13,6 +13,8 @@ let autoplayTimer = null;
 let touchstartX = 0;
 let touchendX = 0;
 let autoSlideInterval = setInterval(() => changeBanner(1), 20000);
+let isBannerMuted = true; // Default state
+let currentTrailerKey = ""; // Para matandaan ang video key
 
 
 
@@ -128,7 +130,7 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-// Bagong Auto-play logic
+
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
@@ -140,17 +142,43 @@ async function autoPlayBannerTrailer(item) {
         const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
         if (trailer) {
+            currentTrailerKey = trailer.key; // I-save ang key
             container.style.display = "block";
-            playerDiv.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
-                    allow="autoplay; encrypted-media">
-                </iframe>`;
+            renderBannerIframe(); // Tawagin ang render function
         } else {
             container.style.display = "none";
         }
-    } catch (e) { container.style.display = "none"; }
+    } catch (e) { 
+        console.log("Trailer fail"); 
+        container.style.display = "none";
+    }
 }
+
+// Function para i-render ang Iframe (para reusable sa mute toggle)
+function renderBannerIframe() {
+    const playerDiv = document.getElementById("player");
+    const muteIcon = document.querySelector("#banner-mute-btn i");
+    
+    const muteValue = isBannerMuted ? 1 : 0;
+    
+    // Palitan ang icon base sa state
+    if (muteIcon) {
+        muteIcon.className = isBannerMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+    }
+
+    playerDiv.innerHTML = `
+        <iframe 
+            src="https://www.youtube.com/embed/${currentTrailerKey}?autoplay=1&mute=${muteValue}&controls=0&loop=1&playlist=${currentTrailerKey}&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" 
+            allow="autoplay; encrypted-media">
+        </iframe>`;
+}
+
+// Function para sa Button Click
+function toggleBannerMute() {
+    isBannerMuted = !isBannerMuted; // Baligtarin ang state
+    renderBannerIframe(); // I-reload ang iframe gamit ang bagong settings
+}
+
 
 // SWIPE LOGIC para sa Banner
 const bannerEl = document.getElementById('banner');

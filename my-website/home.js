@@ -9,6 +9,8 @@ let currentTVState = { season: 1, episode: 1 };
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let autoplayTimer = null;
+let touchStartX = 0;
+ let touchEndX = 0;
 
 async function init() {
   showSkeletons("main-list");
@@ -408,5 +410,31 @@ function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.sty
 
 // ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
 setTimeout(loadExtraCountrySections, 1500);
+// ===== ADD-ONLY: BANNER TOUCH SWIPE =====
 
+
+const bannerEl = document.getElementById("banner");
+
+if (bannerEl) {
+  bannerEl.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  bannerEl.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleBannerSwipe();
+  }, { passive: true });
+}
+
+function handleBannerSwipe() {
+  const swipeDistance = touchEndX - touchStartX;
+
+  if (Math.abs(swipeDistance) < 50) return; // ignore maliit na galaw
+
+  if (swipeDistance > 0) {
+    changeBanner(-1); // swipe right → previous
+  } else {
+    changeBanner(1);  // swipe left → next
+  }
+}
   

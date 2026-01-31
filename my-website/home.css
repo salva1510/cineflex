@@ -691,6 +691,36 @@ body {
     position: relative;
     z-index: 10;
 }
+/* Idagdag ito sa home.css */
+.mute-control {
+    position: absolute;
+    top: 80px; /* Nilagpasan ang navbar */
+    left: 30px;
+    z-index: 10002;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+.mute-control:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+}
+
+/* Siguraduhin na hindi mahaharangan ng banner-fade ang button */
+.trailer-overlay {
+    pointer-events: auto !important;
+}
 
 
 

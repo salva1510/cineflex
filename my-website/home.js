@@ -459,4 +459,14 @@ async function playModalTrailer() {
   iframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`;
   modalTrailer.style.display = "block";
 }
+// ===== ADD-ONLY: STOP MODAL TRAILER =====
+function closeModal() {
+  document.getElementById("details-modal").style.display = "none";
+
+  const iframe = document.getElementById("modal-trailer-player");
+  const container = document.getElementById("modal-trailer");
+
+  if (iframe) iframe.src = "";
+  if (container) container.style.display = "none";
+}
   

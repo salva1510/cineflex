@@ -126,7 +126,9 @@
     <i class="fa-solid fa-play"></i> Watch Now
   </button>
   
-  <button class="trailer-btn" onclick="playModalTrailer()">
+  <button class="info-btn" onclick="playTrailer()">
+    <i class="fa-solid fa-circle-info"></i> Trailer
+  </button>
 </div>
   </div>
   <div class="banner-fade"></div>
@@ -259,18 +261,6 @@
 <!-- 🇰🇷 KOREAN SECTIONS -->
 <section class="row"><h2>🇰🇷 Korean Dramas</h2><div class="scroller" id="korean-tv-list"></div></section>
   </main>
-  <!-- ADD-ONLY: MODAL TRAILER -->
-<div id="modal-trailer" style="display:none; margin-top:20px;">
-  <div style="position:relative; padding-top:56.25%;">
-    <iframe
-      id="modal-trailer-player"
-      style="position:absolute; inset:0; width:100%; height:100%;"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-</div>
 
   <div id="details-modal" class="modal">
     <div class="modal-content">

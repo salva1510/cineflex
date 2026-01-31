@@ -437,36 +437,4 @@ function handleBannerSwipe() {
     changeBanner(1);  // swipe left → next
   }
 }
-// ===== ADD-ONLY: MODAL TRAILER PLAYER =====
-async function playModalTrailer() {
-  const type = currentItem.first_air_date ? 'tv' : 'movie';
-  const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`)
-    .then(r => r.json());
-
-  const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-
-  if (!trailer) {
-    alert("Walang trailer available.");
-    return;
-  }
-
-  // Isara banner trailer kung bukas
-  closeTrailer();
-
-  const modalTrailer = document.getElementById("modal-trailer");
-  const iframe = document.getElementById("modal-trailer-player");
-
-  iframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`;
-  modalTrailer.style.display = "block";
-}
-// ===== ADD-ONLY: STOP MODAL TRAILER =====
-function closeModal() {
-  document.getElementById("details-modal").style.display = "none";
-
-  const iframe = document.getElementById("modal-trailer-player");
-  const container = document.getElementById("modal-trailer");
-
-  if (iframe) iframe.src = "";
-  if (container) container.style.display = "none";
-}
   

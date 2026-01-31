@@ -645,65 +645,6 @@ body {
 .banner-fade {
   z-index: 4;
   }
-/* ===== ADD-ONLY: BANNER DETAILS SA BABA ===== */
-.banner {
-  align-items: flex-end; /* ibaba ang content */
-  padding-bottom: 80px; /* space sa ilalim */
-}
-
-/* Container ng text + buttons */
-.banner-content {
-  max-width: 650px;
-  z-index: 6;
-}
-
-/* Title mas cinematic */
-#banner-title {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 10px;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
-}
-
-/* Description */
-#banner-desc {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #ddd;
-  max-width: 600px;
-  margin-bottom: 25px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-}
-
-/* Buttons alignment */
-.banner-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  #banner-title {
-    font-size: 2rem;
-  }
-
-  #banner-desc {
-    font-size: 0.9rem;
-  }
-
-  .banner {
-    padding-bottom: 60px;
-  }
-}
-/* Mas malakas na fade sa baba para readable ang text */
-.banner-fade {
-  background: linear-gradient(
-    to top,
-    rgba(5,5,5,0.95) 0%,
-    rgba(5,5,5,0.6) 30%,
-    transparent 70%
-  );
-}
 
 
 

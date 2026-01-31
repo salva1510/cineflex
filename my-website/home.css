@@ -209,7 +209,49 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   backdrop-filter: blur(4px);
 }
 
-/* CARD HOVER INFO */
+//* --- SIMPLE FULL-SCREEN VIDEO FIX --- */
+.banner {
+    height: 80vh;
+    position: relative;
+    overflow: hidden; /* Mahalaga ito */
+    background: #000;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5% 60px 5%;
+}
+
+.trailer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#player iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250vw; /* Sobrang lapad para mawala ang black bars */
+    height: 150vh; /* Sobrang taas para mawala ang black bars */
+    transform: translate(-50%, -50%); /* I-center ang video */
+    pointer-events: none;
+    border: none;
+}
+
+.banner-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #050505 10%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    z-index: 2;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 5; /* Para mapindot ang button */
+}
+* CARD HOVER INFO */
 .card-info-overlay {
   position: absolute;
   bottom: 0;
@@ -231,97 +273,8 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* --- CINEMATIC FULL-SCREEN BANNER --- */
-.banner {
-    height: 85vh; /* Taas ng banner sa mobile */
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end; /* Text sa bottom part gaya ng nasa picture */
-    padding: 0 5% 100px 5%;
-    background-color: #000;
-}
 
-.trailer-overlay {
-/* Siguraduhin na ang trailer-overlay ay nakikita */
-.trailer-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 5; /* Dapat mas mababa sa content pero mataas sa bg */
-    display: block;
-}
-
-/* Ang Unmute Button - FIX */
-.mute-control {
-    position: absolute;
-    top: 100px; /* Nilakihan ang layo sa top para iwas sa navbar */
-    left: 20px;
-    z-index: 99999; /* Sobrang taas para siguradong nasa ibabaw */
-    background: rgba(229, 9, 20, 0.8); /* Cineflex Red para madaling makita */
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    pointer-events: auto !important; /* Siguradong clickable */
-}
-
-/* Siguraduhin na ang banner content ay hindi natatakpan ang button */
-.banner-content {
-    z-index: 10;
-    pointer-events: none; /* Hayaan ang click na dumaan sa button */
-}
-
-.banner-content button, .banner-content a {
-    pointer-events: auto; /* Ibalik ang click sa mga buttons lang */
-}
-
-
-#banner-title {
-    font-size: clamp(2rem, 10vw, 3.5rem);
-    font-weight: 900;
-    margin-bottom: 8px;
-    line-height: 1.1;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-}
-
-#banner-desc {
-    font-size: 0.95rem;
-    max-width: 600px;
-    margin-bottom: 20px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-shadow: 1px 1px 5px rgba(0,0,0,1);
-}
-
-.play-btn {
-    background: #fff;
-    color: #000;
-    padding: 12px 30px;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-
-
-
+    
 
 
 /* Meta Data row inside Modal */
@@ -655,11 +608,12 @@ input:checked + .slider:before { transform: translateX(14px); }
 body {
     padding-bottom: 80px;
 }
-/* --- CINEMATIC AUTO-FILL BANNER --- */
+
+/* --- FIXED FULL BANNER VIDEO --- */
 .banner {
-    height: 80vh; 
+    height: 80vh; /* Tamang taas para sa mobile */
     position: relative;
-    overflow: hidden !important; /* Pinipigilan nito ang pagkasira ng layout */
+    overflow: hidden; /* Mahalaga: Para ma-crop ang excess video */
     background: #000;
     display: flex;
     align-items: flex-end;
@@ -679,57 +633,27 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* Nilakihan para ma-crop ang black bars kahit anong size */
-    width: 250vw; 
-    height: 150vh;
-    transform: translate(-50%, -50%) scale(1.2);
-    pointer-events: none;
+    /* Nilakihan natin ang scale para laging fit/cover ang video */
+    width: 280vw; 
+    height: 120vh;
+    transform: translate(-50%, -50%) scale(1.1);
+    pointer-events: none; /* Para hindi ma-click ang YouTube UI */
     border: none;
 }
 
 .banner-fade {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, #050505 10%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    /* Gradient: Itim sa baba, transparent sa taas */
+    background: linear-gradient(to top, #050505 10%, rgba(0,0,0,0.4) 50%, transparent 100%);
     z-index: 2;
     pointer-events: none;
 }
 
 .banner-content {
     position: relative;
-    z-index: 10;
+    z-index: 10; /* Mas mataas sa video para clickable ang Watch button */
 }
-/* Idagdag ito sa home.css */
-.mute-control {
-    position: absolute;
-    top: 80px; /* Nilagpasan ang navbar */
-    left: 30px;
-    z-index: 10002;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-}
-
-.mute-control:hover {
-    background: var(--accent);
-    transform: scale(1.1);
-}
-
-/* Siguraduhin na hindi mahaharangan ng banner-fade ang button */
-.trailer-overlay {
-    pointer-events: auto !important;
-}
-
 
 
 

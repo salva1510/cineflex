@@ -12,7 +12,6 @@ let autoplayTimer = null;
 // Idagdag ang variables na ito sa taas ng home.js
 let touchstartX = 0;
 let touchendX = 0;
-let autoSlideInterval = setInterval(() => changeBanner(1), 20000);
 
 
 
@@ -128,66 +127,37 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-/async function autoPlayBannerTrailer(item) {
+// Function para sa Auto-Play Trailer
+async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
-    const container = document.getElementById("trailer-container");
-    const playerDiv = document.getElementById("player");
-
     try {
         const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
         const data = await res.json();
         const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
 
+        const container = document.getElementById("trailer-container");
+        const playerDiv = document.getElementById("player");
+
         if (trailer) {
             container.style.display = "block";
-            // Mahalaga: mute=1 para payagan ng browser ang autoplay
-            playerDiv.innerHTML = `
-                <iframe 
-                    id="banner-video"
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" 
-                    allow="autoplay; encrypted-media">
-                </iframe>
-                <button id="unmute-btn" onclick="toggleMute(event)" class="mute-control">
-                    <i class="fa-solid fa-volume-xmark"></i>
-                </button>`;
+            playerDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media"></iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) { console.log("Trailer fail"); }
+    } catch (e) { console.log("Trailer Error"); }
 }
 
-// Bagong toggle function na may stopPropagation
-function toggleMute(event) {
-    if(event) event.stopPropagation(); // Iwasan ang conflict sa banner click
-    
-    const iframe = document.getElementById('banner-video');
-    const btn = document.getElementById('unmute-btn');
-    
-    if (iframe && iframe.contentWindow) {
-        const isMuted = btn.innerHTML.includes('volume-xmark');
-        const command = isMuted ? 'unMute' : 'mute';
-        
-        iframe.contentWindow.postMessage(JSON.stringify({
-            event: 'command',
-            func: command
-        }), '*');
+// Swipe Detector para sa Banner
+document.getElementById('banner').addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
 
-        btn.innerHTML = isMuted ? 
-            '<i class="fa-solid fa-volume-high"></i>' : 
-            '<i class="fa-solid fa-volume-xmark"></i>';
-    }
-}
-
-
-
-// SWIPE LOGIC para sa Banner
-const bannerEl = document.getElementById('banner');
-bannerEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-bannerEl.addEventListener('touchend', e => {
+document.getElementById('banner').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX;
-    if (touchendX < touchstartX - 50) changeBanner(1); // Swipe Left
+    if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left
     if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
 });
+
 
 
 
@@ -509,8 +479,11 @@ function closeDMCA(){ const m=document.getElementById('dmca-modal'); if(m) m.sty
 
 // ===== ADD-ONLY: TRIGGER AFTER INITIAL LOAD =====
 setTimeout(loadExtraCountrySections, 1500);
+// Variable para sa Swipe Gestures
+let touchstartX = 0;
+let touchendX = 0;
 
-// Function para sa Auto-Play Trailer
+// Function para sa Auto-Play Trailer (Force Fit)
 async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
@@ -523,27 +496,34 @@ async function autoPlayBannerTrailer(item) {
 
         if (trailer) {
             container.style.display = "block";
-            playerDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media"></iframe>`;
+            playerDiv.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" 
+                    allow="autoplay; encrypted-media">
+                </iframe>`;
         } else {
             container.style.display = "none";
         }
-    } catch (e) { console.log("Trailer fail"); }
+    } catch (e) {
+        container.style.display = "none";
+    }
 }
 
-// Swipe Detector Logic
-const bannerBox = document.getElementById('banner');
-if (bannerBox) {
-    bannerBox.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
-    bannerBox.addEventListener('touchend', e => {
+// Swipe Detector para sa Banner
+const bannerElement = document.getElementById('banner');
+if (bannerElement) {
+    bannerElement.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    bannerElement.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].screenX;
+        // Logic: Kung lumampas sa 50 pixels ang swipe
         if (touchendX < touchstartX - 50) changeBanner(1);  // Swipe Left
         if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
-        
-        // I-reset ang timer para hindi biglang lumipat pagkatapos mag-swipe
-        clearInterval(autoSlideInterval);
-        autoSlideInterval = setInterval(() => changeBanner(1), 10000);
     }, {passive: true});
 }
+
 
 
   

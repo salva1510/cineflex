@@ -128,8 +128,7 @@ function setBanner(item) {
     autoPlayBannerTrailer(item);
 }
 
-// Sa loob ng home.js, hanapin at palitan ang function na ito:
-async function autoPlayBannerTrailer(item) {
+/async function autoPlayBannerTrailer(item) {
     const type = item.first_air_date ? 'tv' : 'movie';
     const container = document.getElementById("trailer-container");
     const playerDiv = document.getElementById("player");
@@ -141,14 +140,14 @@ async function autoPlayBannerTrailer(item) {
 
         if (trailer) {
             container.style.display = "block";
-            // Inalis ang mute=1 at idinagdag ang enablejsapi=1
+            // Mahalaga: mute=1 para payagan ng browser ang autoplay
             playerDiv.innerHTML = `
                 <iframe 
                     id="banner-video"
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" 
+                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" 
                     allow="autoplay; encrypted-media">
                 </iframe>
-                <button id="unmute-btn" onclick="toggleMute()" class="mute-control">
+                <button id="unmute-btn" onclick="toggleMute(event)" class="mute-control">
                     <i class="fa-solid fa-volume-xmark"></i>
                 </button>`;
         } else {
@@ -157,27 +156,28 @@ async function autoPlayBannerTrailer(item) {
     } catch (e) { console.log("Trailer fail"); }
 }
 
-// Idagdag ang function na ito para sa button
-function toggleMute() {
+// Bagong toggle function na may stopPropagation
+function toggleMute(event) {
+    if(event) event.stopPropagation(); // Iwasan ang conflict sa banner click
+    
     const iframe = document.getElementById('banner-video');
     const btn = document.getElementById('unmute-btn');
     
-    if (iframe) {
-        // Nagpapadala ng command sa YouTube Iframe API
-        const command = btn.innerHTML.includes('volume-xmark') ? 'unMute' : 'mute';
+    if (iframe && iframe.contentWindow) {
+        const isMuted = btn.innerHTML.includes('volume-xmark');
+        const command = isMuted ? 'unMute' : 'mute';
+        
         iframe.contentWindow.postMessage(JSON.stringify({
             event: 'command',
             func: command
         }), '*');
 
-        // Palitan ang icon
-        if (command === 'unMute') {
-            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-        } else {
-            btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-        }
+        btn.innerHTML = isMuted ? 
+            '<i class="fa-solid fa-volume-high"></i>' : 
+            '<i class="fa-solid fa-volume-xmark"></i>';
     }
 }
+
 
 
 // SWIPE LOGIC para sa Banner

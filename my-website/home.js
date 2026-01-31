@@ -9,38 +9,6 @@ let currentTVState = { season: 1, episode: 1 };
 let myFavorites = JSON.parse(localStorage.getItem("cineflex_list")) || [];
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let autoplayTimer = null;
-// Idagdag ang variables na ito sa taas ng home.js
-let touchstartX = 0;
-let touchendX = 0;
-
-
-
-const bannerElement = document.getElementById('banner');
-
-// Function para i-handle ang swipe direction
-function handleGesture() {
-    const swipeThreshold = 50; // Minimum pixels para ituring na swipe
-    if (touchendX < touchstartX - swipeThreshold) {
-        // Swipe Left -> Next Banner
-        changeBanner(1);
-    }
-    if (touchendX > touchstartX + swipeThreshold) {
-        // Swipe Right -> Previous Banner
-        changeBanner(-1);
-    }
-}
-
-// Event Listeners para sa touch events sa Banner
-bannerElement.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
-});
-
-bannerElement.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    handleGesture();
-});
-
-
 
 async function init() {
   showSkeletons("main-list");
@@ -116,52 +84,12 @@ function changeBanner(direction) {
     setBanner(currentItem);
 }
 
-
-// Palitan ang iyong setBanner function
 function setBanner(item) {
-    const banner = document.getElementById("banner");
-    banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
-    document.getElementById("banner-title").innerText = item.title || item.name;
-    document.getElementById("banner-desc").innerText = item.overview;
-    
-    autoPlayBannerTrailer(item);
+  const banner = document.getElementById("banner");
+  banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
+  document.getElementById("banner-title").innerText = item.title || item.name;
+  document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
 }
-
-// Bagong Auto-play logic
-async function autoPlayBannerTrailer(item) {
-    const type = item.first_air_date ? 'tv' : 'movie';
-    const container = document.getElementById("trailer-container");
-    const playerDiv = document.getElementById("player");
-
-    try {
-        const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
-        const data = await res.json();
-        const trailer = data.results.find(v => (v.type === "Trailer" || v.type === "Teaser") && v.site === "YouTube");
-
-        if (trailer) {
-            container.style.display = "block";
-            playerDiv.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1&iv_load_policy=3" 
-                    allow="autoplay; encrypted-media">
-                </iframe>`;
-        } else {
-            container.style.display = "none";
-        }
-    } catch (e) { container.style.display = "none"; }
-}
-
-// SWIPE LOGIC para sa Banner
-const bannerEl = document.getElementById('banner');
-bannerEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-bannerEl.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    if (touchendX < touchstartX - 50) changeBanner(1); // Swipe Left
-    if (touchendX > touchstartX + 50) changeBanner(-1); // Swipe Right
-});
-
-
-
 
 function startPlayback() {
   const id = currentItem.id;

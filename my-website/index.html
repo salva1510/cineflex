@@ -108,24 +108,31 @@
 </div>
 
 
-  <header id="banner" class="banner">
+  <header class="banner" id="banner">
   <div id="trailer-container" class="trailer-overlay">
-    <div id="player"></div>
+    <div id="player"></div> <button class="close-trailer-btn" onclick="closeTrailer()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
-  <div class="banner-fade"></div>
+  <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
 
   <div class="banner-content">
     <h1 id="banner-title">Loading...</h1>
     <p id="banner-desc"></p>
     <div class="banner-buttons">
-      <button class="play-btn" onclick="startPlayback()">
-        <i class="fa-solid fa-play"></i> Watch Now
-      </button>
-    </div>
+  <button class="play-btn" onclick="startPlayback()">
+    <i class="fa-solid fa-play"></i> Watch Now
+  </button>
+  
+  <button class="info-btn" onclick="playTrailer()">
+    <i class="fa-solid fa-circle-info"></i> Trailer
+  </button>
+</div>
   </div>
+  <div class="banner-fade"></div>
 </header>
-
 
 
 

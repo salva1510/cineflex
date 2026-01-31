@@ -686,10 +686,15 @@ body {
   z-index: 5;
 }
 
-/* Iangat din ang fade */
+/* Mas malakas na fade sa baba para readable ang text */
 .banner-fade {
-  z-index: 4;
-  }
+  background: linear-gradient(
+    to top,
+    rgba(5,5,5,0.95) 0%,
+    rgba(5,5,5,0.6) 30%,
+    transparent 70%
+  );
+}
 
 
 

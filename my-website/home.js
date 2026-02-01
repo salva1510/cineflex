@@ -295,9 +295,16 @@ async function filterByGenre(id, el) {
 }
 
 // Palitan ang dating playTrailer function
-async function playTrailer() {
-  const type = currentItem.first_air_date ? 'tv' : 'movie';
-  const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
+function playTrailer(videoKey) {
+  const modal = document.getElementById("details-modal");
+  const iframe = document.getElementById("modal-trailer-player");
+  const wrap = document.getElementById("modal-trailer");
+
+  if (!iframe || !wrap) return;
+
+  wrap.style.display = "block";
+  iframe.src = "https://www.youtube.com/embed/" + videoKey + "?autoplay=1&rel=0";
+}
   
   // Hanapin ang YouTube Trailer
   const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");

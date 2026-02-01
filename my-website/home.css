@@ -621,19 +621,23 @@ body {
   overflow: hidden;
 }
 
-#player {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+#player-container {
+    position: fixed; /* Palitan ang absolute ng fixed */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 9999;
+    display: none;
 }
 
 #player iframe {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border: none;
+    width: 100%;
+    height: 100%;
+    border: none;
 }
+
 
 /* Iangat ang banner content sa ibabaw ng video */
 .banner-content {
@@ -916,6 +920,24 @@ body {
 .modal-body button:nth-child(n+5) {
     display: none !important;
 }
+/* Lalabas lang ito kapag nanonood (player open) at naka-portrait ang phone */
+@media screen and (orientation: portrait) {
+    #player-container::after {
+        content: "🔄 Please rotate your phone for a better experience";
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        z-index: 10000;
+        pointer-events: none;
+        color: white;
+    }
+}
+
 
 
 

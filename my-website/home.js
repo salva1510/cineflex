@@ -295,16 +295,9 @@ async function filterByGenre(id, el) {
 }
 
 // Palitan ang dating playTrailer function
- async function playTrailer(videoKey) {
-  const modal = document.getElementById("details-modal");
-  const iframe = document.getElementById("modal-trailer-player");
-  const wrap = document.getElementById("modal-trailer");
-
-  if (!iframe || !wrap) return;
-
-  wrap.style.display = "block";
-  iframe.src = "https://www.youtube.com/embed/" + videoKey + "?autoplay=1&rel=0";
-}
+async function playTrailer() {
+  const type = currentItem.first_air_date ? 'tv' : 'movie';
+  const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
   
   // Hanapin ang YouTube Trailer
   const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
@@ -444,24 +437,4 @@ function handleBannerSwipe() {
     changeBanner(1);  // swipe left → next
   }
 }
-/* ================= SAFE BANNER SWIPE ================= */
-(function () {
-  const banner = document.getElementById("banner");
-  if (!banner) return;
-
-  let startX = 0;
-
-  banner.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  }, { passive: true });
-
-  banner.addEventListener("touchend", e => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX;
-
-    if (Math.abs(diff) > 60 && typeof changeBanner === "function") {
-      changeBanner(diff > 0 ? -1 : 1);
-    }
-  }, { passive: true });
-})();
   

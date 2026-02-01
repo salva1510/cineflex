@@ -293,7 +293,19 @@
     <div id="modal-meta-row"></div>
     <p id="modal-desc"></p>
     
-    <div id="episode-selector" class="episode-controls" style="display:none;">
+    <div class="modal-actions">
+        <button class="play-btn-large" onclick="startPlayback()">
+            <i class="fa-solid fa-play"></i> Watch Now
+        </button>
+        <button class="trailer-btn" onclick="playTrailer()">
+            <i class="fa-solid fa-film"></i> Trailer
+        </button>
+        <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </div>
+
+    <div id="episode-selector" class="episode-controls" style="display:none; margin-top: 20px;">
         <div class="selector-group">
             <label>Season</label>
             <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
@@ -302,12 +314,6 @@
             <label>Episode</label>
             <select id="episode-select"></select>
         </div>
-    </div>
-
-    <div class="modal-actions">
-        <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
-        <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
-        <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
     </div>
 
     <div class="cast-section">
@@ -320,16 +326,6 @@
         <div class="similar-grid" id="modal-similar"></div>
     </div>
 </div>
-
-
-        <div class="modal-actions">
-            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
-            <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
-            <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script src="home.js"></script>
 </body>

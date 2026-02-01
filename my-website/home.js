@@ -295,31 +295,15 @@ async function filterByGenre(id, el) {
 }
 
 // Palitan ang dating playTrailer function
-async function playTrailer() {
-  const type = currentItem.first_air_date ? 'tv' : 'movie';
-  const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
-  
-  // Hanapin ang YouTube Trailer
-  const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-  
-  if (trailer) {
-    const container = document.getElementById("trailer-container");
-    container.style.display = "block";
-    
-    // I-render ang YouTube Iframe sa loob ng banner
-    document.getElementById("player").innerHTML = `
-      <iframe 
-        width="100%" 
-        height="100%" 
-        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen 
-        style="position:absolute; top:0; left:0;">
-      </iframe>`;
-  } else {
-    alert("Pasensya na, walang trailer na available.");
-  }
+function playTrailer(videoKey) {
+  const modal = document.getElementById("details-modal");
+  const iframe = document.getElementById("modal-trailer-player");
+  const wrap = document.getElementById("modal-trailer");
+
+  if (!iframe || !wrap) return;
+
+  wrap.style.display = "block";
+  iframe.src = "https://www.youtube.com/embed/" + videoKey + "?autoplay=1&rel=0";
 }
 
 // Function para isara ang trailer at ibalik ang background image

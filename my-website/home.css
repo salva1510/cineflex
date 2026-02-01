@@ -738,6 +738,64 @@ body {
     height: 70vh !important; /* Itinaas ko nang konti para kumasya ang bagong items */
     overflow-y: auto;
 }
+.cast-section {
+    margin: 20px 0;
+}
+
+.cast-section h4 {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.cast-scroller {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.cast-scroller::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.cast-card {
+    min-width: 80px;
+    text-align: center;
+}
+
+.cast-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%; /* Gawing circle ang mukha */
+    object-fit: cover;
+    border: 2px solid #333;
+    margin-bottom: 5px;
+}
+
+.cast-name {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+}
+
+.cast-character {
+    font-size: 0.65rem;
+    color: #888;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+}
+
 
 
 

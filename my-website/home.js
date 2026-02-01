@@ -299,28 +299,26 @@ async function playTrailer() {
   const type = currentItem.first_air_date ? 'tv' : 'movie';
   const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
   
-  // Hanapin ang YouTube Trailer
   const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
   
   if (trailer) {
     const container = document.getElementById("trailer-container");
     container.style.display = "block";
     
-    // I-render ang YouTube Iframe sa loob ng banner
+    // Dagdag ng parameters para sa cinematic feel
+    // mute=1 (madalas required para sa autoplay), controls=0, loop=1
     document.getElementById("player").innerHTML = `
       <iframe 
-        width="100%" 
-        height="100%" 
-        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0" 
+        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&rel=0&modestbranding=1" 
         frameborder="0" 
         allow="autoplay; encrypted-media" 
-        allowfullscreen 
-        style="position:absolute; top:0; left:0;">
+        allowfullscreen>
       </iframe>`;
   } else {
     alert("Pasensya na, walang trailer na available.");
   }
 }
+
 
 // Function para isara ang trailer at ibalik ang background image
 function closeTrailer() {

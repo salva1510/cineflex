@@ -12,14 +12,62 @@ let autoplayTimer = null;
 let touchStartX = 0;
  let touchEndX = 0;
 
-<div class="section-title">Trending Movies</div>
-<div id="trending-list" class="movie-row" data-url="https://api.themoviedb.org/3/trending/movie/week?api_key=YOUR_KEY">
-    </div>
+async function init() {
+  showSkeletons("main-list");
+  showSkeletons("tv-list");
+  updateMyListUI();
+  updateContinueUI();
 
-<div class="section-title">Pinoy Movies</div>
-<div id="pinoy-list" class="movie-row" data-url="https://api.themoviedb.org/3/discover/movie?api_key=YOUR_KEY&with_original_language=tl">
-</div>
+  try {
+    const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
+const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
+const nowPlaying = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`).then(r=>r.json());
+const upcoming = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`).then(r=>r.json());
 
+const action = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`).then(r=>r.json());
+const comedy = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`).then(r=>r.json());
+const horror = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`).then(r=>r.json());
+const romance = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10749`).then(r=>r.json());
+const scifi = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=878`).then(r=>r.json());
+const trending = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`).then(res => res.json());
+const tvShows = await fetch(`${BASE_URL}/tv/popular?api_key=${API_KEY}`).then(res => res.json());
+const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
+const filipino = await fetch(
+  `${BASE_URL}/discover/movie?` +
+  `api_key=${API_KEY}` +
+  `&region=PH` +
+  `&with_origin_country=PH` +
+  `&sort_by=popularity.desc`
+).then(r => r.json());
+
+const korean = await fetch(
+  `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ko`
+).then(r => r.json());
+// DISPLAY
+displayCards(popular.results, "popular-list");
+displayCards(topRated.results, "toprated-list");
+displayCards(nowPlaying.results, "nowplaying-list");
+displayCards(upcoming.results, "upcoming-list");
+displayCards(action.results, "action-list");
+displayCards(comedy.results, "comedy-list");
+displayCards(horror.results, "horror-list");
+displayCards(romance.results, "romance-list");
+displayCards(scifi.results, "scifi-list");
+displayCards(asian.results, "asian-list");
+displayCards(trending.results, "main-list");
+displayCards(tvShows.results, "tv-list"); 
+displayCards(filipino.results, "filipino-list");
+displayCards(korean.results, "korean-list"); 
+    // I-save ang trending results para sa slider
+    trendingItems = trending.results; 
+    currentItem = trendingItems[0];
+    
+    setBanner(currentItem);
+    
+  } catch (err) {
+    console.error("Failed to fetch data:", err);
+  }
+}
 
 // BAGONG FUNCTION: Para sa manual swipe ng banner
 function changeBanner(direction) {

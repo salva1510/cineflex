@@ -884,6 +884,39 @@ body {
     aspect-ratio: 2/3;
     object-fit: cover;
 }
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap; /* Para mag-adjust sa maliit na screen */
+}
+
+.play-btn-large {
+    flex: 2; /* Mas mahaba ang Watch Now button */
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.trailer-btn, .mylist-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Siguraduhin na walang ibang buttons na lumalabas */
+.modal-body button:nth-child(n+5) {
+    display: none !important;
+}
+
 
 
 

@@ -94,20 +94,37 @@ function setBanner(item) {
 }
 
 function startPlayback() {
-    const playerContainer = document.getElementById("player-container");
-    playerContainer.style.display = "block";
+  const id = currentItem.id;
+  const isTV = currentItem.first_air_date || currentItem.name;
+  const nextBtn = document.getElementById("next-ep-btn");
+  const autoContainer = document.getElementById("autoplay-container");
+  
+  clearTimeout(autoplayTimer);
+  document.getElementById("next-timer").innerText = "";
 
-    // Subukang i-force ang landscape mode
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(function(error) {
-            console.log("Orientation lock hindi supported sa browser na ito o kailangan ng fullscreen.");
-        });
-    }
+  if (isTV) {
+      const s = parseInt(document.getElementById("season-select")?.value) || 1;
+      const e = parseInt(document.getElementById("episode-select")?.value) || 1;
+      currentTVState.season = s;
+      currentTVState.episode = e;
+      
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
+      if(nextBtn) nextBtn.style.display = "block";
+      if(autoContainer) autoContainer.style.display = "flex";
+      
+      startAutoplayCheck();
+  } else {
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
+      if(nextBtn) nextBtn.style.display = "none";
+      if(autoContainer) autoContainer.style.display = "none";
+  }
 
-    // Mas mainam kung isasabay sa Fullscreen para gumana ang lock
-    if (playerContainer.requestFullscreen) {
-        playerContainer.requestFullscreen();
-    }
+  document.getElementById("player-container").style.display = "block";
+  document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);
+  
+  addToContinueWatching(currentItem);
+  closeModal();
+  document.getElementById("player-container").scrollIntoView({ behavior: 'smooth' });
 }
 
 function playNextEpisode() {

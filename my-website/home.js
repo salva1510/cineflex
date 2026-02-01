@@ -189,10 +189,11 @@ async function showDetails(item) {
   currentItem = item;
   const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
   
-  // I-fetch ang details at credits (cast) nang sabay
-  const [details, credits] = await Promise.all([
+  // I-fetch ang details, credits, at similar movies nang sabay-sabay
+  const [details, credits, similar] = await Promise.all([
     fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
-    fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json())
+    fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json()),
+    fetch(`${BASE_URL}/${type}/${item.id}/recommendations?api_key=${API_KEY}`).then(r => r.json())
   ]);
 
   const runtime = details.runtime ? `${details.runtime}m` : (details.number_of_seasons ? `${details.number_of_seasons} Seasons` : "");
@@ -202,8 +203,11 @@ async function showDetails(item) {
   document.getElementById("modal-desc").innerText = item.overview;
   document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   
-  // I-display ang Cast
-  displayCast(credits.cast);
+  // I-display ang Cast (mula sa nakaraang suggestion)
+  if(typeof displayCast === 'function') displayCast(credits.cast);
+
+  // I-display ang Similar Movies
+  displaySimilar(similar.results);
 
   const epSelector = document.getElementById("episode-selector");
   if (type === 'tv') {
@@ -217,6 +221,25 @@ async function showDetails(item) {
   if(btn) btn.innerHTML = myFavorites.some(f => f.id === item.id) ? `<i class="fa-solid fa-check"></i>` : `<i class="fa-solid fa-plus"></i>`;
   document.getElementById("details-modal").style.display = "flex";
 }
+
+// Function para i-render ang similar items
+function displaySimilar(items) {
+    const container = document.getElementById("modal-similar");
+    if (!container) return;
+
+    if (items.length === 0) {
+        container.innerHTML = "<p style='color: #666; font-size: 0.8rem;'>No similar titles found.</p>";
+        return;
+    }
+
+    container.innerHTML = items.slice(0, 12).map(item => `
+        <div class="similar-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+            <img src="${item.poster_path ? IMG_URL + item.poster_path : 'https://via.placeholder.com/100x150?text=No+Poster'}" loading="lazy">
+            <p>${item.title || item.name}</p>
+        </div>
+    `).join('');
+}
+
 
 // Bagong function para i-render ang cast cards
 function displayCast(cast) {

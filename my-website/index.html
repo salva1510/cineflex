@@ -95,17 +95,38 @@
 
 </div>
 <div id="menu-drawer" class="drawer">
- <div class="drawer-header">
-    <h3>Menu</h3>
-    <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()"></i>
+  <div class="drawer-header">
+    <div class="logo" style="font-size: 1.2rem;">CINEFLEX MENU</div>
+    <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()" style="font-size: 1.5rem; cursor: pointer;"></i>
   </div>
+  
   <div class="drawer-content">
-    <p onclick="filterByGenre('all', this)">All Movies</p>
-    <p onclick="filterByGenre('28', this)">Action</p>
-    <p onclick="filterByGenre('35', this)">Comedy</p>
-    <p onclick="filterByGenre('27', this)">Horror</p>
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-clapperboard"></i> Browse Categories</h4>
+      <p onclick="filterByGenre('all', this); closeMenuDrawer()">✨ All Discover</p>
+      <p onclick="filterByGenre('28', this); closeMenuDrawer()">💥 Action & Adventure</p>
+      <p onclick="filterByGenre('35', this); closeMenuDrawer()">😂 Comedy</p>
+      <p onclick="filterByGenre('27', this); closeMenuDrawer()">😱 Horror & Suspense</p>
+      <p onclick="filterByGenre('10749', this); closeMenuDrawer()">❤️ Romance</p>
+      <p onclick="filterByGenre('878', this); closeMenuDrawer()">🚀 Sci-Fi & Fantasy</p>
+    </div>
+
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-globe"></i> International</h4>
+      <p onclick="scrollToSection('pinoy-list')">🇵🇭 Pinoy Cinema</p>
+      <p onclick="scrollToSection('korean-tv-list')">🇰🇷 K-Dramas & Movies</p>
+      <p onclick="scrollToSection('asian-list')">🎌 Anime & Asian Hits</p>
+    </div>
+
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-gears"></i> Account & Support</h4>
+      <p onclick="openAccount()"><i class="fa-solid fa-user-gear"></i> Account Settings</p>
+      <p onclick="openDMCA()"><i class="fa-solid fa-shield-halved"></i> Privacy & DMCA</p>
+      <p onclick="window.location.reload()"><i class="fa-solid fa-rotate"></i> Refresh App</p>
+    </div>
   </div>
 </div>
+
 
 
   <header class="banner" id="banner">

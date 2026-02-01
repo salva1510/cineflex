@@ -474,4 +474,35 @@ if (banner) {
     }
   }, { passive: true });
 })();
+/* ========== SAFE TRAILER OVERRIDE (ADD-ONLY) ========== */
+(function () {
+
+  // kung wala kang modal trailer elements, exit agad
+  const modalWrap = document.getElementById("modal-trailer");
+  const modalFrame = document.getElementById("modal-trailer-player");
+  if (!modalWrap || !modalFrame) return;
+
+  // kung walang existing playTrailer, huwag gagalaw
+  if (typeof window.playTrailer !== "function") return;
+
+  const originalPlayTrailer = window.playTrailer;
+
+  window.playTrailer = function () {
+    try {
+      // tawagin muna ang original (para di masira state mo)
+      originalPlayTrailer.apply(this, arguments);
+    } catch (e) {
+      // ignore error from old logic
+      console.warn("Old trailer logic skipped");
+    }
+
+    // pigilan banner takeover
+    const bannerPlayer = document.getElementById("player");
+    if (bannerPlayer) bannerPlayer.innerHTML = "";
+
+    // siguraduhin modal lang ang active
+    modalWrap.style.display = "block";
+  };
+
+})();
   

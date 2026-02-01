@@ -504,6 +504,44 @@ function scrollToSection(sectionId) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
+// Gawin nating observer ang magha-handle ng loading
+const sectionObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.id;
+            const apiEndpoint = entry.target.getAttribute('data-url');
+            
+            // Tawagin ang loading function mo
+            if (apiEndpoint) {
+                fetchAndPopulate(sectionId, apiEndpoint);
+            }
+            
+            // Tigilan na ang pag-observe kapag loaded na
+            observer.unobserve(entry.target);
+        }
+    });
+}, { rootMargin: "0px 0px 200px 0px" }); // Mag-load na 200px bago pa makita
+
+// Function para i-register ang mga sections
+function setupLazyLoading() {
+    const sections = document.querySelectorAll('.movie-row');
+    sections.forEach(section => sectionObserver.observe(section));
+}
+
+// Bagong fetch function na gagamitin ng observer
+async function fetchAndPopulate(elementId, url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const container = document.getElementById(elementId);
+        if (container) {
+            renderMovies(data.results, elementId); // Gamitin ang existing render function mo
+        }
+    } catch (err) {
+        console.error("Error loading section:", err);
+    }
+}
+
 
 
   

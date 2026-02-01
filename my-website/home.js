@@ -437,21 +437,4 @@ function handleBannerSwipe() {
     changeBanner(1);  // swipe left → next
   }
 }
-// === SAFE BANNER SWIPE (ADD ONLY) ===
-const banner = document.getElementById("banner");
-if (banner) {
-  let sx = 0;
-  banner.addEventListener("touchstart", e => {
-    sx = e.touches[0].clientX;
-  }, { passive:true });
-
-  banner.addEventListener("touchend", e => {
-    const ex = e.changedTouches[0].clientX;
-    if (Math.abs(ex - sx) > 60) {
-      if (typeof changeBanner === "function") {
-        changeBanner(ex > sx ? -1 : 1);
-      }
-    }
-  }, { passive:true });
-}
   

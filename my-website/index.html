@@ -289,37 +289,38 @@
         <span class="close-modal" onclick="closeModal()">&times;</span>
       </div>
       <div class="modal-body">
-        <h2 id="modal-title"></h2>
-        <div id="modal-meta-row"></div>
-        <p id="modal-desc"></p>
-        
-        <div id="episode-selector" class="episode-controls" style="display:none;">
-            <div class="selector-group">
-                <label>Season</label>
-                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
-            </div>
-            <div class="selector-group">
-                <label>Episode</label>
-                <select id="episode-select"></select>
-            </div>
-        </div>
-        <div class="modal-body">
     <h2 id="modal-title"></h2>
     <div id="modal-meta-row"></div>
     <p id="modal-desc"></p>
+    
+    <div id="episode-selector" class="episode-controls" style="display:none;">
+        <div class="selector-group">
+            <label>Season</label>
+            <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+        </div>
+        <div class="selector-group">
+            <label>Episode</label>
+            <select id="episode-select"></select>
+        </div>
+    </div>
+
+    <div class="modal-actions">
+        <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+        <button class="trailer-btn" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
+        <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i></button>
+    </div>
+
+    <div class="cast-section">
+        <h4>Top Cast</h4>
+        <div class="cast-scroller" id="modal-cast"></div>
+    </div>
 
     <div class="similar-section">
         <h4>More Like This</h4>
         <div class="similar-grid" id="modal-similar"></div>
     </div>
-    
-    <div class="cast-section">
-        <h4>Top Cast</h4>
-        <div class="cast-scroller" id="modal-cast"></div>
-    </div>
-    
-    <div id="episode-selector" class="episode-controls" style="display:none;">
-        </div>
+</div>
+
 
         <div class="modal-actions">
             <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>

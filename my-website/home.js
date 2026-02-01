@@ -189,7 +189,12 @@ async function showDetails(item) {
   currentItem = item;
   const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
   
-  const details = await fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json());
+  // I-fetch ang details at credits (cast) nang sabay
+  const [details, credits] = await Promise.all([
+    fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
+    fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json())
+  ]);
+
   const runtime = details.runtime ? `${details.runtime}m` : (details.number_of_seasons ? `${details.number_of_seasons} Seasons` : "");
 
   document.getElementById("modal-title").innerText = item.title || item.name;
@@ -197,6 +202,9 @@ async function showDetails(item) {
   document.getElementById("modal-desc").innerText = item.overview;
   document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   
+  // I-display ang Cast
+  displayCast(credits.cast);
+
   const epSelector = document.getElementById("episode-selector");
   if (type === 'tv') {
       epSelector.style.display = "flex";
@@ -209,6 +217,22 @@ async function showDetails(item) {
   if(btn) btn.innerHTML = myFavorites.some(f => f.id === item.id) ? `<i class="fa-solid fa-check"></i>` : `<i class="fa-solid fa-plus"></i>`;
   document.getElementById("details-modal").style.display = "flex";
 }
+
+// Bagong function para i-render ang cast cards
+function displayCast(cast) {
+    const castContainer = document.getElementById("modal-cast");
+    if (!castContainer) return;
+
+    // Limitahan lang sa top 10 cast members
+    castContainer.innerHTML = cast.slice(0, 10).map(person => `
+        <div class="cast-card">
+            <img src="${person.profile_path ? 'https://image.tmdb.org/t/p/w200' + person.profile_path : 'https://via.placeholder.com/100x150?text=No+Image'}" alt="${person.name}">
+            <p class="cast-name">${person.name}</p>
+            <p class="cast-character">${person.character}</p>
+        </div>
+    `).join('');
+}
+
 
 function setupSeasonSelector(series) {
     const seasonSelect = document.getElementById("season-select");

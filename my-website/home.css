@@ -704,6 +704,15 @@ body {
     transparent 70%
   );
 }
+/* ===== SAFE BANNER DETAILS BOTTOM ===== */
+.banner {
+  align-items: flex-end;
+  padding-bottom: 70px;
+}
+
+.banner-content {
+  margin-bottom: 10px;
+}
 
 
 

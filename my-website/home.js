@@ -505,4 +505,12 @@ if (banner) {
   };
 
 })();
+(function () {
+  const oldCloseModal = window.closeModal;
+  window.closeModal = function () {
+    const frame = document.getElementById("modal-trailer-player");
+    if (frame) frame.src = "";
+    if (typeof oldCloseModal === "function") oldCloseModal();
+  };
+})();
   

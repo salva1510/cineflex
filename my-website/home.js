@@ -513,4 +513,62 @@ if (banner) {
     if (typeof oldCloseModal === "function") oldCloseModal();
   };
 })();
+/* ========== SEPARATE TRAILER FUNCTIONS (SAFE) ========== */
+
+// ▶ BANNER TRAILER
+async function playBannerTrailer() {
+  if (!window.currentItem) return;
+
+  const type = currentItem.first_air_date ? "tv" : "movie";
+  const res = await fetch(
+    `https://api.themoviedb.org/3/${type}/${currentItem.id}/videos?api_key=${API_KEY}`
+  );
+  const data = await res.json();
+
+  const trailer = data.results.find(v => v.site === "YouTube");
+  if (!trailer) return alert("Trailer not available");
+
+  const container = document.getElementById("trailer-container");
+  const player = document.getElementById("player");
+
+  if (!container || !player) return;
+
+  container.style.display = "block";
+  player.innerHTML =
+    `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0"
+      allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+}
+
+// 🎬 MODAL TRAILER
+async function playModalTrailerSafe() {
+  if (!window.currentItem) return;
+
+  const wrap = document.getElementById("modal-trailer");
+  const iframe = document.getElementById("modal-trailer-player");
+
+  if (!wrap || !iframe) return;
+
+  const type = currentItem.first_air_date ? "tv" : "movie";
+  const res = await fetch(
+    `https://api.themoviedb.org/3/${type}/${currentItem.id}/videos?api_key=${API_KEY}`
+  );
+  const data = await res.json();
+
+  const trailer = data.results.find(v => v.site === "YouTube");
+  if (!trailer) return alert("Trailer not available");
+
+  wrap.style.display = "block";
+  iframe.src =
+    `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`;
+}
+// CLEANUP WHEN CLOSING
+(function () {
+  const oldCloseModal = window.closeModal;
+  window.closeModal = function () {
+    const iframe = document.getElementById("modal-trailer-player");
+    if (iframe) iframe.src = "";
+    if (typeof oldCloseModal === "function") oldCloseModal();
+  };
+})();
+
   

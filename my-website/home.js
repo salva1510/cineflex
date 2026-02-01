@@ -437,4 +437,13 @@ function handleBannerSwipe() {
     changeBanner(1);  // swipe left → next
   }
 }
+function scrollToSection(sectionId) {
+    const el = document.getElementById(sectionId);
+    if (el) {
+        closeMenuDrawer();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+
   

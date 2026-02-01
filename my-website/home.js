@@ -295,7 +295,7 @@ async function filterByGenre(id, el) {
 }
 
 // Palitan ang dating playTrailer function
-function playTrailer(videoKey) {
+ async function playTrailer(videoKey) {
   const modal = document.getElementById("details-modal");
   const iframe = document.getElementById("modal-trailer-player");
   const wrap = document.getElementById("modal-trailer");

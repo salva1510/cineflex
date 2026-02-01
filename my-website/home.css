@@ -859,6 +859,32 @@ body {
         grid-template-columns: repeat(4, 1fr); /* Apat na column kapag malaki ang screen */
     }
 }
+.modal-content {
+    max-height: 90vh; /* Para laging pasok sa screen */
+    overflow-y: auto; /* Para ma-scroll ang loob ng modal */
+}
+
+.cast-scroller {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.similar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.similar-card img {
+    width: 100%;
+    border-radius: 8px;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
 
 
 

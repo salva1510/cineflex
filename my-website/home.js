@@ -444,4 +444,24 @@ function handleBannerSwipe() {
     changeBanner(1);  // swipe left → next
   }
 }
+/* ================= SAFE BANNER SWIPE ================= */
+(function () {
+  const banner = document.getElementById("banner");
+  if (!banner) return;
+
+  let startX = 0;
+
+  banner.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  banner.addEventListener("touchend", e => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
+
+    if (Math.abs(diff) > 60 && typeof changeBanner === "function") {
+      changeBanner(diff > 0 ? -1 : 1);
+    }
+  }, { passive: true });
+})();
   

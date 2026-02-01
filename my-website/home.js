@@ -189,7 +189,7 @@ async function showDetails(item) {
   currentItem = item;
   const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
   
-  // I-fetch ang details, credits, at similar movies nang sabay-sabay
+  // I-fetch lahat nang sabay-sabay
   const [details, credits, similar] = await Promise.all([
     fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
     fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json()),
@@ -198,17 +198,19 @@ async function showDetails(item) {
 
   const runtime = details.runtime ? `${details.runtime}m` : (details.number_of_seasons ? `${details.number_of_seasons} Seasons` : "");
 
+  // Update UI Text
   document.getElementById("modal-title").innerText = item.title || item.name;
   document.getElementById("modal-meta-row").innerHTML = `<span>${item.vote_average.toFixed(1)} Rating</span> • <span>${runtime}</span>`;
   document.getElementById("modal-desc").innerText = item.overview;
   document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   
-  // I-display ang Cast (mula sa nakaraang suggestion)
-  if(typeof displayCast === 'function') displayCast(credits.cast);
+  // Render Cast
+  displayCast(credits.cast);
 
-  // I-display ang Similar Movies
+  // Render Similar Content
   displaySimilar(similar.results);
 
+  // TV Selector Logic
   const epSelector = document.getElementById("episode-selector");
   if (type === 'tv') {
       epSelector.style.display = "flex";
@@ -217,28 +219,39 @@ async function showDetails(item) {
       epSelector.style.display = "none";
   }
 
+  // Update My List Button Icon
   const btn = document.getElementById("mylist-btn");
   if(btn) btn.innerHTML = myFavorites.some(f => f.id === item.id) ? `<i class="fa-solid fa-check"></i>` : `<i class="fa-solid fa-plus"></i>`;
+  
   document.getElementById("details-modal").style.display = "flex";
 }
 
-// Function para i-render ang similar items
+// Helper para sa Cast
+function displayCast(cast) {
+    const castContainer = document.getElementById("modal-cast");
+    if (!castContainer) return;
+    castContainer.innerHTML = cast.slice(0, 10).map(person => `
+        <div class="cast-card">
+            <img src="${person.profile_path ? 'https://image.tmdb.org/t/p/w200' + person.profile_path : 'https://via.placeholder.com/100x150?text=No+Image'}">
+            <p class="cast-name">${person.name}</p>
+        </div>
+    `).join('');
+}
+
+// Helper para sa Similar
 function displaySimilar(items) {
     const container = document.getElementById("modal-similar");
     if (!container) return;
-
-    if (items.length === 0) {
-        container.innerHTML = "<p style='color: #666; font-size: 0.8rem;'>No similar titles found.</p>";
-        return;
-    }
-
-    container.innerHTML = items.slice(0, 12).map(item => `
+    container.innerHTML = items.slice(0, 9).map(item => `
         <div class="similar-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-            <img src="${item.poster_path ? IMG_URL + item.poster_path : 'https://via.placeholder.com/100x150?text=No+Poster'}" loading="lazy">
+            <img src="${IMG_URL}${item.poster_path}">
             <p>${item.title || item.name}</p>
         </div>
     `).join('');
 }
+
+
+
 
 
 // Bagong function para i-render ang cast cards

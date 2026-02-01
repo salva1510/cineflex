@@ -1,0 +1,58 @@
+/* =============================== CINEFLEX – FULL home.css (NO CUTS) Includes:
+
+Original styles
+
+Banner bottom details
+
+Swipe arrows support
+
+Full-fit banner trailer
+
+Modal, player, bottom-nav, drawer =============================== */
+
+
+:root { --bg:#050505; --accent:#e50914; --text:#ffffff; --card-w:160px; --card-h:240px; }
+
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; padding-bottom: 80px; /* bottom nav safe */ }
+
+/* ================= NAVBAR ================= */ .navbar { position: fixed; top: 0; width: 100%; padding: 15px 5%; z-index: 1000; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); box-sizing: border-box; } .logo { color: var(--accent); font-weight: 900; font-size: 1.8rem; letter-spacing: -1px; }
+
+/* ================= BANNER ================= / .banner { height: 75vh; background-size: cover; background-position: center top; position: relative; display: flex; align-items: flex-end; / details sa baba / padding: 0 5% 80px; / bottom space */ }
+
+.banner-content { max-width: 650px; z-index: 6; }
+
+#banner-title { font-size: 3rem; font-weight: 900; margin-bottom: 10px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+
+#banner-desc { font-size: 1rem; line-height: 1.5; color: #ddd; max-width: 600px; margin-bottom: 25px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+
+.banner-buttons { display: flex; gap: 12px; }
+
+.play-btn { display: flex; align-items: center; gap: 10px; background: #fff; color: #000; border: none; padding: 12px 28px; font-size: 1.1rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.3s; } .play-btn:hover { background: var(--accent); color: #fff; }
+
+.info-btn { display: flex; align-items: center; gap: 10px; background: rgba(109,109,110,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px 28px; font-size: 1.1rem; font-weight: 700; border-radius: 6px; cursor: pointer; }
+
+.banner-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,5,0.95), rgba(5,5,5,0.6) 30%, transparent 70%); z-index: 4; }
+
+/* Banner arrows */ .banner-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 20px; font-size: 1.5rem; cursor: pointer; z-index: 10; transition: 0.3s; border-radius: 50%; } .banner-nav:hover { background: var(--accent); } .banner-nav.prev { left: 10px; } .banner-nav.next { right: 10px; }
+
+/* ================= BANNER TRAILER ================= */ .trailer-overlay { position: absolute; inset: 0; width: 100%; height: 100%; display: none; z-index: 10000; background: #000; overflow: hidden; } #player { position: absolute; inset: 0; width: 100%; height: 100%; } #player iframe { width: 100%; height: 100%; object-fit: cover; border: none; }
+
+.close-trailer-btn { position: absolute; top: 80px; right: 30px; z-index: 10001; background: rgba(229,9,20,0.9); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+
+/* ================= CONTENT ================= */ .content { padding: 0 5%; } .row { margin-bottom: 40px; } .row h2 { font-size: 1.4rem; margin-bottom: 15px; display: flex; gap: 10px; } .scroller { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+
+.card { min-width: var(--card-w); height: var(--card-h); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; } .card img { width: 100%; height: 100%; object-fit: cover; } .card:hover { transform: scale(1.08); z-index: 10; }
+
+/* ================= PLAYER ================= */ .player-wrapper { width: 95%; max-width: 1100px; margin: 20px auto; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #333; } .player-header { padding: 10px 20px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; } .close-player-btn { background: #e50914; color: #fff; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; } .iframe-container { position: relative; padding-bottom: 56.25%; height: 0; } .iframe-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ================= MODAL ================= */ .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; } .modal-content { background: #181818; width: 100%; max-width: 650px; border-radius: 15px; overflow: hidden; position: relative; } .modal-banner { height: 300px; background-size: cover; background-position: center; } .modal-body { padding: 30px; } .close-modal { position: absolute; right: 20px; top: 15px; font-size: 2.5rem; cursor: pointer; }
+
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; } .play-btn-large { flex: 2; background: var(--accent); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; } .trailer-btn { flex: 1; background: #fff; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; } .mylist-btn { flex: 0.5; background: #333; color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; }
+
+/* ================= SEARCH ================= */ .search-overlay { position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000; display: none; padding: 80px 5% 40px; overflow-y: auto; } .search-input-wrapper { display: flex; align-items: center; background: #1a1a1a; padding: 15px 25px; border-radius: 50px; margin: 0 auto 40px; max-width: 800px; border: 1px solid #333; } .search-input-wrapper input { background: transparent; border: none; color: #fff; font-size: 1.2rem; width: 100%; outline: none; margin: 0 15px; } .search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 25px; }
+
+/* ================= BOTTOM NAV ================= */ .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; z-index: 11000; border-top: 1px solid rgba(255,255,255,0.1); } .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 0.7rem; gap: 4px; cursor: pointer; } .nav-item i { font-size: 1.3rem; } .nav-item:hover, .nav-item.active { color: var(--accent); }
+
+/* ================= DRAWER ================= */ .drawer { position: fixed; bottom: -100%; left: 0; width: 100%; height: 50vh; background: #111; z-index: 12000; transition: 0.4s; border-radius: 20px 20px 0 0; padding: 20px; } .drawer.open { bottom: 0; } .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; } .drawer-content p { padding: 15px 0; font-size: 1.1rem; border-bottom: 1px solid #222; cursor: pointer; }
+
+/* ================= MOBILE ================= */ @media (max-width: 768px) { #banner-title { font-size: 2rem; } #banner-desc { font-size: 0.9rem; } .banner { padding-bottom: 60px; } }

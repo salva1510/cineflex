@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFlex | Premium</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">CINEFLEX</div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Search..." oninput="handleSearch(this.value)">
+        </div>
+    </nav>
+
+    <header id="banner" class="banner">
+        <div class="banner-content">
+            <h1 id="banner-title"></h1>
+            <p id="banner-desc"></p>
+            <div class="banner-buttons">
+                <button class="btn-primary" onclick="openModal(currentItem)"><i class="fa-solid fa-play"></i> Play</button>
+                <button class="btn-secondary" onclick="toggleMyList()"><i class="fa-solid fa-plus"></i> My List</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <section class="section" id="continue-section" style="display:none;">
+            <h2 class="section-title">Continue Watching</h2>
+            <div id="continue-list" class="scroller"></div>
+        </section>
+
+        <section class="section" id="search-section" style="display:none;">
+            <h2 class="section-title">Search Results</h2>
+            <div id="search-results" class="scroller"></div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Trending Now</h2>
+            <div id="main-list" class="scroller"></div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">TV Shows</h2>
+            <div id="tv-list" class="scroller"></div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Action Movies</h2>
+            <div id="action-list" class="scroller"></div>
+        </section>
+
+        <section class="section" id="mylist-section">
+            <h2 class="section-title">My List</h2>
+            <div id="mylist-list" class="scroller"></div>
+        </section>
+    </div>
+
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="player-container" class="player-wrapper">
+                <iframe id="video-iframe" allowfullscreen src=""></iframe>
+            </div>
+            <div class="modal-details">
+                <h2 id="modal-title"></h2>
+                <p id="modal-desc"></p>
+                
+                <div id="episode-selector" class="episode-controls">
+                    <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+                    <select id="episode-select"></select>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+                    <button class="btn-secondary" onclick="toggleMyList()">Add to List</button>
+                </div>
+
+                <div class="cast-section">
+                    <h4>Top Cast</h4>
+                    <div id="modal-cast" class="cast-scroller"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>

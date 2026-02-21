@@ -1,0 +1,104 @@
+/* ===== EXISTING ROOT ===== */
+:root {
+  --bg: #050505;
+  --accent: #e50914;
+  --text: #ffffff;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: fixed;
+  width: 100%;
+  padding: 15px 5%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+}
+
+.logo {
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 1.8rem;
+}
+
+/* ===== CONTENT ===== */
+.content {
+  padding: 120px 5%;
+}
+
+/* ================================================= */
+/* =============== NEW MODAL SYSTEM =============== */
+/* ================================================= */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.6);
+  animation: fadeIn 0.3s ease;
+}
+
+.video-modal-content {
+  background: #111;
+  margin: 5% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  animation: slideUp 0.4s ease;
+}
+
+.video-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.video-wrapper video {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  color: var(--accent);
+  transform: rotate(90deg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

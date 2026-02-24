@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFlex | Nood Kahit Saan</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="logo">CineFlex</div>
+    </nav>
+
+    <header class="banner" id="hero-banner">
+        <div class="banner-content">
+            <h1 class="banner-title" id="main-title">CineFlex</h1>
+            <p id="main-desc">Naglo-load ng mga pinakabagong pelikula...</p>
+            <div style="margin-top: 20px;">
+                <button onclick="playCurrent()" style="padding: 12px 30px; font-weight: bold; cursor: pointer; background: white; border: none; border-radius: 4px; font-size: 1.1rem;">Play</button>
+            </div>
+        </div>
+        <div class="banner-fade"></div>
+    </header>
+
+    <div class="content">
+        <div class="row">
+            <h2>Trending Ngayon</h2>
+            <div class="scroller" id="trending-scroller"></div>
+        </div>
+        <div class="row">
+            <h2>TV Series</h2>
+            <div class="scroller" id="tv-scroller"></div>
+        </div>
+    </div>
+
+    <div id="player-modal" class="player-modal">
+        <div class="player-content">
+            <button onclick="closePlayer()" style="color: white; background: none; border: none; font-size: 2rem; float: right; cursor: pointer;">&times;</button>
+            <h3 id="playing-title">CineFlex Player</h3>
+            <div class="iframe-container">
+                <iframe id="video-iframe" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>

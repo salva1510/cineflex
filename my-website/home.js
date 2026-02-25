@@ -497,4 +497,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   rows.forEach(row => observer.observe(row));
 });
+function stopModalVideo(){
+  document.getElementById("modal-player").src = "";
+  document.getElementById("modal-video").style.display = "none";
+  document.getElementById("modal-banner").classList.remove("hide");
+}
   

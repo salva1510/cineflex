@@ -1,60 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineFlex | Official</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <link rel="manifest" href="manifest.json">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW Registered!', reg))
+        .catch(err => console.log('SW Registration failed', err));
+    });
+  }
+</script>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CineFlex">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cineflex - Premium Streaming</title>
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <nav class="navbar"><div class="logo">CINEFLEX</div></nav>
+  <nav class="navbar">
+  <div class="logo">CINEFLEX</div>
+</nav>
 
-    <div id="home-page">
-        <div class="banner-container" id="swipe-area">
-            <header class="banner" id="banner">
-                <div class="banner-overlay"></div>
-                <div class="banner-content" id="banner-content"></div>
-            </header>
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" onclick="openSearch()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>Search</span>
+  </div>
+  <div class="nav-item" onclick="openMenuDrawer()">
+    <i class="fa-solid fa-bars"></i>
+    <span>Menu</span>
+  </div>
+  <div class="nav-item" onclick="openDMCA()">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>Info</span>
+  </div>
+  <div class="nav-item" onclick="openAccount()">
+    <i class="fa-solid fa-user"></i>
+    <span>Account</span>
+  </div>
+</div>
+  <!-- DMCA MODAL -->
+<div id="dmca-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-banner" style="background:#111;">
+      <span class="close-modal" onclick="closeDMCA()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <h2>DMCA Policy</h2>
+
+      <p>
+        Cineflex respects the intellectual property rights of others.
+        We comply with the Digital Millennium Copyright Act (DMCA) and
+        respond to valid infringement notices.
+      </p>
+
+      <p>
+        If you believe that your copyrighted work has been copied in a way
+        that constitutes copyright infringement, please provide us with
+        the following information:
+      </p>
+
+      <ul style="color:#bbb; line-height:1.6;">
+        <li>Proof of ownership of the copyrighted content</li>
+        <li>URL of the allegedly infringing material</li>
+        <li>Your contact information</li>
+        <li>A statement that the information is accurate</li>
+      </ul>
+
+      <p>
+        Send DMCA notices to:<br>
+        <b>dmca@cineflex.app</b>
+      </p>
+
+      <p style="font-size:0.85rem; color:#777;">
+        We do not host any media files on our servers.
+        All content is provided by third-party services.
+      </p>
+    </div>
+  </div>
+</div>
+  
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay" class="search-overlay">
+  
+  <div class="search-input-wrapper">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input 
+      type="text" 
+      placeholder="Search movies or TV shows..."
+      oninput="processSearch(this.value)"
+      autofocus
+    >
+    <i class="fa-solid fa-xmark" onclick="closeSearch()" style="cursor:pointer;"></i>
+  </div>
+
+  <div id="search-results" class="search-results-grid"></div>
+
+</div>
+<div id="menu-drawer" class="drawer">
+  <div class="drawer-header">
+    <div class="logo" style="font-size: 1.2rem;">CINEFLEX MENU</div>
+    <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()" style="font-size: 1.5rem; cursor: pointer;"></i>
+  </div>
+  
+  <div class="drawer-content">
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-clapperboard"></i> Browse Categories</h4>
+      <p onclick="filterByGenre('all', this); closeMenuDrawer()">✨ All Discover</p>
+      <p onclick="filterByGenre('28', this); closeMenuDrawer()">💥 Action & Adventure</p>
+      <p onclick="filterByGenre('35', this); closeMenuDrawer()">😂 Comedy</p>
+      <p onclick="filterByGenre('27', this); closeMenuDrawer()">😱 Horror & Suspense</p>
+      <p onclick="filterByGenre('10749', this); closeMenuDrawer()">❤️ Romance</p>
+      <p onclick="filterByGenre('878', this); closeMenuDrawer()">🚀 Sci-Fi & Fantasy</p>
+    </div>
+
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-globe"></i> International</h4>
+      <p onclick="scrollToSection('pinoy-list')">🇵🇭 Pinoy Cinema</p>
+      <p onclick="scrollToSection('korean-tv-list')">🇰🇷 K-Dramas & Movies</p>
+      <p onclick="scrollToSection('asian-list')">🎌 Anime & Asian Hits</p>
+    </div>
+
+    <div class="menu-section">
+      <h4><i class="fa-solid fa-gears"></i> Account & Support</h4>
+      <p onclick="openAccount()"><i class="fa-solid fa-user-gear"></i> Account Settings</p>
+      <p onclick="openDMCA()"><i class="fa-solid fa-shield-halved"></i> Privacy & DMCA</p>
+      <p onclick="window.location.reload()"><i class="fa-solid fa-rotate"></i> Refresh App</p>
+    </div>
+  </div>
+</div>
+
+
+
+  <header class="banner" id="banner">
+  <div id="trailer-container" class="trailer-overlay">
+    <div id="player"></div> <button class="close-trailer-btn" onclick="closeTrailer()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <button class="banner-nav prev" onclick="changeBanner(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="banner-nav next" onclick="changeBanner(1)"><i class="fa-solid fa-chevron-right"></i></button>
+
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+    <div class="banner-buttons">
+  <button class="play-btn" onclick="startPlayback()">
+    <i class="fa-solid fa-play"></i> Watch Now
+  </button>
+  
+  <button class="info-btn" onclick="playTrailer()">
+    <i class="fa-solid fa-circle-info"></i> Trailer
+  </button>
+</div>
+  </div>
+  <div class="banner-fade"></div>
+</header>
+
+
+
+  <div class="genre-wrapper">
+    <div class="genre-container" id="genre-list">
+      <button class="genre-pill active" onclick="filterByGenre('all', this)">All</button>
+      <button class="genre-pill" onclick="filterByGenre('28', this)">Action</button>
+      <button class="genre-pill" onclick="filterByGenre('35', this)">Comedy</button>
+      <button class="genre-pill" onclick="filterByGenre('18', this)">Drama</button>
+      <button class="genre-pill" onclick="filterByGenre('27', this)">Horror</button>
+      <button class="genre-pill" onclick="filterByGenre('10749', this)">Romance</button>
+      <button class="genre-pill" onclick="filterByGenre('878', this)">Sci-Fi</button>
+    </div>
+  </div>
+
+  <div id="player-container" class="player-wrapper" style="display:none;">
+    <div class="player-header">
+      <span id="player-title-display">Now Playing</span>
+      <div class="player-controls">
+  <div id="autoplay-container" style="display:none; align-items: center; gap: 10px; margin-right: 15px;">
+    <span id="next-timer" style="color: var(--accent); font-weight: bold; font-size: 0.8rem;"></span>
+    <label class="switch">
+      <input type="checkbox" id="autoplay-toggle" checked>
+      <span class="slider"></span>
+    </label>
+    <span style="font-size: 0.7rem; color: #888;">Auto-play</span>
+  </div>
+  <button id="next-ep-btn" class="next-btn" onclick="playNextEpisode()" style="display:none;">
+    <i class="fa-solid fa-forward-step"></i> Next
+  </button>
+  <button onclick="closePlayer()" class="close-player-btn">×</button>
+</div>
+    </div>
+    <div class="iframe-container">
+      <iframe id="video-player" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
+    </div>
+  </div>
+
+  <main class="content">
+
+    <section class="row" id="my-list-section" style="display: none;">
+      <h2 style="color: #ffd700;"><i class="fa-solid fa-star"></i> My List</h2>
+      <div class="scroller" id="my-list"></div>
+    </section>
+
+    <section class="row" id="continue-watching-section" style="display: none;">
+      <h2 style="color: #4cd137;"><i class="fa-solid fa-clock-rotate-left"></i> Continue Watching</h2>
+      <div class="scroller" id="continue-list"></div>
+    </section>
+
+    <section class="row">
+  <h2>🔥 Popular Movies</h2>
+  <div class="scroller" id="popular-list"></div>
+</section>
+
+<section class="row">
+  <h2>⭐ Top Rated Movies</h2>
+  <div class="scroller" id="toprated-list"></div>
+</section>
+
+<section class="row">
+  <h2>🎬 Now Playing</h2>
+  <div class="scroller" id="nowplaying-list"></div>
+</section>
+
+<section class="row">
+  <h2>⏳ Upcoming Movies</h2>
+  <div class="scroller" id="upcoming-list"></div>
+</section>
+
+<section class="row">
+  <h2>💥 Action Movies</h2>
+  <div class="scroller" id="action-list"></div>
+</section>
+
+<section class="row">
+  <h2>😂 Comedy Movies</h2>
+  <div class="scroller" id="comedy-list"></div>
+</section>
+
+<section class="row">
+  <h2>😱 Horror Movies</h2>
+  <div class="scroller" id="horror-list"></div>
+</section>
+
+<section class="row">
+  <h2>❤️ Romance Movies</h2>
+  <div class="scroller" id="romance-list"></div>
+</section>
+
+<section class="row">
+  <h2>🚀 Sci-Fi Movies</h2>
+  <div class="scroller" id="scifi-list"></div>
+</section>
+
+<section class="row">
+  <h2>🎌 Asian Movies</h2>
+  <div class="scroller" id="asian-list"></div>
+</section>
+    <section class="row">
+      <h2 id="row-title">Trending Now</h2>
+      <div class="scroller" id="main-list"></div>
+    </section>
+    
+    <section class="row" id="tv-section">
+      <h2>Popular TV Shows</h2>
+      <div class="scroller" id="tv-list"></div>
+    </section>
+    <section class="row">
+  <h2>🇵🇭 Filipino Movies</h2>
+  <div class="scroller" id="filipino-list"></div>
+</section>
+
+<section class="row">
+  <h2>🇰🇷 Korean Movies</h2>
+  <div class="scroller" id="korean-list"></div>
+</section>
+
+    <!-- 🇵🇭 PINOY SECTIONS (ADD ONLY) -->
+<section class="row"><h2>🇵🇭 Pinoy Movies</h2><div class="scroller" id="pinoy-list"></div></section>
+<section class="row"><h2>🇵🇭 Pinoy Classics</h2><div class="scroller" id="pinoy-classics-list"></div></section>
+<section class="row"><h2>🇵🇭 Pinoy Romance</h2><div class="scroller" id="pinoy-romance-list"></div></section>
+<section class="row"><h2>🇵🇭 Pinoy Horror</h2><div class="scroller" id="pinoy-horror-list"></div></section>
+<section class="row"><h2>🇵🇭 Pinoy Comedy</h2><div class="scroller" id="pinoy-comedy-list"></div></section>
+
+<!-- 🇰🇷 KOREAN SECTIONS -->
+<section class="row"><h2>🇰🇷 Korean Dramas</h2><div class="scroller" id="korean-tv-list"></div></section>
+  </main>
+
+  <div id="details-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-banner" id="modal-banner">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+    <h2 id="modal-title"></h2>
+    <div id="modal-meta-row"></div>
+    <p id="modal-desc"></p>
+    
+    <div class="modal-actions">
+        <button class="play-btn-large" onclick="startPlayback()">
+            <i class="fa-solid fa-play"></i> Watch Now
+        </button>
+        <button class="trailer-btn" onclick="playTrailer()">
+            <i class="fa-solid fa-film"></i> Trailer
+        </button>
+        <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </div>
+
+    <div id="episode-selector" class="episode-controls" style="display:none; margin-top: 20px;">
+        <div class="selector-group">
+            <label>Season</label>
+            <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
         </div>
-
-        <div id="history-sec" class="row" style="display:none;"><div class="row-title">Continue Watching</div><div class="scroller" id="history-row"></div></div>
-        <div id="mylist-sec" class="row" style="display:none;"><div class="row-title">My List</div><div class="scroller" id="mylist-row"></div></div>
-        <div class="row"><div class="row-title">Trending Now</div><div class="scroller" id="trending-row"></div></div>
-    </div>
-
-    <div id="search-page" class="search-container">
-        <input type="text" class="search-bar" placeholder="Search movies, TV shows..." onkeyup="runSearch(this.value)">
-        <div class="grid" id="search-results"></div>
-    </div>
-
-    <div id="pModal" class="modal">
-        <div class="modal-content">
-            <iframe id="pIframe" src="" style="width:100%; aspect-ratio:16/9; border:none;" allowfullscreen></iframe>
-            <div style="padding:20px;">
-                <h2 id="pTitle"></h2>
-                <div class="banner-btns" style="margin:15px 0;">
-                    <button class="btn btn-play" onclick="closeModal()"><i class="fa fa-play"></i> Watch Now</button>
-                    <button class="btn btn-mylist" id="modal-list-btn" onclick="toggleFav()"></button>
-                </div>
-                <p id="pDesc" style="color:#aaa; font-size:0.9rem; line-height:1.4;"></p>
-                <h4 style="border-bottom:1px solid #333; padding-bottom:5px;">Cast</h4>
-                <div class="scroller" id="pCast"></div>
-                <h4 style="margin-top:20px; border-bottom:1px solid #333; padding-bottom:5px;">More Like This</h4>
-                <div class="grid" id="pSimilar"></div>
-                <button onclick="closeModal()" style="width:100%; padding:15px; background:#333; color:white; border:none; margin-top:30px; border-radius:5px; cursor:pointer;">Close</button>
-            </div>
+        <div class="selector-group">
+            <label>Episode</label>
+            <select id="episode-select"></select>
         </div>
     </div>
 
-    <div class="footer-nav">
-        <div class="nav-item active" onclick="navTo('home', this)"><i class="fa fa-home"></i>Home</div>
-        <div class="nav-item" onclick="navTo('search', this)"><i class="fa fa-search"></i>Search</div>
-        <div class="nav-item" onclick="alert('Movies grid is being updated...')"><i class="fa fa-film"></i>Movies</div>
-        <div class="nav-item" onclick="alert('TV grid is being updated...')"><i class="fa fa-tv"></i>TV Shows</div>
+    <div class="cast-section">
+        <h4>Top Cast</h4>
+        <div class="cast-scroller" id="modal-cast"></div>
     </div>
 
-    <script src="home.js"></script>
+    <div class="similar-section">
+        <h4>More Like This</h4>
+        <div class="similar-grid" id="modal-similar"></div>
+    </div>
+</div>
+
+  <script src="home.js"></script>
+      <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker registered!', reg))
+        .catch(err => console.log('Service Worker registration failed', err));
+    });
+  }
+      </script>
+
+
 </body>
-</html>
+  </html>
+

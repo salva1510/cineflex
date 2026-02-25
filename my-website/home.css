@@ -1082,6 +1082,36 @@ body {
 }
 
 /* --- PREMIUM UPGRADE END --- */
+/* --- ADD ONLY: SERVER SWITCHER UI --- */
+.server-options {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.srv-btn {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.srv-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.srv-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+}
 
 
 

@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
+
+:root {
+    --primary: #e50914;
+    --bg: #050505;
+    --surface: #121212;
+    --text: #ffffff;
+}
+
+body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', sans-serif; padding-bottom: 75px; /* Para sa Footer */
+    user-select: none; -webkit-tap-highlight-color: transparent;
+}
+
+/* Navbar & Categories */
+.top-nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+}
+.header { padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+.logo { color: var(--primary); font-size: 1.8rem; font-weight: 900; letter-spacing: -1.5px; }
+
+.categories {
+    display: flex; gap: 10px; padding: 0 5% 15px;
+    overflow-x: auto; scrollbar-width: none;
+}
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn {
+    padding: 6px 16px; background: rgba(255,255,255,0.1);
+    border-radius: 20px; font-size: 0.85rem; border: 1px solid transparent;
+    white-space: nowrap; transition: 0.3s;
+}
+.cat-btn.active { background: var(--primary); font-weight: 600; }
+
+/* Grid System para sa Movies/TV Shows */
+.content-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; padding: 100px 5% 20px;
+}
+.movie-card {
+    aspect-ratio: 2/3; background: var(--surface);
+    border-radius: 6px; overflow: hidden; position: relative;
+}
+.movie-card img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Circular Cast Hub */
+.cast-scroller { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; }
+.cast-item { min-width: 70px; text-align: center; }
+.cast-img {
+    width: 60px; height: 60px; border-radius: 50%;
+    object-fit: cover; border: 2px solid #333;
+}
+.cast-name { font-size: 0.65rem; color: #aaa; margin-top: 4px; display: block; }
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed; bottom: 0; width: 100%; height: 65px;
+    background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(15px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid #222; z-index: 2000;
+}
+.nav-link {
+    display: flex; flex-direction: column; align-items: center;
+    color: #777; text-decoration: none; font-size: 0.7rem; gap: 4px;
+}
+.nav-link.active { color: var(--primary); }
+.nav-link i { font-size: 1.3rem; }
+
+/* Skeleton Loading Effect */
+.skeleton {
+    background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+    background-size: 200% 100%; animation: loading 1.5s infinite;
+}
+@keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }

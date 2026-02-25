@@ -540,6 +540,42 @@ function premiumBannerTransition() {
 premiumBannerTransition();
 
 /* --- PREMIUM LOGIC END --- */
+/* --- PREMIUM LOGIC START --- */
+
+// 1. Smooth Page Entry Fade
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.8s ease-in-out';
+    
+    // Trigger fade in after a short delay
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+});
+
+// 2. Dynamic Navbar Background on Scroll
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        nav.style.backgroundColor = 'rgba(5, 5, 5, 0.95)';
+        nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.5)';
+    } else {
+        nav.style.backgroundColor = 'transparent';
+        nav.style.boxShadow = 'none';
+    }
+});
+
+// 3. Auto-Scroll Banner Enhancement
+// Updates your existing banner function to be smoother
+function premiumBannerTransition() {
+    const banner = document.getElementById('banner');
+    banner.style.transition = 'background-image 0.8s ease-in-out';
+}
+
+// Execute logic
+premiumBannerTransition();
+
+/* --- PREMIUM LOGIC END --- */
 
 
   

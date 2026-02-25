@@ -304,27 +304,32 @@
 <section class="row"><h2>🇰🇷 Korean Dramas</h2><div class="scroller" id="korean-tv-list"></div></section>
   </main>
 
-  <div id="details-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-banner" id="modal-banner">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-      </div>
-      <div class="modal-body">
-    <h2 id="modal-title"></h2>
-    <div id="modal-meta-row"></div>
-    <p id="modal-desc"></p>
-    
-    <div class="modal-actions">
-        <button class="play-btn-large" onclick="startPlayback()">
-            <i class="fa-solid fa-play"></i> Watch Now
-        </button>
-        <button class="trailer-btn" onclick="playTrailer()">
-            <i class="fa-solid fa-film"></i> Trailer
-        </button>
-        <button class="mylist-btn" id="mylist-btn" onclick="toggleMyList()">
-            <i class="fa-solid fa-plus"></i>
-        </button>
+  <div class="modal" id="details-modal">
+  <div class="modal-content">
+
+    <div class="modal-banner" id="modal-banner"></div>
+
+    <!-- VIDEO PLAYER INSIDE MODAL -->
+    <div class="modal-video" id="modal-video" style="display:none;">
+      <iframe id="modal-player" allowfullscreen></iframe>
+      <button class="close-video-btn" onclick="stopModalVideo()">✕</button>
     </div>
+
+    <div class="modal-body">
+      <h2 id="modal-title"></h2>
+      <p id="modal-desc"></p>
+
+      <div class="modal-actions">
+        <button class="play-btn-large" onclick="startPlayback()">▶ Watch Now</button>
+        <button class="trailer-btn" onclick="playTrailer()">🎬 Trailer</button>
+        <button class="mylist-btn" onclick="toggleMyList()">＋ My List</button>
+      </div>
+    </div>
+
+    <span class="close-modal" onclick="closeModal()">×</span>
+
+  </div>
+</div>
 
     <div id="episode-selector" class="episode-controls" style="display:none; margin-top: 20px;">
         <div class="selector-group">

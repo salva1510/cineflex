@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+    --primary: #e50914;
+    --bg: #050505;
+    --glass: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    margin: 0; background: var(--bg); color: #fff;
+    font-family: 'Inter', sans-serif; padding-bottom: 80px; /* Space para sa footer */
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar { position: fixed; top: 0; width: 100%; padding: 15px 5%; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); box-sizing: border-box; }
+.logo { color: var(--primary); font-weight: 900; font-size: 1.8rem; letter-spacing: -1px; }
+
+/* Category Bar */
+.category-bar {
+    display: flex; gap: 10px; padding: 90px 5% 10px;
+    overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+}
+.category-bar::-webkit-scrollbar { display: none; }
+.genre-chip {
+    padding: 8px 20px; background: var(--glass); border-radius: 20px;
+    cursor: pointer; font-size: 0.85rem; transition: 0.3s; border: 1px solid transparent;
+}
+.genre-chip.active { background: var(--primary); border-color: #fff; font-weight: bold; }
+
+/* Fixed Footer Navigation */
+.footer-nav {
+    position: fixed; bottom: 0; width: 100%; height: 70px;
+    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid #222; z-index: 2000;
+}
+.nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    color: #888; cursor: pointer; font-size: 0.7rem; transition: 0.3s;
+}
+.nav-item.active { color: var(--primary); transform: scale(1.1); }
+.nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+
+/* Movie Cards */
+.row { padding: 20px 0 0 5%; }
+.row-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; }
+.scroller { display: flex; gap: 12px; overflow-x: auto; padding: 15px 0; scrollbar-width: none; }
+.scroller::-webkit-scrollbar { display: none; }
+.card {
+    min-width: 160px; height: 240px; border-radius: 10px;
+    overflow: hidden; transition: 0.4s; cursor: pointer; border: 1px solid #222;
+}
+.card:hover { transform: scale(1.08); border-color: var(--primary); z-index: 10; }
+.card img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Cast Circular Design */
+.cast-scroller { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.cast-card { min-width: 80px; text-align: center; }
+.cast-card img {
+    width: 70px; height: 70px; border-radius: 50%;
+    object-fit: cover; border: 2px solid #333; margin-bottom: 5px;
+}
+.cast-name { font-size: 0.7rem; color: #bbb; display: block; }
+
+/* Search Section Overlay */
+#search-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg); z-index: 1500; padding: 90px 5%; overflow-y: auto;
+}
+.search-input {
+    width: 100%; padding: 15px; border-radius: 30px; background: #111;
+    border: 1px solid #333; color: white; font-size: 1rem; outline: none; margin-bottom: 20px;
+}
+
+/* Modal Player */
+.modal { display: none; position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; overflow-y: auto; }
+.modal-content { width: 95%; max-width: 1100px; margin: 20px auto; background: #000; border-radius: 15px; overflow: hidden; }

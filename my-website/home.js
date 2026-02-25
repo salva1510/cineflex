@@ -505,5 +505,18 @@ function scrollToSection(sectionId) {
     }
 }
 
+// SAFE PREMIUM REVEAL
+document.addEventListener("DOMContentLoaded", () => {
+  const rows = document.querySelectorAll(".row");
 
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  rows.forEach(row => observer.observe(row));
+});
   

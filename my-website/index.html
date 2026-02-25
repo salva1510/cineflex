@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFlex | Official</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar"><div class="logo">CINEFLEX</div></nav>
+
+    <div id="home-page">
+        <div class="banner-container" id="swipe-area">
+            <header class="banner" id="banner">
+                <div class="banner-overlay"></div>
+                <div class="banner-content" id="banner-content"></div>
+            </header>
+        </div>
+
+        <div id="history-sec" class="row" style="display:none;"><div class="row-title">Continue Watching</div><div class="scroller" id="history-row"></div></div>
+        <div id="mylist-sec" class="row" style="display:none;"><div class="row-title">My List</div><div class="scroller" id="mylist-row"></div></div>
+        <div class="row"><div class="row-title">Trending Now</div><div class="scroller" id="trending-row"></div></div>
+    </div>
+
+    <div id="search-page" class="search-container">
+        <input type="text" class="search-bar" placeholder="Search movies, TV shows..." onkeyup="runSearch(this.value)">
+        <div class="grid" id="search-results"></div>
+    </div>
+
+    <div id="pModal" class="modal">
+        <div class="modal-content">
+            <iframe id="pIframe" src="" style="width:100%; aspect-ratio:16/9; border:none;" allowfullscreen></iframe>
+            <div style="padding:20px;">
+                <h2 id="pTitle"></h2>
+                <div class="banner-btns" style="margin:15px 0;">
+                    <button class="btn btn-play" onclick="closeModal()"><i class="fa fa-play"></i> Watch Now</button>
+                    <button class="btn btn-mylist" id="modal-list-btn" onclick="toggleFav()"></button>
+                </div>
+                <p id="pDesc" style="color:#aaa; font-size:0.9rem; line-height:1.4;"></p>
+                <h4 style="border-bottom:1px solid #333; padding-bottom:5px;">Cast</h4>
+                <div class="scroller" id="pCast"></div>
+                <h4 style="margin-top:20px; border-bottom:1px solid #333; padding-bottom:5px;">More Like This</h4>
+                <div class="grid" id="pSimilar"></div>
+                <button onclick="closeModal()" style="width:100%; padding:15px; background:#333; color:white; border:none; margin-top:30px; border-radius:5px; cursor:pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <div class="nav-item active" onclick="navTo('home', this)"><i class="fa fa-home"></i>Home</div>
+        <div class="nav-item" onclick="navTo('search', this)"><i class="fa fa-search"></i>Search</div>
+        <div class="nav-item" onclick="alert('Movies grid is being updated...')"><i class="fa fa-film"></i>Movies</div>
+        <div class="nav-item" onclick="alert('TV grid is being updated...')"><i class="fa fa-tv"></i>TV Shows</div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>

@@ -95,36 +95,21 @@ function setBanner(item) {
 
 function startPlayback() {
   const id = currentItem.id;
-  const isTV = currentItem.first_air_date || currentItem.name;
-  const nextBtn = document.getElementById("next-ep-btn");
-  const autoContainer = document.getElementById("autoplay-container");
-  
-  clearTimeout(autoplayTimer);
-  document.getElementById("next-timer").innerText = "";
+  const isTV = currentItem.first_air_date;
+
+  let url;
 
   if (isTV) {
-      const s = parseInt(document.getElementById("season-select")?.value) || 1;
-      const e = parseInt(document.getElementById("episode-select")?.value) || 1;
-      currentTVState.season = s;
-      currentTVState.episode = e;
-      
-      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
-      if(nextBtn) nextBtn.style.display = "block";
-      if(autoContainer) autoContainer.style.display = "flex";
-      
-      startAutoplayCheck();
+    const s = parseInt(document.getElementById("season-select")?.value) || 1;
+    const e = parseInt(document.getElementById("episode-select")?.value) || 1;
+    url = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
   } else {
-      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/movie/${id}`;
-      if(nextBtn) nextBtn.style.display = "none";
-      if(autoContainer) autoContainer.style.display = "none";
+    url = `https://zxcstream.xyz/embed/movie/${id}`;
   }
 
-  document.getElementById("player-container").style.display = "block";
-  document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);
-  
-  addToContinueWatching(currentItem);
-  closeModal();
-  document.getElementById("player-container").scrollIntoView({ behavior: 'smooth' });
+  document.getElementById("modal-player").src = url;
+  document.getElementById("modal-video").style.display = "block";
+  document.getElementById("modal-banner").classList.add("hide");
 }
 
 function playNextEpisode() {
@@ -358,27 +343,17 @@ async function filterByGenre(id, el) {
 async function playTrailer() {
   const type = currentItem.first_air_date ? 'tv' : 'movie';
   const data = await fetch(`${BASE_URL}/${type}/${currentItem.id}/videos?api_key=${API_KEY}`).then(r => r.json());
-  
-  // Hanapin ang YouTube Trailer
+
   const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-  
+
   if (trailer) {
-    const container = document.getElementById("trailer-container");
-    container.style.display = "block";
-    
-    // I-render ang YouTube Iframe sa loob ng banner
-    document.getElementById("player").innerHTML = `
-      <iframe 
-        width="100%" 
-        height="100%" 
-        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen 
-        style="position:absolute; top:0; left:0;">
-      </iframe>`;
+    document.getElementById("modal-player").src =
+      `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
+
+    document.getElementById("modal-video").style.display = "block";
+    document.getElementById("modal-banner").classList.add("hide");
   } else {
-    alert("Pasensya na, walang trailer na available.");
+    alert("No trailer available.");
   }
 }
 
@@ -404,7 +379,10 @@ function changeBanner(direction) {
 function openDownload() { window.open(`https://getpvid.com/download/${currentItem.id}`, '_blank'); }
 function openSearch() { document.getElementById("search-overlay").style.display = "block"; }
 function closeSearch() { document.getElementById("search-overlay").style.display = "none"; }
-function closeModal() { document.getElementById("details-modal").style.display = "none"; }
+function closeModal() {
+  document.getElementById("details-modal").style.display = "none";
+  stopModalVideo();
+}
 function closePlayer() { 
     document.getElementById("video-player").src = ""; 
     document.getElementById("player-container").style.display = "none"; 

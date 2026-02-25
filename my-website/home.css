@@ -916,6 +916,89 @@ body {
 .modal-body button:nth-child(n+5) {
     display: none !important;
 }
+/* --- PREMIUM UPGRADE START --- */
+
+:root {
+    --bg: #050505;
+    --accent: #e50914;
+    --accent-glow: rgba(229, 9, 20, 0.4);
+    --glass: rgba(20, 20, 20, 0.75);
+    --text: #ffffff;
+    --card-w: 170px; /* Slightly wider cards */
+}
+
+/* Glassmorphism Navbar */
+.navbar {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Cinematic Banner */
+.banner {
+    height: 85vh !important;
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+}
+
+.banner-content h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+/* Premium Card Hover Effect */
+.card {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease !important;
+}
+
+.card:hover {
+    transform: scale(1.1) translateY(-10px) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 20px var(--accent-glow) !important;
+    z-index: 99;
+}
+
+.card img {
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Horizontal Scrolling Snap */
+.scroller {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+    padding: 20px 0;
+}
+
+.card {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+}
+
+/* Hide Scrollbars but keep functionality */
+.scroller::-webkit-scrollbar {
+    display: none;
+}
+
+/* Full Screen Modal Upgrade */
+.modal {
+    background: rgba(0,0,0,0.85) !important;
+    backdrop-filter: blur(20px);
+}
+
+.modal-content {
+    background: #141414 !important;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 100px rgba(0,0,0,1);
+    border-radius: 12px;
+}
+
+/* --- PREMIUM UPGRADE END --- */
 
 
 

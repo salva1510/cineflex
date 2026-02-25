@@ -576,6 +576,70 @@ function premiumBannerTransition() {
 premiumBannerTransition();
 
 /* --- PREMIUM LOGIC END --- */
+// --- ADD ONLY: MULTI-SERVER LOGIC ---
+const altMovieServers = [
+    (id) => `https://zxcstream.xyz/embed/movie/${id}`,
+    (id) => `https://vidsrc.me/embed/movie?tmdb=${id}`,
+    (id) => `https://embed.su/embed/movie/${id}`,
+    (id) => `https://www.2embed.cc/embed/${id}`
+];
+
+const altTVServers = [
+    (id, s, e) => `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`,
+    (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}`,
+    (id, s, e) => `https://embed.su/embed/tv/${id}/${s}/${e}`
+];
+
+function injectServerSwitcher() {
+    const playerContainer = document.getElementById('player-container');
+    if (!playerContainer) return;
+
+    // Check kung meron na, para hindi paulit-ulit
+    if (document.getElementById('server-ui')) return;
+
+    const serverUI = document.createElement('div');
+    serverUI.id = 'server-ui';
+    serverUI.className = 'server-options';
+    
+    // Gumawa ng 4 buttons
+    for (let i = 0; i < 4; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'srv-btn';
+        btn.innerText = `Server ${i + 1}`;
+        btn.onclick = () => changeVideoSource(i);
+        serverUI.appendChild(btn);
+    }
+    
+    playerContainer.appendChild(serverUI);
+}
+
+function changeVideoSource(index) {
+    const iframe = document.getElementById('video-player');
+    if (!currentItem || !iframe) return;
+
+    let newUrl = "";
+    if (currentItem.title) { // Movie
+        newUrl = altMovieServers[index](currentItem.id);
+    } else { // TV Show
+        const s = document.getElementById('season-select').value || 1;
+        const e = document.getElementById('episode-select').value || 1;
+        newUrl = altTVServers[index % altTVServers.length](currentItem.id, s, e);
+    }
+
+    iframe.src = newUrl;
+    
+    // Highlight active button
+    document.querySelectorAll('.srv-btn').forEach((b, idx) => {
+        b.classList.toggle('active', idx === index);
+    });
+}
+
+// Hook into existing play button
+const originalStartPlayback = startPlayback;
+startPlayback = function() {
+    originalStartPlayback(); // Tawagin yung luma mong code
+    setTimeout(injectServerSwitcher, 500); // Idagdag yung switcher UI
+};
 
 
   

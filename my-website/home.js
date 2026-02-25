@@ -149,7 +149,10 @@ function startAutoplayCheck() {
             const timerEl = document.getElementById("next-timer");
             
             const interval = setInterval(() => {
-                if(timerEl) timerEl.innerText = `Next in ${countdown}s...`;
+                if(timerEl) timerEl.innerHTML = `
+<span style="color:#e50914;font-weight:bold;">
+▶ Next Episode in ${countdown}s
+</span>`;
                 countdown--;
                 if (countdown < 0) {
                     clearInterval(interval);

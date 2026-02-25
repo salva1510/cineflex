@@ -1,0 +1,31 @@
+:root { --accent: #e50914; --bg: #050505; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 70px; }
+
+/* Navbar & Bottom Nav */
+.navbar { position: fixed; top: 0; width: 100%; padding: 15px 5%; z-index: 2000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; box-sizing: border-box; }
+.logo { color: var(--accent); font-weight: 900; font-size: 1.8rem; }
+
+.footer-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 3000; }
+.nav-item { display: flex; flex-direction: column; align-items: center; color: #888; cursor: pointer; font-size: 0.7rem; transition: 0.3s; }
+.nav-item.active { color: var(--accent); transform: scale(1.1); }
+.nav-item i { font-size: 1.4rem; margin-bottom: 3px; }
+
+/* Search & Grid */
+#search-view { display: none; padding: 90px 5% 20px; }
+.search-input { width: 100%; padding: 15px 25px; border-radius: 30px; background: #151515; border: 1px solid #333; color: white; font-size: 1rem; outline: none; margin-bottom: 20px; }
+
+.content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; padding: 20px 0; }
+.card { border-radius: 8px; overflow: hidden; transition: 0.3s; cursor: pointer; border: 1px solid #222; }
+.card:hover { transform: scale(1.05); border-color: var(--accent); }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Cast Circular */
+.cast-scroller { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.cast-scroller::-webkit-scrollbar { display: none; }
+.cast-item { min-width: 75px; text-align: center; }
+.cast-item img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #333; }
+.cast-item span { font-size: 0.7rem; display: block; margin-top: 5px; color: #bbb; }
+
+/* Modal */
+.modal { display: none; position: fixed; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 5000; overflow-y: auto; }
+.modal-content { width: 95%; max-width: 1000px; margin: 20px auto; background: #111; border-radius: 12px; overflow: hidden; }

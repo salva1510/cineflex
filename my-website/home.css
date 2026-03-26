@@ -1156,6 +1156,47 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
 }
+.top-10-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 40px; /* Mas malawak na gap para sa numero */
+    padding: 20px 5%;
+    scrollbar-width: none;
+}
+
+.top-10-item {
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    min-width: 180px; /* Mas malaki nang kaunti sa regular cards */
+    transition: transform 0.3s;
+}
+
+.top-10-item:hover {
+    transform: scale(1.1);
+}
+
+.top-10-number {
+    font-size: 120px;
+    font-weight: 900;
+    color: #050505;
+    -webkit-text-stroke: 2px #555; /* Outline ng numero */
+    position: absolute;
+    left: -25px;
+    bottom: -15px;
+    z-index: 1;
+    line-height: 1;
+}
+
+.top-10-item img {
+    width: 140px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 4px;
+    position: relative;
+    z-index: 2; /* Para nasa ibabaw ng numero ang poster */
+}
+
 
 
 

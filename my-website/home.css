@@ -1101,6 +1101,29 @@ body {
     font-size: 14px;
     transition: 0.3s;
 }
+/* Responsive Grid para sa lahat */
+.main-list, .tv-list, .similar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Kusa mag-adjust ang columns */
+    gap: 15px;
+    padding: 20px;
+}
+
+/* Hover Effect na gumagana sa Mouse at Touch */
+.card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .card:hover {
+        transform: scale(1.1);
+        z-index: 5;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+}
+
 
 .srv-btn:hover {
     background: var(--accent);

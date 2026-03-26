@@ -29,17 +29,23 @@ async function loadTop10() {
         top10Container.innerHTML = '';
 
         // Kumuha lang ng unang 10 movies
-        data.results.slice(0, 10).forEach((movie, index) => {
-            const div = document.createElement('div');
-            div.className = 'top-10-item';
-            div.onclick = () => showDetails(movie.id, 'movie'); // Gamitin ang existing function mo
-            
-            div.innerHTML = `
-                <div class="top-10-number">${index + 1}</div>
-                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
-            `;
-            top10Container.appendChild(div);
-        });
+        // Sa loob ng loadTop10() loop:
+data.results.slice(0, 10).forEach((movie, index) => {
+    const div = document.createElement('div');
+    div.className = 'top-10-item';
+    
+    // Dagdag logic: Kung rank 10, lagyan ng extra class para sa spacing
+    if (index === 9) { 
+        div.style.minWidth = "260px"; // Mas malapad para sa "10"
+    }
+
+    div.innerHTML = `
+        <span class="top-10-number">${index + 1}</span>
+        <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+    `;
+    top10Container.appendChild(div);
+});
+
     } catch (error) {
         console.error("Error loading Top 10:", error);
     }

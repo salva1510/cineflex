@@ -633,44 +633,4 @@ startPlayback = function() {
         plyrWrapper.style.display = "none";
     }
 };
-function injectServerSwitcher() {
-    const serverList = document.getElementById('server-list');
-    if (!serverList || serverList.children.length > 0) return;
-
-    for (let i = 0; i < 4; i++) {
-        const btn = document.createElement('button');
-        // Mobile-friendly style
-        btn.style.cssText = "background:#1a1a1a; color:white; border:1px solid #333; padding:12px; border-radius:6px; font-weight:bold; cursor:pointer;";
-        btn.innerHTML = `Server ${i + 1}`;
-        
-        btn.onclick = () => {
-            // Reset lahat ng buttons sa gray
-            document.querySelectorAll('#server-list button').forEach(b => {
-                b.style.background = "#1a1a1a";
-                b.style.borderColor = "#333";
-            });
-            // Gawing pula ang pinindot (Netflix style)
-            btn.style.background = "#e50914";
-            btn.style.borderColor = "#e50914";
-            changeVideoSource(i);
-        };
-        serverList.appendChild(btn);
-    }
-}
-
-// Para lumabas ang buttons pag-click ng "Watch Now"
-const originalStart = startPlayback;
-startPlayback = function() {
-    originalStart();
-    setTimeout(injectServerSwitcher, 500);
-};
-
-// Para malinis ang buttons pag-close ng player
-const originalClose = closePlayer;
-closePlayer = function() {
-    originalClose();
-    const list = document.getElementById('server-list');
-    if(list) list.innerHTML = '';
-};
-
 

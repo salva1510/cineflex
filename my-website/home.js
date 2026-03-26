@@ -607,3 +607,30 @@ startPlayback = function() {
     originalStartPlayback(); // Tawagin yung luma mong code
     setTimeout(injectServerSwitcher, 500); // Idagdag yung switcher UI
 };
+// Load Plyr JS
+const script = document.createElement('script');
+script.src = "https://cdn.plyr.io/3.7.8/plyr.js";
+document.body.appendChild(script);
+
+let modernPlayer;
+
+script.onload = () => {
+    modernPlayer = new Plyr('#player-gui', {
+        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen']
+    });
+};
+
+// I-update ang startPlayback function para gumana ang bagong player
+const originalPlayback = startPlayback;
+startPlayback = function() {
+    originalPlayback();
+    const iframe = document.getElementById('video-player');
+    const plyrWrapper = document.getElementById('plyr-wrapper');
+    
+    // Default setup: Pakita ang iframe, itago ang Plyr muna
+    if(iframe && plyrWrapper) {
+        iframe.style.display = "block";
+        plyrWrapper.style.display = "none";
+    }
+};
+

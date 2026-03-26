@@ -1135,6 +1135,27 @@ body {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent);
 }
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 5%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+    transition: background 0.3s;
+}
+
+/* Kapag nag-scroll pababa, iigsi o iitim ang navbar */
+.navbar.scrolled {
+    background: #050505;
+}
+
+.search-container input, .modal-content {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(15px); /* Blurred background effect */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
 
 
 

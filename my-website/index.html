@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.modernPlayer = new Plyr('#player-gui');
+  });
+</script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WGQFTDMHGY"></script>
 <script>
   window.dataLayer = window.dataLayer || [];

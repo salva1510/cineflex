@@ -1156,45 +1156,57 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
 }
+/* Container ng buong Top 10 */
 .top-10-scroller {
     display: flex;
     overflow-x: auto;
-    gap: 40px; /* Mas malawak na gap para sa numero */
-    padding: 20px 5%;
+    gap: 50px; /* Mas malaking gap para sa numero */
+    padding: 20px 40px;
     scrollbar-width: none;
+    align-items: center;
 }
 
 .top-10-item {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     position: relative;
-    min-width: 180px; /* Mas malaki nang kaunti sa regular cards */
-    transition: transform 0.3s;
+    min-width: 220px; /* Space para sa number + poster */
+    height: 250px;
+    cursor: pointer;
 }
 
-.top-10-item:hover {
-    transform: scale(1.1);
-}
-
+/* Ang malaking numero */
 .top-10-number {
-    font-size: 120px;
+    font-size: 180px; /* Mas malaki para kitang-kita */
     font-weight: 900;
     color: #050505;
-    -webkit-text-stroke: 2px #555; /* Outline ng numero */
+    -webkit-text-stroke: 3px #555; /* Outline para lutang sa itim */
     position: absolute;
-    left: -25px;
-    bottom: -15px;
+    left: -30px; /* Nakalabas nang kaunti sa kaliwa */
+    bottom: -20px;
     z-index: 1;
     line-height: 1;
+    font-family: 'Arial Black', sans-serif;
+    letter-spacing: -10px;
 }
 
+/* Ang poster */
 .top-10-item img {
-    width: 140px;
-    height: 210px;
+    width: 160px;
+    height: 230px;
     object-fit: cover;
-    border-radius: 4px;
-    position: relative;
-    z-index: 2; /* Para nasa ibabaw ng numero ang poster */
+    border-radius: 6px;
+    position: absolute;
+    right: 0; /* Nakadikit sa kanan para hindi matakpan ang number */
+    z-index: 2;
+    box-shadow: 10px 0 20px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect para sa Desktop */
+.top-10-item:hover img {
+    transform: scale(1.05);
+    border: 1px solid #e50914;
 }
 
 

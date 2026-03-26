@@ -18,6 +18,37 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
 
+ // Ilagay ito sa loob ng init() function o sa baba nito
+async function loadTop10() {
+    try {
+        const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+        const data = await response.json();
+        const top10Container = document.getElementById('top-10-list');
+        
+        if (!top10Container) return;
+        top10Container.innerHTML = '';
+
+        // Kumuha lang ng unang 10 movies
+        data.results.slice(0, 10).forEach((movie, index) => {
+            const div = document.createElement('div');
+            div.className = 'top-10-item';
+            div.onclick = () => showDetails(movie.id, 'movie'); // Gamitin ang existing function mo
+            
+            div.innerHTML = `
+                <div class="top-10-number">${index + 1}</div>
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+            `;
+            top10Container.appendChild(div);
+        });
+    } catch (error) {
+        console.error("Error loading Top 10:", error);
+    }
+}
+
+// Tawagin ang function
+loadTop10();
+ 
+
   try {
     const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
 const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());

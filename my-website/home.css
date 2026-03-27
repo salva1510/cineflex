@@ -1156,20 +1156,6 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
 }
-/* SAFE TOP 10 CSS */
-.top-10-section {
-    padding: 20px 0;
-    overflow: hidden;
-}
-
-.top-10-scroller {
-    display: flex;
-    overflow-x: auto;
-    gap: 30px;
-    padding: 20px 5%;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-}
 
 .top-10-item {
     position: relative;

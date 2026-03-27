@@ -18,45 +18,40 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
 
- // Ilagay ito sa loob ng init() function o sa baba nito
+// ILAGAY ITO SA PINAKABABA NG home.js
 async function loadTop10() {
+    const top10Container = document.getElementById('top-10-list');
+    if (!top10Container) return;
+
     try {
         const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
         const data = await response.json();
-        const top10Container = document.getElementById('top-10-list');
         
-        if (!top10Container) return;
         top10Container.innerHTML = '';
 
-        // Kumuha lang ng unang 10 movies
-        // Sa loob ng loadTop10() loop:
-data.results.slice(0, 10).forEach((movie, index) => {
-    // Hanapin ito sa loob ng loadTop10() loop:
-const div = document.createElement('div');
-div.className = 'top-10-item';
+        data.results.slice(0, 10).forEach((movie, index) => {
+            const div = document.createElement('div');
+            div.className = 'top-10-item';
+            
+            // Eto ang fix para gumana ang click
+            div.onclick = function() {
+                showDetails(movie.id, 'movie');
+            };
 
-// Eto ang magpapatakbo sa click:
-div.onclick = () => {
-    // Ang 'movie' dito ay yung data galing sa API loop
-    showDetails(movie.id, 'movie'); 
-};
-
-div.innerHTML = `
-    <span class="top-10-number">${index + 1}</span>
-    <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
-`;
-
-    `;
-    top10Container.appendChild(div);
-});
-
+            div.innerHTML = `
+                <span class="top-10-number">${index + 1}</span>
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}" style="pointer-events: none;">
+            `;
+            top10Container.appendChild(div);
+        });
     } catch (error) {
-        console.error("Error loading Top 10:", error);
+        console.log("Top 10 Error:", error);
     }
 }
 
-// Tawagin ang function
-loadTop10();
+// Tawagin ang function pagkatapos mag-load ang lahat
+setTimeout(loadTop10, 1000);
+
  
 
   try {

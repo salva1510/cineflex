@@ -18,43 +18,6 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
 
- // Ilagay ito sa loob ng init() function o sa baba nito
-async function loadTop10() {
-    try {
-        const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
-        const data = await response.json();
-        const top10Container = document.getElementById('top-10-list');
-        
-        if (!top10Container) return;
-        top10Container.innerHTML = '';
-
-        // Kumuha lang ng unang 10 movies
-        // Sa loob ng loadTop10() loop:
-data.results.slice(0, 10).forEach((movie, index) => {
-    const div = document.createElement('div');
-    div.className = 'top-10-item';
-    
-    // Dagdag logic: Kung rank 10, lagyan ng extra class para sa spacing
-    if (index === 9) { 
-        div.style.minWidth = "260px"; // Mas malapad para sa "10"
-    }
-
-    div.innerHTML = `
-        <span class="top-10-number">${index + 1}</span>
-        <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
-    `;
-    top10Container.appendChild(div);
-});
-
-    } catch (error) {
-        console.error("Error loading Top 10:", error);
-    }
-}
-
-// Tawagin ang function
-loadTop10();
- 
-
   try {
     const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
 const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
@@ -670,4 +633,33 @@ startPlayback = function() {
         plyrWrapper.style.display = "none";
     }
 };
+async function loadTop10() {
+    const list = document.getElementById('top-10-list');
+    if (!list) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+        const data = await response.json();
+        list.innerHTML = ''; 
+
+        data.results.slice(0, 10).forEach((movie, index) => {
+            const item = document.createElement('div');
+            item.className = 'top-10-item';
+            
+            // Eto ang nagpapatakbo sa click!
+            item.onclick = () => {
+                showDetails(movie.id, 'movie');
+            };
+
+            item.innerHTML = `
+                <span class="top-10-number">${index + 1}</span>
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+            `;
+            list.appendChild(item);
+        });
+    } catch (error) {
+        console.error("Top 10 Error:", error);
+    }
+}
+
 

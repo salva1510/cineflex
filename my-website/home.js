@@ -18,6 +18,7 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
  generateRecommendations();
+ loadTrendingToday();
 
   try {
     const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
@@ -645,5 +646,11 @@ function generateRecommendations() {
     .then(data => {
       displayCards(data.results, "recommended-list");
     });
+}
+async function loadTrendingToday() {
+  const data = await fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`)
+    .then(r => r.json());
+
+  displayCards(data.results, "trending-today");
 }
 

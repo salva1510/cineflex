@@ -18,42 +18,6 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
 
-// ILAGAY ITO SA PINAKABABA NG home.js
-async function loadTop10() {
-    const top10Container = document.getElementById('top-10-list');
-    if (!top10Container) return;
-
-    try {
-        const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
-        const data = await response.json();
-        
-        top10Container.innerHTML = '';
-
-        data.results.slice(0, 10).forEach((movie, index) => {
-            const div = document.createElement('div');
-            div.className = 'top-10-item';
-            
-            // Eto ang fix para gumana ang click
-            div.onclick = function() {
-                showDetails(movie.id, 'movie');
-            };
-
-            div.innerHTML = `
-                <span class="top-10-number">${index + 1}</span>
-                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}" style="pointer-events: none;">
-            `;
-            top10Container.appendChild(div);
-        });
-    } catch (error) {
-        console.log("Top 10 Error:", error);
-    }
-}
-
-// Tawagin ang function pagkatapos mag-load ang lahat
-setTimeout(loadTop10, 1000);
-
- 
-
   try {
     const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
 const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
@@ -669,4 +633,43 @@ startPlayback = function() {
         plyrWrapper.style.display = "none";
     }
 };
+async function loadTop10() {
+    const container = document.getElementById('top-10-list');
+    if (!container) return;
+
+    try {
+        const res = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+        const data = await res.json();
+        
+        container.innerHTML = ''; // Linisin ang loading state
+
+        data.results.slice(0, 10).forEach((movie, index) => {
+            const movieDiv = document.createElement('div');
+            movieDiv.className = 'top-10-item';
+            movieDiv.style.cursor = 'pointer';
+
+            movieDiv.innerHTML = `
+                <span class="top-10-number">${index + 1}</span>
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+            `;
+
+            // Eto ang siguradong paraan para gumana ang pindot
+            movieDiv.addEventListener('click', () => {
+                if (typeof showDetails === "function") {
+                    showDetails(movie.id, 'movie');
+                } else {
+                    console.error("showDetails function is missing!");
+                }
+            });
+
+            container.appendChild(movieDiv);
+        });
+    } catch (err) {
+        console.error("Top 10 failed:", err);
+    }
+}
+
+// Tawagin ang function 2 seconds pagka-load para sure na ready na ang site
+setTimeout(loadTop10, 2000);
+
 

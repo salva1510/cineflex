@@ -1101,29 +1101,6 @@ body {
     font-size: 14px;
     transition: 0.3s;
 }
-/* Responsive Grid para sa lahat */
-.main-list, .tv-list, .similar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Kusa mag-adjust ang columns */
-    gap: 15px;
-    padding: 20px;
-}
-
-/* Hover Effect na gumagana sa Mouse at Touch */
-.card {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-@media (min-width: 1024px) {
-    .card:hover {
-        transform: scale(1.1);
-        z-index: 5;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    }
-}
-
 
 .srv-btn:hover {
     background: var(--accent);
@@ -1135,52 +1112,6 @@ body {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent);
 }
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 5%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-    transition: background 0.3s;
-}
-
-/* Kapag nag-scroll pababa, iigsi o iitim ang navbar */
-.navbar.scrolled {
-    background: #050505;
-}
-
-.search-container input, .modal-content {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(15px); /* Blurred background effect */
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-}
-
-.top-10-item {
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-width: 200px;
-    z-index: 10; /* Tinitiyak na nasa ibabaw siya */
-}
-
-.top-10-number {
-    pointer-events: none; /* Para lumusot ang pindot sa number papunta sa div */
-    z-index: 1;
-}
-
-.top-10-item img {
-    pointer-events: none; /* Para div level ang sasalo ng click */
-    z-index: 2;
-    transition: 0.3s;
-}
-
-.top-10-item:active img {
-    transform: scale(0.95); /* Feedback kapag pinindot sa Redmi */
-}
-
-
 
 
 

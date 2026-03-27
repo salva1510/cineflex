@@ -660,7 +660,7 @@ function loadShorts() {
       <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
     </div>
     <div class="short-card">
-      <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U"></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/waFsOZhTz4M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   `;
 }

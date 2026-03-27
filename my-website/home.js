@@ -634,32 +634,39 @@ startPlayback = function() {
     }
 };
 async function loadTop10() {
-    const list = document.getElementById('top-10-list');
-    if (!list) return;
+    const top10Container = document.getElementById('top-10-list');
+    if (!top10Container) return;
 
     try {
         const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
         const data = await response.json();
-        list.innerHTML = ''; 
+        
+        top10Container.innerHTML = '';
 
         data.results.slice(0, 10).forEach((movie, index) => {
-            const item = document.createElement('div');
-            item.className = 'top-10-item';
+            const div = document.createElement('div');
+            div.className = 'top-10-item';
             
-            // Eto ang nagpapatakbo sa click!
-            item.onclick = () => {
+            // Pinagsamang click at image logic
+            div.onclick = () => {
                 showDetails(movie.id, 'movie');
             };
 
-            item.innerHTML = `
+            div.innerHTML = `
                 <span class="top-10-number">${index + 1}</span>
                 <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
             `;
-            list.appendChild(item);
+            top10Container.appendChild(div);
         });
     } catch (error) {
         console.error("Top 10 Error:", error);
     }
 }
+
+// Tawagin ang function pagka-load ng page
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(loadTop10, 1000);
+});
+
 
 

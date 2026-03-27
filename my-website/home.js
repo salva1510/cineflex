@@ -21,10 +21,18 @@ async function init() {
  loadTrendingToday();
 
   try {
-    const [popular, trending] = await Promise.all([
-  fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json()),
-  fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`).then(r=>r.json())
-]);
+    const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
+const topRated = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`).then(r=>r.json());
+const nowPlaying = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`).then(r=>r.json());
+const upcoming = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`).then(r=>r.json());
+
+const action = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`).then(r=>r.json());
+const comedy = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`).then(r=>r.json());
+const horror = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`).then(r=>r.json());
+const romance = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10749`).then(r=>r.json());
+const scifi = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=878`).then(r=>r.json());
+const trending = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`).then(res => res.json());
+const tvShows = await fetch(`${BASE_URL}/tv/popular?api_key=${API_KEY}`).then(res => res.json());
 const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ja|ko|zh`).then(r=>r.json());
 const filipino = await fetch(
   `${BASE_URL}/discover/movie?` +

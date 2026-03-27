@@ -633,4 +633,40 @@ startPlayback = function() {
         plyrWrapper.style.display = "none";
     }
 };
+async function setupTop10() {
+    // 1. Kusa nating gagawin ang section sa HTML
+    const container = document.createElement('section');
+    container.innerHTML = `
+        <h2 style="padding: 20px 5% 0; color: white; font-family: sans-serif;">Top 10 Movies Today</h2>
+        <div id="top-10-list" style="display: flex; overflow-x: auto; gap: 40px; padding: 20px 5%; scrollbar-width: none;"></div>
+    `;
+    
+    // Ilalagay natin ito sa itaas ng "Trending" o "Popular" list mo
+    const mainContent = document.querySelector('.content') || document.body;
+    mainContent.prepend(container);
+
+    try {
+        const res = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+        const data = await res.json();
+        const list = document.getElementById('top-10-list');
+
+        data.results.slice(0, 10).forEach((movie, index) => {
+            const item = document.createElement('div');
+            item.style.cssText = "display:flex; align-items:center; position:relative; min-width:200px; cursor:pointer; flex-shrink:0;";
+            
+            item.innerHTML = `
+                <span style="font-size:120px; font-weight:900; color:#000; -webkit-text-stroke:2px #555; position:absolute; left:-20px; bottom:-10px; z-index:1; line-height:1;">${index + 1}</span>
+                <img src="${IMG_URL + movie.poster_path}" style="width:140px; height:200px; object-fit:cover; border-radius:8px; position:relative; z-index:2; margin-left:30px; box-shadow: 5px 5px 15px rgba(0,0,0,0.5);">
+            `;
+
+            // Ito ang siguradong clicker
+            item.onclick = () => showDetails(movie.id, 'movie');
+            list.appendChild(item);
+        });
+    } catch (e) { console.error(e); }
+}
+
+// Patakbuhin ang function
+setTimeout(setupTop10, 1500);
+                   
 

@@ -17,6 +17,7 @@ async function init() {
   showSkeletons("tv-list");
   updateMyListUI();
   updateContinueUI();
+ generateRecommendations();
 
   try {
     const popular = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`).then(r=>r.json());
@@ -633,4 +634,16 @@ startPlayback = function() {
         plyrWrapper.style.display = "none";
     }
 };
+// ===== AI-LIKE RECOMMENDATION SYSTEM =====
+function generateRecommendations() {
+  if (continueWatching.length === 0) return;
+
+  const lastWatched = continueWatching[0];
+
+  fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${lastWatched.genre_ids?.[0]}`)
+    .then(res => res.json())
+    .then(data => {
+      displayCards(data.results, "recommended-list");
+    });
+}
 

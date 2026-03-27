@@ -653,4 +653,17 @@ async function loadTrendingToday() {
 
   displayCards(data.results, "trending-today");
 }
+function loadShorts() {
+  const container = document.getElementById("shorts");
+  container.innerHTML = `
+    <div class="short-card">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+    </div>
+    <div class="short-card">
+      <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U"></iframe>
+    </div>
+  `;
+}
+
+loadShorts();
 

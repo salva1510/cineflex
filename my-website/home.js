@@ -662,6 +662,15 @@ function loadShorts() {
     <div class="short-card">
       <iframe width="560" height="315" src="https://www.youtube.com/embed/waFsOZhTz4M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+    <div class="short-card">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/npHCvrPKCfI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+   </div>
+    <div class="short-card">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/rgHjCS7stRE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+   </div>
+    <div class="short-card">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/7diPIpXlJS8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
   `;
 }
 

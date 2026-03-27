@@ -1112,20 +1112,6 @@ body {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent);
 }
-.top-10-number {
-    pointer-events: none !important; /* Eto ang sikreto para lumusot ang click */
-    user-select: none;
-}
-
-.top-10-item {
-    cursor: pointer;
-    z-index: 10;
-}
-
-.top-10-item img {
-    pointer-events: auto !important;
-}
-
 
 
 

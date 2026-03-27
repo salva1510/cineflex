@@ -650,19 +650,25 @@ async function setupTop10() {
         const data = await res.json();
         const list = document.getElementById('top-10-list');
 
-        data.results.slice(0, 10).forEach((movie, index) => {
-            const item = document.createElement('div');
-            item.style.cssText = "display:flex; align-items:center; position:relative; min-width:200px; cursor:pointer; flex-shrink:0;";
-            
-            item.innerHTML = `
-                <span style="font-size:120px; font-weight:900; color:#000; -webkit-text-stroke:2px #555; position:absolute; left:-20px; bottom:-10px; z-index:1; line-height:1;">${index + 1}</span>
-                <img src="${IMG_URL + movie.poster_path}" style="width:140px; height:200px; object-fit:cover; border-radius:8px; position:relative; z-index:2; margin-left:30px; box-shadow: 5px 5px 15px rgba(0,0,0,0.5);">
-            `;
+        // Sa loob ng loadTop10()
+data.results.slice(0, 10).forEach((movie, index) => {
+    const item = document.createElement('div');
+    item.className = 'top-10-item';
+    
+    // Eto dapat ang itsura ng click function:
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("Pinitik ang ID:", movie.id); // Check mo sa console kung lumalabas ito
+        showDetails(movie.id, 'movie');
+    });
 
-            // Ito ang siguradong clicker
-            item.onclick = () => showDetails(movie.id, 'movie');
-            list.appendChild(item);
-        });
+    item.innerHTML = `
+        <span class="top-10-number">${index + 1}</span>
+        <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+    `;
+    list.appendChild(item);
+});
+
     } catch (e) { console.error(e); }
 }
 

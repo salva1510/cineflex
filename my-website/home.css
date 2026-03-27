@@ -6,7 +6,30 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .nav-icons i { font-size: 1.2rem; cursor: pointer; margin-left: 20px; transition: 0.3s; }
 .nav-icons i:hover { color: var(--accent); }
 
-.banner { height: 75vh; background-size: cover; background-position: center top; position: relative; display: flex; align-items: center; padding: 0 5%; }
+.banner { 
+    height: 55vh; /* Binabaan natin mula 75vh */
+    background-size: cover; 
+    background-position: center top; 
+    position: relative; 
+    display: flex; 
+    align-items: flex-end; /* Nilagay natin sa ilalim ang text para hindi tabas */
+    padding: 0 5% 40px; /* Nilagyan ng space sa ilalim ng text */
+}
+
+/* Para hindi masyadong malaki ang text sa banner pag lumiit ang height */
+.banner-title {
+    font-size: 2rem; /* Ginawang mas compact */
+    margin-bottom: 10px;
+}
+
+.banner-desc {
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Hanggang 2 lines na lang ang description para tipid sa space */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .banner-content { max-width: 600px; z-index: 2; }
 .banner-fade { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg) 5%, transparent 70%); }
 .play-btn { background: white; color: black; border: none; padding: 12px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-right: 10px; font-size: 1rem; }

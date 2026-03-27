@@ -388,6 +388,35 @@
     });
   }
       </script>
+      <script>
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// LOGIN FUNCTION
+function login() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider);
+}
+
+// LOGOUT
+function logout() {
+  auth.signOut();
+}
+
+// TRACK USER
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log("Logged in:", user.displayName);
+  }
+});
+      </script>
 
 
 </body>

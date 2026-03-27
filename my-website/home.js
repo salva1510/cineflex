@@ -31,17 +31,21 @@ async function loadTop10() {
         // Kumuha lang ng unang 10 movies
         // Sa loob ng loadTop10() loop:
 data.results.slice(0, 10).forEach((movie, index) => {
-    const div = document.createElement('div');
-    div.className = 'top-10-item';
-    
-    // Dagdag logic: Kung rank 10, lagyan ng extra class para sa spacing
-    if (index === 9) { 
-        div.style.minWidth = "260px"; // Mas malapad para sa "10"
-    }
+    // Hanapin ito sa loob ng loadTop10() loop:
+const div = document.createElement('div');
+div.className = 'top-10-item';
 
-    div.innerHTML = `
-        <span class="top-10-number">${index + 1}</span>
-        <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+// Eto ang magpapatakbo sa click:
+div.onclick = () => {
+    // Ang 'movie' dito ay yung data galing sa API loop
+    showDetails(movie.id, 'movie'); 
+};
+
+div.innerHTML = `
+    <span class="top-10-number">${index + 1}</span>
+    <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+`;
+
     `;
     top10Container.appendChild(div);
 });

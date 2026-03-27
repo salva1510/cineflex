@@ -676,3 +676,15 @@ function loadShorts() {
 
 loadShorts();
 
+function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const msg = input.value;
+  if (!msg) return;
+
+  const div = document.createElement("p");
+  div.innerText = msg;
+
+  document.getElementById("messages").appendChild(div);
+  input.value = "";
+}
+

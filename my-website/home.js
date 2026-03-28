@@ -17,7 +17,6 @@ async function init() {
   showSkeletons("tv-list");
   updateMyListUI();
   updateContinueUI();
- generateRecommendations();
  generateAdvancedRecommendations();
  loadTrendingToday();
 

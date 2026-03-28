@@ -751,12 +751,5 @@ db.collection("chat")
       container.appendChild(p);
     });
   });
-async function loadCustomMovies() {
-  onSnapshot(collection(db, "movies"), snapshot => {
-    const movies = [];
-    snapshot.forEach(doc => movies.push(doc.data()));
-    
-    displayCards(movies, "custom-list");
-  });
-}
+
 

@@ -18,6 +18,7 @@ async function init() {
   updateMyListUI();
   updateContinueUI();
  generateRecommendations();
+ generateAdvancedRecommendations();
  loadTrendingToday();
 
   try {
@@ -636,16 +637,19 @@ startPlayback = function() {
     }
 };
 // ===== AI-LIKE RECOMMENDATION SYSTEM =====
-function generateRecommendations() {
+async function generateAdvancedRecommendations() {
   if (continueWatching.length === 0) return;
 
-  const lastWatched = continueWatching[0];
+  const genres = continueWatching.flatMap(i => i.genre_ids || []);
+  const mostUsed = genres.sort((a,b)=>
+    genres.filter(v=>v===a).length - genres.filter(v=>v===b).length
+  ).pop();
 
-  fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${lastWatched.genre_ids?.[0]}`)
-    .then(res => res.json())
-    .then(data => {
-      displayCards(data.results, "recommended-list");
-    });
+  const res = await fetch(
+    `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${mostUsed}`
+  ).then(r=>r.json());
+
+  displayCards(res.results, "recommended-list");
 }
 async function loadTrendingToday() {
   const data = await fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`)

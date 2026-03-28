@@ -683,16 +683,25 @@ function loadShorts() {
 loadShorts();
 
 function sendMessage() {
-  const input = document.getElementById("chat-input");
-  const msg = input.value;
-  if (!msg) return;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const msg = document.getElementById("chatInput").value;
 
-  const div = document.createElement("p");
-  div.innerText = msg;
-
-  document.getElementById("messages").appendChild(div);
-  input.value = "";
+  addDoc(collection(db, "chat"), {
+    text: msg,
+    user: user?.displayName || "Guest",
+    time: Date.now()
+  });
 }
+
+onSnapshot(query(collection(db, "chat"), orderBy("time")), snapshot => {
+  const box = document.getElementById("messages");
+  box.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    box.innerHTML += `<p><b>${d.user}:</b> ${d.text}</p>`;
+  });
+});
 let previewTimeout;
 
 async function playPreview(id) {

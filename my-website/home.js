@@ -177,7 +177,10 @@ function displayCards(data, containerId) {
     const rating = item.vote_average ? item.vote_average.toFixed(1) : "NR";
 
     return `
-      <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+      <div class="card"
+  onmouseenter="playPreview(${item.id})"
+  onmouseleave="stopPreview()"
+  onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
         <div class="card-badges">
           <span class="badge-rating"><i class="fa-solid fa-star"></i> ${rating}</span>
           <span class="badge-year">${year}</span>
@@ -689,5 +692,30 @@ function sendMessage() {
 
   document.getElementById("messages").appendChild(div);
   input.value = "";
+}
+let previewTimeout;
+
+async function playPreview(id) {
+  clearTimeout(previewTimeout);
+
+  previewTimeout = setTimeout(async () => {
+    const data = await fetch(`${BASE_URL}/movie/${id}/videos?api_key=${API_KEY}`)
+      .then(r=>r.json());
+
+    const trailer = data.results.find(v => v.site === "YouTube");
+
+    if (trailer) {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`;
+      iframe.className = "preview-player";
+
+      document.body.appendChild(iframe);
+    }
+  }, 800);
+}
+
+function stopPreview() {
+  clearTimeout(previewTimeout);
+  document.querySelectorAll(".preview-player").forEach(e => e.remove());
 }
 

@@ -718,4 +718,28 @@ function stopPreview() {
   clearTimeout(previewTimeout);
   document.querySelectorAll(".preview-player").forEach(e => e.remove());
 }
+function sendMessage() {
+  const msg = document.getElementById("chatInput").value;
+
+  db.collection("chat").add({
+    text: msg,
+    time: Date.now()
+  });
+
+  document.getElementById("chatInput").value = "";
+}
+
+// LIVE LISTENER
+db.collection("chat")
+  .orderBy("time")
+  .onSnapshot(snapshot => {
+    const container = document.getElementById("messages");
+    container.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const p = document.createElement("p");
+      p.innerText = doc.data().text;
+      container.appendChild(p);
+    });
+  });
 

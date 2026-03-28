@@ -1182,6 +1182,11 @@ body {
   z-index: 9999;
   border-radius: 10px;
 }
+body {
+  margin: 0;
+  background: black;
+  overscroll-behavior: none;
+}
 
 
 

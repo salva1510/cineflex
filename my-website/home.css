@@ -1187,6 +1187,19 @@ body {
   background: black;
   overscroll-behavior: none;
 }
+#installBtn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+    transition: 0.2s;
+}
+
+@media (max-width: 600px) {
+    #installBtn {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+  }
+
 
 
 

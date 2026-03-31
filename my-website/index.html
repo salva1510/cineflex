@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <button id="installBtn" style="display:none;">Install App</button>
-
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("installBtn").style.display = "block";
-});
-
-document.getElementById("installBtn").addEventListener("click", () => {
-  deferredPrompt.prompt();
-});
-</script>
   <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
   <link rel="manifest" href="manifest.json">
@@ -80,20 +65,6 @@ document.getElementById("installBtn").addEventListener("click", () => {
   gtag('config', 'G-WGQFTDMHGY');
 </script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('SW Registered!', reg))
-        .catch(err => console.log('SW Registration failed', err));
-    });
-  }
-</script>
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CineFlex">
-<link rel="apple-touch-icon" href="icon-192.png">
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -102,7 +73,7 @@ document.getElementById("installBtn").addEventListener("click", () => {
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 <style>
   :root { 
-    --plyr-color-main: #e50914; /* Kulay ng buttons */
+    --plyr-color-man: #e50914; /* Kulay ng buttons */
   } 
   .plyr { border-radius: 8px; overflow: hidden; margin-top: 10px; }
 </style>
@@ -113,6 +84,18 @@ document.getElementById("installBtn").addEventListener("click", () => {
 
   <nav class="navbar">
   <div class="logo">CINEFLEX</div>
+    <div class="navbar">
+    <div class="logo">CineFlex</div>
+    <div class="nav-icons">
+        <button id="installBtn" style="display:none; background: var(--accent); color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-right: 10px;">
+            <i class="fas fa-download"></i> Install App
+        </button>
+        
+        <i class="fas fa-search" onclick="toggleSearch()"></i>
+        <i class="fas fa-user" onclick="showAuth()"></i>
+    </div>
+    </div>
+    
 </nav>
 
 <div class="bottom-nav">

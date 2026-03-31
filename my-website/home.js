@@ -11,6 +11,40 @@ let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || []
 let autoplayTimer = null;
 let touchStartX = 0;
  let touchEndX = 0;
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Pigilan ang default prompt ng browser
+    e.preventDefault();
+    // I-save ang event para magamit mamaya
+    deferredPrompt = e;
+    // Ipakita ang install button sa header
+    installBtn.style.display = 'inline-block';
+});
+
+installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        // Ipakita ang install prompt
+        deferredPrompt.prompt();
+        // Alamin kung tinanggap ng user
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        // I-reset ang prompt variable
+        deferredPrompt = null;
+        // Itago ulit ang button pagkatapos ma-install
+        installBtn.style.display = 'none';
+    }
+});
+
+// Itago ang button kapag na-install na ang app
+window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+    deferredPrompt = null;
+    console.log('PWA was installed');
+});
+
+
 
 async function init() {
   showSkeletons("main-list");

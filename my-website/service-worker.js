@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v1";
+const CACHE_NAME = "cineflex-v2";
 
 const urlsToCache = [
   "/",

@@ -583,7 +583,7 @@ premiumBannerTransition();
 
 // --- ADD ONLY: MULTI-SERVER LOGIC ---
 const altMovieServers = [
-    // UPDATED TO PLAYER FORMAT FOR SERVER 1
+    (id) => `https://bcine.app/e/movie/${id}`,
     (id) => `https://zxcstream.xyz/player/movie/${id}`,
     (id) => `https://vidsrc.me/embed/movie?tmdb=${id}`,
     (id) => `https://embed.su/embed/movie/${id}`,
@@ -591,6 +591,8 @@ const altMovieServers = [
 ];
 
 const altTVServers = [
+    // Inayos ko ito, tinanggal ko yung sumobrang characters sa dulo
+    (id, s, e) => `https://bcine.app/e/tv/${id}/${s}/${e}`,
     (id, s, e) => `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`,
     (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}`,
     (id, s, e) => `https://embed.su/embed/tv/${id}/${s}/${e}`

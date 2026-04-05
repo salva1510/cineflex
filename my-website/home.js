@@ -583,7 +583,7 @@ premiumBannerTransition();
 
 // --- ADD ONLY: MULTI-SERVER LOGIC ---
 const altMovieServers = [
-    (id) => `https://bcine.app/e/movie/${id}`,
+    (id) => `https://bcine.app/e/movie/${id}`, // Dapat ito ang Server 1
     (id) => `https://zxcstream.xyz/player/movie/${id}`,
     (id) => `https://vidsrc.me/embed/movie?tmdb=${id}`,
     (id) => `https://embed.su/embed/movie/${id}`,
@@ -591,8 +591,8 @@ const altMovieServers = [
 ];
 
 const altTVServers = [
-    // Inayos ko ito, tinanggal ko yung sumobrang characters sa dulo
-    (id, s, e) => `https://bcine.app/e/tv/${id}/${s}/${e}`,
+    // Siguraduhing walang sumobrang ${id}/${s}/${e} sa dulo nito
+    (id, s, e) => `https://bcine.app/e/tv/${id}/${s}/${e}`, 
     (id, s, e) => `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`,
     (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}`,
     (id, s, e) => `https://embed.su/embed/tv/${id}/${s}/${e}`
@@ -718,26 +718,6 @@ function loadShorts() {
 
 loadShorts();
 
-function sendMessage() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const msg = document.getElementById("chatInput").value;
-
-  addDoc(collection(db, "chat"), {
-    text: msg,
-    user: user?.displayName || "Guest",
-    time: Date.now()
-  });
-}
-
-onSnapshot(query(collection(db, "chat"), orderBy("time")), snapshot => {
-  const box = document.getElementById("messages");
-  box.innerHTML = "";
-
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    box.innerHTML += `<p><b>${d.user}:</b> ${d.text}</p>`;
-  });
-});
 let previewTimeout;
 
 async function playPreview(id) {
@@ -763,29 +743,5 @@ function stopPreview() {
   clearTimeout(previewTimeout);
   document.querySelectorAll(".preview-player").forEach(e => e.remove());
 }
-function sendMessage() {
-  const msg = document.getElementById("chatInput").value;
-
-  db.collection("chat").add({
-    text: msg,
-    time: Date.now()
-  });
-
-  document.getElementById("chatInput").value = "";
-}
-
-// LIVE LISTENER
-db.collection("chat")
-  .orderBy("time")
-  .onSnapshot(snapshot => {
-    const container = document.getElementById("messages");
-    container.innerHTML = "";
-
-    snapshot.forEach(doc => {
-      const p = document.createElement("p");
-      p.innerText = doc.data().text;
-      container.appendChild(p);
-    });
-  });
 
 

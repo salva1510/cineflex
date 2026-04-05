@@ -43,40 +43,6 @@ window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     console.log('PWA was installed');
 });
-// Check natin kung may natitirang oras sa LocalStorage
-let timeLeft = localStorage.getItem('watchTime') || 0;
-
-function updateDisplay() {
-    document.getElementById('time-display').innerText = timeLeft;
-    if (timeLeft > 0) {
-        document.getElementById('player-container').style.display = 'block';
-    } else {
-        document.getElementById('player-container').style.display = 'none';
-    }
-}
-
-function rewardUser() {
-    // 1. Bubuksan ang Adsterra Direct Link
-    window.open('IYONG_ADSTERRA_DIRECT_LINK_HERE', '_blank');
-
-    // 2. Magdadagdag ng 120 minutes (2 hours)
-    timeLeft = parseInt(timeLeft) + 120;
-    localStorage.setItem('watchTime', timeLeft);
-    updateDisplay();
-}
-
-// Timer: Nababawasan ng 1 minute kada minuto
-setInterval(() => {
-    if (timeLeft > 0) {
-        timeLeft--;
-        localStorage.setItem('watchTime', timeLeft);
-        updateDisplay();
-    }
-}, 60000); // 60000ms = 1 minute
-
-// Run display on load
-updateDisplay();
-
 
 
 

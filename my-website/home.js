@@ -12,6 +12,63 @@ let autoplayTimer = null;
 let touchStartX = 0;
  let touchEndX = 0;
 let deferredPrompt;
+<script>
+// 1. Initialize variables mula sa LocalStorage
+let timeLeft = parseInt(localStorage.getItem('cineflex_minutes')) || 0;
+// Halimbawa ng Embed Link (Pwede mong gawing dynamic ito base sa movie ID)
+const movieSource = "bcine.app/api-docs"; 
+
+function refreshDisplay() {
+    const timeText = document.getElementById('time-display');
+    const playerDiv = document.getElementById('player-container');
+    const iframe = document.getElementById('main-player');
+    const btn = document.getElementById('ad-btn');
+
+    timeText.innerText = timeLeft;
+
+    if (timeLeft > 0) {
+        // MAY ORAS: Ipakita ang player at lagyan ng SRC ang iframe
+        playerDiv.style.display = "block";
+        if (iframe.src === "" || iframe.src === window.location.href) {
+            iframe.src = movieSource;
+        }
+        btn.innerText = "ADD MORE WATCH TIME (+2 Hours)";
+        btn.style.background = "#28a745"; // Gawing Green
+    } else {
+        // WALANG ORAS: Itago ang player at alisin ang SRC
+        playerDiv.style.display = "none";
+        iframe.src = ""; 
+        btn.innerText = "WATCH ADS TO UNLOCK MOVIE";
+        btn.style.background = "#e50914"; // Gawing Red
+    }
+}
+
+function rewardUser() {
+    // 1. Buksan ang Adsterra Direct Link (Palitan mo ito ng link mo mula sa Adsterra dashboard)
+    window.open('<script src="https://pl28389725.profitablecpmratenetwork.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js"></script>
+', '_blank');
+
+    // 2. Dagdag ng 120 minutes (2 Hours)
+    timeLeft += 120;
+    localStorage.setItem('cineflex_minutes', timeLeft);
+    
+    // 3. I-update ang screen
+    refreshDisplay();
+}
+
+// Timer: Bawasan ang oras kada 1 minuto
+setInterval(() => {
+    if (timeLeft > 0) {
+        timeLeft--;
+        localStorage.setItem('cineflex_minutes', timeLeft);
+        refreshDisplay();
+    }
+}, 60000);
+
+// Run on page load
+refreshDisplay();
+</script>
+
 const installBtn = document.getElementById('installBtn');
 
 window.addEventListener('beforeinstallprompt', (e) => {

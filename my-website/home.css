@@ -1199,21 +1199,6 @@ body {
         padding: 4px 8px;
     }
   }
-.srv-btn {
-    flex: 1;
-    padding: 8px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.srv-btn.active {
-    background: var(--accent); /* Kulay pula ng CineFlex */
-    border-color: var(--accent);
-}
-
 
 
 

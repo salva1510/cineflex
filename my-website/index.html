@@ -264,6 +264,10 @@
 </div>
   </div>
   <div id="chat">
+  <div id="messages"></div>
+  <input id="chatInput" placeholder="Chat..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
 
   <main class="content">
 
@@ -281,6 +285,11 @@
   <h2>🔥 Quick Watch</h2>
   <div class="shorts-container" id="shorts"></div>
 </section>
+
+    <section class="row">
+  <h2>🤖 Recommended For You</h2>
+  <div class="scroller" id="recommended-list"></div>
+    </section>
 
     <section class="row">
   <h2>📈 Trending Today</h2>
@@ -344,25 +353,16 @@
         </button>
     </div>
 
-    <div class="episode-controls">
-    <div class="selector-group" id="season-group">
-        <label>Season</label>
-        <select id="season-select" onchange="updateEpisodes()"></select>
-    </div>
-    <div class="selector-group" id="episode-group">
-        <label>Episode</label>
-        <select id="episode-select" onchange="startPlayback()"></select>
-    </div>
-
-    <div class="selector-group">
-        <label>Server</label>
-        <div class="server-options" style="display: flex; gap: 10px; margin-top: 5px;">
-            <button class="srv-btn active" id="btn-bcine" onclick="setServer('bcine')">Server 1 (BCine)</button>
-            <button class="srv-btn" id="btn-zxc" onclick="setServer('zxc')">Server 2 (ZXC)</button>
+    <div id="episode-selector" class="episode-controls" style="display:none; margin-top: 20px;">
+        <div class="selector-group">
+            <label>Season</label>
+            <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+        </div>
+        <div class="selector-group">
+            <label>Episode</label>
+            <select id="episode-select"></select>
         </div>
     </div>
-</div>
-
 
     <div class="cast-section">
         <h4>Top Cast</h4>

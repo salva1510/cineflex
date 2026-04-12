@@ -1,7 +1,7 @@
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
-let selectedServer = 'bcine';
+
 let currentItem = null;
 let trendingItems = []; // Para sa manual banner swipe
 let currentBannerIndex = 0; // Index ng kasalukuyang banner
@@ -129,39 +129,32 @@ function setBanner(item) {
   document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
 }
 
-function setServer(server) {
-    selectedServer = server;
-    
-    // Palitan ang kulay ng buttons
-    document.getElementById('btn-bcine').classList.toggle('active', server === 'bcine');
-    document.getElementById('btn-zxc').classList.toggle('active', server === 'zxc');
-    
-    // I-play ulit gamit ang bagong server
-    startPlayback();
-}
-
-// 3. I-update ang iyong startPlayback function
 function startPlayback() {
-    if (!currentItem) return;
-    const id = currentItem.id;
-    const isTV = currentItem.first_air_date || currentItem.name;
-    const player = document.getElementById("video-player");
+  const id = currentItem.id;
+  const isTV = currentItem.first_air_date || currentItem.name;
+  const nextBtn = document.getElementById("next-ep-btn");
+  const autoContainer = document.getElementById("autoplay-container");
+  
+  clearTimeout(autoplayTimer);
+  document.getElementById("next-timer").innerText = "";
 
-    if (isTV) {
-        const s = document.getElementById("season-select").value || 1;
-        const e = document.getElementById("episode-select").value || 1;
-        
-        // BCine as Primary, ZXC as Secondary
-        player.src = (selectedServer === 'bcine') 
-            ? `https://bcine.app/api-docs/tv/${id}/${s}/${e}` 
-            : `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
-    } else {
-        player.src = (selectedServer === 'bcine') 
-            ? `https://bcine.app/api-docs/movie/${id}` 
-            : `https://zxcstream.xyz/player/movie/${id}`;
-    }
-}
-
+  if (isTV) {
+      const s = parseInt(document.getElementById("season-select")?.value) || 1;
+      const e = parseInt(document.getElementById("episode-select")?.value) || 1;
+      currentTVState.season = s;
+      currentTVState.episode = e;
+      
+      document.getElementById("video-player").src = `https://zxcstream.xyz/embed/tv/${id}/${s}/${e}`;
+      if(nextBtn) nextBtn.style.display = "block";
+      if(autoContainer) autoContainer.style.display = "flex";
+      
+      startAutoplayCheck();
+  } else {
+      // UPDATED TO PLAYER FORMAT
+      document.getElementById("video-player").src = `https://zxcstream.xyz/player/movie/${id}`;
+      if(nextBtn) nextBtn.style.display = "none";
+      if(autoContainer) autoContainer.style.display = "none";
+  }
 
   document.getElementById("player-container").style.display = "block";
   document.getElementById("player-title-display").innerText = "Playing: " + (currentItem.title || currentItem.name);

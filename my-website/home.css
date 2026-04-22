@@ -1199,6 +1199,35 @@ body {
         padding: 4px 8px;
     }
   }
+/* Eto lang ang idagdag mo sa CSS mo para magmukhang modern */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background-color: #0a0a0b;
+}
+
+.movie-card {
+    background: #1a1a1c;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #222;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    border-color: #e50914; /* Accent color */
+}
+
+.movie-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
 
 
 

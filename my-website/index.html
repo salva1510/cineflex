@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <title>CINEFLEX | Home</title>
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="scrolling-text-container">
+    <div class="scrolling-text-inner">
+        <span>🍿 Welcome to CineFlex! Grab your popcorn and enjoy the show! 🎬 </span>
+        <span>✨ Discover the latest hits and timeless classics right here! 🎥 </span>
+        <span>🔥 Credits To Salva 🍿 </span>
+        <span>🌟 Donate: Gcash: 09365028152 🎬 </span>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <div class="logo">CINEFLEX</div>
+    <div class="nav-icons">
+      <i class="fa fa-search" onclick="toggleSearch()"></i>
+      <i class="fa fa-user" onclick="login()"></i>
+      <button id="installBtn" style="display:none;">Install App</button>
+    </div>
+  </nav>
+
+  <div id="search-bar-container" style="display:none; padding: 15px 5%; background: #0a0a0a;">
+    <input type="text" id="searchInput" placeholder="Search movies or TV shows..." style="width:100%; padding:12px; border-radius:30px; border:1px solid #333; background:#1a1a1a; color:white; outline:none;">
+  </div>
+
+  <header class="banner" id="banner">
+    <div class="banner-content" id="banner-content"></div>
+    <div class="banner-fade"></div>
+  </header>
+
+  <main class="main-content">
+    <h2 class="section-title">Trending Ngayon</h2>
+    <div class="movie-grid" id="trending-grid"></div>
+
+    <h2 class="section-title">Continue Watching</h2>
+    <div class="movie-grid" id="recent-grid"></div>
+
+    <h2 class="section-title">Popular TV Shows</h2>
+    <div class="movie-grid" id="tv-grid"></div>
+  </main>
+
+  <div id="chat-section">
+    <h3 style="color: var(--accent); padding: 0 5%;">Community Chat</h3>
+    <div id="messages"></div>
+    <div class="chat-input-container">
+      <input type="text" id="chatInput" placeholder="Write a message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="home.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW failed', err));
+      });
+    }
+  </script>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxt8j4fBu_Km5ASqxZK3yiAXNbAYmdNNk",
+      authDomain: "enable-fa17d.firebaseapp.com",
+      projectId: "enable-fa17d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.login = async () => {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    };
+
+    window.db = db;
+    onAuthStateChanged(auth, user => { if (user) console.log("User:", user.displayName); });
+  </script>
+</body>
+</html>

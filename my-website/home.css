@@ -1199,6 +1199,90 @@ body {
         padding: 4px 8px;
     }
   }
+/* Container para sa lahat ng episodes */
+.episode-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+  background-color: #000; /* Dark background */
+}
+
+/* Ang mismong card */
+.episode-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Naka-stack pababa */
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Wrapper para sa Image */
+.thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.thumbnail-wrapper img {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Standard widescreen ratio */
+  object-fit: cover;
+  border-radius: 12px; /* Rounded corners */
+}
+
+/* Episode number sa taas */
+.episode-number {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Play button overlay */
+.play-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text Details */
+.episode-details {
+  padding: 12px 5px;
+}
+
+.episode-details h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+}
+
+.meta {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.description {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit sa 2 lines lang */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 
 
 

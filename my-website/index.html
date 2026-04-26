@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cineflex - Premium Streaming</title>
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="scrolling-text-container">
+    <div class="scrolling-text-inner">
+        <span>🍿 Welcome to CineFlex! 🎬 Credits To Salva 🍿 Donate: Gcash: 09365028152 🎬 Enjoy watching! 🍿</span>
+    </div>
+</div>
+
+<nav class="navbar">
+    <div class="logo">CINEFLEX</div>
+    <div class="nav-icons">
+        <button id="installBtn" style="display:none; background: #e50914; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-weight: bold;">Install</button>
+    </div>
+</nav>
+
+<div id="menu-drawer" class="menu-drawer">
+    <div class="drawer-content">
+        <div class="drawer-header">
+            <div class="logo-area">
+                <span class="logo" style="color:#e50914; font-weight:900;">CINEFLEX</span>
+                <span style="background:#333; font-size:0.6rem; padding:2px 5px; border-radius:4px; margin-left:5px;">v2.0</span>
+            </div>
+            <i class="fa-solid fa-xmark close-drawer" onclick="closeMenuDrawer()"></i>
+        </div>
+        <div class="drawer-body">
+            <div class="user-card">
+                <i class="fa-solid fa-circle-user" style="font-size:2.5rem; color:#444;"></i>
+                <div>
+                    <p style="margin:0; font-weight:bold; font-size:0.9rem;">Welcome, Guest!</p>
+                    <p style="margin:0; font-size:0.7rem; color:#e50914;">Premium Access</p>
+                </div>
+            </div>
+            <div class="drawer-section">
+                <h4>Library</h4>
+                <div class="drawer-item" onclick="scrollToSection('continue-watching-section')"><i class="fa-solid fa-clock-rotate-left"></i> <span>History</span></div>
+                <div class="drawer-item" onclick="alert('Watchlist coming soon!')"><i class="fa-solid fa-bookmark"></i> <span>My List</span></div>
+            </div>
+            <div class="drawer-section">
+                <h4>Categories</h4>
+                <div class="drawer-item" onclick="scrollToSection('anime-list')"><i class="fa-solid fa-dragon"></i> <span>Latest Anime</span></div>
+                <div class="drawer-item" onclick="scrollToSection('kdrama-list')"><i class="fa-solid fa-tv"></i> <span>K-Dramas</span></div>
+                <div class="drawer-item" onclick="scrollToSection('filipino-list')"><i class="fa-solid fa-clapperboard"></i> <span>Vivamax Hits</span></div>
+            </div>
+            <div class="drawer-section">
+                <h4>Support</h4>
+                <div class="drawer-item" onclick="alert('GCash: 09365028152')"><i class="fa-solid fa-heart"></i> <span>Support Site</span></div>
+                <div class="drawer-item" onclick="alert('Request recorded!')"><i class="fa-solid fa-comment-medical"></i> <span>Request Content</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeMenuDrawer()"></div>
+
+<header class="banner" id="banner" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+    <div class="banner-buttons">
+      <button class="play-btn" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Watch Now</button>
+    </div>
+  </div>
+  <div class="banner-fade"></div>
+</header>
+
+<main class="content">
+    <section class="row" id="continue-watching-section" style="display:none;"><h2>Continue Watching</h2><div class="scroller" id="continue-list"></div></section>
+    <section class="row"><h2>Trending Today</h2><div class="scroller" id="trending-today"></div></section>
+    <section class="row"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
+    <section class="row"><h2>Vivamax Hits</h2><div class="scroller" id="filipino-list"></div></section>
+    <section class="row"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+</main>
+
+<div id="details-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-banner" id="modal-banner"><span class="close-modal" onclick="closeModal()">&times;</span></div>
+      <div class="modal-body">
+        <div id="modal-player-container" class="modal-player-wrapper">
+            <div style="position:relative; padding-bottom:56.25%; height:0;">
+                <iframe id="modal-video-iframe" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+        <h2 id="modal-title"></h2>
+        <p id="modal-desc"></p>
+        <div id="movie-play-action" class="modal-actions" style="margin-bottom: 20px;">
+            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play Movie</button>
+        </div>
+        <div id="episode-selector" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <h3 style="margin:0; font-size:1.1rem; border-left: 4px solid #e50914; padding-left: 10px;">Episodes</h3>
+                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            </div>
+            <div id="episode-list" class="episode-list-container"></div>
+        </div>
+        <div class="modal-row" style="margin-top:25px;">
+            <h3 style="font-size:1.1rem; border-left:4px solid #e50914; padding-left:10px;">More Like This</h3>
+            <div id="modal-recommendations" class="mini-recommendation-list"></div>
+        </div>
+        <div class="cast-section">
+            <h4>Top Cast</h4>
+            <div class="cast-scroller" id="modal-cast"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></div>
+  <div class="nav-item" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
+  <div class="nav-item" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></div>
+</div>
+
+<div id="search-overlay" class="search-overlay" style="display:none;">
+    <div class="search-input-wrapper">
+        <input type="text" id="searchInput" placeholder="Search movies, anime, or shows..." oninput="processSearch(this.value)">
+        <i class="fa-solid fa-xmark" onclick="closeSearch()"></i>
+    </div>
+    <div id="search-results" class="search-results-grid"></div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>

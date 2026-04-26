@@ -8,12 +8,47 @@
   <title>Cineflex - Premium Streaming</title>
   <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Scrolling Text */
+    .scrolling-text-container { background: #1a1a1a; color: #ffcc00; overflow: hidden; white-space: nowrap; padding: 10px 0; font-family: sans-serif; font-weight: bold; border-bottom: 2px solid #333; }
+    .scrolling-text-inner { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* Modal & List Styles */
+    .episode-list-container, .mini-recommendation-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding: 5px; }
+    .episode-item, .rec-item { display: flex; gap: 15px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .episode-item:hover, .rec-item:hover { background: rgba(255, 255, 255, 0.1); }
+    .episode-item.active { background: rgba(229, 9, 20, 0.2); border-left: 4px solid #e50914; }
+    .ep-thumb-container, .rec-thumb-container { width: 120px; flex-shrink: 0; }
+    .ep-thumb, .rec-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; }
+    .ep-info h4, .rec-info h4 { margin: 0; font-size: 0.9rem; color: #fff; }
+    .ep-info p, .rec-info p { margin: 0; font-size: 0.75rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Menu Drawer Styling */
+    .menu-drawer { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 2000; transition: 0.4s; padding: 20px; box-sizing: border-box; border-left: 1px solid #333; }
+    .menu-drawer.active { right: 0; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+    .drawer-header h3 { color: #e50914; margin: 0; letter-spacing: 1px; }
+    .close-drawer { font-size: 1.5rem; cursor: pointer; }
+    .drawer-section { margin-bottom: 25px; }
+    .drawer-section h4 { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+    .drawer-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; color: #eee; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
+    .drawer-item i { width: 20px; color: #e50914; }
+    .drawer-item:hover { color: #fff; transform: translateX(5px); }
+
+    .modal-player-wrapper { width: 100%; margin-bottom: 20px; border-radius: 8px; overflow: hidden; background: #000; display: none; }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
 
 <div class="scrolling-text-container">
     <div class="scrolling-text-inner">
-        <span>🍿 Welcome to CineFlex! 🎬 Credits To Salva 🍿 Donate: Gcash: 09365028152 🎬 Enjoy watching! 🍿</span>
+        <span>🍿 Welcome to CineFlex! 🎬 Credits To Salva 🍿 Donate:Gcash:09365028152 🎬</span>
     </div>
 </div>
 
@@ -25,42 +60,28 @@
 </nav>
 
 <div id="menu-drawer" class="menu-drawer">
-    <div class="drawer-content">
-        <div class="drawer-header">
-            <div class="logo-area">
-                <span class="logo" style="color:#e50914; font-weight:900;">CINEFLEX</span>
-                <span style="background:#333; font-size:0.6rem; padding:2px 5px; border-radius:4px; margin-left:5px;">v2.0</span>
-            </div>
-            <i class="fa-solid fa-xmark close-drawer" onclick="closeMenuDrawer()"></i>
+    <div class="drawer-header">
+        <h3>CINEFLEX</h3>
+        <span class="close-drawer" onclick="closeMenuDrawer()">&times;</span>
+    </div>
+    <div class="drawer-links">
+        <div class="drawer-section">
+            <h4>Personal</h4>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-heart"></i> My List</div>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-clock-rotate-left"></i> History</div>
         </div>
-        <div class="drawer-body">
-            <div class="user-card">
-                <i class="fa-solid fa-circle-user" style="font-size:2.5rem; color:#444;"></i>
-                <div>
-                    <p style="margin:0; font-weight:bold; font-size:0.9rem;">Welcome, Guest!</p>
-                    <p style="margin:0; font-size:0.7rem; color:#e50914;">Premium Access</p>
-                </div>
-            </div>
-            <div class="drawer-section">
-                <h4>Library</h4>
-                <div class="drawer-item" onclick="scrollToSection('continue-watching-section')"><i class="fa-solid fa-clock-rotate-left"></i> <span>History</span></div>
-                <div class="drawer-item" onclick="alert('Watchlist coming soon!')"><i class="fa-solid fa-bookmark"></i> <span>My List</span></div>
-            </div>
-            <div class="drawer-section">
-                <h4>Categories</h4>
-                <div class="drawer-item" onclick="scrollToSection('anime-list')"><i class="fa-solid fa-dragon"></i> <span>Latest Anime</span></div>
-                <div class="drawer-item" onclick="scrollToSection('kdrama-list')"><i class="fa-solid fa-tv"></i> <span>K-Dramas</span></div>
-                <div class="drawer-item" onclick="scrollToSection('filipino-list')"><i class="fa-solid fa-clapperboard"></i> <span>Vivamax Hits</span></div>
-            </div>
-            <div class="drawer-section">
-                <h4>Support</h4>
-                <div class="drawer-item" onclick="alert('GCash: 09365028152')"><i class="fa-solid fa-heart"></i> <span>Support Site</span></div>
-                <div class="drawer-item" onclick="alert('Request recorded!')"><i class="fa-solid fa-comment-medical"></i> <span>Request Content</span></div>
-            </div>
+        <div class="drawer-section">
+            <h4>Quick Categories</h4>
+            <div class="drawer-item" onclick="window.scrollTo({top: 500, behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-dragon"></i> Latest Anime</div>
+            <div class="drawer-item" onclick="alert('Loading Vivamax...')"><i class="fa-solid fa-film"></i> Vivamax</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Community</h4>
+            <div class="drawer-item" onclick="alert('Gcash: 09365028152')"><i class="fa-solid fa-circle-dollar-to-slot"></i> Donate</div>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-paper-plane"></i> Request Movie</div>
         </div>
     </div>
 </div>
-<div id="drawer-overlay" class="drawer-overlay" onclick="closeMenuDrawer()"></div>
 
 <header class="banner" id="banner" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
   <div class="banner-content">
@@ -76,9 +97,12 @@
 <main class="content">
     <section class="row" id="continue-watching-section" style="display:none;"><h2>Continue Watching</h2><div class="scroller" id="continue-list"></div></section>
     <section class="row"><h2>Trending Today</h2><div class="scroller" id="trending-today"></div></section>
+    
     <section class="row"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
-    <section class="row"><h2>Vivamax Hits</h2><div class="scroller" id="filipino-list"></div></section>
+    
+    <section class="row"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
     <section class="row"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+    <section class="row"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
 </main>
 
 <div id="details-modal" class="modal" style="display:none;">
@@ -122,7 +146,7 @@
 
 <div id="search-overlay" class="search-overlay" style="display:none;">
     <div class="search-input-wrapper">
-        <input type="text" id="searchInput" placeholder="Search movies, anime, or shows..." oninput="processSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search movies, anime..." oninput="processSearch(this.value)">
         <i class="fa-solid fa-xmark" onclick="closeSearch()"></i>
     </div>
     <div id="search-results" class="search-results-grid"></div>

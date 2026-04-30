@@ -1200,12 +1200,11 @@ body {
     }
   }
 /* Container para sa lahat ng episodes */
-.episode-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 15px;
-  background-color: #000; /* Dark background */
+.episode-container .episode-card .thumbnail-wrapper img {
+  width: 100%;  /* You can adjust this to make the image wider */
+  height: 250px;  /* Increase this to make the image taller */
+  object-fit: cover;  /* Ensures the image covers the container */
+  border-radius: 12px;
 }
 
 /* Ang mismong card */

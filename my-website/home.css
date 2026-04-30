@@ -1282,19 +1282,6 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-#modal-player-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
-#modal-video-iframe { width: 100%; height: 100%; border: none; }
-
-.video-overlay-list { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.9); overflow-y: auto; z-index: 5; 
-}
-.video-overlay-list.hidden { display: none; }
-
-.episode-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #222; cursor: pointer; }
-.ep-img { width: 100px; border-radius: 4px; margin-right: 15px; }
-.ep-txt { font-size: 0.9rem; }
-
 
 
 

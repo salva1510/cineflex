@@ -1200,33 +1200,24 @@ body {
     }
   }
 /* Container para sa lahat ng episodes */
-.episode-container .episode-card .thumbnail-wrapper img {
-  width: 100%;  /* You can adjust this to make the image wider */
-  height: 250px;  /* Increase this to make the image taller */
-  object-fit: cover;  /* Ensures the image covers the container */
-  border-radius: 12px;
-}
-
-/* Ang mismong card */
-.episode-card {
-  width: 100%;
+/* Increase the size of the image and the card */
+.episode-container .episode-card {
+  width: 100%; /* Ensures the card takes full width of the container */
   display: flex;
-  flex-direction: column; /* Naka-stack pababa */
+  flex-direction: column; /* Stack elements vertically */
   background: transparent;
   overflow: hidden;
-}
-
-/* Wrapper para sa Image */
-.thumbnail-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.thumbnail-wrapper img {
-  width: 100%;
-  aspect-ratio: 16 / 9; /* Standard widescreen ratio */
-  object-fit: cover;
   border-radius: 12px; /* Rounded corners */
+  /* You can adjust the height as per your requirement */
+  height: 300px; /* Adjust the height of the card */
+}
+
+/* Increase the image size inside the thumbnail-wrapper */
+.episode-container .episode-card .thumbnail-wrapper img {
+  width: 100%;  /* Take full width of the card */
+  height: 100%;  /* Make the image fill the entire height */
+  object-fit: cover;  /* Ensure the image is fully covered */
+  border-radius: 12px; /* Keeps the rounded corners */
 }
 
 /* Episode number sa taas */

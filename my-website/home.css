@@ -1,0 +1,45 @@
+:root { --bg: #050505; --accent: #e50914; --text: #ffffff; --card-w: 160px; --card-h: 240px; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
+
+.navbar { position: fixed; width: 100%; padding: 15px 5%; z-index: 1000; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); box-sizing: border-box; }
+.logo { color: var(--accent); font-weight: 900; font-size: 1.8rem; letter-spacing: -1px; }
+.nav-icons i { font-size: 1.2rem; cursor: pointer; margin-left: 20px; transition: 0.3s; }
+.nav-icons i:hover { color: var(--accent); }
+
+.banner { height: 75vh; background-size: cover; background-position: center top; position: relative; display: flex; align-items: center; padding: 0 5%; }
+.banner-content { max-width: 600px; z-index: 2; }
+.banner-fade { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg) 5%, transparent); }
+
+.row { padding: 20px 0 20px 5%; }
+.row-title { font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; }
+.scroller { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 10px; }
+.scroller::-webkit-scrollbar { display: none; }
+
+.card { min-width: var(--card-w); height: var(--card-h); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s; flex-shrink: 0; }
+.card:hover { transform: scale(1.05); z-index: 10; }
+.card img { width: 100%; height: 100%; object-fit: cover; }
+
+/* TOP 10 SPECIFIC STYLES */
+.top10-scroller { display: flex; gap: 40px; overflow-x: auto; scrollbar-width: none; padding: 20px 0 20px 40px; }
+.top10-scroller::-webkit-scrollbar { display: none; }
+.top10-card { position: relative; min-width: 155px; height: 230px; flex-shrink: 0; cursor: pointer; transition: transform 0.3s; }
+.top10-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; position: relative; z-index: 2; }
+.top10-rank { 
+    position: absolute; left: -35px; bottom: -15px; font-size: 170px; font-weight: 900; color: #000; 
+    z-index: 1; -webkit-text-stroke: 2px #555; line-height: 1; user-select: none;
+}
+.top10-card:hover { transform: scale(1.05); z-index: 20; }
+
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
+.modal-content { background: #181818; margin: 2% auto; width: 90%; max-width: 850px; border-radius: 10px; overflow: hidden; position: relative; }
+.player-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
+.player-container iframe { width: 100%; height: 100%; }
+
+.episode-card { width: 100%; display: flex; flex-direction: column; background: transparent; overflow: hidden; }
+.thumbnail-wrapper { position: relative; width: 100%; }
+.thumbnail-wrapper img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; }
+.episode-number { position: absolute; top: 10px; left: 10px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; border-top: 1px solid #333; }
+.nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #888; cursor: pointer; }
+.nav-item i { font-size: 1.2rem; margin-bottom: 4px; }

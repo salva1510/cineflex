@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cineflex - Premium Streaming</title>
   <link rel="stylesheet" href="home.css?v=1.1">
+<script src="home.js?v=1.1"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
@@ -14,114 +15,122 @@
     .scrolling-text-container { background: #1a1a1a; color: #ffcc00; overflow: hidden; white-space: nowrap; padding: 10px 0; font-family: sans-serif; font-weight: bold; border-bottom: 2px solid #333; }
     .scrolling-text-inner { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; }
     @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* Modal & List Styles */
+    .episode-list-container, .mini-recommendation-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding: 5px; }
+    .episode-item, .rec-item { display: flex; gap: 15px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .episode-item:hover, .rec-item:hover { background: rgba(255, 255, 255, 0.1); }
+    .episode-item.active { background: rgba(229, 9, 20, 0.2); border-left: 4px solid #e50914; }
+    .ep-thumb-container, .rec-thumb-container { width: 120px; flex-shrink: 0; }
+    .ep-thumb, .rec-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; }
+    .ep-info h4, .rec-info h4 { margin: 0; font-size: 0.9rem; color: #fff; }
+    .ep-info p, .rec-info p { margin: 0; font-size: 0.75rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Menu Drawer Styling */
+    .menu-drawer { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 2000; transition: 0.4s; padding: 20px; box-sizing: border-box; border-left: 1px solid #333; }
+    .menu-drawer.active { right: 0; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+    .drawer-header h3 { color: #e50914; margin: 0; letter-spacing: 1px; }
+    .close-drawer { font-size: 1.5rem; cursor: pointer; }
+    .drawer-section { margin-bottom: 25px; }
+    .drawer-section h4 { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+    .drawer-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; color: #eee; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
+    .drawer-item i { width: 20px; color: #e50914; }
+    .drawer-item:hover { color: #fff; transform: translateX(5px); }
+
+    .modal-player-wrapper { width: 100%; margin-bottom: 20px; border-radius: 8px; overflow: hidden; background: #000; display: none; }
   </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
 
 <div class="scrolling-text-container">
-    <div class="scrolling-text-inner">WELCOME TO CINEFLEX.ONLINE! ENJOY STREAMING YOUR FAVORITE MOVIES AND ANIME FOR FREE! NO REGISTRATION REQUIRED.</div>
+    <div class="scrolling-text-inner">
+        <span>🍿 Welcome to CineFlex! 🎬 Credits To Salva 🍿 Donate:Gcash:09365028152 🎬</span>
+    </div>
 </div>
 
 <nav class="navbar">
-  <div class="logo">CINEFLEX</div>
-  <div class="nav-icons">
-    <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
-    <i class="fa-solid fa-bars" onclick="openMenuDrawer()"></i>
-  </div>
+    <div class="logo">CINEFLEX</div>
+    <div class="nav-icons">
+        <button id="installBtn" style="display:none; background: #e50914; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-weight: bold;">Install</button>
+    </div>
 </nav>
 
-<div class="banner" id="banner" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
-  <div class="banner-fade"></div>
+<div id="menu-drawer" class="menu-drawer">
+    <div class="drawer-header">
+        <h3>CINEFLEX</h3>
+        <span class="close-drawer" onclick="closeMenuDrawer()">&times;</span>
+    </div>
+    <div class="drawer-links">
+        <div class="drawer-section">
+            <h4>Personal</h4>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-heart"></i> My List</div>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-clock-rotate-left"></i> History</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Quick Categories</h4>
+            <div class="drawer-item" onclick="window.scrollTo({top: 500, behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-dragon"></i> Latest Anime</div>
+            <div class="drawer-item" onclick="alert('Loading Vivamax...')"><i class="fa-solid fa-film"></i> Vivamax</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Community</h4>
+            <div class="drawer-item" onclick="alert('Gcash: 09365028152')"><i class="fa-solid fa-circle-dollar-to-slot"></i> Donate</div>
+            <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-paper-plane"></i> Request Movie</div>
+        </div>
+    </div>
+</div>
+
+<header class="banner" id="banner" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
   <div class="banner-content">
     <h1 id="banner-title">Loading...</h1>
     <p id="banner-desc"></p>
     <div class="banner-buttons">
-      <button class="play-btn" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Play Now</button>
+      <button class="play-btn" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Watch Now</button>
     </div>
   </div>
-</div>
+  <div class="banner-fade"></div>
+</header>
 
-<div class="main-content">
-  <section id="continue-watching-section" style="display:none;">
-    <h3 class="section-title">Continue Watching</h3>
-    <div class="horizontal-scroll" id="continue-list"></div>
-  </section>
+<main class="content">
+    <section class="row" id="continue-watching-section" style="display:none;"><h2>Continue Watching</h2><div class="scroller" id="continue-list"></div></section>
+    <section class="row"><h2>Trending Today</h2><div class="scroller" id="trending-today"></div></section>
+    
+    <section class="row"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
+    
+    <section class="row"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
+    <section class="row"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+    <section class="row"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
+</main>
 
-  <section>
-    <h3 class="section-title">Trending Today</h3>
-    <div class="horizontal-scroll" id="trending-today"></div>
-  </section>
-
-  <section>
-    <h3 class="section-title">Popular Movies</h3>
-    <div class="horizontal-scroll" id="popular-list"></div>
-  </section>
-
-  <section>
-    <h3 class="section-title">Filipino Movies</h3>
-    <div class="horizontal-scroll" id="filipino-list"></div>
-  </section>
-
-  <section>
-    <h3 class="section-title">K-Drama Series</h3>
-    <div class="horizontal-scroll" id="kdrama-list"></div>
-  </section>
-
-  <section>
-    <h3 class="section-title">K-Pop Specials</h3>
-    <div class="horizontal-scroll" id="kpop-list"></div>
-  </section>
-
-  <section>
-    <h3 class="section-title">Anime Collection</h3>
-    <div class="horizontal-scroll" id="anime-list"></div>
-  </section>
-</div>
-
-<div id="details-modal" class="modal">
+<div id="details-modal" class="modal" style="display:none;">
     <div class="modal-content">
-      <div id="modal-banner" class="modal-hero">
-        <i class="fa-solid fa-xmark close-modal" onclick="closeModal()"></i>
-        <div class="hero-overlay"></div>
-      </div>
-      
+      <div class="modal-banner" id="modal-banner"><span class="close-modal" onclick="closeModal()">&times;</span></div>
       <div class="modal-body">
-        <h2 id="modal-title"></h2>
-        <p id="modal-desc" class="modal-overview"></p>
-
-        <div id="modal-player-container" style="display:none;">
-            <div class="server-selector-container">
-                <span class="server-label"><i class="fa-solid fa-server"></i> SELECT SOURCE:</span>
-                <div class="server-grid">
-                    <button onclick="switchServer('vidsrc')" id="btn-vidsrc" class="server-btn active">Server 1</button>
-                    <button onclick="switchServer('vidsrcpro')" id="btn-vidsrcpro" class="server-btn">Server 2</button>
-                    <button onclick="switchServer('bcine')" id="btn-bcine" class="server-btn">Server 3</button>
-                    <button onclick="switchServer('vidsrcme')" id="btn-vidsrcme" class="server-btn">Server 4</button>
-                    <button onclick="switchServer('2embed')" id="btn-2embed" class="server-btn">Server 5</button>
-                    <button onclick="switchServer('superembed')" id="btn-superembed" class="server-btn">Server 6</button>
-                    <button onclick="switchServer('warez')" id="btn-warez" class="server-btn">Server 7</button>
-                </div>
+        <div id="modal-player-container" class="modal-player-wrapper">
+            <div style="position:relative; padding-bottom:56.25%; height:0;">
+                <iframe id="modal-video-iframe" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" src="" allowfullscreen></iframe>
             </div>
-            <iframe id="modal-video-iframe" src="" frameborder="0" allowfullscreen scrolling="no"></iframe>
         </div>
-
-        <button id="movie-play-action" class="play-btn-large" onclick="startPlayback()">
-            <i class="fa-solid fa-play"></i> Watch Movie Now
-        </button>
-
+        <h2 id="modal-title"></h2>
+        <p id="modal-desc"></p>
+        <div id="movie-play-action" class="modal-actions" style="margin-bottom: 20px;">
+            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play Movie</button>
+        </div>
         <div id="episode-selector" style="display:none;">
-            <div class="season-header">
-                <h3>Episodes</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <h3 style="margin:0; font-size:1.1rem; border-left: 4px solid #e50914; padding-left: 10px;">Episodes</h3>
                 <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
             </div>
             <div id="episode-list" class="episode-list-container"></div>
         </div>
-
         <div class="modal-row" style="margin-top:25px;">
             <h3 style="font-size:1.1rem; border-left:4px solid #e50914; padding-left:10px;">More Like This</h3>
             <div id="modal-recommendations" class="mini-recommendation-list"></div>
         </div>
-
         <div class="cast-section">
             <h4>Top Cast</h4>
             <div class="cast-scroller" id="modal-cast"></div>
@@ -144,21 +153,11 @@
     <div id="search-results" class="search-results-grid"></div>
 </div>
 
-<div id="menu-drawer" class="drawer">
-    <div class="drawer-header">
-        <div class="logo">CINEFLEX</div>
-        <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()"></i>
-    </div>
-    <div class="drawer-content">
-        <a href="#"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="#"><i class="fa-solid fa-fire"></i> Trending</a>
-        <a href="#"><i class="fa-solid fa-film"></i> Movies</a>
-        <a href="#"><i class="fa-solid fa-tv"></i> TV Shows</a>
-        <hr style="border: 0.1px solid #333; margin: 15px 0;">
-        <p style="color:#666; font-size: 0.8rem; padding-left: 15px;">Version 2.0 (Multi-Server)</p>
-    </div>
-</div>
+<script src="home.js"></script>
+      <script src="home.js"></script>
+    <script src="https://pl28389725.profitablecpmratenetwork.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js"></script>
+</body>
+</html>
 
-<script src="home.js?v=1.1"></script>
 </body>
 </html>

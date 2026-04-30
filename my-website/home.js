@@ -3,8 +3,6 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 let currentItem = null;
-let currentServer = "vidsrc"; 
-let currentContentInfo = { type: 'movie', season: 1, episode: 1 };
 let trendingItems = [];
 let currentBannerIndex = 0;
 let currentTVState = { season: 1, episode: 1 };
@@ -41,7 +39,7 @@ function setBanner(item) {
   if(!banner) return;
   banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   document.getElementById("banner-title").innerText = item.title || item.name;
-  document.getElementById("banner-desc").innerText = item.overview.slice(0, 150) + "...";
+  document.getElementById("banner-desc").innerText = item.overview.slice(0, 120) + "...";
 }
 
 function showBannerDetails() { showDetails(trendingItems[currentBannerIndex]); }
@@ -63,7 +61,7 @@ async function showDetails(item) {
   
   document.getElementById("modal-player-container").style.display = "none";
   document.getElementById("modal-video-iframe").src = "";
-  if(document.getElementById("search-overlay")) closeSearch();
+  closeSearch();
 
   const [details, credits, recs] = await Promise.all([
     fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
@@ -75,10 +73,11 @@ async function showDetails(item) {
   document.getElementById("modal-desc").innerText = item.overview;
   document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   
-  document.getElementById("modal-recommendations").innerHTML = recs.results.slice(0, 8).map(r => `
+  const recContainer = document.getElementById("modal-recommendations");
+  recContainer.innerHTML = recs.results.slice(0, 8).map(r => `
     <div class="rec-item" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
         <div class="rec-thumb-container"><img src="${IMG_URL}${r.backdrop_path || r.poster_path}" class="rec-thumb"></div>
-        <div class="rec-info"><h4>${r.title || r.name}</h4><p>${r.overview ? r.overview.slice(0, 50) + '...' : 'Suggested.'}</p></div>
+        <div class="rec-info"><h4>${r.title || r.name}</h4><p>${r.overview || 'Suggested anime/movie.'}</p></div>
     </div>`).join('');
 
   document.getElementById("modal-cast").innerHTML = credits.cast.slice(0, 8).map(c => `
@@ -103,61 +102,17 @@ async function showDetails(item) {
   document.querySelector('.modal-content').scrollTo({ top: 0 });
 }
 
-// 7-SERVER SWITCHING ENGINE
-function getEmbedURL(server, type, id, s, e) {
-    const isTV = type === 'tv';
-    switch(server) {
-        case 'vidsrc': return `https://vidsrc.to/embed/${type}/${id}${isTV?`/${s}/${e}`:''}`;
-        case 'vidsrcpro': return `https://vidsrc.pro/embed/${type}/${id}${isTV?`/${s}/${e}`:''}`;
-        case 'bcine': return `https://bcine.app/embed/${type}/${id}${isTV?`/${s}/${e}`:''}`;
-        case 'vidsrcme': return `https://vidsrc.me/embed/${type}/${id}${isTV?`/${s}/${e}`:''}`;
-        case '2embed': return `https://www.2embed.cc/embed${isTV?`tv?tmdb=${id}&s=${s}&e=${e}`:`?tmdb=${id}`}`;
-        case 'superembed': return `https://multiembed.mov/?video_id=${id}&tmdb=1${isTV?`&s=${s}&e=${e}`:''}`;
-        case 'warez': return `https://embed.warezcdn.com/${type}/${id}${isTV?`/${s}/${e}`:''}`;
-        default: return `https://vidsrc.to/embed/${type}/${id}`;
-    }
-}
-
-function switchServer(serverName) {
-    currentServer = serverName;
-    document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`btn-${serverName}`).classList.add('active');
-    
-    const iframe = document.getElementById("modal-video-iframe");
-    const { type, season, episode } = currentContentInfo;
-    iframe.src = getEmbedURL(serverName, type, currentItem.id, season, episode);
-}
-
-function playSpecificEpisode(epNum, element) {
-    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
-    if(element) element.classList.add('active');
-    
-    currentContentInfo = { type: 'tv', season: currentTVState.season, episode: epNum };
-    document.getElementById("modal-player-container").style.display = "block";
-    switchServer(currentServer);
-    
-    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-    addToContinueWatching(currentItem);
-}
-
-function startPlayback() {
-    currentContentInfo = { type: 'movie', season: 1, episode: 1 };
-    document.getElementById("modal-player-container").style.display = "block";
-    document.getElementById("movie-play-action").style.display = "none";
-    switchServer(currentServer);
-    
-    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-    addToContinueWatching(currentItem);
-}
-
-function displayCards(data, containerId) {
-  const container = document.getElementById(containerId);
-  if(!container || !data) return;
-  container.innerHTML = data.filter(i => i.poster_path).map(item => `
-    <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-        <img src="${IMG_URL}${item.poster_path}" loading="lazy">
-    </div>`).join('');
-}
+const processSearch = async (q) => {
+    const resultsDiv = document.getElementById("search-results");
+    if(q.length < 2) { resultsDiv.innerHTML = ""; return; }
+    try {
+        const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${q}`).then(r => r.json());
+        resultsDiv.innerHTML = res.results.filter(i => i.poster_path).map(item => `
+            <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+            </div>`).join('');
+    } catch (err) { console.error(err); }
+};
 
 function setupSeasonSelector(series) {
     const seasonSelect = document.getElementById("season-select");
@@ -172,21 +127,45 @@ async function loadEpisodes(seriesId, seasonNum) {
     document.getElementById("episode-list").innerHTML = data.episodes.map(e => `
             <div class="episode-item" onclick="playSpecificEpisode(${e.episode_number}, this)">
                 <div class="ep-thumb-container"><img src="${e.still_path ? IMG_URL + e.still_path : 'https://via.placeholder.com/300x170'}" class="ep-thumb"></div>
-                <div class="ep-info"><h4>${e.episode_number}. ${e.name}</h4><p>${e.overview || 'Watch this on Cineflex.'}</p></div>
+                <div class="ep-info"><h4>${e.episode_number}. ${e.name}</h4><p>${e.overview || 'Watch now.'}</p></div>
             </div>`).join('');
 }
 
-const processSearch = async (q) => {
-    const resultsDiv = document.getElementById("search-results");
-    if(q.length < 2) { resultsDiv.innerHTML = ""; return; }
-    try {
-        const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${q}`).then(r => r.json());
-        resultsDiv.innerHTML = res.results.filter(i => i.poster_path).map(item => `
-            <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
-            </div>`).join('');
-    } catch (err) { console.error(err); }
-};
+// MAIN PLAYER SERVER UPDATE: BCINE.APP
+function playSpecificEpisode(epNum, element) {
+    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    const playerContainer = document.getElementById("modal-player-container");
+    const iframe = document.getElementById("modal-video-iframe");
+    playerContainer.style.display = "block";
+    
+    // Updated to bcine.app for TV
+    iframe.src = `https://bcine.app/embed/tv/${currentItem.id}/${currentTVState.season}/${epNum}`;
+    
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+}
+
+function startPlayback() {
+    const playerContainer = document.getElementById("modal-player-container");
+    const iframe = document.getElementById("modal-video-iframe");
+    playerContainer.style.display = "block";
+    
+    // Updated to bcine.app for Movies
+    iframe.src = `https://bcine.app/embed/movie/${currentItem.id}`;
+    
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+}
+
+function displayCards(data, containerId) {
+  const container = document.getElementById(containerId);
+  if(!container || !data) return;
+  container.innerHTML = data.filter(i => i.poster_path).map(item => `
+    <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy">
+    </div>`).join('');
+}
 
 function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
 function closeMenuDrawer() { document.getElementById("menu-drawer").classList.remove("active"); }
@@ -204,8 +183,7 @@ function addToContinueWatching(item) {
 
 function updateContinueUI() {
   if(continueWatching.length > 0) {
-    const section = document.getElementById("continue-watching-section");
-    if(section) section.style.display = "block";
+    document.getElementById("continue-watching-section").style.display = "block";
     displayCards(continueWatching, "continue-list");
   }
 }

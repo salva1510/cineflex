@@ -1282,21 +1282,20 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* Itatago ang button kapag naka-landscape na para hindi sagabal sa panonood */
+/* Itatago ang button kapag naka-landscape na */
 @media (orientation: landscape) {
     .fullscreen-btn {
         display: none !important;
     }
 }
 
-/* Lalabas lang ang button kapag naka-Portrait (nakatayo ang phone) */
+/* Lalabas lang ang button kapag naka-Portrait */
 @media (orientation: portrait) {
     .fullscreen-btn {
-        display: flex !important;
-        align-items: center;
-        gap: 5px;
+        display: flex !important; /* 'flex' para pantay ang icon at text */
     }
 }
+
 
 }
 

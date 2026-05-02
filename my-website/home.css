@@ -1282,18 +1282,22 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* Itatago ang button kapag naka-landscape ang phone */
+/* Itatago ang button kapag naka-landscape na para hindi sagabal sa panonood */
 @media (orientation: landscape) {
     .fullscreen-btn {
         display: none !important;
     }
 }
 
-/* Sisiguraduhin na kita ang button kapag naka-portrait (nakatayo ang phone) */
+/* Lalabas lang ang button kapag naka-Portrait (nakatayo ang phone) */
 @media (orientation: portrait) {
     .fullscreen-btn {
-        display: block !important;
+        display: flex !important;
+        align-items: center;
+        gap: 5px;
     }
+}
+
 }
 
 

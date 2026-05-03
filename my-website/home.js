@@ -1,8 +1,8 @@
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
-// BAGONG PLAYER DOMAIN
-const PLAYER_BASE_URL = "https://peachify.top";
+// BAGONG SERVER DOMAIN
+const PLAYER_BASE_URL = "https://www.zxcstream.xyz";
 
 let currentItem = null;
 let trendingItems = [];
@@ -12,31 +12,28 @@ let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || []
 let touchStartX = 0;
 let touchEndX = 0;
 
-// --- POPUNDER FUNCTION ---
-function triggerPopunder() {
-    const script = document.createElement('script');
-    script.src = "https://pl28389725.profitablecpmratenetwork.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js";
-    document.body.appendChild(script);
-}
-
 // --- FIXED FULLSCREEN & LANDSCAPE LOGIC ---
 async function enterCinemaMode() {
   const playerContainer = document.getElementById("modal-player-container");
   if (!playerContainer) return;
+
   try {
     if (playerContainer.requestFullscreen) {
       await playerContainer.requestFullscreen();
     } else if (playerContainer.webkitRequestFullscreen) {
       await playerContainer.webkitRequestFullscreen();
     }
+
+    // Lock to landscape
     if (screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock("landscape").catch(e => console.log("Orientation lock error:", e));
+      await screen.orientation.lock("landscape").catch(e => console.log("Orientation lock failed:", e));
     }
   } catch (err) {
     console.log("Cinema mode error:", err);
   }
 }
 
+// I-unlock ang orientation pag nag-exit sa fullscreen
 document.addEventListener('fullscreenchange', () => {
   if (!document.fullscreenElement) {
     if (screen.orientation && screen.orientation.unlock) {
@@ -54,7 +51,7 @@ async function init() {
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json())
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()) // Kids Fetch
     ]);
 
     trendingItems = trd.results;
@@ -65,10 +62,12 @@ async function init() {
     displayCards(fil.results, "filipino-list");
     displayCards(kd.results, "kdrama-list");
     displayCards(kp.results, "kpop-list");
-    displayCards(kids.results, "kids-list");
+    displayCards(kids.results, "kids-list"); // Display Kids
     
     updateContinueUI();
-  } catch (err) { console.error("Init Error:", err); }
+  } catch (err) { 
+    console.error("Init Error:", err); 
+  }
 }
 
 function setBanner(item) {
@@ -81,16 +80,33 @@ function setBanner(item) {
   if (bDesc) bDesc.innerText = item.overview ? item.overview.slice(0, 120) + "..." : "";
 }
 
+function showBannerDetails() { 
+  if (trendingItems[currentBannerIndex]) showDetails(trendingItems[currentBannerIndex]); 
+}
+
+function handleTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
+function handleTouchEnd(e) { 
+    touchEndX = e.changedTouches[0].screenX; 
+    if (touchStartX - touchEndX > 50) changeBanner(1);
+    if (touchEndX - touchStartX > 50) changeBanner(-1);
+}
+
+function changeBanner(dir) {
+    currentBannerIndex = (currentBannerIndex + dir + trendingItems.length) % trendingItems.length;
+    setBanner(trendingItems[currentBannerIndex]);
+}
+
 async function showDetails(item) {
   currentItem = item;
   const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
   const modal = document.getElementById("details-modal");
   const playerContainer = document.getElementById("modal-player-container");
   const iframe = document.getElementById("modal-video-iframe");
-  
+
   if (playerContainer) playerContainer.style.display = "none";
   if (iframe) iframe.src = "";
-  
+  closeSearch();
+
   try {
     const [details, credits, recs] = await Promise.all([
       fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
@@ -102,48 +118,55 @@ async function showDetails(item) {
     document.getElementById("modal-desc").innerText = item.overview || "";
     document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
     
+    const recContainer = document.getElementById("modal-recommendations");
+    if (recContainer) {
+      recContainer.innerHTML = recs.results.slice(0, 8).map(r => `
+        <div class="rec-item" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
+            <div class="rec-thumb-container"><img src="${IMG_URL}${r.backdrop_path || r.poster_path}" class="rec-thumb"></div>
+            <div class="rec-info"><h4>${r.title || r.name}</h4><p>${r.overview || 'Watch now.'}</p></div>
+        </div>`).join('');
+    }
+
+    const castContainer = document.getElementById("modal-cast");
+    if (castContainer) {
+      castContainer.innerHTML = credits.cast.slice(0, 8).map(c => `
+        <div class="cast-card">
+          <img src="${c.profile_path ? IMG_URL + c.profile_path : 'https://via.placeholder.com/100x150'}"><p>${c.name}</p>
+        </div>`).join('');
+    }
+
     const epSelector = document.getElementById("episode-selector");
     const movieBtn = document.getElementById("movie-play-action");
 
     if (type === 'tv') {
-        epSelector.style.display = "block";
-        movieBtn.style.display = "none";
+        if (epSelector) epSelector.style.display = "block";
+        if (movieBtn) movieBtn.style.display = "none";
         setupSeasonSelector(details);
     } else {
-        epSelector.style.display = "none";
-        movieBtn.style.display = "block";
+        if (epSelector) epSelector.style.display = "none";
+        if (movieBtn) movieBtn.style.display = "block";
     }
 
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  } catch (err) { console.error(err); }
+    if (modal) {
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+      document.querySelector('.modal-content').scrollTo({ top: 0 });
+    }
+  } catch (err) { console.error("Details Error:", err); }
 }
 
-function startPlayback() {
-    triggerPopunder();
-    const playerContainer = document.getElementById("modal-player-container");
-    const iframe = document.getElementById("modal-video-iframe");
-    playerContainer.style.display = "block";
-    // Updated Domain
-    iframe.src = `${PLAYER_BASE_URL}/embed/movie/${currentItem.id}`;
-    enterCinemaMode();
-    addToContinueWatching(currentItem);
-}
-
-function playSpecificEpisode(epNum, element) {
-    triggerPopunder();
-    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
-    const playerContainer = document.getElementById("modal-player-container");
-    const iframe = document.getElementById("modal-video-iframe");
-    playerContainer.style.display = "block";
-    // Updated Domain
-    iframe.src = `${PLAYER_BASE_URL}/embed/tv/${currentItem.id}/${currentTVState.season}/${epNum}`;
-    enterCinemaMode();
-    addToContinueWatching(currentItem);
-}
-
-// ... (Keep other functions like displayCards, openMenuDrawer, etc. exactly as they were)
+const processSearch = async (q) => {
+    const resultsDiv = document.getElementById("search-results");
+    if (!resultsDiv) return;
+    if (q.length < 2) { resultsDiv.innerHTML = ""; return; }
+    try {
+        const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${q}`).then(r => r.json());
+        resultsDiv.innerHTML = res.results.filter(i => i.poster_path).map(item => `
+            <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+            </div>`).join('');
+    } catch (err) { console.error(err); }
+};
 
 function setupSeasonSelector(series) {
     const seasonSelect = document.getElementById("season-select");
@@ -157,11 +180,41 @@ async function loadEpisodes(seriesId, seasonNum) {
     const data = await fetch(`${BASE_URL}/tv/${seriesId}/season/${seasonNum}?api_key=${API_KEY}`).then(r => r.json());
     currentTVState.season = seasonNum;
     const epList = document.getElementById("episode-list");
-    epList.innerHTML = data.episodes.map(e => `
-        <div class="episode-item" onclick="playSpecificEpisode(${e.episode_number}, this)">
-            <div class="ep-thumb-container"><img src="${e.still_path ? IMG_URL + e.still_path : 'https://via.placeholder.com/300x170'}" class="ep-thumb"></div>
-            <div class="ep-info"><h4>${e.episode_number}. ${e.name}</h4><p>${e.overview || 'Watch now.'}</p></div>
-        </div>`).join('');
+    if (epList) {
+      epList.innerHTML = data.episodes.map(e => `
+            <div class="episode-item" onclick="playSpecificEpisode(${e.episode_number}, this)">
+                <div class="ep-thumb-container"><img src="${e.still_path ? IMG_URL + e.still_path : 'https://via.placeholder.com/300x170'}" class="ep-thumb"></div>
+                <div class="ep-info"><h4>${e.episode_number}. ${e.name}</h4><p>${e.overview || 'Watch now.'}</p></div>
+            </div>`).join('');
+    }
+}
+
+function playSpecificEpisode(epNum, element) {
+    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    const playerContainer = document.getElementById("modal-player-container");
+    const iframe = document.getElementById("modal-video-iframe");
+    if (playerContainer) playerContainer.style.display = "block";
+    
+    // BAGONG LINK STRUCTURE PARA SA ZXCSTREAM
+    iframe.src = `${PLAYER_BASE_URL}/embed/tv/${currentItem.id}/${currentTVState.season}/${epNum}`;
+    
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+    enterCinemaMode();
+}
+
+function startPlayback() {
+    const playerContainer = document.getElementById("modal-player-container");
+    const iframe = document.getElementById("modal-video-iframe");
+    if (playerContainer) playerContainer.style.display = "block";
+    
+    // BAGONG LINK STRUCTURE PARA SA ZXCSTREAM
+    iframe.src = `${PLAYER_BASE_URL}/embed/movie/${currentItem.id}`;
+    
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+    enterCinemaMode();
 }
 
 function displayCards(data, containerId) {
@@ -179,13 +232,19 @@ function closeModal() {
   document.getElementById("details-modal").style.display = "none"; 
   document.getElementById("modal-video-iframe").src = ""; 
   document.body.style.overflow = "auto"; 
+  if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
 }
+function openSearch() { document.getElementById("search-overlay").style.display = "block"; document.getElementById("searchInput").focus(); }
+function closeSearch() { document.getElementById("search-overlay").style.display = "none"; }
+
 function addToContinueWatching(item) {
   continueWatching = continueWatching.filter(i => i.id !== item.id);
   continueWatching.unshift(item);
+  if (continueWatching.length > 10) continueWatching.pop();
   localStorage.setItem("cineflex_recent", JSON.stringify(continueWatching));
   updateContinueUI();
 }
+
 function updateContinueUI() {
   const section = document.getElementById("continue-watching-section");
   if(continueWatching.length > 0 && section) {

@@ -1298,6 +1298,22 @@ body {
 
 
 }
+.view-all-card {
+    min-width: 100px !important;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    transition: 0.3s;
+}
+
+.view-all-card:hover {
+    background: var(--accent);
+}
+
 
 
 

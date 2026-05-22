@@ -215,11 +215,21 @@ function startPlayback() {
 function displayCards(data, containerId) {
   const container = document.getElementById(containerId);
   if(!container || !data) return;
+  
+  // I-render ang cards
   container.innerHTML = data.filter(i => i.poster_path).map(item => `
     <div class="card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
         <img src="${IMG_URL}${item.poster_path}" loading="lazy">
     </div>`).join('');
+
+  // Magdagdag ng "View All" card sa dulo
+  const viewAllCard = document.createElement('div');
+  viewAllCard.className = "card view-all-card";
+  viewAllCard.innerHTML = `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; cursor:pointer;"><span>View All</span></div>`;
+  viewAllCard.onclick = () => viewAll(containerId, data);
+  container.appendChild(viewAllCard);
 }
+
 
 function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
 function closeMenuDrawer() { document.getElementById("menu-drawer").classList.remove("active"); }
@@ -249,3 +259,16 @@ function updateContinueUI() {
 }
 
 init();
+// Function para ipakita ang lahat ng items sa isang section
+function viewAll(categoryName, items) {
+    const section = document.getElementById("search-results"); // Reuse natin ang search grid layout
+    const overlay = document.getElementById("search-overlay");
+    
+    document.getElementById("search-results").innerHTML = items.filter(i => i.poster_path).map(item => `
+        <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+            <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+        </div>`).join('');
+    
+    overlay.style.display = "block";
+}
+

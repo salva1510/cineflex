@@ -30,8 +30,38 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
     cursor: grab; 
     user-select: none; 
 }
-.scroller::-webkit-scrollbar { display: none; }
-.scroller:active { cursor: grabbing; }
+/* Itatago pa rin ang scrollbar sa mobile devices */
+@media (max-width: 1023px) {
+  .scroller::-webkit-scrollbar { display: none; }
+}
+
+/* Magpapakita ng magandang scrollbar para sa desktop view */
+@media (min-width: 1024px) {
+  .scroller {
+    scrollbar-width: thin; /* Para sa Firefox */
+    scrollbar-color: #e50914 #1a1a1a; /* Kulay ng scrollbar sa Firefox */
+  }
+  
+  .scroller::-webkit-scrollbar {
+    display: block;
+    height: 6px; /* Taas o nipis ng horizontal scrollbar */
+  }
+  
+  .scroller::-webkit-scrollbar-track {
+    background: #141414; /* Kulay ng background track */
+    border-radius: 10px;
+  }
+  
+  .scroller::-webkit-scrollbar-thumb {
+    background: #e50914; /* Netflix red accent color */
+    border-radius: 10px;
+  }
+  
+  .scroller::-webkit-scrollbar-thumb:hover {
+    background: #ff1e27; /* Mas maliwanag na pula kapag tinatapatan ng mouse */
+  }
+}
+
 
 .card { min-width: var(--card-w); height: var(--card-h); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); flex-shrink: 0; }
 

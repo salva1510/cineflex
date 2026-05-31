@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cineflex</title>
+  <link rel="stylesheet" href="home.css?v=1.1">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">CINEFLEX</div>
+    <div class="nav-icons">
+        <button onclick="openSearch()">Search</button>
+        <button onclick="openMenuDrawer()">Menu</button>
+    </div>
+</nav>
+
+<header class="banner" id="banner">
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <button class="play-btn" onclick="showBannerDetails()">Watch Now</button>
+  </div>
+</header>
+
+<main class="content">
+    <section class="row" id="continue-watching-section" style="display:none;"><h2>Continue Watching</h2><div class="scroller" id="continue-list"></div></section>
+    <section class="row" id="trending-section"><h2>Trending Today</h2><div class="scroller" id="trending-today"></div></section>
+    <section class="row" id="pinoy-action-section"><h2>Pinoy Action</h2><div class="scroller" id="pinoy-action-list"></div></section>
+    <section class="row" id="marvel-section"><h2>Marvel Universe</h2><div class="scroller" id="marvel-list"></div></section>
+    <section class="row" id="kids-section"><h2>Kids & Family</h2><div class="scroller" id="kids-list"></div></section>
+    <section class="row" id="anime-section"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
+    <section class="row" id="filipino-section"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
+    <section class="row" id="kdrama-section"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+    <section class="row" id="kpop-section"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
+</main>
+
+<div id="details-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <div id="modal-banner" class="modal-banner"></div>
+      <div class="modal-body">
+        <div id="modal-player-container" class="modal-player-wrapper">
+            <div class="server-tabs">
+                <button id="srv1-btn" class="server-btn active" onclick="switchServer(1)">Server 1</button>
+                <button id="srv2-btn" class="server-btn" onclick="switchServer(2)">Server 2</button>
+            </div>
+            <iframe id="modal-video-iframe" style="width:100%; height:300px;" src=""></iframe>
+        </div>
+        <h2 id="modal-title"></h2>
+        <p id="modal-desc"></p>
+        <div id="movie-play-action"><button onclick="startPlayback()">Play Movie</button></div>
+        <div id="episode-selector">
+            <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            <div id="episode-list"></div>
+        </div>
+        <div id="modal-recommendations"></div>
+        <div id="modal-cast"></div>
+      </div>
+    </div>
+</div>
+
+<div id="search-overlay" class="search-overlay" style="display:none;">
+    <input type="text" id="searchInput" placeholder="Search..." oninput="processSearch(this.value)">
+    <button onclick="closeSearch()">Close</button>
+    <div id="search-results"></div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>

@@ -58,7 +58,7 @@ async function init() {
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json())
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json())
     ]);
 
@@ -79,6 +79,7 @@ async function init() {
     console.error("Init Error:", err); 
   }
 }
+
 
 function setBanner(item) {
   const banner = document.getElementById("banner");
@@ -331,9 +332,8 @@ async function viewAll(containerId) {
         url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
     } else if (containerId === "marvel-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`;
-      else if (containerId === "pinoy-action-list") {
-    url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`;
-    }
+    } else if (containerId === "pinoy-action-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`;
     } else if (containerId === "anime-list") {
         url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`;
     } else if (containerId === "filipino-list") {
@@ -350,6 +350,8 @@ async function viewAll(containerId) {
                 <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
             </div>`).join('');
         return;
+    }
+
     }
 
     try {

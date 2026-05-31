@@ -51,7 +51,7 @@ document.addEventListener('fullscreenchange', () => {
 
 async function init() {
   try {
-    const [trd, marvel, anime, fil, kd, kp, kids] = await Promise.all([
+    const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction] = await Promise.all([
       fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`).then(r => r.json()),
@@ -59,6 +59,7 @@ async function init() {
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json())
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json())
     ]);
 
     trendingItems = trd.results;
@@ -71,6 +72,7 @@ async function init() {
     displayCards(kd.results, "kdrama-list");
     displayCards(kp.results, "kpop-list");
     displayCards(kids.results, "kids-list");
+    displayCards(pinoyAction.results, "pinoy-action-list");
     
     updateContinueUI();
   } catch (err) { 
@@ -285,6 +287,7 @@ function displayCards(data, containerId) {
   viewAllCard.innerHTML = `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; cursor:pointer;"><span>View All</span></div>`;
   viewAllCard.onclick = () => viewAll(containerId);
   container.appendChild(viewAllCard);
+  
 }
 
 function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
@@ -328,6 +331,9 @@ async function viewAll(containerId) {
         url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
     } else if (containerId === "marvel-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`;
+      else if (containerId === "pinoy-action-list") {
+    url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`;
+    }
     } else if (containerId === "anime-list") {
         url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`;
     } else if (containerId === "filipino-list") {

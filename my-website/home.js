@@ -328,6 +328,7 @@ async function viewAll(containerId) {
 
     let url = "";
     
+    // --- Dito natin inayos ang flow ---
     if (containerId === "trending-today") {
         url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
     } else if (containerId === "marvel-list") {
@@ -349,10 +350,11 @@ async function viewAll(containerId) {
             <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
                 <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
             </div>`).join('');
-        return;
+        return; // Hihinto na dito ang function para sa continue-list
     }
 
-    }
+    // Siguraduhing may URL bago mag-fetch
+    if (url === "") return;
 
     try {
         const [page1, page2] = await Promise.all([
@@ -373,5 +375,6 @@ async function viewAll(containerId) {
         resultsDiv.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Failed to load items. Please try again.</div>";
     }
 }
+
 
 init();

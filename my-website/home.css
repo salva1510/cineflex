@@ -263,33 +263,68 @@ body { margin: 0; background: black; overscroll-behavior: none; }
 @media (orientation: portrait) { .fullscreen-btn { display: flex !important; } }
 .view-all-card { min-width: 100px !important; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; transition: 0.3s; }
 .view-all-card:hover { background: var(--accent); }
-/* Gawing mas malapad ang modal para magkasya ang 3 columns nang hindi masikip */
+/* --- AYUSIN ANG MODAL GRID LAYOUT --- */
+
 .modal-content {
-    width: 95% !important; /* Full width halos sa mobile/desktop */
-    max-width: 1200px !important; /* Limitahan para hindi sobrang unat sa ultra-wide monitors */
+    width: 95% !important;
+    max-width: 1200px !important;
+    margin: 20px auto;
 }
 
-/* 3-Column Grid na fixed ang spacing */
-.episode-list-container, 
-.mini-recommendation-list {
+/* Ginawang specific ang selector para ma-override ang lahat ng luma */
+#episode-list, 
+#modal-recommendations, 
+.similar-grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr); /* Fixed 3 columns */
-    gap: 15px; /* Mas malinaw na pagitan */
-    padding: 10px;
+    grid-template-columns: repeat(3, 1fr) !important; /* FIXED 3 COLUMNS */
+    gap: 12px !important;
+    padding: 10px 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-/* Siguraduhing pantay ang laki ng mga cards sa grid */
-.episode-item, .rec-item {
-    display: flex;
-    flex-direction: column;
-    background: #1a1a1a; /* Mas dark na background para sa grid look */
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 8px;
-    transition: 0.3s;
+/* Generic card styling para sa grid items */
+.episode-item, 
+.rec-item, 
+.similar-card {
+    display: flex !important;
+    flex-direction: column !important;
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 6px !important;
+    transition: 0.3s !important;
+    overflow: hidden;
 }
 
-.episode-item:hover, .rec-item:hover {
-    border-color: var(--accent);
-    transform: scale(1.02);
+/* Siguraduhing maayos ang thumbnails sa loob ng 3 columns */
+.ep-thumb-container, 
+.rec-thumb-container, 
+.similar-card img {
+    width: 100% !important;
+    aspect-ratio: 16/9 !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+}
+
+/* Font sizing para magkasya ang text sa grid */
+.episode-item h4, 
+.rec-item h4, 
+.similar-card p {
+    font-size: 0.75rem !important;
+    margin-top: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+    color: white !important;
+}
+
+/* Mobile Adjustment: Kung masyadong maliit ang screen, gawing 2 columns lang */
+@media (max-width: 500px) {
+    #episode-list, 
+    #modal-recommendations, 
+    .similar-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }

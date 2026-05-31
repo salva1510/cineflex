@@ -263,67 +263,33 @@ body { margin: 0; background: black; overscroll-behavior: none; }
 @media (orientation: portrait) { .fullscreen-btn { display: flex !important; } }
 .view-all-card { min-width: 100px !important; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; transition: 0.3s; }
 .view-all-card:hover { background: var(--accent); }
-/* --- 3-COLUMN GRID PARA SA MODAL CONTENT --- */
+/* Gawing mas malapad ang modal para magkasya ang 3 columns nang hindi masikip */
+.modal-content {
+    width: 95% !important; /* Full width halos sa mobile/desktop */
+    max-width: 1200px !important; /* Limitahan para hindi sobrang unat sa ultra-wide monitors */
+}
 
-/* Container para sa Episode List at More Like This (Recommendations) */
+/* 3-Column Grid na fixed ang spacing */
 .episode-list-container, 
 .mini-recommendation-list {
-    display: grid !important; /* Pinuwersa nating maging grid */
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    gap: 10px; /* Space sa pagitan ng cards */
-    margin-top: 15px;
-    max-height: 400px;
-    overflow-y: auto;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr); /* Fixed 3 columns */
+    gap: 15px; /* Mas malinaw na pagitan */
+    padding: 10px;
 }
 
-/* Pag-aayos sa bawat card sa loob ng grid */
-.episode-item, 
-.rec-item {
+/* Siguraduhing pantay ang laki ng mga cards sa grid */
+.episode-item, .rec-item {
     display: flex;
-    flex-direction: column; /* Gawing vertical ang laman (Image sa taas, Title sa baba) */
-    gap: 5px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 8px;
+    flex-direction: column;
+    background: #1a1a1a; /* Mas dark na background para sa grid look */
+    border: 1px solid #333;
     border-radius: 8px;
-    cursor: pointer;
+    padding: 8px;
     transition: 0.3s;
-    min-height: 0; /* Iwas overflow */
 }
 
-.episode-item:hover, 
-.rec-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+.episode-item:hover, .rec-item:hover {
+    border-color: var(--accent);
+    transform: scale(1.02);
 }
-
-/* Image styling para maging maayos ang 3-columns */
-.ep-thumb-container, 
-.rec-thumb-container { 
-    width: 100%; 
-}
-
-.ep-thumb, 
-.rec-thumb { 
-    width: 100%; 
-    aspect-ratio: 16/9; 
-    object-fit: cover; 
-    border-radius: 4px; 
-}
-
-/* Title styling para hindi maging masyadong mahaba */
-.ep-info h4, 
-.rec-info h4 { 
-    margin: 5px 0 0 0; 
-    font-size: 0.7rem; 
-    color: #fff; 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    text-align: center;
-}
-
-/* Itago ang mahabang description para hindi kumain ng space sa grid */
-.episode-item p, 
-.rec-item p { 
-    display: none; 
-}
-

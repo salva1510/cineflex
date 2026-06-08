@@ -328,3 +328,10 @@ body { margin: 0; background: black; overscroll-behavior: none; }
         grid-template-columns: repeat(2, 1fr) !important;
     }
 }
+/* Visual feedback para sa TV remote focus */
+:focus {
+    outline: 2px solid #e50914 !important;
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+

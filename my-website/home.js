@@ -423,4 +423,39 @@ document.addEventListener('keydown', (e) => {
             break;
     }
 });
+// --- NETFLIX-STYLE REMOTE NAVIGATION ---
+let selectedIndex = 0;
+// Target natin ang lahat ng card/item na clickable
+const getFocusables = () => document.querySelectorAll('.card, .episode-item, .nav-item, .search-card');
+
+function moveFocus(direction) {
+    const items = getFocusables();
+    if (items.length === 0) return;
+
+    // Logic para sa Grid (3 columns base sa CSS mo)
+    const cols = 3; 
+    let newIndex = selectedIndex;
+
+    switch(direction) {
+        case 'ArrowRight': newIndex = Math.min(selectedIndex + 1, items.length - 1); break;
+        case 'ArrowLeft':  newIndex = Math.max(selectedIndex - 1, 0); break;
+        case 'ArrowDown':  newIndex = Math.min(selectedIndex + cols, items.length - 1); break;
+        case 'ArrowUp':    newIndex = Math.max(selectedIndex - cols, 0); break;
+        case 'Enter':
+            items[selectedIndex].click();
+            return;
+    }
+
+    selectedIndex = newIndex;
+    items[selectedIndex].focus();
+    items[selectedIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.addEventListener('keydown', (e) => {
+    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+        e.preventDefault(); // Iwasan ang default scroll ng browser
+        moveFocus(e.key);
+    }
+});
+
 

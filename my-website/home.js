@@ -378,3 +378,49 @@ async function viewAll(containerId) {
 
 
 init();
+
+// --- TV REMOTE NAVIGATION SYSTEM ---
+// Hindi nito babaguhin ang iyong existing functions.
+const focusableElements = 'button, [onclick], .card, .episode-item, .nav-item';
+let currentFocusIndex = 0;
+
+function updateFocus() {
+    const elements = document.querySelectorAll(focusableElements);
+    elements.forEach((el, index) => {
+        if (index === currentFocusIndex) {
+            el.focus();
+            el.style.outline = "2px solid #e50914"; // Visual indicator para alam kung nasaan ang focus
+        } else {
+            el.style.outline = "none";
+        }
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    const elements = document.querySelectorAll(focusableElements);
+    
+    switch(e.key) {
+        case 'ArrowRight':
+            if (currentFocusIndex < elements.length - 1) currentFocusIndex++;
+            updateFocus();
+            break;
+        case 'ArrowLeft':
+            if (currentFocusIndex > 0) currentFocusIndex--;
+            updateFocus();
+            break;
+        case 'ArrowDown':
+            // Logic para sa pagbaba (maaari mong i-adjust ang step base sa grid mo)
+            currentFocusIndex = Math.min(currentFocusIndex + 3, elements.length - 1);
+            updateFocus();
+            break;
+        case 'ArrowUp':
+            currentFocusIndex = Math.max(currentFocusIndex - 3, 0);
+            updateFocus();
+            break;
+        case 'Enter':
+            const activeElement = document.activeElement;
+            if (activeElement) activeElement.click();
+            break;
+    }
+});
+

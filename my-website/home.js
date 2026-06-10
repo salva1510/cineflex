@@ -105,6 +105,28 @@ function changeBanner(dir) {
     currentBannerIndex = (currentBannerIndex + dir + trendingItems.length) % trendingItems.length;
     setBanner(trendingItems[currentBannerIndex]);
 }
+function updateDownloadLink(type, id, season = null, episode = null) {
+    const btn = document.getElementById('download-btn');
+    let url = "";
+
+    if (type === 'movie') {
+        url = `https://1embed.cc/download/movie/${id}`;
+    } else if (type === 'tv') {
+        url = `https://1embed.cc/download/tv/${id}/${season}/${episode}`;
+    }
+
+    if (btn) {
+        btn.setAttribute('href', url);
+    }
+}
+
+// Halimbawa ng pagtawag sa function (tawagin ito pagkatapos mag-load ng video info)
+// Para sa Movie:
+// updateDownloadLink('movie', '12345'); 
+
+// Para sa TV Show:
+// updateDownloadLink('tv', '12345', '1', '5');
+
 
 async function showDetails(item) {
   currentItem = item;

@@ -129,10 +129,21 @@ function updateDownloadLink(type, id, season = null, episode = null) {
 
 
 async function showDetails(item) {
-  currentItem = item;
-  const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
-  currentTVState.type = type;
-  activeServer = 1; // reset sa server 1 tuwing bubukas ang modal
+  // ... (existing code sa taas)
+
+  try {
+    // ... (iyong fetch logic at pag-populate ng UI)
+
+    // DITO MO ISINGIT ANG PAG-UPDATE NG DOWNLOAD LINK
+    if (type === 'movie') {
+        updateDownloadLink('movie', item.id);
+    } 
+    // Para sa TV, ang link ay mau-update sa 'playSpecificEpisode' function
+    
+    // ... (rest of the code)
+  } catch (err) { console.error("Details Error:", err); }
+}
+
   
   updateServerTabsUI();
 
@@ -267,10 +278,16 @@ function updateServerTabsUI() {
 }
 
 function playSpecificEpisode(epNum, element) {
-    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
+    // ... (existing code)
     
     currentTVState.currentEpNum = epNum;
+    
+    // IDAGDAG ITO DITO:
+    updateDownloadLink('tv', currentItem.id, currentTVState.season, epNum);
+    
+    // ... (rest of the code)
+}
+
     
     const playerContainer = document.getElementById("modal-player-container");
     if (playerContainer) playerContainer.style.display = "block";

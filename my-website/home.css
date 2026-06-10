@@ -343,19 +343,5 @@ body { margin: 0; background: black; overscroll-behavior: none; }
     box-shadow: 0 0 20px rgba(255,255,255,0.3);
     transition: transform 0.2s ease-in-out;
 }
-.my-download-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff4500; /* Baguhin base sa theme mo */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.my-download-button:hover {
-    background-color: #e03e00;
-}
-
 
 

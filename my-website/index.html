@@ -48,6 +48,10 @@
     #banner { cursor: grab; user-select: none; }
     #banner:active { cursor: grabbing; }
   </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
 
@@ -84,7 +88,13 @@
     </div>
 </div>
 
-<header class="banner" id="banner">
+<header class="banner" id="banner" 
+        ontouchstart="handleTouchStart(event)" 
+        ontouchend="handleTouchEnd(event)"
+        onmousedown="handleMouseDown(event)"
+        onmousemove="handleMouseMove(event)"
+        onmouseup="handleMouseUp()"
+        onmouseleave="handleMouseLeave()">
   <div class="banner-content">
     <h1 id="banner-title">Loading...</h1>
     <p id="banner-desc"></p>
@@ -104,7 +114,11 @@
     <section class="row" id="filipino-section"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
     <section class="row" id="kdrama-section"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
     <section class="row" id="kpop-section"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
-    <section class="row" id="pinoy-action-section"><h2>Pinoy Action</h2><div class="scroller" id="pinoy-action-list"></div></section>
+  <section class="row" id="pinoy-action-section">
+    <h2>Pinoy Action</h2>
+    <div class="scroller" id="pinoy-action-list"></div>
+  </section>
+  
 </main>
 
 <div id="details-modal" class="modal" style="display:none;">
@@ -113,27 +127,21 @@
       <div class="modal-body">
         
         <div id="modal-player-container" class="modal-player-wrapper" style="position: relative;">
-            <div class="server-tabs"></div>
-            <button class="fullscreen-btn" onclick="enterCinemaMode()" style="position: absolute; top: 50px; left: 50%; transform: translateX(-50%); z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.8rem; backdrop-filter: blur(4px); display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-expand"></i> Fullscreen
+            <div class="server-tabs">
+            </div>
+            <button class="fullscreen-btn" onclick="enterCinemaMode()" style="position: absolute; top: 50px; left: 50%; transform: translateX(-50%); z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.8rem; backdrop-filter: blur(4px); display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                <i class="fa-solid fa-expand"></i> Fullscreen Mode
             </button>
             <div style="position:relative; padding-bottom:56.25%; height:0; margin-top:5px;">
-                <iframe id="modal-video-iframe" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen></iframe>
+                <iframe id="modal-video-iframe" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" src="" allowfullscreen></iframe>
             </div>
         </div>
 
         <h2 id="modal-title"></h2>
         <p id="modal-desc"></p>
-        
         <div id="movie-play-action" class="modal-actions" style="margin-bottom: 20px;">
-            <button class="play-btn-large" onclick="startPlayback()">
-                <i class="fa-solid fa-play"></i> Play Movie
-            </button>
-            <button class="download-btn" onclick="downloadMedia()" style="background: #2ecc71; color: white; border: none; padding: 12px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: 10px;">
-                <i class="fa-solid fa-download"></i> Download
-            </button>
+            <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play Movie</button>
         </div>
-        
         <div class="cast-section">
             <h4>Top Cast</h4>
             <div class="cast-scroller" id="modal-cast"></div>

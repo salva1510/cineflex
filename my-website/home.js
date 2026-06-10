@@ -243,6 +243,26 @@ function startPlayback() {
     enterCinemaMode();
     triggerPopUnder();
 }
+// Function para sa manual na paglipat ng banner (halimbawa: buttons o click)
+function changeBanner(dir) {
+    currentBannerIndex = (currentBannerIndex + dir + trendingItems.length) % trendingItems.length;
+    setBanner(trendingItems[currentBannerIndex]);
+}
+
+// Mobile touch swipe logic
+function handleTouchStart(e) { touchStartX = e.touches[0].clientX; }
+
+function handleTouchEnd(e) {
+    touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) changeBanner(1); // Swipe Left
+    if (diff < -50) changeBanner(-1); // Swipe Right
+}
+
+// I-attach ang event listeners pagkatapos mag-load ng data
+document.getElementById('banner').addEventListener('touchstart', handleTouchStart);
+document.getElementById('banner').addEventListener('touchend', handleTouchEnd);
+
 
 function displayCards(data, containerId) {
   const container = document.getElementById(containerId);
@@ -257,6 +277,12 @@ function displayCards(data, containerId) {
   viewAllCard.onclick = () => viewAll(containerId);
   container.appendChild(viewAllCard);
 }
+async function viewAll(containerId) {
+    const title = document.getElementById(containerId).parentElement.querySelector('h2').innerText;
+    alert("Viewing all for: " + title); 
+    // Dito mo ilalagay ang logic kung paano mo gustong ipakita ang lahat (ex: redirect sa bagong page)
+}
+
 
 function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
 function closeMenuDrawer() { document.getElementById("menu-drawer").classList.remove("active"); }

@@ -3,8 +3,8 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 // --- PLAYERS DOMAINS ---
-const SERVER_1_URL = "https://peachify.top";
-const SERVER_2_URL = "https://dl.peachify.top/"; // Bagong Server 2 API mo
+const SERVER_1_URL = "https://peachify.pro";
+const SERVER_2_URL = "zxcstream.xyz"; // Bagong Server 2 API mo
 
 let currentItem = null;
 let trendingItems = [];

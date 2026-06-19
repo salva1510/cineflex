@@ -63,17 +63,30 @@ async function fetchDramas(isNewRegion = false) {
         // Itabi ang huling dokumento para sa susunod na "Load More"
         lastVisibleDrama = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 
-        // I-render ang bawat Drama Card (Gayahin mo rito kung paano mo binuo ang card mo sa lumang code)
+                // I-render ang bawat Drama Card galing Firebase
         documentSnapshots.forEach((doc) => {
             const drama = doc.data();
+            
+            // Gumawa ng object na kamukha ng istruktura ng TMDB para gumana ang showDetails()
+            const itemData = {
+                id: doc.id,
+                title: drama.title,
+                overview: drama.overview || '',
+                backdrop_path: drama.backdrop || drama.poster,
+                poster_path: drama.poster,
+                first_air_date: drama.type === 'tv' ? '2026' : undefined, // flag para sa TV o Movie
+                name: drama.type === 'tv' ? drama.title : undefined
+            };
+
+            // Dito gagamitin natin ang class="card" para sumunod sa CSS mo, at i-wrap natin sa isang div para sa grid layout
             const dramaCard = `
-                <div class="movie-card" onclick="showDetails('${doc.id}')" style="width: calc(33.33% - 10px); max-width: 180px; flex-shrink: 0;">
-                    <img src="${drama.poster}" alt="${drama.title}" style="width:100%; border-radius:4px; aspect-ratio:2/3; object-fit:cover;">
-                    <h4 style="font-size:0.85rem; margin:5px 0 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${drama.title}</h4>
+                <div class="card" onclick='showDetails(${JSON.stringify(itemData).replace(/'/g, "&apos;")})' style="flex: 0 0 calc(33.33% - 10px); max-width: 180px; margin-bottom: 15px;">
+                    <img src="${drama.poster}" loading="lazy">
                 </div>
             `;
             document.getElementById('kdrama-list').insertAdjacentHTML('beforeend', dramaCard);
         });
+
 
         // Ipakita ang button kung mas marami o katumbas ng LIMIT ang nakuha natin
         if (documentSnapshots.docs.length === DRAMA_LIMIT) {

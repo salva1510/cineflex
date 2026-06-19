@@ -472,7 +472,7 @@ async function viewAll(containerId) {
         
         const allItems = [...(page1.results || []), ...(page2.results || [])];
 
-        resultsDiv.innerHTML = allItems.filter(i => i.poster_path).map(item => `
+                resultsDiv.innerHTML = allItems.filter(i => i.poster_path).map(item => `
             <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
                 <img src="${IMG_URL}${item.poster_path}">
                 <p>${item.title || item.name}</p>
@@ -482,6 +482,8 @@ async function viewAll(containerId) {
         console.error("View All Fetch Error:", err);
         resultsDiv.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Failed to load items. Please try again.</div>";
     }
+}
+
 }
 
 

@@ -80,7 +80,13 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .player-header { padding: 10px 20px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
 .player-controls { display: flex; align-items: center; gap: 10px; }
 .close-player-btn { background: #e50914; color: #fff; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.iframe-container { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
+.iframe-container { 
+  position: relative; 
+  padding-bottom: 42.25% !important; /* Binabaan para sumakto sa widescreen video */
+  height: 0; 
+  background: #000; 
+}
+
 /* BAGONG CODE NA IPAPALIT MO: */
 .iframe-container iframe { 
   position: absolute; 

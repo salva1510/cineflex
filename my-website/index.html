@@ -112,7 +112,31 @@
     <section class="row" id="kids-section"><h2>Kids & Family</h2><div class="scroller" id="kids-list"></div></section>
     <section class="row" id="anime-section"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
     <section class="row" id="filipino-section"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
-    <section class="row" id="kdrama-section"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+    <section class="row" id="kdrama-section" style="margin-bottom: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 4%; flex-wrap: wrap; gap: 10px;">
+        <h2 style="margin: 0;">Asian Dramas</h2>
+        
+        <div class="region-filter-wrapper" style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-earth-asia" style="color: #e50914;"></i>
+            <select id="region-select" onchange="changeRegion(this.value)" style="background: #141414; color: #fff; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; outline: none;">
+                <option value="all">All Regions</option>
+                <option value="kr">South Korea</option>
+                <option value="cn">China / Taiwan</option>
+                <option value="jp">Japan</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="drama-grid-layout" id="kdrama-list" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; min-height: 100px;">
+        </div>
+
+    <div id="load-more-container" style="text-align: center; margin-top: 20px; display: none;">
+        <button id="load-more-btn" onclick="loadMoreDramas()" style="background: #e50914; color: #fff; border: none; padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: 0.3s;">
+            <i class="fa-solid fa-spinner"></i> Load More
+        </button>
+    </div>
+</section>
+
     <section class="row" id="kpop-section"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
   <section class="row" id="pinoy-action-section">
     <h2>Pinoy Action</h2>

@@ -441,8 +441,14 @@ async function viewAll(containerId) {
         url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`;
     } else if (containerId === "filipino-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`;
-    } else if (containerId === "kdrama-list") {
-        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`;
+        } else if (containerId === "kdrama-list") {
+        // Dahil Firebase na ang gamit mo sa section na ito at may "Load More" na,
+        // Gagawin nating taga-scroll na lang ito pababa papunta sa mismong section
+        closeSearch();
+        document.getElementById('kdrama-section').scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+
     } else if (containerId === "kpop-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`;
     } else if (containerId === "kids-list") {

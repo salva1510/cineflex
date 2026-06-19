@@ -2,11 +2,8 @@ const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
-// --- PLAYERS DOMAINS ---
-// Gagamit tayo ng Backticks (``) imbes na ordinaryong quotation marks ("") 
-// para makapagpasok tayo ng dynamic variables gamit ang ${}
-
-const SERVER_1_URL = `https://zxcstream.xyz/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
+// --- PLAYERS DOMAINS (Gawin nating malinis na Base URL lang) ---
+const SERVER_1_URL = "https://zxcstream.xyz";
 
 let currentItem = null;
 let trendingItems = [];
@@ -211,20 +208,29 @@ function updateVideoSource() {
     const iframe = document.getElementById("modal-video-iframe");
     if (!iframe || !currentItem) return;
 
+    // Kukunin natin ang tamang IDs mula sa kasalukuyang pinapanood ng user
+    const movieId = currentItem.id;
+    const season = currentTVState.season;
+    const episode = currentTVState.currentEpNum;
+
     if (currentTVState.type === 'tv') {
         if (activeServer === 1) {
-            iframe.src = `${SERVER_1_URL}/embed/tv/${currentItem.id}/${currentTVState.season}/${currentTVState.currentEpNum}`;
+            // Dito natin bubuuin nang tama ang template literal gamit ang backticks (``)
+            iframe.src = `${SERVER_1_URL}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
         } else {
-            iframe.src = `${SERVER_2_URL}/embed/tv/${currentItem.id}/${currentTVState.season}/${currentTVState.currentEpNum}`;
+            // Kung may server 2 ka, siguraduhing tama rin ang format nito
+            iframe.src = `${SERVER_2_URL}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
         }
     } else {
         if (activeServer === 1) {
-            iframe.src = `${SERVER_1_URL}/embed/movie/${currentItem.id}`;
+            // Para sa Movie, karaniwang tinatanggal ang season at episode numbers sa dulo
+            iframe.src = `${SERVER_1_URL}/player/movie/${movieId}?dubLang=tl&dubType=0`;
         } else {
-            iframe.src = `${SERVER_2_URL}/embed/movie/${currentItem.id}`;
+            iframe.src = `${SERVER_2_URL}/player/movie/${movieId}?dubLang=tl&dubType=0`;
         }
     }
 }
+
 
 function switchServer(serverNum) {
     activeServer = serverNum;

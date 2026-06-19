@@ -14,6 +14,84 @@ let activeServer = 1;
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let touchStartX = 0;
 let touchEndX = 0;
+let lastVisibleDrama = null; // Taga-tanda kung saan huling huminto ang load
+let currentRegion = 'all';    // Kasalukuyang rehiyon
+const DRAMA_LIMIT = 12;      // Ilang drama ang ilo-load kada batch
+
+// 1. Function kapag nagpalit ng Region sa Dropdown
+async function changeRegion(region) {
+    currentRegion = region;
+    lastVisibleDrama = null; // I-reset ang pagination
+    document.getElementById('kdrama-list').innerHTML = '<p style="color: #aaa; padding-left: 10px;">Loading...</p>';
+    
+    await fetchDramas(true);
+}
+
+// 2. Pangunahing Function para kumuha ng Data sa Firebase
+async function fetchDramas(isNewRegion = false) {
+    const db = firebase.firestore();
+    let query = db.collection('dramas'); // Palitan mo ito kung ano ang totoong pangalan ng Collection mo sa Firestore
+
+    // Kung may piniling partikular na rehiyon
+    if (currentRegion !== 'all') {
+        query = query.where('region', '==', currentRegion);
+    }
+
+    // I-order at i-limit ang load para hindi mabigla ang website
+    query = query.orderBy('createdAt', 'desc').limit(DRAMA_LIMIT);
+
+    // Kung maglo-load ng susunod na batch (Load More)
+    if (!isNewRegion && lastVisibleDrama) {
+        query = query.startAfter(lastVisibleDrama);
+    }
+
+    try {
+        const documentSnapshots = await query.get();
+        
+        if (isNewRegion) {
+            document.getElementById('kdrama-list').innerHTML = ''; // Linisin ang lumang listahan
+        }
+
+        if (documentSnapshots.empty) {
+            if (isNewRegion) {
+                document.getElementById('kdrama-list').innerHTML = '<p style="color: #666; padding-left: 10px;">No dramas found.</p>';
+            }
+            document.getElementById('load-more-container').style.display = 'none';
+            return;
+        }
+
+        // Itabi ang huling dokumento para sa susunod na "Load More"
+        lastVisibleDrama = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+        // I-render ang bawat Drama Card (Gayahin mo rito kung paano mo binuo ang card mo sa lumang code)
+        documentSnapshots.forEach((doc) => {
+            const drama = doc.data();
+            const dramaCard = `
+                <div class="movie-card" onclick="showDetails('${doc.id}')" style="width: calc(33.33% - 10px); max-width: 180px; flex-shrink: 0;">
+                    <img src="${drama.poster}" alt="${drama.title}" style="width:100%; border-radius:4px; aspect-ratio:2/3; object-fit:cover;">
+                    <h4 style="font-size:0.85rem; margin:5px 0 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${drama.title}</h4>
+                </div>
+            `;
+            document.getElementById('kdrama-list').insertAdjacentHTML('beforeend', dramaCard);
+        });
+
+        // Ipakita ang button kung mas marami o katumbas ng LIMIT ang nakuha natin
+        if (documentSnapshots.docs.length === DRAMA_LIMIT) {
+            document.getElementById('load-more-container').style.display = 'block';
+        } else {
+            document.getElementById('load-more-container').style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error("Error loading dramas: ", error);
+    }
+}
+
+// 3. Function kapag pinalo ang "Load More" button
+function loadMoreDramas() {
+    fetchDramas(false);
+}
+
 
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {

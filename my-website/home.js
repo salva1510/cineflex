@@ -128,12 +128,12 @@ document.addEventListener('fullscreenchange', () => {
 
 async function init() {
   try {
-    const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction] = await Promise.all([
+    const [trd, marvel, anime, fil, kp, kids, pinoyAction] = await Promise.all([
       fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
+      // Tinanggal na natin ang TMDB Kdrama fetch dito dahil Firebase na ang gagamitin natin
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json())
@@ -146,16 +146,19 @@ async function init() {
     displayCards(marvel.results, "marvel-list");
     displayCards(anime.results, "anime-list");
     displayCards(fil.results, "filipino-list");
-    displayCards(kd.results, "kdrama-list");
     displayCards(kp.results, "kpop-list");
     displayCards(kids.results, "kids-list");
     displayCards(pinoyAction.results, "pinoy-action-list");
+    
+    // Eto ang magpapagana sa Firebase Drama layout mo pagkabukas ng site
+    await fetchDramas(true);
     
     updateContinueUI();
   } catch (err) { 
     console.error("Init Error:", err); 
   }
 }
+
 
 
 function setBanner(item) {

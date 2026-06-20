@@ -255,3 +255,55 @@ input:checked + .slider:before { transform: translateX(14px); }
   #banner-desc { font-size: 0.9rem; } 
   .banner { padding-bottom: 60px; } 
 }
+/* === DRAMABOX SHORT DRAMA SECTION === */
+:root {
+  /* Sukat para sa patayong DramaBox cards sa mobile */
+  --db-card-w: 125px;
+  --db-card-h: 220px;
+}
+
+.dramabox-scroller {
+  gap: 12px !important;
+  padding: 15px 0 !important;
+}
+
+.dramabox-card {
+  min-width: var(--db-card-w) !important;
+  height: var(--db-card-h) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Badge para sa bilang ng episodes na sikat sa DramaBox */
+.badge-episodes {
+  background: linear-gradient(45deg, #ff007f, #7f00ff);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Mas maliit na text at clip para sa mahabang pamagat sa portrait card */
+.dramabox-card .card-title {
+  font-size: 0.75rem !important;
+  white-space: normal !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsibong sukat para sa mas malalaking screen/tablets */
+@media (min-width: 768px) {
+  :root {
+    --db-card-w: 150px;
+    --db-card-h: 265px;
+  }
+  .dramabox-card .card-title {
+    font-size: 0.85rem !important;
+  }
+}
+

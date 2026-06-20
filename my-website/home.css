@@ -366,3 +366,69 @@ input:checked + .slider:before { transform: translateX(14px); }
     z-index: 2;            /* MAS MABABA: Napupunta na ngayon sa likod ng numero */
     box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
 }
+/* --- PAGPAPALAKI NG EPISODE THUMBNAILS --- */
+.episode-item {
+    display: flex;
+    gap: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03); /* Kaunting background para mas litaw ang card */
+    border-radius: 8px;
+    align-items: center;
+}
+
+.episode-item .ep-thumb-container {
+    width: 140px;  /* Pinalaki mula sa dating maliit na sukat */
+    height: 85px;  /* Itinugma ang height para sa magandang 16:9 ratio */
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.episode-item .ep-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- PAGPAPALAKI NG MORE LIKE THIS (RECOMMENDATIONS) --- */
+.rec-item {
+    display: flex;
+    gap: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    align-items: center;
+}
+
+.rec-item .rec-thumb-container {
+    width: 140px;  /* Pinalaki rin para pumantay sa taas ng episode row */
+    height: 85px;  
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.rec-item .rec-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- PAG-AYOS NG TEXT OVERFLOW PARA SA MGA MASKALALAKING CARDS --- */
+.ep-info h4, .rec-info h4 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+
+.ep-info p, .rec-info p {
+    font-size: 0.8rem;
+    color: #cccccc;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Hanggang 2 lines lang para hindi humaba ang card */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+

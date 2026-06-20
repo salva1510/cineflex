@@ -431,4 +431,81 @@ input:checked + .slider:before { transform: translateX(14px); }
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+/* --- MODERN 2-COLUMN GRID SYSTEM --- */
+
+.modern-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Hinahati sa dalawang pantay na column */
+    gap: 16px;                            /* Espasyo sa pagitan ng mga cards */
+    padding: 10px 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Isang pirasong card/item block */
+.modern-grid-item {
+    display: flex;
+    flex-direction: column; /* Ang text ay bababa sa ilalim ng imahe */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.modern-grid-item:focus, .modern-grid-item:hover {
+    transform: scale(1.03);
+}
+
+/* Wrapper para sa Image at Floating Badge */
+.modern-thumb-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Sakto sa landscape video display ratio */
+    overflow: hidden;
+    border-radius: 12px;  /* Makinis at malaking kanto gaya ng sa mockup */
+    background: #141414;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modern-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Floating Badge (E1, E2, etc.) na nasa itaas-kaliwa */
+.modern-ep-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(40, 40, 40, 0.75); /* Dark transparent filter */
+    color: #e0e0e0;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 4px;
+    backdrop-filter: blur(4px); /* Swabeng iOS-like blur effect */
+}
+
+/* Text Containers sa Ilalim */
+.modern-meta-info {
+    padding: 8px 2px 4px 2px;
+}
+
+/* Pamagat ng Episode o Pelikula */
+.modern-ep-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Lalagyan ng '...' kapag masyadong mahaba */
+}
+
+/* Petsa at Runtime info sa pinaka-ibaba */
+.modern-sub-text {
+    font-size: 0.78rem;
+    color: #757575; /* Grayish tone para sa secondary info */
+    margin: 0;
+}
+
 

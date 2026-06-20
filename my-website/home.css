@@ -306,25 +306,24 @@ input:checked + .slider:before { transform: translateX(14px); }
     font-size: 0.85rem !important;
   }
 }
-/* --- NETFLIX TOP 10 ROW STYLE --- */
+/* --- NETFLIX TOP 10 DESIGN (NUMERO SA HARAP) --- */
 
-/* Ang main list container (netflix-movies-list) ay dapat may sapat na taas */
 #netflix-movies-list {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     overflow-x: auto;
-    padding: 20px 10px 20px 30px; /* May dagdag na padding sa kaliwa para sa unang numero */
+    padding: 20px 10px 20px 25px;
     scroll-behavior: smooth;
 }
 
-/* Wrapper para sa Numero + Poster magkasama */
+/* Wrapper para sa Numero at Poster */
 .netflix-item-container {
     position: relative;
     display: flex;
-    align-items: flex-end; /* Pinapantay ang ilalim ng numero at poster */
-    min-width: 140px;      /* Mas makitid na container para magkasya */
-    height: 180px;         /* Itinugma sa standard card height mo */
-    margin-right: 25px;    /* Espasyo sa pagitan ng mga cards para hindi mag-overlap */
+    align-items: flex-end; 
+    min-width: 140px;      
+    height: 180px;         
+    margin-right: 15px;    
     cursor: pointer;
     transition: transform 0.3s ease;
     flex-shrink: 0;
@@ -334,29 +333,36 @@ input:checked + .slider:before { transform: translateX(14px); }
     transform: scale(1.05);
 }
 
-/* Ang Mismong Higanteng Numero */
+/* ANG HIGANTENG NUMERO (ILALAGAY SA HARAP) */
 .netflix-num-badge {
     position: absolute;
-    left: -35px;           /* Inuusog pakaliwa sa labas ng poster */
-    bottom: -15px;         /* Bahagyang ibinababa para sa Netflix style drop */
-    font-size: 7.5rem;     /* Higanteng laki tulad ng sa mockup */
+    left: -25px;           /* Inuusog pakaliwa para naka-overlap sa gilid */
+    bottom: -15px;         
+    font-size: 8rem;       /* Malaking sukat para kitang-kita */
     font-weight: 900;
-    font-family: 'Arial Black', sans-serif;
-    color: #000000;        /* Maitim na fill sa loob ng numero */
+    font-family: 'Arial Black', Impact, sans-serif;
     line-height: 0.8;
-    -webkit-text-stroke: 4px #5e5e5e; /* Makapal na gray/silvery outline */
+    
+    /* Ginawang puting outline at translucent dark body para litaw sa madidilim o maliliwanag na poster */
+    color: rgba(20, 20, 20, 0.7); 
+    -webkit-text-stroke: 3px #ffffff; 
+    
     letter-spacing: -5px;
-    z-index: 1;
+    z-index: 5;            /* MAS MATAAS: Nilalagay ang numero sa ibabaw ng poster */
+    pointer-events: none;  /* Para pwedeng i-click ang poster kahit natatakpan ng numero */
     user-select: none;
+    
+    /* Karagdagang anino sa likod ng numero para mas madaling basahin */
+    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)); 
 }
 
-/* Ang Poster na katabi ng Numero */
+/* ANG POSTER (ILALAGAY SA LIKOD NG NUMERO) */
 .netflix-num-poster {
     position: relative;
-    width: 115px;          /* Sadyang pinaliliit ang lapad para sa mobile aspect ratio */
+    width: 120px;          
     height: 100%;
     object-fit: cover;
-    border-radius: 5px;
-    z-index: 2;            /* Sapaw sa ibabaw ng numero ang kanang bahagi ng poster */
+    border-radius: 6px;
+    z-index: 2;            /* MAS MABABA: Napupunta na ngayon sa likod ng numero */
     box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
 }

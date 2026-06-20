@@ -2,9 +2,8 @@ const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
-// --- PLAYERS DOMAINS ---
+// --- PLAYERS DOMAINS (Gawin nating malinis na Base URL lang) ---
 const SERVER_1_URL = "https://zxcstream.xyz";
-const SERVER_2_URL = "https://zxcstream.xyz"; // Siguraduhing may URL ito kung gagamitin
 
 let currentItem = null;
 let trendingItems = [];
@@ -15,93 +14,6 @@ let activeServer = 1;
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let touchStartX = 0;
 let touchEndX = 0;
-let lastVisibleDrama = null; // Taga-tanda kung saan huling huminto ang load
-let currentRegion = 'all';    // Kasalukuyang rehiyon
-const DRAMA_LIMIT = 12;      // Ilang drama ang ilo-load kada batch
-
-// 1. Function kapag nagpalit ng Region sa Dropdown
-async function changeRegion(region) {
-    currentRegion = region;
-    lastVisibleDrama = null; // I-reset ang pagination
-    document.getElementById('kdrama-list').innerHTML = '<p style="color: #aaa; padding-left: 10px;">Loading...</p>';
-    
-    await fetchDramas(true);
-}
-
-// 2. Pangunahing Function para kumuha ng Data sa Firebase
-async function fetchDramas(isNewRegion = false) {
-    const db = firebase.firestore();
-    let query = db.collection('dramas'); 
-
-    // Kung may piniling partikular na rehiyon
-    if (currentRegion !== 'all') {
-        query = query.where('region', '==', currentRegion);
-    }
-
-    // I-order at i-limit ang load
-    query = query.orderBy('createdAt', 'desc').limit(DRAMA_LIMIT);
-
-    // Kung maglo-load ng susunod na batch (Load More)
-    if (!isNewRegion && lastVisibleDrama) {
-        query = query.startAfter(lastVisibleDrama);
-    }
-
-    try {
-        const documentSnapshots = await query.get();
-        
-        if (isNewRegion) {
-            document.getElementById('kdrama-list').innerHTML = ''; // Linisin ang lumang listahan
-        }
-
-        if (documentSnapshots.empty) {
-            if (isNewRegion) {
-                document.getElementById('kdrama-list').innerHTML = '<p style="color: #666; padding-left: 10px;">No dramas found.</p>';
-            }
-            document.getElementById('load-more-container').style.display = 'none';
-            return;
-        }
-
-        // Itabi ang huling dokumento para sa susunod na "Load More"
-        lastVisibleDrama = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-        // I-render ang bawat Drama Card galing Firebase
-        documentSnapshots.forEach((doc) => {
-            const drama = doc.data();
-            
-            const itemData = {
-                id: doc.id,
-                title: drama.title,
-                overview: drama.overview || '',
-                backdrop_path: drama.backdrop || drama.poster,
-                poster_path: drama.poster,
-                first_air_date: drama.type === 'tv' ? '2026' : undefined, 
-                name: drama.type === 'tv' ? drama.title : undefined
-            };
-
-            const dramaCard = `
-                <div class="card" onclick='showDetails(${JSON.stringify(itemData).replace(/'/g, "&apos;")})' style="flex: 0 0 calc(33.33% - 10px); max-width: 180px; margin-bottom: 15px;">
-                    <img src="${drama.poster}" loading="lazy">
-                </div>
-            `;
-            document.getElementById('kdrama-list').insertAdjacentHTML('beforeend', dramaCard);
-        });
-
-        // Ipakita ang button kung mas marami o katumbas ng LIMIT ang nakuha natin
-        if (documentSnapshots.docs.length === DRAMA_LIMIT) {
-            document.getElementById('load-more-container').style.display = 'block';
-        } else {
-            document.getElementById('load-more-container').style.display = 'none';
-        }
-
-    } catch (error) {
-        console.error("Error loading dramas: ", error);
-    }
-}
-
-// 3. Function kapag pinalo ang "Load More" button
-function loadMoreDramas() {
-    fetchDramas(false);
-}
 
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {
@@ -138,11 +50,12 @@ document.addEventListener('fullscreenchange', () => {
 
 async function init() {
   try {
-    const [trd, marvel, anime, fil, kp, kids, pinoyAction] = await Promise.all([
+    const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction] = await Promise.all([
       fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json())
@@ -155,18 +68,17 @@ async function init() {
     displayCards(marvel.results, "marvel-list");
     displayCards(anime.results, "anime-list");
     displayCards(fil.results, "filipino-list");
+    displayCards(kd.results, "kdrama-list");
     displayCards(kp.results, "kpop-list");
     displayCards(kids.results, "kids-list");
     displayCards(pinoyAction.results, "pinoy-action-list");
-    
-    // Eto ang magpapagana sa Firebase Drama layout mo pagkabukas ng site
-    await fetchDramas(true);
     
     updateContinueUI();
   } catch (err) { 
     console.error("Init Error:", err); 
   }
 }
+
 
 function setBanner(item) {
   const banner = document.getElementById("banner");
@@ -198,7 +110,7 @@ async function showDetails(item) {
   currentItem = item;
   const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
   currentTVState.type = type;
-  activeServer = 1; 
+  activeServer = 1; // reset sa server 1 tuwing bubukas ang modal
   
   updateServerTabsUI();
 
@@ -296,24 +208,29 @@ function updateVideoSource() {
     const iframe = document.getElementById("modal-video-iframe");
     if (!iframe || !currentItem) return;
 
+    // Kukunin natin ang tamang IDs mula sa kasalukuyang pinapanood ng user
     const movieId = currentItem.id;
     const season = currentTVState.season;
     const episode = currentTVState.currentEpNum;
 
     if (currentTVState.type === 'tv') {
         if (activeServer === 1) {
+            // Dito natin bubuuin nang tama ang template literal gamit ang backticks (``)
             iframe.src = `${SERVER_1_URL}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
         } else {
+            // Kung may server 2 ka, siguraduhing tama rin ang format nito
             iframe.src = `${SERVER_2_URL}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
         }
     } else {
         if (activeServer === 1) {
+            // Para sa Movie, karaniwang tinatanggal ang season at episode numbers sa dulo
             iframe.src = `${SERVER_1_URL}/player/movie/${movieId}?dubLang=tl&dubType=0`;
         } else {
             iframe.src = `${SERVER_2_URL}/player/movie/${movieId}?dubLang=tl&dubType=0`;
         }
     }
 }
+
 
 function switchServer(serverNum) {
     activeServer = serverNum;
@@ -379,6 +296,7 @@ function displayCards(data, containerId) {
   viewAllCard.innerHTML = `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; cursor:pointer;"><span>View All</span></div>`;
   viewAllCard.onclick = () => viewAll(containerId);
   container.appendChild(viewAllCard);
+  
 }
 
 function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
@@ -418,6 +336,7 @@ async function viewAll(containerId) {
 
     let url = "";
     
+    // --- Dito natin inayos ang flow ---
     if (containerId === "trending-today") {
         url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
     } else if (containerId === "marvel-list") {
@@ -429,9 +348,7 @@ async function viewAll(containerId) {
     } else if (containerId === "filipino-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`;
     } else if (containerId === "kdrama-list") {
-        closeSearch();
-        document.getElementById('kdrama-section').scrollIntoView({ behavior: 'smooth' });
-        return;
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`;
     } else if (containerId === "kpop-list") {
         url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`;
     } else if (containerId === "kids-list") {
@@ -441,9 +358,10 @@ async function viewAll(containerId) {
             <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
                 <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
             </div>`).join('');
-        return; 
+        return; // Hihinto na dito ang function para sa continue-list
     }
 
+    // Siguraduhing may URL bago mag-fetch
     if (url === "") return;
 
     try {
@@ -466,4 +384,86 @@ async function viewAll(containerId) {
     }
 }
 
+
 init();
+
+// --- TV REMOTE NAVIGATION SYSTEM ---
+// Hindi nito babaguhin ang iyong existing functions.
+const focusableElements = 'button, [onclick], .card, .episode-item, .nav-item';
+let currentFocusIndex = 0;
+
+function updateFocus() {
+    const elements = document.querySelectorAll(focusableElements);
+    elements.forEach((el, index) => {
+        if (index === currentFocusIndex) {
+            el.focus();
+            el.style.outline = "2px solid #e50914"; // Visual indicator para alam kung nasaan ang focus
+        } else {
+            el.style.outline = "none";
+        }
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    const elements = document.querySelectorAll(focusableElements);
+    
+    switch(e.key) {
+        case 'ArrowRight':
+            if (currentFocusIndex < elements.length - 1) currentFocusIndex++;
+            updateFocus();
+            break;
+        case 'ArrowLeft':
+            if (currentFocusIndex > 0) currentFocusIndex--;
+            updateFocus();
+            break;
+        case 'ArrowDown':
+            // Logic para sa pagbaba (maaari mong i-adjust ang step base sa grid mo)
+            currentFocusIndex = Math.min(currentFocusIndex + 3, elements.length - 1);
+            updateFocus();
+            break;
+        case 'ArrowUp':
+            currentFocusIndex = Math.max(currentFocusIndex - 3, 0);
+            updateFocus();
+            break;
+        case 'Enter':
+            const activeElement = document.activeElement;
+            if (activeElement) activeElement.click();
+            break;
+    }
+});
+// --- NETFLIX-STYLE REMOTE NAVIGATION ---
+let selectedIndex = 0;
+// Target natin ang lahat ng card/item na clickable
+const getFocusables = () => document.querySelectorAll('.card, .episode-item, .nav-item, .search-card');
+
+function moveFocus(direction) {
+    const items = getFocusables();
+    if (items.length === 0) return;
+
+    // Logic para sa Grid (3 columns base sa CSS mo)
+    const cols = 3; 
+    let newIndex = selectedIndex;
+
+    switch(direction) {
+        case 'ArrowRight': newIndex = Math.min(selectedIndex + 1, items.length - 1); break;
+        case 'ArrowLeft':  newIndex = Math.max(selectedIndex - 1, 0); break;
+        case 'ArrowDown':  newIndex = Math.min(selectedIndex + cols, items.length - 1); break;
+        case 'ArrowUp':    newIndex = Math.max(selectedIndex - cols, 0); break;
+        case 'Enter':
+            items[selectedIndex].click();
+            return;
+    }
+
+    selectedIndex = newIndex;
+    items[selectedIndex].focus();
+    items[selectedIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.addEventListener('keydown', (e) => {
+    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+        e.preventDefault(); // Iwasan ang default scroll ng browser
+        moveFocus(e.key);
+    }
+});
+
+

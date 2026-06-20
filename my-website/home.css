@@ -306,22 +306,35 @@ input:checked + .slider:before { transform: translateX(14px); }
     font-size: 0.85rem !important;
   }
 }
-/* Netflix Trending Badge Style */
-.netflix-badge {
+/* Wrapper para magka-espasyo ang malaking numero sa tabi ng poster */
+.netflix-card-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: visible !important; /* Para hindi maputol ang lumalampas na numero */
+    margin-left: 15px; /* Dagdag space para sa numero */
+}
+
+/* Ang Malaking Numero */
+.netflix-big-number {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    background: #e50914;
-    color: #fff;
-    font-family: sans-serif;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    z-index: 10;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    left: -22px; /* Nilalabas nang kaunti sa poster */
+    bottom: -10px;
+    font-size: 6.5rem; /* Higanteng laki */
+    font-weight: 900;
+    font-family: 'Arial Black', Impact, sans-serif;
+    line-height: 1;
+    color: #141414; /* Kulay ng background para sa body ng numero */
+    -webkit-text-stroke: 3px #808080; /* Kulay Gray o White na outline */
+    z-index: 1;
+    user-select: none;
+}
+
+/* Siguraduhing nasa ibabaw ng numero ang mismong image poster */
+.netflix-poster {
+    position: relative;
+    z-index: 2;
+    border-radius: 6px;
 }
 
 

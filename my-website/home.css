@@ -306,35 +306,35 @@ input:checked + .slider:before { transform: translateX(14px); }
     font-size: 0.85rem !important;
   }
 }
-/* Wrapper para magka-espasyo ang malaking numero sa tabi ng poster */
+/* Container para sa card */
 .netflix-card-wrapper {
     position: relative;
-    display: flex;
-    align-items: flex-end;
-    overflow: visible !important; /* Para hindi maputol ang lumalampas na numero */
-    margin-left: 15px; /* Dagdag space para sa numero */
+    overflow: hidden;
+    border-radius: 8px; /* Para maganda ang kanto */
 }
 
-/* Ang Malaking Numero */
+/* Ang Badge mismo (Nasa loob ng poster, sa baba) */
 .netflix-big-number {
     position: absolute;
-    left: -22px; /* Nilalabas nang kaunti sa poster */
-    bottom: -10px;
-    font-size: 6.5rem; /* Higanteng laki */
+    bottom: -5px; /* Bahagyang nakalubog para elegante */
+    left: 2px;
+    font-size: 3rem; /* Mas maliit pero bold */
     font-weight: 900;
-    font-family: 'Arial Black', Impact, sans-serif;
-    line-height: 1;
-    color: #141414; /* Kulay ng background para sa body ng numero */
-    -webkit-text-stroke: 3px #808080; /* Kulay Gray o White na outline */
-    z-index: 1;
-    user-select: none;
+    color: white;
+    z-index: 10;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    pointer-events: none; /* Para hindi makaharang sa click */
+    font-family: sans-serif;
 }
 
-/* Siguraduhing nasa ibabaw ng numero ang mismong image poster */
-.netflix-poster {
-    position: relative;
-    z-index: 2;
-    border-radius: 6px;
+/* Para magkaroon ng dark gradient sa ilalim para lumitaw ang puting numero */
+.netflix-poster::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+    border-radius: 0 0 8px 8px;
 }
-
-

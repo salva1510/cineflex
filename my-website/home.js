@@ -14,6 +14,109 @@ let activeServer = 1;
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
 let touchStartX = 0;
 let touchEndX = 0;
+// --- Idagdag ito sa pinakataas ng iyong code kasama ng iba pang mga Global Variables ---
+let currentViewAllPage = 1;
+let currentViewAllUrl = "";
+let isFetchingViewAll = false;
+
+async function viewAll(containerId) {
+    const resultsDiv = document.getElementById("search-results");
+    const overlay = document.getElementById("search-overlay");
+    if (!resultsDiv || !overlay) return;
+
+    // Reset natin ang page status sa tuwing magbubukas ng bagong section
+    currentViewAllPage = 1;
+    isFetchingViewAll = false;
+    resultsDiv.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Loading full list...</div>";
+    overlay.style.display = "block";
+
+    let url = "";
+    
+    if (containerId === "trending-today") {
+        url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
+    } else if (containerId === "marvel-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`;
+    } else if (containerId === "pinoy-action-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`;
+    } else if (containerId === "anime-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`;
+    } else if (containerId === "filipino-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`;
+    } else if (containerId === "kdrama-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`;
+    } else if (containerId === "kpop-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`;
+    } else if (containerId === "kids-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`;
+    } else if (containerId === "continue-list") {
+        resultsDiv.innerHTML = continueWatching.filter(i => i.poster_path).map(item => `
+            <div class="search-card" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+            </div>`).join('');
+        return;
+    }
+
+    if (url === "") return;
+    currentViewAllUrl = url; // I-save ang URL para sa susunod na mga pahina
+
+    try {
+        // Sabay nating kunin ang Page 1 at Page 2 sa unang bukas (40 items agad)
+        const [page1, page2] = await Promise.all([
+            fetch(`${url}&page=1`).then(r => r.json()),
+            fetch(`${url}&page=2`).then(r => r.json())
+        ]);
+        
+        const allItems = [...(page1.results || []), ...(page2.results || [])];
+        currentViewAllPage = 2; // Naka-page 2 na tayo
+
+        resultsDiv.innerHTML = allItems.filter(i => i.poster_path).map(item => `
+            <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                <img src="${IMG_URL}${item.poster_path}">
+                <p>${item.title || item.name}</p>
+            </div>`).join('');
+            
+        // I-refresh ang focus list kung gumagamit ng TV Remote navigation
+        if (typeof selectedIndex !== 'undefined') selectedIndex = 0;
+
+    } catch (err) {
+        console.error("View All Fetch Error:", err);
+        resultsDiv.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Failed to load items. Please try again.</div>";
+    }
+}
+
+// --- AUTOMATIC SCROLL MONITORING (Para sa Infinite Loading) ---
+// Kapag malapit na sa dulo ng scrollbar ang user, kusa nitong hihilahin ang Page 3, 4, 5 pataas.
+document.getElementById("search-overlay").addEventListener("scroll", async function() {
+    if (currentViewAllUrl === "" || isFetchingViewAll) return;
+
+    const resultsDiv = document.getElementById("search-results");
+    
+    // Kapag ang scroll ay umabot sa 80% ng kabuuang taas ng container
+    if (this.scrollTop + this.clientHeight >= this.scrollHeight - 300) {
+        isFetchingViewAll = true;
+        currentViewAllPage++; // Dagdagan ang pahina
+
+        try {
+            const res = await fetch(`${currentViewAllUrl}&page=${currentViewAllPage}`).then(r => r.json());
+            
+            if (res.results && res.results.length > 0) {
+                const extraHtml = res.results.filter(i => i.poster_path).map(item => `
+                    <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                        <img src="${IMG_URL}${item.poster_path}">
+                        <p>${item.title || item.name}</p>
+                    </div>`).join('');
+                
+                // Idagdag ang mga bagong cards sa dulo nang hindi binubura ang nauna
+                resultsDiv.insertAdjacentHTML('beforeend', extraHtml);
+            }
+        } catch (error) {
+            console.error("Error loading next page:", error);
+        } finally {
+            isFetchingViewAll = false;
+        }
+    }
+});
+
 
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {

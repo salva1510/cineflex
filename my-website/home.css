@@ -128,6 +128,25 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .trailer-btn:hover { background: #cccccc; }
 .mylist-btn { flex: 0.5; background: #333; color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; }
 .modal-body button:nth-child(n+5) { display: none !important; }
+/* Kapag naka-fullscreen ang mismong container, puwersahing mawala ang padding-bottom scaling */
+#modal-player-container:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000 !important;
+}
+
+#modal-player-container:fullscreen .iframe-container {
+  padding-bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#modal-player-container:fullscreen iframe {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important; /* Siguradong walang mapuputol na gilid habang sagad ang screen */
+}
+
 
 /* --- CAST AT SIMILAR SECTIONS --- */
 .cast-section { margin: 20px 0; }

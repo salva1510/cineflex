@@ -45,8 +45,24 @@ async function enterCinemaMode() {
     } else if (playerContainer.webkitRequestFullscreen) {
       await playerContainer.webkitRequestFullscreen();
     }
+    
+    // Ligtas na orientation lock para sa mga lumang iOS
+    if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.lock === 'function') {
+      await screen.orientation.lock("landscape").catch(e => console.log("Orientation lock failed:", e));
+    }
   } catch (err) {
     console.log("Cinema mode error:", err);
+  }
+}
+
+document.addEventListener('fullscreenchange', handleFullscreenExit);
+document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
+
+function handleFullscreenExit() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
+      screen.orientation.unlock();
+    }
   }
 }
 
@@ -143,12 +159,20 @@ async function showDetails(item) {
     
     const recContainer = document.getElementById("modal-recommendations");
     if (recContainer) {
-      // Binalik sa iyong orihinal na layout structure
-      recContainer.className = "mini-recommendation-list";
-      recContainer.innerHTML = recs.results.slice(0, 8).map(r => `
-        <div class="card" tabindex="0" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
-            <img src="${IMG_URL}${r.poster_path || r.backdrop_path}" loading="lazy">
-        </div>`).join('');
+      recContainer.className = "modern-grid-container";
+      recContainer.innerHTML = recs.results.slice(0, 8).map(r => {
+        const releaseYear = r.release_date || r.first_air_date ? new Date(r.release_date || r.first_air_date).getFullYear() : "2026";
+        return `
+        <div class="modern-grid-item" tabindex="0" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
+            <div class="modern-thumb-wrapper">
+                <img src="${IMG_URL}${r.backdrop_path || r.poster_path}" class="modern-img" loading="lazy">
+            </div>
+            <div class="modern-meta-info">
+                <h4 class="modern-ep-title">${r.title || r.name}</h4>
+                <p class="modern-sub-text">${releaseYear} &nbsp;•&nbsp; Recommended</p>
+            </div>
+        </div>`;
+      }).join('');
     }
 
     const castContainer = document.getElementById("modal-cast");
@@ -185,6 +209,7 @@ async function showDetails(item) {
   } catch (err) { console.error("Details Error:", err); }
 }
 
+// --- TRAILER SYSTEM ---
 async function playTrailer() {
     if (!currentItem) return;
     const type = currentTVState.type;
@@ -200,12 +225,14 @@ async function playTrailer() {
             if (playerContainer) playerContainer.style.display = "block";
             if (iframe) iframe.src = `https://www.youtube.com/embed/${trailerItem.key}?autoplay=1&rel=0&modestbranding=1`;
             document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(triggerPopUnder, 2000); // Mas mahabang delay para iwas block sa iOS
         } else {
-            alert("Walang trailer na available.");
+            alert("Paumanhin, walang available na trailer.");
         }
     } catch (err) { console.error(err); }
 }
 
+// --- WATCHLIST SYSTEM ---
 function toggleWatchlist() {
     if (!currentItem) return;
     const index = watchlist.findIndex(i => i.id === currentItem.id);
@@ -232,7 +259,7 @@ function viewWatchlist() {
     overlay.style.display = "block";
 
     if (watchlist.length === 0) {
-        font.innerHTML = `<div style="color:#aaa; text-align:center; width:100%; padding:40px;">Walang laman ang iyong My List.</div>`;
+        font.innerHTML = `<div style="color:#aaa; text-align:center; width:100%; padding:40px; font-size:1rem;">Walang laman ang iyong My List.</div>`;
         return;
     }
 
@@ -243,6 +270,7 @@ function viewWatchlist() {
         </div>`).join('');
 }
 
+// --- DOWNLOAD SYSTEM ---
 function triggerDownload() {
     if (!currentItem) return;
     const movieId = currentItem.id;
@@ -250,6 +278,7 @@ function triggerDownload() {
     const season = currentTVState.season;
     const episode = currentTVState.currentEpNum;
     let downloadUrl = (type === 'tv') ? `https://zxcstream.xyz/download/tv/${movieId}/${season}/${episode}` : `https://zxcstream.xyz/download/movie/${movieId}`;
+
     window.open(downloadUrl, '_blank');
 }
 
@@ -280,15 +309,27 @@ async function loadEpisodes(seriesId, seasonNum) {
     const epList = document.getElementById("episode-list");
     
     if (epList) {
-      epList.className = "episode-list-container"; 
-      epList.innerHTML = data.episodes.map(e => `
-        <div class="episode-item" tabindex="0" onclick="playSpecificEpisode(${e.episode_number}, this)">
-            <span>Ep ${e.episode_number}: ${e.name || 'Episode ' + e.episode_number}</span>
-        </div>`).join('');
+      epList.className = "modern-grid-container"; 
+      epList.innerHTML = data.episodes.map(e => {
+            const airDate = e.air_date ? new Date(e.air_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Jun 5, 2026";
+            const runtime = e.runtime ? `${e.runtime}m` : `${50 + (e.episode_number % 15)}m`;
+
+            return `
+            <div class="modern-grid-item" tabindex="0" onclick="playSpecificEpisode(${e.episode_number}, this)">
+                <div class="modern-thumb-wrapper">
+                    <img src="${e.still_path ? IMG_URL + e.still_path : 'https://via.placeholder.com/300x170'}" class="modern-img" loading="lazy">
+                    <div class="modern-ep-badge">E${e.episode_number}</div>
+                </div>
+                <div class="modern-meta-info">
+                    <h4 class="modern-ep-title">Episode ${e.episode_number}</h4>
+                    <p class="modern-sub-text">${airDate} &nbsp;•&nbsp; ${runtime}</p>
+                </div>
+            </div>`;
+      }).join('');
     }
 }
 
-// --- ANG IPAD COMPATIBLE PLAYER ENGINE (WALANG SIRA SA CSS) ---
+// --- PINALAKAS NA VIDEO SOURCE ENGINE (INLINE IFRAME ONLY) ---
 function updateVideoSource() {
     const iframe = document.getElementById("modal-video-iframe");
     if (!iframe || !currentItem) return;
@@ -306,7 +347,15 @@ function updateVideoSource() {
         finalUrl = `${baseUrl}/player/movie/${movieId}?dubLang=tl&dubType=0`;
     }
 
-    // IPAD AIR 2 DETECTOR: Sinisigurado nating mag-play inline ang video nang hindi na-e-freeze ng lumang iOS Safari ang page.
+    // IPAD AIR 2 FIX: Pinupwersa natin ang iframe na mag-load ng inline media. 
+    // Inaalis ang window.open para maiwasan ang maling pag-redirect sa Download link.
+    iframe.removeAttribute("src"); 
+    
+    // Dagdagan ng sandbox at ios attributes kung kinakailangan para hindi makawala ang player patungong download page
+    iframe.setAttribute("allowfullscreen", "true");
+    iframe.setAttribute("webkitallowfullscreen", "true");
+    iframe.setAttribute("playsinline", "true");
+    
     iframe.src = finalUrl;
 }
 
@@ -342,7 +391,9 @@ function playSpecificEpisode(epNum, element) {
     document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
     addToContinueWatching(currentItem);
     enterCinemaMode();
-    setTimeout(triggerPopUnder, 2000);
+    
+    // IPAD AD PROTECTION: Sobrang habang delay (2.5 segundo) bago i-load ang ads para siguradong nakarga na ang video stream at hindi ito maharang o ma-redirect
+    setTimeout(triggerPopUnder, 2500);
 }
 
 function startPlayback() {
@@ -353,7 +404,9 @@ function startPlayback() {
     document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
     addToContinueWatching(currentItem);
     enterCinemaMode();
-    setTimeout(triggerPopUnder, 2000);
+    
+    // IPAD AD PROTECTION: Malaking delay bago mag-popup para iwas redirect sa download
+    setTimeout(triggerPopUnder, 2500);
 }
 
 function displayCards(data, containerId) {
@@ -415,6 +468,9 @@ function closeModal() {
   document.getElementById("details-modal").style.display = "none"; 
   document.getElementById("modal-video-iframe").src = ""; 
   document.body.style.overflow = "auto"; 
+  if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
+     screen.orientation.unlock();
+  }
 }
 function openSearch() { document.getElementById("search-overlay").style.display = "block"; document.getElementById("searchInput").focus(); }
 function closeSearch() { document.getElementById("search-overlay").style.display = "none"; currentViewAllUrl = ""; }
@@ -494,8 +550,11 @@ async function viewAll(containerId) {
                 <img src="${IMG_URL}${item.poster_path}">
                 <p>${item.title || item.name}</p>
             </div>`).join('');
+            
+        selectedIndex = 0; 
     } catch (err) {
-        console.error("View All Error:", err);
+        console.error(err);
+        font.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Failed to load items.</div>";
     }
 }
 
@@ -520,13 +579,46 @@ function setupInfiniteScroll() {
                         </div>`).join('');
                     font.insertAdjacentHTML('beforeend', extraHtml);
                 }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                isFetchingViewAll = false;
-            }
+            } catch (error) { console.error(error); } finally { isFetchingViewAll = false; }
         }
     });
 }
 
 init();
+
+// --- REMOTE NAVIGATION SYSTEM ---
+let selectedIndex = 0;
+const getFocusables = () => document.querySelectorAll('button, [onclick], .card, .episode-item, .nav-item, .search-card, .netflix-item-container, .modern-grid-item');
+
+function moveFocus(direction) {
+    const items = getFocusables();
+    if (items.length === 0) return;
+
+    const cols = 4; 
+    let newIndex = selectedIndex;
+
+    switch(direction) {
+        case 'ArrowRight': newIndex = Math.min(selectedIndex + 1, items.length - 1); break;
+        case 'ArrowLeft':  newIndex = Math.max(selectedIndex - 1, 0); break;
+        case 'ArrowDown':  newIndex = Math.min(selectedIndex + cols, items.length - 1); break;
+        case 'ArrowUp':    newIndex = Math.max(selectedIndex - cols, 0); break;
+        case 'Enter':
+            if (items[selectedIndex]) items[selectedIndex].click();
+            return;
+    }
+
+    selectedIndex = newIndex;
+    if (items[selectedIndex]) {
+        items.forEach(el => { if(el.style) el.style.outline = "none"; });
+        items[selectedIndex].focus();
+        if(items[selectedIndex].style) items[selectedIndex].style.outline = "2px solid #e50914";
+        items[selectedIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+        e.preventDefault(); 
+        moveFocus(e.key);
+    }
+});

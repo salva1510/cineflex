@@ -273,12 +273,17 @@ function viewWatchlist() {
 // --- DOWNLOAD SYSTEM ---
 function triggerDownload() {
     if (!currentItem) return;
+    
+    // 1. I-trigger muna ang iyong Pop-Under Ad Script
+    triggerPopUnder();
+
     const movieId = currentItem.id;
     const type = currentTVState.type; 
     const season = currentTVState.season;
     const episode = currentTVState.currentEpNum;
     let downloadUrl = (type === 'tv') ? `https://zxcstream.xyz/download/tv/${movieId}/${season}/${episode}` : `https://zxcstream.xyz/download/movie/${movieId}`;
 
+    // 2. Buksan ang totoong download link sa bagong tab matapos mag-load ng ad
     window.open(downloadUrl, '_blank');
 }
 

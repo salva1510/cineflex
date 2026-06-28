@@ -2,8 +2,16 @@
   "short_name": "Cineflex",
   "name": "Cineflex Streaming",
   "icons": [
-    { "src": "https://image.tmdb.org/t/p/w185/742aa17a327005b91fb6602054523286.png", "type": "image/png", "sizes": "192x192" },
-    { "src": "https://image.tmdb.org/t/p/w500/742aa17a327005b91fb6602054523286.png", "type": "image/png", "sizes": "512x512" }
+    {
+      "src": "https://image.tmdb.org/t/p/w185/742aa17a327005b91fb6602054523286.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://image.tmdb.org/t/p/w500/742aa17a327005b91fb6602054523286.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
   ],
   "start_url": "/",
   "background_color": "#050505",

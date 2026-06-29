@@ -1,21 +1,22 @@
 {
   "short_name": "Cineflex",
-  "name": "Cineflex Streaming",
+  "name": "Cineflex - Stream Movies & TV Shows",
   "icons": [
     {
-      "src": "https://image.tmdb.org/t/p/w185/742aa17a327005b91fb6602054523286.png",
+      "src": "https://image.tmdb.org/t/p/w192/742aa17a327005b91fb6602054523286.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "https://image.tmdb.org/t/p/w500/742aa17a327005b91fb6602054523286.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "500x500"
     }
   ],
   "start_url": "/",
   "background_color": "#050505",
   "theme_color": "#000000",
   "display": "standalone",
-  "orientation": "portrait-primary"
+  "orientation": "portrait"
 }

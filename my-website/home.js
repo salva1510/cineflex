@@ -23,53 +23,6 @@ let touchEndX = 0;
 let currentViewAllPage = 1;
 let currentViewAllUrl = "";
 let isFetchingViewAll = false;
-// ==========================================
-//        PWA INSTALLATION SUBSYSTEM
-// ==========================================
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
-
-// Intercept browser's native installation prompt
-window.addEventListener("beforeinstallprompt", (e) => {
-  // Prevent older platforms from popping it instantly
-  e.preventDefault();
-  // Save the trigger event so it can be deployed on a click action
-  deferredPrompt = e;
-  // Reveal the hidden navbar installation button
-  if (installBtn) {
-    installBtn.style.display = "inline-block";
-  }
-});
-
-// Bind user click event to action the saved install window prompt
-if (installBtn) {
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
-    
-    // Fire the install layout popup
-    deferredPrompt.prompt();
-    
-    // Await decision outcome from the viewer
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User installation choice outcome: ${outcome}`);
-    
-    // Nullify saved reference since it cannot be recycled
-    deferredPrompt = null;
-    
-    // Hide the button container safely
-    installBtn.style.display = "none";
-  });
-}
-
-// Clean up hidden references once confirmed fully deployed
-window.addEventListener("appinstalled", () => {
-  deferredPrompt = null;
-  if (installBtn) {
-    installBtn.style.display = "none";
-  }
-  console.log("Cineflex PWA layout has been successfully installed locally.");
-});
-
 
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {
@@ -635,15 +588,6 @@ function setupInfiniteScroll() {
         }
     });
 }
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('Service Worker Registered!', reg))
-      .catch(err => console.error('Service Worker Registration Failed:', err));
-  });
-}
-
-
 
 init();
 

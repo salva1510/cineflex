@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cineflex</title>
+  <link rel="stylesheet" href="home.css?v=1.2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Scrolling Text */
+    .scrolling-text-container { background: #1a1a1a; color: #ffcc00; overflow: hidden; white-space: nowrap; padding: 10px 0; font-family: sans-serif; font-weight: bold; border-bottom: 2px solid #333; }
+    .scrolling-text-inner { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* Modal & List Styles */
+    .episode-list-container, .mini-recommendation-list { margin-top: 20px; display: flex; flex-direction: column; }
+    
+    /* Splash Screen Animations */
+    @keyframes pulseText {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body style="margin: 0; background: #050505;">
+
+<div id="splash-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #050505 !important; z-index: 999999 !important; display: flex !important; justify-content: center; align-items: center; cursor: pointer; flex-direction: column; user-select: none; -webkit-user-select: none; box-sizing: border-box;">
+    <h1 style="color: #e50914 !important; font-size: 3.5rem !important; font-weight: 900 !important; letter-spacing: -2px !important; margin: 0 !important; font-family: 'Helvetica Neue', Arial, sans-serif !important; text-shadow: 0 4px 15px rgba(229,9,20,0.4); display: block !important;">CINEFLEX</h1>
+    <p style="color: #ffffff !important; margin-top: 20px !important; font-size: 1rem !important; font-family: Arial, sans-serif !important; letter-spacing: 2px !important; font-weight: bold !important; display: block !important; animation: pulseText 1.8s infinite ease-in-out; text-transform: uppercase;">TAP ANYWHERE TO ENTER</p>
+</div>
+
+<audio id="intro-sound" src="netflix-intro.mp3" preload="auto"></audio>
+
+<div class="scrolling-text-container">
+  <div class="scrolling-text-inner">
+    📢 IMPORTANT ANNOUNCEMENT: Welcome to Cineflex Online! If the player doesn't load or experiences buffering, please switch to alternative servers. Enjoy streaming! 🎬🍿
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="logo">CINEFLEX</div>
+  <div class="nav-icons">
+    <i class="fa-solid fa-bell" style="margin-right:15px; cursor:pointer;"></i>
+    <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
+  </div>
+</nav>
+
+<div id="banner" class="hero-banner" onclick="showBannerDetails()">
+  <div class="hero-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc"></p>
+    <div class="hero-btns" onclick="event.stopPropagation();">
+      <button class="btn-play" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Play</button>
+      <button class="btn-list" onclick="showBannerDetails()"><i class="fa-solid fa-info"></i> Details</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-container">
+  <div id="continue-watching-section" class="section-container" style="display:none; margin-top: -20px; margin-bottom: 25px;">
+     <h2 class="section-title">Continue Watching</h2>
+     <div id="continue-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Trending Today</h2>
+    <div id="trending-today" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Netflix Originals</h2>
+    <div id="netflix-movies-list" class="cards-scroll-container netflix-row"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">DramaBox Mini Series</h2>
+    <div id="dramabox-list" class="cards-scroll-container dramabox-row"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Korean Dramas</h2>
+    <div id="kdrama-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Pinoy Action Movies</h2>
+    <div id="pinoy-action-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Anime Series</h2>
+    <div id="anime-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Marvel Universe</h2>
+    <div id="marvel-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Filipino Movies</h2>
+    <div id="filipino-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">K-Pop Music & Movies</h2>
+    <div id="kpop-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Cocomelon Nursery Rhymes</h2>
+    <div id="cocomelon-list" class="cards-scroll-container"></div>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">Kids & Family</h2>
+    <div id="kids-list" class="cards-scroll-container"></div>
+  </div>
+</div>
+
+<div id="menu-drawer" class="menu-drawer">
+  <div class="drawer-header">
+    <h3>Cineflex Menu</h3>
+    <i class="fa-solid fa-xmark close-drawer-btn" onclick="closeMenuDrawer()"></i>
+  </div>
+  <div class="drawer-content">
+    <div class="drawer-item" onclick="closeMenuDrawer(); window.scrollTo({top:0, behavior:'smooth'});"><i class="fa-solid fa-house"></i> Home</div>
+    <div class="drawer-item" onclick="viewWatchlist()"><i class="fa-solid fa-plus"></i> My Watchlist</div>
+    <div class="drawer-item" id="installBtn" style="display:none; color:#2ecc71;"><i class="fa-solid fa-download"></i> Install App (PWA)</div>
+  </div>
+</div>
+
+<div id="details-modal" class="modal">
+    <div class="modal-content">
+      <div id="modal-banner" class="modal-hero">
+         <i class="fa-solid fa-xmark modal-close-btn" onclick="closeModal()"></i>
+         <div class="modal-hero-cover"></div>
+      </div>
+      
+      <div id="modal-player-container" class="player-wrapper" style="display:none;">
+          <iframe id="modal-video-iframe" src="" allowfullscreen webkitallowfullscreen playsinline></iframe>
+      </div>
+
+      <div class="modal-body">
+        <h2 id="modal-title"></h2>
+        
+        <div class="server-tabs-container" style="margin: 15px 0; display: flex; gap: 10px;">
+            <button id="srv1-btn" class="server-tab-btn active" onclick="switchServer(1)"><i class="fa-solid fa-server"></i> Server 1</button>
+            <button id="srv2-btn" class="server-tab-btn" onclick="switchServer(2)"><i class="fa-solid fa-server"></i> Server 2</button>
+        </div>
+
+        <div class="modal-actions-row">
+            <button id="movie-play-action" class="modal-btn-main" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Watch Now</button>
+            <button class="modal-btn-circle" onclick="playTrailer()"><i class="fa-solid fa-video"></i> Trailer</button>
+            <button id="modal-watchlist-btn" class="modal-btn-circle" onclick="toggleWatchlist()"><i class="fa-solid fa-plus"></i> My List</button>
+            <button class="modal-btn-circle" onclick="triggerDownload()"><i class="fa-solid fa-cloud-download-alt"></i></button>
+        </div>
+
+        <p id="modal-desc"></p>
+        
+        <div class="modal-row">
+            <h3>Cast & Crew</h3>
+            <div id="modal-cast" class="cast-scroll-container"></div>
+        </div>
+
+        <div id="episode-selector" class="modal-row" style="display:none; margin-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <h3 style="margin:0; font-size:1.1rem; border-left: 4px solid #e50914; padding-left: 10px;">Episodes</h3>
+                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            </div>
+            <div id="episode-list" class="episode-list-container"></div>
+        </div>
+        
+        <div class="modal-row" style="margin-top:25px;">
+            <h3 style="font-size:1.1rem; border-left:4px solid #e50914; padding-left:10px;">More Like This</h3>
+            <div id="modal-recommendations" class="mini-recommendation-list"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></div>
+  <div class="nav-item" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
+  <div class="nav-item" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></div>
+</div>
+
+<div id="search-overlay" class="search-overlay" style="display:none;">
+    <div class="search-input-wrapper">
+        <input type="text" id="searchInput" placeholder="Search movies, TV shows, anime...">
+        <i class="fa-solid fa-xmark search-close-trigger" onclick="closeSearch()"></i>
+    </div>
+    <div id="search-results" class="search-grid-container"></div>
+</div>
+
+<script src="home.js?v=1.2"></script>
+
+</body>
+</html>

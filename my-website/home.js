@@ -24,30 +24,6 @@ let currentViewAllPage = 1;
 let currentViewAllUrl = "";
 let isFetchingViewAll = false;
 
-// --- PWA LOGIC GLOBAL VARIABLE ---
-let deferredPrompt;
-
-// Pagrehistro ng Service Worker para mag-activate ang 'Add to Home Screen' ng device
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('Service Worker matagumpay na nairhistro!', reg))
-      .catch(err => console.error('Bigo sa pag-register ng Service Worker:', err));
-  });
-}
-
-// Pakikinig kapag nagpahiwatig ang browser na pwedeng i-app ang iyong streaming site
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  
-  // Ipakita ang iyong button na id="installBtn" mula sa navbar
-  const installBtn = document.getElementById('installBtn');
-  if (installBtn) {
-    installBtn.style.display = 'block';
-  }
-});
-
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {
   try {
@@ -70,6 +46,7 @@ async function enterCinemaMode() {
       await playerContainer.webkitRequestFullscreen();
     }
     
+    // Ligtas na orientation lock para sa mga lumang iOS
     if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.lock === 'function') {
       await screen.orientation.lock("landscape").catch(e => console.log("Orientation lock failed:", e));
     }
@@ -91,23 +68,6 @@ function handleFullscreenExit() {
 
 async function init() {
   try {
-    // Setup ng click logic para sa Install Button natin
-    const installBtn = document.getElementById('installBtn');
-    if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            
-            // Ilabas ang installation dialog ng smartphone
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`Sagot ng user sa installation: ${outcome}`);
-            
-            // Itago muli ang install button
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-        });
-    }
-
     const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction, dramabox, netflixMovies, cocomelonData] = await Promise.all([
       fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
@@ -249,6 +209,7 @@ async function showDetails(item) {
   } catch (err) { console.error("Details Error:", err); }
 }
 
+// --- TRAILER SYSTEM ---
 async function playTrailer() {
     if (!currentItem) return;
     const type = currentTVState.type;
@@ -264,13 +225,14 @@ async function playTrailer() {
             if (playerContainer) playerContainer.style.display = "block";
             if (iframe) iframe.src = `https://www.youtube.com/embed/${trailerItem.key}?autoplay=1&rel=0&modestbranding=1`;
             document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(triggerPopUnder, 2000);
+            setTimeout(triggerPopUnder, 2000); // Mas mahabang delay para iwas block sa iOS
         } else {
             alert("Paumanhin, walang available na trailer.");
         }
     } catch (err) { console.error(err); }
 }
 
+// --- WATCHLIST SYSTEM ---
 function toggleWatchlist() {
     if (!currentItem) return;
     const index = watchlist.findIndex(i => i.id === currentItem.id);
@@ -308,8 +270,11 @@ function viewWatchlist() {
         </div>`).join('');
 }
 
+// --- DOWNLOAD SYSTEM ---
 function triggerDownload() {
     if (!currentItem) return;
+    
+    // 1. I-trigger muna ang iyong Pop-Under Ad Script
     triggerPopUnder();
 
     const movieId = currentItem.id;
@@ -318,6 +283,7 @@ function triggerDownload() {
     const episode = currentTVState.currentEpNum;
     let downloadUrl = (type === 'tv') ? `https://zxcstream.xyz/download/tv/${movieId}/${season}/${episode}` : `https://zxcstream.xyz/download/movie/${movieId}`;
 
+    // 2. Buksan ang totoong download link sa bagong tab matapos mag-load ng ad
     window.open(downloadUrl, '_blank');
 }
 
@@ -368,6 +334,7 @@ async function loadEpisodes(seriesId, seasonNum) {
     }
 }
 
+// --- PINALAKAS NA VIDEO SOURCE ENGINE (INLINE IFRAME ONLY) ---
 function updateVideoSource() {
     const iframe = document.getElementById("modal-video-iframe");
     if (!iframe || !currentItem) return;
@@ -385,10 +352,15 @@ function updateVideoSource() {
         finalUrl = `${baseUrl}/player/movie/${movieId}?dubLang=tl&dubType=0`;
     }
 
+    // IPAD AIR 2 FIX: Pinupwersa natin ang iframe na mag-load ng inline media. 
+    // Inaalis ang window.open para maiwasan ang maling pag-redirect sa Download link.
     iframe.removeAttribute("src"); 
+    
+    // Dagdagan ng sandbox at ios attributes kung kinakailangan para hindi makawala ang player patungong download page
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("webkitallowfullscreen", "true");
     iframe.setAttribute("playsinline", "true");
+    
     iframe.src = finalUrl;
 }
 
@@ -424,6 +396,8 @@ function playSpecificEpisode(epNum, element) {
     document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
     addToContinueWatching(currentItem);
     enterCinemaMode();
+    
+    // IPAD AD PROTECTION: Sobrang habang delay (2.5 segundo) bago i-load ang ads para siguradong nakarga na ang video stream at hindi ito maharang o ma-redirect
     setTimeout(triggerPopUnder, 2500);
 }
 
@@ -435,6 +409,8 @@ function startPlayback() {
     document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
     addToContinueWatching(currentItem);
     enterCinemaMode();
+    
+    // IPAD AD PROTECTION: Malaking delay bago mag-popup para iwas redirect sa download
     setTimeout(triggerPopUnder, 2500);
 }
 
@@ -613,14 +589,7 @@ function setupInfiniteScroll() {
     });
 }
 
-// Patakbuhin ang initialization
 init();
-
-window.addEventListener('appinstalled', () => {
-  console.log('Ang Cineflex ay matagumpay na na-install bilang App!');
-  const installBtn = document.getElementById('installBtn');
-  if (installBtn) installBtn.style.display = 'none';
-});
 
 // --- REMOTE NAVIGATION SYSTEM ---
 let selectedIndex = 0;

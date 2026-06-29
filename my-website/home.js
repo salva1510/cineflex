@@ -23,6 +23,63 @@ let touchEndX = 0;
 let currentViewAllPage = 1;
 let currentViewAllUrl = "";
 let isFetchingViewAll = false;
+// --- PWA REGISTRATION & INSTALLATION ENGINE ---
+let deferredPrompt;
+
+// 1. I-register ang Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js') // Siguraduhing sw.js ang pangalan ng service worker file mo sa root directory
+      .then(reg => console.log('Service Worker registered successfully!', reg.scope))
+      .catch(err => console.log('Service Worker registration failed:', err));
+  });
+}
+
+// 2. Makinig sa install prompt event ng browser
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Pigilan ang default prompt ng browser
+  e.preventDefault();
+  // I-save ang event para magamit mamaya
+  deferredPrompt = e;
+  
+  // Ipakita ang Install Button na nasa navbar mo
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.style.display = 'block';
+  }
+});
+
+// 3. Logic kapag kinlik ng user ang Install Button sa navbar
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      // Ipakita ang install prompt
+      deferredPrompt.prompt();
+      
+      // Hintayin ang sagot ng user (Inaccept o Dinene-y)
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to install prompt: ${outcome}`);
+      
+      // Linisin ang deferredPrompt variable, hindi na ito pwedeng gamitin muli
+      deferredPrompt = null;
+      
+      // Itago ulit ang button
+      installBtn.style.display = 'none';
+    });
+  });
+
+  // Itago ang button kapag naka-install na ang app
+  window.addEventListener('appinstalled', () => {
+    console.log('Cineflex PWA was installed successfully!');
+    const installBtn = document.getElementById('installBtn');
+    if (installBtn) installBtn.style.display = 'none';
+    deferredPrompt = null;
+  });
+});
+
 
 // --- POP-UNDER ADS INJECTION ---
 function triggerPopUnder() {

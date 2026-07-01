@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cineflex</title>
+  <link rel="stylesheet" href="home.css?v=1.1">
+  <script src="home.js?v=1.1"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Modal & List Styles */
+    .episode-list-container, .mini-recommendation-list { margin-top: 20px; display: flex; flex-direction: column; }
+
+    /* Custom styles for Auth forms */
+    .auth-input {
+      width: 100%; padding: 14px; margin-bottom: 16px; border-radius: 6px; 
+      border: 1px solid #222; background: #141414; color: #fff; 
+      box-sizing: border-box; font-size: 0.95rem; transition: border 0.2s;
+    }
+    .auth-input:focus {
+      outline: none; border-color: #e50914;
+    }
+    .auth-btn {
+      width: 100%; padding: 14px; background: #e50914; color: white; 
+      border: none; border-radius: 6px; font-weight: bold; cursor: pointer; 
+      font-size: 1rem; transition: background 0.2s;
+    }
+    .auth-btn:hover { background: #b80710; }
+  </style>
+</head>
+<body>
+
+<div id="login-screen" style="position: fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index: 99999; display: flex; justify-content: center; align-items: center; font-family: 'Inter', sans-serif; box-sizing: border-box; padding: 20px;">
+    <div style="background: rgba(15, 15, 15, 0.98); padding: 40px 30px; border-radius: 12px; width: 100%; max-width: 420px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.7); text-align: center;">
+        <h1 style="color: #e50914; font-weight: 900; margin-top: 0; margin-bottom: 30px; font-size: 2.5rem; letter-spacing: -1.5px;">Cineflex</h1>
+        
+        <div id="signin-box">
+            <h2 style="color: #fff; margin-bottom: 25px; font-size: 1.6rem; text-align: left; font-weight: 700;">Sign In</h2>
+            <input type="email" id="login-email" placeholder="Email Address" class="auth-input">
+            <input type="password" id="login-password" placeholder="Password" class="auth-input">
+            <button onclick="handleLogin()" class="auth-btn" style="margin-top: 10px;">Sign In</button>
+            <p style="color: #8c8c8c; margin-top: 25px; font-size: 0.95rem; text-align: left;">Bago ka lang ba? <a href="javascript:void(0)" onclick="toggleAuthMode(true)" style="color: #fff; text-decoration: none; font-weight: 500;">Mag-sign up ngayon.</a></p>
+        </div>
+
+        <div id="signup-box" style="display: none;">
+            <h2 style="color: #fff; margin-bottom: 25px; font-size: 1.6rem; text-align: left; font-weight: 700;">Mag-sign Up</h2>
+            <input type="text" id="reg-name" placeholder="Pangalan" class="auth-input">
+            <input type="email" id="reg-email" placeholder="Email Address" class="auth-input">
+            <input type="password" id="reg-password" placeholder="Gumawa ng Password" class="auth-input">
+            <button onclick="handleRegister()" class="auth-btn" style="margin-top: 10px;">Magsimula</button>
+            <p style="color: #8c8c8c; margin-top: 25px; font-size: 0.95rem; text-align: left;">May account ka na? <a href="javascript:void(0)" onclick="toggleAuthMode(false)" style="color: #fff; text-decoration: none; font-weight: 500;">Mag-login dito.</a></p>
+        </div>
+    </div>
+</div>
+<div class="navbar" id="navbar">
+  <div class="logo">Cineflex</div>
+  <div class="nav-icons">
+    <i class="fa-solid fa-bell"></i>
+  </div>
+</div>
+
+<div class="banner" id="hero-banner" onclick="openHeroDetails()">
+  <div class="banner-cover" id="banner-img"></div>
+  <div class="banner-gradient"></div>
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <p id="banner-desc">Please wait while we fetch the latest blockbusters...</p>
+    <div class="banner-buttons">
+      <button class="btn-play"><i class="fa-solid fa-play"></i> Play Now</button>
+      <button class="btn-info"><i class="fa-solid fa-circle-info"></i> More Info</button>
+    </div>
+  </div>
+  <div class="banner-nav banner-left" onclick="changeBanner(-1); event.stopPropagation();"><i class="fa-solid fa-chevron-left"></i></div>
+  <div class="banner-nav banner-right" onclick="changeBanner(1); event.stopPropagation();"><i class="fa-solid fa-chevron-right"></i></div>
+</div>
+
+<div class="content-wrapper">
+    <div id="view-all-container" style="display:none; margin-bottom:30px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:0 4%;">
+            <h2 id="view-all-title" style="margin:0; font-size:1.4rem;">All Movies</h2>
+            <button onclick="closeViewAll()" style="background:transparent; border:none; color:#e50914; font-size:1.1rem; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        </div>
+        <div id="view-all-grid" class="modern-grid-container" style="padding:0 4%;"></div>
+        <div id="view-all-loading" style="text-align:center; padding:20px; color:#aaa; display:none;">Loading more...</div>
+    </div>
+
+    <div id="homepage-lists">
+        <div class="section-header" onclick="viewAll('continue')">
+          <h2>Continue Watching</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="continue-watching-list"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('watchlist')">
+          <h2>My Watchlist</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="my-watchlist-list"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('trending-movies')">
+          <h2>Trending Movies</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="trending-movies"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('trending-tv')">
+          <h2>Trending TV Shows</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="trending-tv"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('action')">
+          <h2>Action & Adventure</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="action-movies"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('comedy')">
+          <h2>Comedy Zone</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="comedy-movies"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('horror')">
+          <h2>Horror & Thriller</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="horror-movies"></div>
+        </div>
+
+        <div class="section-header" onclick="viewAll('anime')">
+          <h2>Anime & Animation</h2>
+          <span>View All <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel" id="anime-movies"></div>
+        </div>
+    </div>
+</div>
+
+<div id="menu-drawer" class="menu-drawer" style="transform: translateX(100%);">
+    <div class="drawer-header">
+        <h2 style="margin:0; font-size:1.3rem; color:#e50914;">Menu</h2>
+        <i class="fa-solid fa-xmark" onclick="closeMenuDrawer()" style="font-size:1.5rem; cursor:pointer;"></i>
+    </div>
+    <div class="drawer-content">
+        <div class="drawer-item" onclick="closeMenuDrawer(); window.scrollTo({top:0, behavior:'smooth'});"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="drawer-item" onclick="closeMenuDrawer(); openSearch();"><i class="fa-solid fa-magnifying-glass"></i> Search Movies</div>
+        <div class="drawer-item" onclick="viewAll('watchlist'); closeMenuDrawer();"><i class="fa-solid fa-bookmark"></i> Watchlist</div>
+        <div class="drawer-item" onclick="clearContinueWatching(); closeMenuDrawer();"><i class="fa-solid fa-trash"></i> Clear History</div>
+        <hr style="border-color: rgba(255,255,255,0.05); margin: 20px 0;">
+        <div class="drawer-item" onclick="handleLogout()" style="color: #e50914;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div>
+    </div>
+</div>
+
+<div id="detail-modal" class="modal-overlay" style="display:none;" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-hero">
+        <div class="modal-hero-bg" id="modal-bg"></div>
+        <div class="modal-hero-gradient"></div>
+        <i class="fa-solid fa-xmark modal-close" onclick="closeModal()"></i>
+        <div class="modal-hero-content">
+          <h2 id="modal-title">Movie Title</h2>
+          <div class="modal-meta">
+            <span id="modal-year">2024</span>
+            <span id="modal-rating"><i class="fa-solid fa-star" style="color:#ffcc00;"></i> 8.5</span>
+            <span id="modal-type-badge">MOVIE</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-body">
+        <div class="action-bar">
+            <button class="modal-btn-play" onclick="playCurrentItem()"><i class="fa-solid fa-play"></i> Watch Now</button>
+            <button class="modal-btn-circle" id="modal-watchlist-btn" onclick="toggleWatchlist()"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        
+        <p class="modal-overview" id="modal-overview">Plot synopsis goes here...</p>
+        
+        <div id="player-section" style="display:none; margin-top:20px; background:#000; border-radius:8px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.8);">
+            <div style="background:#111; padding:8px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222;">
+                <span style="font-size:0.85rem; font-weight:bold; color:#aaa;" id="playing-title-status">STREAMING</span>
+                <div>
+                   <button id="btn-srv-1" onclick="switchServer(1)" style="padding:4px 10px; background:#e50914; color:#fff; border:none; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer; margin-right:5px;">Server 1</button>
+                   <button id="btn-srv-2" onclick="switchServer(2)" style="padding:4px 10px; background:#222; color:#ccc; border:none; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer;">Server 2</button>
+                </div>
+            </div>
+            <div style="position:relative; width:100%; aspect-ratio:16/9;">
+               <iframe id="video-player" src="" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div id="tv-episodes-wrapper" style="display:none; margin-top:25px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; box-sizing: border-box;">
+                <h3 style="margin:0; font-size:1.1rem; border-left: 4px solid #e50914; padding-left: 10px;">Episodes</h3>
+                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            </div>
+            <div id="episode-list" class="episode-list-container"></div>
+        </div>
+        <div class="modal-row" style="margin-top:25px;">
+            <h3 style="font-size:1.1rem; border-left:4px solid #e50914; padding-left:10px;">More Like This</h3>
+            <div id="modal-recommendations" class="mini-recommendation-list"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></div>
+  <div class="nav-item" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
+  <div class="nav-item" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></div>
+</div>
+
+<div id="search-overlay" class="search-overlay" style="display:none;">
+    <div class="search-input-wrapper">
+        <input type="text" id="searchInput" placeholder="Search movies, TV shows, anime..." oninput="handleSearch(this.value)">
+        <i class="fa-solid fa-xmark" onclick="closeSearch()" style="color:#fff; font-size:1.3rem; cursor:pointer; padding:5px;"></i>
+    </div>
+    <div id="search-results-grid" class="modern-grid-container" style="padding: 20px 4%;"></div>
+</div>
+
+</body>
+</html>

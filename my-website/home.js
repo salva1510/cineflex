@@ -777,3 +777,183 @@ console.log("Player Loaded");
 }
 
 setTimeout(getRecommendedContent,2000);
+
+// ======================================
+// CINEFLEX PREMIUM ENGINE v2.0
+// Part 5
+// ======================================
+
+// Netflix Splash Screen
+window.addEventListener("load", () => {
+
+    const splash = document.getElementById("splash-overlay");
+
+    if (splash) {
+
+        setTimeout(() => {
+
+            splash.style.opacity = "0";
+
+            setTimeout(() => {
+
+                splash.remove();
+
+            },700);
+
+        },1800);
+
+    }
+
+});
+
+// Auto Banner Rotation
+setInterval(() => {
+
+    if (trendingItems.length > 1) {
+
+        changeBanner(1);
+
+    }
+
+},10000);
+
+// Lazy Image Animation
+const lazyObserver = new IntersectionObserver(entries=>{
+
+    entries.forEach(entry=>{
+
+        if(entry.isIntersecting){
+
+            entry.target.classList.add("loaded");
+
+            lazyObserver.unobserve(entry.target);
+
+        }
+
+    });
+
+},{
+    threshold:0.2
+});
+
+function observeImages(){
+
+    document.querySelectorAll("img").forEach(img=>{
+
+        lazyObserver.observe(img);
+
+    });
+
+}
+
+setTimeout(observeImages,1500);
+
+// Skeleton Loading
+function hideSkeleton(){
+
+    document.querySelectorAll(".skeleton").forEach(el=>{
+
+        el.remove();
+
+    });
+
+}
+
+window.addEventListener("load",()=>{
+
+    setTimeout(hideSkeleton,1000);
+
+});
+
+// Hover Animation
+document.addEventListener("mouseover",(e)=>{
+
+    if(e.target.closest(".card")){
+
+        e.target.closest(".card").classList.add("hovering");
+
+    }
+
+});
+
+document.addEventListener("mouseout",(e)=>{
+
+    if(e.target.closest(".card")){
+
+        e.target.closest(".card").classList.remove("hovering");
+
+    }
+
+});
+
+// Auto Save Watch Progress
+setInterval(()=>{
+
+    const iframe=document.getElementById("modal-video-iframe");
+
+    if(currentItem && iframe){
+
+        savePlayback(currentItem.id,Date.now());
+
+    }
+
+},5000);
+
+// Resume Notification
+function showResumeNotice(){
+
+    if(!currentItem) return;
+
+    const time=getPlayback(currentItem.id);
+
+    if(time>0){
+
+        console.log("Resume available.");
+
+    }
+
+}
+
+// Install Prompt Reminder
+setTimeout(()=>{
+
+    if(deferredPrompt){
+
+        const btn=document.getElementById("installBtn");
+
+        if(btn){
+
+            btn.classList.add("install-pulse");
+
+        }
+
+    }
+
+},10000);
+
+// Keyboard Shortcuts
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Escape"){
+
+        closeModal();
+
+        closeSearch();
+
+    }
+
+});
+
+// Observe Newly Created Cards
+const bodyObserver=new MutationObserver(()=>{
+
+    observeImages();
+
+});
+
+bodyObserver.observe(document.body,{
+    childList:true,
+    subtree:true
+});
+
+console.log("✅ Cineflex Premium Engine Loaded");

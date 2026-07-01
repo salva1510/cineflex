@@ -87,19 +87,49 @@
           <div class="drawer-section">
     <h4>Account</h4>
 
-    <div id="accountInfo" class="drawer-item">
-        <i class="fa-solid fa-user"></i>
-        Guest
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+
+        <img id="userPhoto"
+        src="https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff"
+        style="
+        width:55px;
+        height:55px;
+        border-radius:50%;
+        object-fit:cover;
+        border:2px solid #e50914;">
+
+        <div style="flex:1;">
+            <div id="userName"
+            style="font-weight:bold;color:white;">
+                Guest
+            </div>
+
+            <div id="userEmail"
+            style="font-size:.8rem;color:#999;">
+                Not logged in
+            </div>
+
+            <div id="userBadge"
+            style="
+            margin-top:5px;
+            display:inline-block;
+            background:#e50914;
+            color:white;
+            padding:3px 8px;
+            border-radius:20px;
+            font-size:11px;">
+                FREE MEMBER
+            </div>
+        </div>
+
     </div>
 
-    <div id="logoutBtn"
-         class="drawer-item"
-         onclick="logout()"
-         style="display:none;">
+    <div class="drawer-item" onclick="logout()" id="logoutBtn" style="display:none;">
         <i class="fa-solid fa-right-from-bracket"></i>
         Logout
     </div>
-          </div>
+
+</div>
         </div>
     </div>
 </div>

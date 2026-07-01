@@ -298,3 +298,6 @@ auth.onAuthStateChanged((user)=>{
     }
 
 });
+window.addEventListener("load", () => {
+    openLoginModal();
+});

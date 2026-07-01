@@ -301,3 +301,33 @@ auth.onAuthStateChanged((user)=>{
 window.addEventListener("load", () => {
     openLoginModal();
 });
+auth.onAuthStateChanged((user) => {
+
+    const info = document.getElementById("accountInfo");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (user) {
+
+        if(info){
+            info.innerHTML =
+            `<i class="fa-solid fa-user"></i> ${user.displayName || user.email}`;
+        }
+
+        if(logoutBtn){
+            logoutBtn.style.display = "flex";
+        }
+
+    } else {
+
+        if(info){
+            info.innerHTML =
+            `<i class="fa-solid fa-user"></i> Guest`;
+        }
+
+        if(logoutBtn){
+            logoutBtn.style.display = "none";
+        }
+
+    }
+
+});

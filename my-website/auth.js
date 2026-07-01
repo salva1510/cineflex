@@ -331,3 +331,59 @@ auth.onAuthStateChanged((user) => {
     }
 
 });
+auth.onAuthStateChanged((user)=>{
+
+    const photo=document.getElementById("userPhoto");
+    const name=document.getElementById("userName");
+    const email=document.getElementById("userEmail");
+    const badge=document.getElementById("userBadge");
+    const logout=document.getElementById("logoutBtn");
+
+    if(user){
+
+        if(photo){
+            photo.src=user.photoURL ||
+            "https://ui-avatars.com/api/?name="+encodeURIComponent(user.displayName||user.email);
+        }
+
+        if(name){
+            name.innerText=user.displayName || "User";
+        }
+
+        if(email){
+            email.innerText=user.email;
+        }
+
+        if(badge){
+            badge.innerText="CINEFLEX MEMBER";
+        }
+
+        if(logout){
+            logout.style.display="flex";
+        }
+
+    }else{
+
+        if(photo){
+            photo.src="https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
+        }
+
+        if(name){
+            name.innerText="Guest";
+        }
+
+        if(email){
+            email.innerText="Not logged in";
+        }
+
+        if(badge){
+            badge.innerText="FREE MEMBER";
+        }
+
+        if(logout){
+            logout.style.display="none";
+        }
+
+    }
+
+});

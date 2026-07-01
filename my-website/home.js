@@ -957,3 +957,85 @@ bodyObserver.observe(document.body,{
 });
 
 console.log("✅ Cineflex Premium Engine Loaded");
+
+// ======================================
+// CINEFLEX PERFORMANCE ENGINE
+// Part 6
+// ======================================
+
+// Cache TMDB requests
+const apiCache = new Map();
+
+async function cachedFetch(url) {
+
+    if (apiCache.has(url)) {
+        return apiCache.get(url);
+    }
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    apiCache.set(url, data);
+
+    return data;
+}
+
+// Preload banner image
+function preloadBanner() {
+
+    if (!trendingItems.length) return;
+
+    const next = trendingItems[(currentBannerIndex + 1) % trendingItems.length];
+
+    if (!next.backdrop_path) return;
+
+    const img = new Image();
+    img.src = `https://image.tmdb.org/t/p/original${next.backdrop_path}`;
+
+}
+
+// Low memory cleanup
+setInterval(() => {
+
+    if (apiCache.size > 100) {
+
+        apiCache.clear();
+
+        console.log("TMDB cache cleared.");
+
+    }
+
+},300000);
+
+// Auto preload
+setInterval(preloadBanner,8000);
+
+// Offline detection
+window.addEventListener("offline",()=>{
+
+    alert("You're offline.");
+
+});
+
+window.addEventListener("online",()=>{
+
+    console.log("Internet restored.");
+
+});
+
+// FPS optimization
+document.addEventListener("visibilitychange",()=>{
+
+    if(document.hidden){
+
+        console.log("Background mode");
+
+    }else{
+
+        console.log("Foreground mode");
+
+    }
+
+});
+
+console.log("Performance Engine Loaded");

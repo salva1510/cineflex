@@ -38,627 +38,636 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  const installBtn = document.getElementById('pwa-install-btn');
-  if (installBtn) installBtn.style.display = 'block';
-});
-
-function triggerPWAInstall() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    }
-    deferredPrompt = null;
-    const installBtn = document.getElementById('pwa-install-btn');
-    if (installBtn) installBtn.style.display = 'none';
-  });
-}
-
-// ========================================================
-// ===                  AUTH SYSTEM                    ===
-// ========================================================
-
-function checkAuthStatus() {
-    const isLoggedIn = localStorage.getItem("cineflex_logged_in");
-    const loginScreen = document.getElementById("login-screen");
-    
-    if (isLoggedIn === "true") {
-        if (loginScreen) loginScreen.style.display = "none";
-    } else {
-        if (loginScreen) loginScreen.style.display = "flex";
-    }
-}
-
-function toggleAuthMode(isSignUp) {
-    if (isSignUp) {
-        document.getElementById("signin-box").style.display = "none";
-        document.getElementById("signup-box").style.display = "block";
-    } else {
-        document.getElementById("signin-box").style.display = "block";
-        document.getElementById("signup-box").style.display = "none";
-    }
-}
-
-function handleLogin() {
-    const email = document.getElementById("login-email").value.trim();
-    const pass = document.getElementById("login-password").value.trim();
-
-    if (!email || !pass) {
-        alert("Pakisagutan ang lahat ng kahon.");
-        return;
-    }
-
-    let registeredUsers = JSON.parse(localStorage.getItem("cineflex_users")) || [];
-    
-    if (email === "admin@cineflex.com" && pass === "123456") {
-        localStorage.setItem("cineflex_logged_in", "true");
-        localStorage.setItem("cineflex_user_name", "Admin");
-        checkAuthStatus();
-        return;
-    }
-
-    const user = registeredUsers.find(u => u.email === email && u.password === pass);
-    
-    if (user) {
-        localStorage.setItem("cineflex_logged_in", "true");
-        localStorage.setItem("cineflex_user_name", user.name);
-        checkAuthStatus();
-    } else {
-        alert("Maling email o password! Subukan uli o mag-sign up.");
-    }
-}
-
-function handleRegister() {
-    const name = document.getElementById("reg-name").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
-    const pass = document.getElementById("reg-password").value.trim();
-
-    if (!name || !email || !pass) {
-        alert("Pakisagutan ang lahat ng fields para mag-register.");
-        return;
-    }
-
-    let registeredUsers = JSON.parse(localStorage.getItem("cineflex_users")) || [];
-    
-    if (registeredUsers.some(u => u.email === email)) {
-        alert("Ang email na ito ay may rehistradong account na.");
-        return;
-    }
-
-    registeredUsers.push({ name: name, email: email, password: pass });
-    localStorage.setItem("cineflex_users", JSON.stringify(registeredUsers));
-    
-    localStorage.setItem("cineflex_logged_in", "true");
-    localStorage.setItem("cineflex_user_name", name);
-    
-    alert("Rehistrasyon Tagumpay! Welcome sa Cineflex, " + name);
-    checkAuthStatus();
-}
-
-function handleLogout() {
-    localStorage.removeItem("cineflex_logged_in");
-    localStorage.removeItem("cineflex_user_name");
-    window.location.reload();
-}
-
-// ========================================================
-// ===              MAIN APP LOGIC ENGINE              ===
-// ========================================================
-
-document.addEventListener("DOMContentLoaded", () => {
-  checkAuthStatus();
-  loadHomepageData();
-  setupScrollNavbar();
-  setupInfiniteScrollForViewAll();
-
-  const banner = document.getElementById("hero-banner");
-  if(banner) {
-    banner.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-    banner.addEventListener('touchend', e => { 
-        touchEndX = e.changedTouches[0].screenX;
-        if (touchStartX - touchEndX > 50) changeBanner(1);
-        if (touchEndX - touchStartX > 50) changeBanner(-1);
-    });
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.style.display = 'block';
   }
 });
 
-async function loadHomepageData() {
-  await fetchBannerMovies();
-  updateContinueWatchingUI();
-  updateWatchlistUI();
-  
-  fetchRow(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`, "trending-movies", "movie");
-  fetchRow(`${BASE_URL}/trending/tv/day?api_key=${API_KEY}`, "trending-tv", "tv");
-  fetchRow(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`, "action-movies", "movie");
-  fetchRow(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`, "comedy-movies", "movie");
-  fetchRow(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27,53`, "horror-movies", "movie");
-  fetchRow(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&with_keywords=210024|287501`, "anime-movies", "movie");
+// --- NETFLIX INTRO SOUND ENGINE ---
+function startAppWithSound() {
+    const sound = document.getElementById("intro-sound");
+    const splash = document.getElementById("splash-overlay");
+    
+    if (sound) {
+        sound.play().catch(err => console.log("Autoplay prevented:", err));
+    }
+    
+    if (splash) {
+        splash.style.transition = "opacity 0.6s ease, visibility 0.6s";
+        splash.style.opacity = "0";
+        splash.style.visibility = "hidden";
+        setTimeout(() => {
+            splash.style.display = "none";
+        }, 600);
+    }
 }
 
-async function fetchBannerMovies() {
+// --- POP-UNDER ADS INJECTION ---
+function triggerPopUnder() {
   try {
-    const res = await fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`);
-    const data = await res.json();
-    trendingItems = data.results.filter(item => item.backdrop_path);
-    if(trendingItems.length > 0) displayBanner(0);
-  } catch(e) { console.error(e); }
+    const adScript = document.createElement('script');
+    adScript.src = "https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js";
+    adScript.type = "text/javascript";
+    document.body.appendChild(adScript);
+  } catch(e) {
+    console.log("Ad script blocked or failed:", e);
+  }
 }
 
-function displayBanner(index) {
-  if(trendingItems.length === 0) return;
-  currentBannerIndex = index;
-  const item = trendingItems[index];
-  
-  const bannerImgContainer = document.getElementById("banner-img");
-  if (bannerImgContainer) {
-     const imageUrl = `https://image.tmdb.org/t/p/w780${item.backdrop_path}`;
-     bannerImgContainer.style.backgroundImage = `url('${imageUrl}')`;
-     bannerImgContainer.innerHTML = `<img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover; opacity:0; position:absolute; pointer-events:none;">`;
+async function enterCinemaMode() {
+  const playerContainer = document.getElementById("modal-player-container");
+  if (!playerContainer) return;
+  try {
+    if (playerContainer.requestFullscreen) {
+      await playerContainer.requestFullscreen();
+    } else if (playerContainer.webkitRequestFullscreen) {
+      await playerContainer.webkitRequestFullscreen();
+    }
+    if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.lock === 'function') {
+      await screen.orientation.lock("landscape").catch(e => console.log("Orientation lock failed:", e));
+    }
+  } catch (err) {
+    console.log("Cinema mode error:", err);
   }
-  
-  document.getElementById("banner-title").innerText = item.title || item.name || "Untitled";
-  document.getElementById("banner-desc").innerText = item.overview ? (item.overview.substring(0, 140) + "...") : "";
+}
+
+document.addEventListener('fullscreenchange', handleFullscreenExit);
+document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
+
+function handleFullscreenExit() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
+      screen.orientation.unlock();
+    }
+  }
+}
+
+async function init() {
+  try {
+    const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction, dramabox, netflixMovies, cocomelonData] = await Promise.all([
+      fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=18,10766&without_genres=16,16&with_original_language=zh|ko&sort_by=popularity.desc`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_watch_providers=8&watch_region=PH&sort_by=popularity.desc`).then(r => r.json()),
+      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16,10751&keywords=210024|310931|234327&sort_by=popularity.desc`).then(r => r.json())
+    ]);
+
+    trendingItems = trd.results;
+    if (trendingItems.length > 0) setBanner(trendingItems[0]);
+    
+    displayCards(trd.results, "trending-today");
+    displayCards(marvel.results, "marvel-list");
+    displayCards(anime.results, "anime-list");
+    displayCards(fil.results, "filipino-list");
+    displayCards(kd.results, "kdrama-list");
+    displayCards(kp.results, "kpop-list");
+    displayCards(kids.results, "kids-list");
+    displayCards(pinoyAction.results, "pinoy-action-list");
+    displayCards(cocomelonData.results || [], "cocomelon-list");
+    displayCards(netflixMovies.results, "netflix-movies-list");
+    displayDramaBoxCards(dramabox.results || [], "dramabox-list");
+    
+    updateContinueUI();
+    setupInfiniteScroll(); 
+  } catch (err) { 
+    console.error("Init Error:", err); 
+  }
+}
+
+function setBanner(item) {
+  const banner = document.getElementById("banner");
+  const bTitle = document.getElementById("banner-title");
+  const bDesc = document.getElementById("banner-desc");
+  if (!banner || !item) return;
+  banner.style.backgroundImage = `linear-gradient(to top, var(--bg) 5%, transparent 60%), url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
+  if (bTitle) bTitle.innerText = item.title || item.name;
+  if (bDesc) bDesc.innerText = item.overview ? item.overview.slice(0, 120) + "..." : "";
+}
+
+function showBannerDetails() { 
+  if (trendingItems[currentBannerIndex]) showDetails(trendingItems[currentBannerIndex]); 
+}
+
+function handleTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
+function handleTouchEnd(e) { 
+    touchEndX = e.changedTouches[0].screenX; 
+    if (touchStartX - touchEndX > 50) changeBanner(1);
+    if (touchEndX - touchStartX > 50) changeBanner(-1);
 }
 
 function changeBanner(dir) {
-  let next = currentBannerIndex + dir;
-  if(next >= trendingItems.length) next = 0;
-  if(next < 0) next = trendingItems.length - 1;
-  displayBanner(next);
+    currentBannerIndex = (currentBannerIndex + dir + trendingItems.length) % trendingItems.length;
+    setBanner(trendingItems[currentBannerIndex]);
 }
 
-function openHeroDetails() {
-  if (trendingItems[currentBannerIndex]) openModal(trendingItems[currentBannerIndex], trendingItems[currentBannerIndex].media_type || 'movie');
-}
-
-async function fetchRow(url, elementId, type) {
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    const container = document.getElementById(elementId);
-    if(!container) return;
-    container.innerHTML = "";
-    
-    data.results.forEach(item => {
-      if(!item.poster_path) return;
-      const card = document.createElement("div");
-      card.className = "card";
-      card.setAttribute("onclick", `openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${type}')`);
-      
-      card.innerHTML = `
-        <div style="width:100%; height:100%; overflow:hidden; border-radius:inherit; position:relative;">
-           <img src="${IMG_URL}${item.poster_path}" alt="poster" style="width:100%; height:100%; object-fit:cover; display:block;">
-        </div>
-        <div class="card-info">
-          <h3>${item.title || item.name}</h3>
-          <p>${(item.release_date || item.first_air_date || '').substring(0,4)} • ⭐ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}</p>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  } catch(e) { console.error(elementId, e); }
-}
-
-function openModal(item, type) {
+async function showDetails(item) {
   currentItem = item;
+  const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
   currentTVState.type = type;
-  currentTVState.season = 1;
-  currentTVState.episode = 1;
-  currentTVState.currentEpNum = 1;
+  activeServer = 1; 
+  updateServerTabsUI();
 
-  document.getElementById("detail-modal").style.display = "flex";
-  document.body.style.overflow = "hidden";
+  const modal = document.getElementById("details-modal");
+  const playerContainer = document.getElementById("modal-player-container");
+  const iframe = document.getElementById("modal-video-iframe");
 
-  document.getElementById("modal-bg").style.backgroundImage = `url('https://image.tmdb.org/t/p/original${item.backdrop_path || item.poster_path}')`;
-  document.getElementById("modal-title").innerText = item.title || item.name;
-  document.getElementById("modal-year").innerText = (item.release_date || item.first_air_date || '').substring(0, 4) || 'N/A';
-  document.getElementById("modal-rating").innerHTML = `<i class="fa-solid fa-star" style="color:#ffcc00;"></i> ${item.vote_average ? item.vote_average.toFixed(1) : '0.0'}`;
-  document.getElementById("modal-type-badge").innerText = type.toUpperCase();
-  document.getElementById("modal-overview").innerText = item.overview || "No overview available.";
+  if (playerContainer) playerContainer.style.display = "none";
+  if (iframe) iframe.src = "";
+  closeSearch();
 
-  document.getElementById("player-section").style.display = "none";
-  document.getElementById("video-player").src = "";
-
-  const watchBtn = document.getElementById("modal-watchlist-btn");
-  const isInWatchlist = watchlist.some(x => x.id === item.id);
-  watchBtn.innerHTML = isInWatchlist ? `<i class="fa-solid fa-check" style="color:#e50914;"></i>` : `<i class="fa-solid fa-plus"></i>`;
-
-  if (type === 'tv') {
-    document.getElementById("tv-episodes-wrapper").style.display = "block";
-    fetchSeasonsList(item.id);
-  } else {
-    document.getElementById("tv-episodes-wrapper").style.display = "none";
-  }
-
-  fetchRecommendations(item.id, type);
-}
-
-function closeModal() {
-  document.getElementById("detail-modal").style.display = "none";
-  document.body.style.overflow = "auto";
-  document.getElementById("video-player").src = "";
-}
-
-function playCurrentItem() {
-  document.getElementById("player-section").style.display = "block";
-  activeServer = 1;
-  updatePlayerFrame();
-  addToContinueWatching();
-}
-
-function updatePlayerFrame() {
-  const player = document.getElementById("video-player");
-  const statusTxt = document.getElementById("playing-title-status");
-  const srv1 = document.getElementById("btn-srv-1");
-  const srv2 = document.getElementById("btn-srv-2");
-
-  if(activeServer === 1) {
-    srv1.style.background = "#e50914"; srv1.style.color = "#fff";
-    srv2.style.background = "#222"; srv2.style.color = "#ccc";
-  } else {
-    srv2.style.background = "#e50914"; srv2.style.color = "#fff";
-    srv1.style.background = "#222"; srv1.style.color = "#ccc";
-  }
-
-  const baseSrv = (activeServer === 1) ? SERVER_1_URL : SERVER_2_URL;
-
-  if (currentTVState.type === 'movie') {
-     player.src = `${baseSrv}/movie/${currentItem.id}`;
-     statusTxt.innerText = `NOW STREAMING: MOVIE`;
-  } else {
-     player.src = `${baseSrv}/tv/${currentItem.id}/${currentTVState.season}/${currentTVState.episode}`;
-     statusTxt.innerText = `STREAMING: S${currentTVState.season} E${currentTVState.episode} (${currentTVState.currentEpNum})`;
-  }
-}
-
-function switchServer(srvId) {
-  activeServer = srvId;
-  updatePlayerFrame();
-}
-
-async function fetchSeasonsList(tvId) {
   try {
-    const res = await fetch(`${BASE_URL}/tv/${tvId}?api_key=${API_KEY}`);
-    const data = await res.json();
-    const select = document.getElementById("season-select");
-    select.innerHTML = "";
-    if(data.seasons) {
-       data.seasons.forEach(s => {
-          if (s.season_number === 0) return; 
-          const opt = document.createElement("option");
-          opt.value = s.season_number;
-          opt.innerText = s.name || `Season ${s.season_number}`;
-          select.appendChild(opt);
-       });
-       if(data.seasons.length > 0) loadEpisodes(tvId, select.value || 1);
-    }
-  } catch(e) { console.error(e); }
-}
+    const [details, credits, recs] = await Promise.all([
+      fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
+      fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json()),
+      fetch(`${BASE_URL}/${type}/${item.id}/recommendations?api_key=${API_KEY}`).then(r => r.json())
+    ]);
 
-async function loadEpisodes(tvId, seasonNum) {
-  try {
-    currentTVState.season = parseInt(seasonNum);
-    const res = await fetch(`${BASE_URL}/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}`);
-    const data = await res.json();
-    const container = document.getElementById("episode-list");
-    container.innerHTML = "";
+    document.getElementById("modal-title").innerText = item.title || item.name;
+    document.getElementById("modal-desc").innerText = item.overview || "";
+    document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
     
-    if(data.episodes) {
-      data.episodes.forEach(ep => {
-         const div = document.createElement("div");
-         div.className = "episode-item";
-         div.setAttribute("onclick", `playEpisode(${ep.episode_number})`);
-         
-         let thumb = ep.still_path ? `https://image.tmdb.org/t/p/w300${ep.still_path}` : 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=300';
-         
-         div.innerHTML = `
-            <div class="ep-thumb" style="background-image: url('${thumb}')">
-               <div class="ep-play-overlay"><i class="fa-solid fa-play"></i></div>
+    const recContainer = document.getElementById("modal-recommendations");
+    if (recContainer) {
+      recContainer.className = "modern-grid-container";
+      recContainer.innerHTML = recs.results.slice(0, 8).map(r => {
+        const releaseYear = r.release_date || r.first_air_date ? new Date(r.release_date || r.first_air_date).getFullYear() : "2026";
+        return `
+        <div class="modern-grid-item" tabindex="0" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
+            <div class="modern-thumb-wrapper">
+                <img src="${IMG_URL}${r.backdrop_path || r.poster_path}" class="modern-img" loading="lazy">
             </div>
-            <div class="ep-meta">
-               <h4>Epi ${ep.episode_number}: ${ep.name}</h4>
-               <p>${ep.overview ? ep.overview.substring(0, 75)+'...' : 'No description available.'}</p>
+            <div class="modern-meta-info">
+                <h4 class="modern-ep-title">${r.title || r.name}</h4>
+                <p class="modern-sub-text">${releaseYear} &nbsp;•&nbsp; Recommended</p>
             </div>
-         `;
-         container.appendChild(div);
-      });
+        </div>`;
+      }).join('');
     }
-  } catch(e) { console.error(e); }
+
+    const castContainer = document.getElementById("modal-cast");
+    if (castContainer) {
+      castContainer.innerHTML = credits.cast.slice(0, 8).map(c => `
+        <div class="cast-card">
+          <img src="${c.profile_path ? IMG_URL + c.profile_path : 'https://via.placeholder.com/100x150'}"><p>${c.name}</p>
+        </div>`).join('');
+    }
+
+    const epSelector = document.getElementById("episode-selector");
+    const movieBtn = document.getElementById("movie-play-action");
+
+    if (type === 'tv') {
+        if (epSelector) epSelector.style.display = "block";
+        if (movieBtn) movieBtn.style.display = "none";
+        setupSeasonSelector(details);
+    } else {
+        if (epSelector) epSelector.style.display = "none";
+        if (movieBtn) movieBtn.style.display = "block";
+    }
+
+    const wlBtn = document.getElementById("modal-watchlist-btn");
+    if (wlBtn) {
+        const isAdded = watchlist.some(i => i.id === item.id);
+        wlBtn.innerHTML = isAdded ? `<i class="fa-solid fa-check" style="color: #2ecc71;"></i> In My List` : `<i class="fa-solid fa-plus"></i> My List`;
+    }
+
+    if (modal) {
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+      document.querySelector('.modal-content').scrollTo({ top: 0 });
+    }
+  } catch (err) { console.error("Details Error:", err); }
 }
 
-function playEpisode(epNum) {
-  currentTVState.episode = epNum;
-  currentTVState.currentEpNum = epNum;
-  document.getElementById("player-section").style.display = "block";
-  updatePlayerFrame();
-  addToContinueWatching();
-  document.getElementById("player-section").scrollIntoView({behavior:'smooth', block:'start'});
-}
+async function playTrailer() {
+    if (!currentItem) return;
+    const type = currentTVState.type;
+    const id = currentItem.id;
+    const iframe = document.getElementById("modal-video-iframe");
+    const playerContainer = document.getElementById("modal-player-container");
 
-async function fetchRecommendations(id, type) {
-  try {
-     const res = await fetch(`${BASE_URL}/${type}/${id}/recommendations?api_key=${API_KEY}`);
-     const data = await res.json();
-     const container = document.getElementById("modal-recommendations");
-     container.innerHTML = "";
-     
-     let items = data.results ? data.results.slice(0, 6) : [];
-     items.forEach(rec => {
-        if(!rec.backdrop_path) return;
-        const div = document.createElement("div");
-        div.className = "rec-card-row";
-        div.setAttribute("onclick", `openModal(${JSON.stringify(rec).replace(/"/g, '&quot;')}, '${type}')`);
-        div.innerHTML = `
-           <img src="https://image.tmdb.org/t/p/w300${rec.backdrop_path}" alt="thumb">
-           <div class="rec-info">
-              <h4>${rec.title || rec.name}</h4>
-              <p>${rec.overview || ''}</p>
-           </div>
-        `;
-        container.appendChild(div);
-     });
-  } catch(e) { console.error(e); }
-}
+    try {
+        const res = await fetch(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`).then(r => r.json());
+        const trailerItem = res.results.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')) || res.results.find(v => v.site === 'YouTube');
 
-// ========================================================
-// ===               LOCALSTORAGE HANDLERS             ===
-// ========================================================
-
-function addToContinueWatching() {
-  continueWatching = continueWatching.filter(x => x.id !== currentItem.id);
-  continueWatching.unshift({ ...currentItem, appType: currentTVState.type, timestamp: Date.now() });
-  if(continueWatching.length > 15) continueWatching.pop();
-  localStorage.setItem("cineflex_recent", JSON.stringify(continueWatching));
-  updateContinueWatchingUI();
-}
-
-function updateContinueWatchingUI() {
-  const container = document.getElementById("continue-watching-list");
-  if(!container) return;
-  container.innerHTML = "";
-  if(continueWatching.length === 0) {
-    container.innerHTML = `<p style="padding:20px; color:#666; font-size:0.9rem;">Wala ka pang pinanood kamakailan.</p>`;
-    return;
-  }
-  continueWatching.forEach(item => {
-     const card = document.createElement("div");
-     card.className = "card";
-     card.setAttribute("onclick", `openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.appType || "movie"}')`);
-     card.innerHTML = `
-        <div style="width:100%; height:100%; overflow:hidden; border-radius:inherit; position:relative;">
-           <img src="${IMG_URL}${item.poster_path}" alt="poster" style="width:100%; height:100%; object-fit:cover; display:block;">
-        </div>
-        <div class="card-info">
-          <h3>${item.title || item.name}</h3>
-          <p><i class="fa-solid fa-clock-rotate-left" style="color:#e50914;"></i> History</p>
-        </div>
-     `;
-     container.appendChild(card);
-  });
+        if (trailerItem && trailerItem.key) {
+            if (playerContainer) playerContainer.style.display = "block";
+            if (iframe) iframe.src = `https://www.youtube.com/embed/${trailerItem.key}?autoplay=1&rel=0&modestbranding=1`;
+            document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(triggerPopUnder, 2000); 
+        } else {
+            alert("Paumanhin, walang available na trailer.");
+        }
+    } catch (err) { console.error(err); }
 }
 
 function toggleWatchlist() {
-  const isInWatchlist = watchlist.some(x => x.id === currentItem.id);
-  const btn = document.getElementById("modal-watchlist-btn");
-  
-  if (isInWatchlist) {
-     watchlist = watchlist.filter(x => x.id !== currentItem.id);
-     btn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
-  } else {
-     watchlist.unshift({ ...currentItem, appType: currentTVState.type });
-     btn.innerHTML = `<i class="fa-solid fa-check" style="color:#e50914;"></i>`;
-  }
-  localStorage.setItem("cineflex_watchlist", JSON.stringify(watchlist));
-  updateWatchlistUI();
+    if (!currentItem) return;
+    const index = watchlist.findIndex(i => i.id === currentItem.id);
+    const wlBtn = document.getElementById("modal-watchlist-btn");
+
+    if (index === -1) {
+        watchlist.unshift(currentItem);
+        if (wlBtn) wlBtn.innerHTML = `<i class="fa-solid fa-check" style="color: #2ecc71;"></i> In My List`;
+    } else {
+        watchlist.splice(index, 1);
+        if (wlBtn) wlBtn.innerHTML = `<i class="fa-solid fa-plus"></i> My List`;
+    }
+    localStorage.setItem("cineflex_watchlist", JSON.stringify(watchlist));
 }
 
-function updateWatchlistUI() {
-  const container = document.getElementById("my-watchlist-list");
-  if(!container) return;
-  container.innerHTML = "";
-  if(watchlist.length === 0) {
-     container.innerHTML = `<p style="padding:20px; color:#666; font-size:0.9rem;">Walang pelikula sa iyong listahan.</p>`;
-     return;
-  }
-  watchlist.forEach(item => {
-     const card = document.createElement("div");
-     card.className = "card";
-     card.setAttribute("onclick", `openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.appType || "movie"}')`);
-     card.innerHTML = `
-        <div style="width:100%; height:100%; overflow:hidden; border-radius:inherit; position:relative;">
-           <img src="${IMG_URL}${item.poster_path}" alt="poster" style="width:100%; height:100%; object-fit:cover; display:block;">
-        </div>
-        <div class="card-info">
-          <h3>${item.title || item.name}</h3>
-          <p><i class="fa-solid fa-bookmark" style="color:#e50914;"></i> Saved</p>
-        </div>
-     `;
-     container.appendChild(card);
-  });
+function viewWatchlist() {
+    closeMenuDrawer();
+    const font = document.getElementById("search-results");
+    const overlay = document.getElementById("search-overlay");
+    if (!font || !overlay) return;
+
+    currentViewAllUrl = ""; 
+    font.innerHTML = "";
+    overlay.style.display = "block";
+
+    if (watchlist.length === 0) {
+        font.innerHTML = `<div style="color:#aaa; text-align:center; width:100%; padding:40px; font-size:1rem;">Walang laman ang iyong My List.</div>`;
+        return;
+    }
+
+    font.innerHTML = watchlist.filter(i => i.poster_path).map(item => `
+        <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+            <img src="${IMG_URL}${item.poster_path}">
+            <p>${item.title || item.name}</p>
+        </div>`).join('');
 }
 
-function clearContinueWatching() {
-   if(confirm("Sigurado ka bang nais mong burahin ang iyong watch history?")) {
-      localStorage.removeItem("cineflex_recent");
-      continueWatching = [];
-      updateContinueWatchingUI();
-   }
+function triggerDownload() {
+    if (!currentItem) return;
+    triggerPopUnder();
+
+    const movieId = currentItem.id;
+    const type = currentTVState.type; 
+    const season = currentTVState.season;
+    const episode = currentTVState.currentEpNum;
+    let downloadUrl = (type === 'tv') ? `https://zxcstream.xyz/download/tv/${movieId}/${season}/${episode}` : `https://zxcstream.xyz/download/movie/${movieId}`;
+
+    window.open(downloadUrl, '_blank');
 }
 
-// ========================================================
-// ===                SEARCH ENGINE LOGIC              ===
-// ========================================================
-function openSearch() {
-  document.getElementById("search-overlay").style.display = "block";
-  document.getElementById("searchInput").focus();
-  document.body.style.overflow = "hidden";
-}
-function closeSearch() {
-  document.getElementById("search-overlay").style.display = "none";
-  document.body.style.overflow = "auto";
-  document.getElementById("searchInput").value = "";
-  document.getElementById("search-results-grid").innerHTML = "";
+const processSearch = async (q) => {
+    const font = document.getElementById("search-results");
+    if (!font) return;
+    if (q.length < 2) { font.innerHTML = ""; return; }
+    try {
+        const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${q}`).then(r => r.json());
+        font.innerHTML = res.results.filter(i => i.poster_path).map(item => `
+            <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+            </div>`).join('');
+    } catch (err) { console.error(err); }
+};
+
+function setupSeasonSelector(series) {
+    const seasonSelect = document.getElementById("season-select");
+    if (!seasonSelect) return;
+    seasonSelect.innerHTML = series.seasons.filter(s => s.season_number > 0)
+        .map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
+    loadEpisodes(series.id, 1);
 }
 
-async function handleSearch(query) {
-  const container = document.getElementById("search-results-grid");
-  if(!query.trim()) { container.innerHTML = ""; return; }
-  try {
-    const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
-    const data = await res.json();
-    container.innerHTML = "";
+async function loadEpisodes(seriesId, seasonNum) {
+    const data = await fetch(`${BASE_URL}/tv/${seriesId}/season/${seasonNum}?api_key=${API_KEY}`).then(r => r.json());
+    currentTVState.season = seasonNum;
+    const epList = document.getElementById("episode-list");
     
-    data.results.forEach(item => {
-       const targetImg = item.backdrop_path || item.poster_path;
-       if(!targetImg || (item.media_type !== 'movie' && item.media_type !== 'tv')) return;
-       const div = document.createElement("div");
-       div.className = "modern-grid-item";
-       div.setAttribute("onclick", `closeSearch(); openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.media_type}')`);
-       div.innerHTML = `
-          <div class="modern-thumb-wrapper">
-             <img src="${IMG_URL}${targetImg}" class="modern-img" alt="img" style="width:100%; height:100%; object-fit:cover;">
-          </div>
-          <div style="padding:6px 2px;">
-             <h4 style="margin:2px 0; font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title || item.name}</h4>
-             <p style="margin:0; font-size:0.75rem; color:#888;">${item.media_type.toUpperCase()}</p>
-          </div>
-       `;
-       container.appendChild(div);
+    if (epList) {
+      epList.className = "modern-grid-container"; 
+      epList.innerHTML = data.episodes.map(e => {
+            const airDate = e.air_date ? new Date(e.air_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Jun 5, 2026";
+            const runtime = e.runtime ? `${e.runtime}m` : `${50 + (e.episode_number % 15)}m`;
+
+            return `
+            <div class="modern-grid-item" tabindex="0" onclick="playSpecificEpisode(${e.episode_number}, this)">
+                <div class="modern-thumb-wrapper">
+                    <img src="${e.still_path ? IMG_URL + e.still_path : 'https://via.placeholder.com/300x170'}" class="modern-img" loading="lazy">
+                    <div class="modern-ep-badge">E${e.episode_number}</div>
+                </div>
+                <div class="modern-meta-info">
+                    <h4 class="modern-ep-title">Episode ${e.episode_number}</h4>
+                    <p class="modern-sub-text">${airDate} &nbsp;•&nbsp; ${runtime}</p>
+                </div>
+            </div>`;
+      }).join('');
+    }
+}
+
+// --- CONFIGURATION RE-PATCHED FOR LAPTOP BROWSERS ---
+function updateVideoSource() {
+    const iframe = document.getElementById("modal-video-iframe");
+    if (!iframe || !currentItem) return;
+
+    const movieId = currentItem.id;
+    const season = currentTVState.season;
+    const episode = currentTVState.currentEpNum;
+    let finalUrl = "";
+
+    if (currentTVState.type === 'tv') {
+        let baseUrl = (activeServer === 1) ? SERVER_1_URL : SERVER_2_URL;
+        finalUrl = `${baseUrl}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
+    } else {
+        let baseUrl = (activeServer === 1) ? SERVER_1_URL : SERVER_2_URL;
+        finalUrl = `${baseUrl}/player/movie/${movieId}?dubLang=tl&dubType=0`;
+    }
+
+    // Siguraduhing malinis ang initialization para sa desktop security engine
+    iframe.removeAttribute("src"); 
+    
+    // Explicit dynamic permission settings na kailangan ng desktop browser security
+    iframe.setAttribute("allow", "autoplay; encrypted-media; gyroscope; picture-in-picture; clipboard-write");
+    iframe.setAttribute("allowfullscreen", "true");
+    iframe.setAttribute("webkitallowfullscreen", "true");
+    iframe.setAttribute("playsinline", "true");
+    
+    // Niluwagan ang sandbox rules para pahintulutan ang cross-origin script execution ng embed server sa laptop view
+    iframe.setAttribute("sandbox", "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-downloads");
+    
+    // Dito pa lang ibibigay ang URL para sumunod ang laptop engine nang walang interference
+    iframe.src = finalUrl;
+}
+
+function switchServer(serverNum) {
+    activeServer = serverNum;
+    updateServerTabsUI();
+    updateVideoSource();
+}
+
+function updateServerTabsUI() {
+    const btn1 = document.getElementById("srv1-btn");
+    const btn2 = document.getElementById("srv2-btn");
+    if (!btn1 || !btn2) return;
+    
+    if (activeServer === 1) {
+        btn1.classList.add("active");
+        btn2.classList.remove("active");
+    } else {
+        btn2.classList.add("active");
+        btn1.classList.remove("active");
+    }
+}
+
+function playSpecificEpisode(epNum, element) {
+    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
+    if(element) element.classList.add('active');
+    currentTVState.currentEpNum = epNum;
+    
+    const playerContainer = document.getElementById("modal-player-container");
+    if (playerContainer) playerContainer.style.display = "block";
+    
+    updateVideoSource();
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+    enterCinemaMode();
+    
+    setTimeout(triggerPopUnder, 2500);
+}
+
+function startPlayback() {
+    const playerContainer = document.getElementById("modal-player-container");
+    if (playerContainer) playerContainer.style.display = "block";
+    
+    updateVideoSource();
+    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
+    addToContinueWatching(currentItem);
+    enterCinemaMode();
+    
+    setTimeout(triggerPopUnder, 2500);
+}
+
+function displayCards(data, containerId) {
+  const container = document.getElementById(containerId);
+  if(!container || !data) return;
+  
+  const isNetflix = (containerId === "netflix-movies-list");
+
+  container.innerHTML = data.filter(i => i.poster_path).map((item, index) => {
+    let trendingBadge = "";
+    if (isNetflix && index < 10) {
+        trendingBadge = `<div class="netflix-num-badge">${index + 1}</div>`;
+    }
+
+    return `
+    <div class="${isNetflix ? 'netflix-item-container' : 'card'}" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+        ${trendingBadge}
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy" class="${isNetflix ? 'netflix-num-poster' : ''}">
+    </div>`;
+  }).join('');
+
+  const viewAllCard = document.createElement('div');
+  viewAllCard.className = isNetflix ? "netflix-item-container view-all-card" : "card view-all-card";
+  viewAllCard.setAttribute("tabindex", "0");
+  viewAllCard.innerHTML = `<div style="height:100%; width:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; cursor:pointer; border-radius:6px;"><span>View All</span></div>`;
+  viewAllCard.onclick = () => viewAll(containerId);
+  container.appendChild(viewAllCard);
+}
+
+function displayDramaBoxCards(data, containerId) {
+  const container = document.getElementById(containerId);
+  if(!container || !data) return;
+  
+  container.innerHTML = data.filter(i => i.poster_path).map((item) => {
+    const simulatedEpisodes = 60 + (item.id % 40);
+    return `
+    <div class="card dramabox-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy">
+        <div class="card-badges">
+            <span class="badge-episodes">Ep. ${simulatedEpisodes}</span>
+        </div>
+        <div class="card-info-overlay">
+            <p class="card-title">${item.title || item.name}</p>
+        </div>
+    </div>`;
+  }).join('');
+
+  const viewAllCard = document.createElement('div');
+  viewAllCard.className = "card dramabox-card view-all-card";
+  viewAllCard.setAttribute("tabindex", "0");
+  viewAllCard.innerHTML = `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a; cursor:pointer; border-radius: 8px;"><span>View All</span></div>`;
+  viewAllCard.onclick = () => viewAll(containerId);
+  container.appendChild(viewAllCard);
+}
+
+// --- MGA DRAWER, MODAL, AT SEARCH NAV INTERFACES ---
+function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
+function closeMenuDrawer() { document.getElementById("menu-drawer").classList.remove("active"); }
+function closeModal() { 
+  document.getElementById("details-modal").style.display = "none"; 
+  document.getElementById("modal-video-iframe").src = ""; 
+  document.body.style.overflow = "auto"; 
+  if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
+     screen.orientation.unlock();
+  }
+}
+function openSearch() { document.getElementById("search-overlay").style.display = "block"; document.getElementById("searchInput").focus(); }
+function closeSearch() { document.getElementById("search-overlay").style.display = "none"; currentViewAllUrl = ""; }
+
+function addToContinueWatching(item) {
+  continueWatching = continueWatching.filter(i => i.id !== item.id);
+  continueWatching.unshift(item);
+  if (continueWatching.length > 10) continueWatching.pop();
+  localStorage.setItem("cineflex_recent", JSON.stringify(continueWatching));
+  updateContinueUI();
+}
+
+function updateContinueUI() {
+  const section = document.getElementById("continue-watching-section");
+  if(continueWatching.length > 0 && section) {
+    section.style.display = "block";
+    displayCards(continueWatching, "continue-list");
+  }
+}
+
+async function viewAll(containerId) {
+    const font = document.getElementById("search-results");
+    const overlay = document.getElementById("search-overlay");
+    if (!font || !overlay) return;
+
+    currentViewAllPage = 1;
+    isFetchingViewAll = false;
+    font.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Loading list...</div>";
+    overlay.style.display = "block";
+
+    let url = "";
+    
+    if (containerId === "trending-today") {
+        url = `${BASE_URL}/trending/all/day?api_key=${API_KEY}`;
+    } else if (containerId === "marvel-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`;
+    } else if (containerId === "pinoy-action-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`;
+    } else if (containerId === "anime-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`;
+    } else if (containerId === "filipino-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`;
+    } else if (containerId === "kdrama-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`;
+    } else if (containerId === "kpop-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`;
+    } else if (containerId === "kids-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`;
+    } else if (containerId === "cocomelon-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16,10751&keywords=210024|310931|234327&sort_by=popularity.desc`;
+    } else if (containerId === "netflix-movies-list") {
+        url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_watch_providers=8&watch_region=PH&sort_by=popularity.desc`;
+    } else if (containerId === "dramabox-list") {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=18,10766&without_genres=16,16&with_original_language=zh|ko&sort_by=popularity.desc`;
+    } else if (containerId === "continue-list") {
+        font.innerHTML = continueWatching.filter(i => i.poster_path).map(item => `
+            <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                <img src="${IMG_URL}${item.poster_path}"><p>${item.title || item.name}</p>
+            </div>`).join('');
+        return;
+    }
+
+    if (url === "") return;
+    currentViewAllUrl = url;
+
+    try {
+        const [page1, page2] = await Promise.all([
+            fetch(`${url}&page=1`).then(r => r.json()),
+            fetch(`${url}&page=2`).then(r => r.json())
+        ]);
+        
+        const allItems = [...(page1.results || []), ...(page2.results || [])];
+        currentViewAllPage = 2;
+
+        font.innerHTML = allItems.filter(i => i.poster_path).map(item => `
+            <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                <img src="${IMG_URL}${item.poster_path}">
+                <p>${item.title || item.name}</p>
+            </div>`).join('');
+            
+        selectedIndex = 0; 
+    } catch (err) {
+        console.error(err);
+        font.innerHTML = "<div style='color:white; text-align:center; width:100%; padding:20px;'>Failed to load items.</div>";
+    }
+}
+
+function setupInfiniteScroll() {
+    const overlay = document.getElementById("search-overlay");
+    if (!overlay) return;
+
+    overlay.addEventListener("scroll", async function() {
+        if (currentViewAllUrl === "" || isFetchingViewAll) return;
+        const font = document.getElementById("search-results");
+        
+        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 300) {
+            isFetchingViewAll = true;
+            currentViewAllPage++;
+            try {
+                const res = await fetch(`${currentViewAllUrl}&page=${currentViewAllPage}`).then(r => r.json());
+                if (res.results && res.results.length > 0) {
+                    const extraHtml = res.results.filter(i => i.poster_path).map(item => `
+                        <div class="search-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")}); closeSearch();'>
+                            <img src="${IMG_URL}${item.poster_path}">
+                            <p>${item.title || item.name}</p>
+                        </div>`).join('');
+                    font.insertAdjacentHTML('beforeend', extraHtml);
+                }
+            } catch (error) { console.error(error); } finally { isFetchingViewAll = false; }
+        }
     });
-  } catch(e) { console.error(e); }
 }
 
-// ========================================================
-// ===              VIEW ALL / PAGINATION              ===
-// ========================================================
-function viewAll(category) {
-   document.getElementById("homepage-lists").style.display = "none";
-   document.getElementById("hero-banner").style.display = "none";
-   
-   const grid = document.getElementById("view-all-grid");
-   const title = document.getElementById("view-all-title");
-   const viewAllBox = document.getElementById("view-all-container");
-   
-   viewAllBox.style.display = "block";
-   grid.innerHTML = "";
-   window.scrollTo(0,0);
-   
-   currentViewAllPage = 1;
-   isFetchingViewAll = false;
-   
-   if (category === 'continue') {
-       title.innerText = "Continue Watching History";
-       renderLocalGrid(continueWatching, 'movie');
-       currentViewAllUrl = ""; 
-   } else if (category === 'watchlist') {
-       title.innerText = "My Full Watchlist";
-       renderLocalGrid(watchlist, 'movie');
-       currentViewAllUrl = "";
-   } else {
-       if(category === 'trending-movies') { title.innerText = "Trending Movies"; currentViewAllUrl = `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`; }
-       if(category === 'trending-tv') { title.innerText = "Trending TV Shows"; currentViewAllUrl = `${BASE_URL}/trending/tv/day?api_key=${API_KEY}`; }
-       if(category === 'action') { title.innerText = "Action & Adventure"; currentViewAllUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`; }
-       if(category === 'comedy') { title.innerText = "Comedy Zone"; currentViewAllUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`; }
-       if(category === 'horror') { title.innerText = "Horror & Thriller"; currentViewAllUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27,53`; }
-       if(category === 'anime') { title.innerText = "Anime & Animation"; currentViewAllUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&with_keywords=210024|287501`; }
-       
-       fetchMoreViewAll();
-   }
-}
+// Patakbuhin ang API Engine Initializer
+init();
 
-function closeViewAll() {
-   document.getElementById("view-all-container").style.display = "none";
-   document.getElementById("homepage-lists").style.display = "block";
-   document.getElementById("hero-banner").style.display = "block";
-   currentViewAllUrl = "";
-}
-
-function renderLocalGrid(list, defaultType) {
-   const grid = document.getElementById("view-all-grid");
-   if(list.length === 0) { grid.innerHTML = `<p style="color:#666; padding:20px 0;">Walang laman ang listahan na ito.</p>`; return; }
-   list.forEach(item => {
-      const targetImg = item.backdrop_path || item.poster_path;
-      const div = document.createElement("div");
-      div.className = "modern-grid-item";
-      div.setAttribute("onclick", `openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.appType || defaultType}')`);
-      div.innerHTML = `
-         <div class="modern-thumb-wrapper">
-            <img src="${IMG_URL}${targetImg}" class="modern-img" alt="img" style="width:100%; height:100%; object-fit:cover;">
-         </div>
-         <div style="padding:6px 2px;">
-            <h4 style="margin:2px 0; font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title || item.name}</h4>
-         </div>
-      `;
-      grid.appendChild(div);
-   });
-}
-
-async function fetchMoreViewAll() {
-   if(!currentViewAllUrl || isFetchingViewAll) return;
-   isFetchingViewAll = true;
-   document.getElementById("view-all-loading").style.display = "block";
-   
-   try {
-      let connector = currentViewAllUrl.includes("?") ? "&" : "?";
-      let fullUrl = `${currentViewAllUrl}${connector}page=${currentViewAllPage}`;
-      
-      const res = await fetch(fullUrl);
-      const data = await res.json();
-      
-      let deducedType = currentViewAllUrl.includes("/tv") ? "tv" : "movie";
-      const grid = document.getElementById("view-all-grid");
-      
-      if(data.results && data.results.length > 0) {
-         data.results.forEach(item => {
-            const targetImg = item.backdrop_path || item.poster_path;
-            if(!targetImg) return;
-            const div = document.createElement("div");
-            div.className = "modern-grid-item";
-            div.setAttribute("onclick", `openModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${deducedType}')`);
-            div.innerHTML = `
-               <div class="modern-thumb-wrapper">
-                  <img src="${IMG_URL}${targetImg}" class="modern-img" alt="img" style="width:100%; height:100%; object-fit:cover;">
-               </div>
-               <div style="padding:6px 2px;">
-                  <h4 style="margin:2px 0; font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title || item.name}</h4>
-                  <p style="margin:0; font-size:0.75rem; color:#666;">⭐ ${item.vote_average ? item.vote_average.toFixed(1) : '0.0'}</p>
-               </div>
-            `;
-            grid.appendChild(div);
-         });
-         currentViewAllPage++;
+// --- DOM CONTENT LOADED - ATTACH ALL INTERACTIONS SAFETY ---
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('installBtn');
+  
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        console.log("Deferred prompt ay hindi pa ready.");
+        return;
       }
-   } catch(e) { console.error(e); }
-   finally {
-      isFetchingViewAll = false;
-      document.getElementById("view-all-loading").style.display = "none";
-   }
-}
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User choice outcome: ${outcome}`);
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
 
-function setupInfiniteScrollForViewAll() {
-   window.addEventListener("scroll", () => {
-      if(!currentViewAllUrl) return; 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 700) {
-          fetchMoreViewAll();
-      }
-   });
-}
+  window.addEventListener('appinstalled', () => {
+    console.log('Cineflex PWA installed successfully!');
+    if (installBtn) installBtn.style.display = 'none';
+    deferredPrompt = null;
+  });
 
-// ========================================================
-// ===               DRAWER & MISC UTILS               ===
-// ========================================================
-function openMenuDrawer() { document.getElementById("menu-drawer").style.transform = "translateX(0%)"; }
-function closeMenuDrawer() { document.getElementById("menu-drawer").style.transform = "translateX(100%)"; }
-function setupScrollNavbar() {
-  const nav = document.getElementById("navbar");
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => processSearch(e.target.value));
+  }
+
+  const banner = document.getElementById("banner");
+  if (banner) {
+     banner.addEventListener('touchstart', handleTouchStart, false);
+     banner.addEventListener('touchend', handleTouchEnd, false);
+  }
+
   window.addEventListener("scroll", () => {
-    if(nav) {
+    const nav = document.querySelector(".navbar");
+    if (nav) {
       if (window.scrollY > 30) nav.classList.add("scrolled");
       else nav.classList.remove("scrolled");
     }
   });
-}
+});
 
 // --- REMOTE NAVIGATION SYSTEM ---
 let selectedIndex = 0;
@@ -691,9 +700,8 @@ function moveFocus(direction) {
 }
 
 document.addEventListener('keydown', (e) => {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
-        if (document.activeElement.tagName === 'INPUT') return;
-        e.preventDefault();
+    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+        e.preventDefault(); 
         moveFocus(e.key);
     }
 });

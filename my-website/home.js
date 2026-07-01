@@ -705,3 +705,75 @@ document.addEventListener('keydown', (e) => {
         moveFocus(e.key);
     }
 });
+// ======================================
+// CINEFLEX AI ENGINE v1.0
+// ======================================
+
+// Personalized Recommendation
+function getRecommendedContent() {
+
+    if (continueWatching.length === 0) return;
+
+    const last = continueWatching[0];
+
+    fetch(`${BASE_URL}/${currentTVState.type}/${last.id}/recommendations?api_key=${API_KEY}`)
+        .then(r => r.json())
+        .then(data => {
+
+            if (!data.results) return;
+
+            let row = document.getElementById("recommended-list");
+
+            if (!row) {
+
+                const section = document.createElement("section");
+
+                section.className = "row";
+
+                section.innerHTML = `
+                    <h2>Recommended For You</h2>
+                    <div class="scroller" id="recommended-list"></div>
+                `;
+
+                document.querySelector("main").prepend(section);
+
+                row = document.getElementById("recommended-list");
+            }
+
+            displayCards(data.results, "recommended-list");
+
+        });
+
+}
+
+// Resume Playback
+function savePlayback(movieId,time){
+
+    localStorage.setItem(
+        "resume_"+movieId,
+        time
+    );
+
+}
+
+function getPlayback(movieId){
+
+    return Number(
+        localStorage.getItem("resume_"+movieId) || 0
+    );
+
+}
+
+const iframePlayer=document.getElementById("modal-video-iframe");
+
+if(iframePlayer){
+
+iframePlayer.addEventListener("load",()=>{
+
+console.log("Player Loaded");
+
+});
+
+}
+
+setTimeout(getRecommendedContent,2000);

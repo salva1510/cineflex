@@ -419,31 +419,56 @@ function updateServerTabsUI() {
 }
 
 function playSpecificEpisode(epNum, element) {
-    document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
-    if(element) element.classList.add('active');
-    currentTVState.currentEpNum = epNum;
-    
-    const playerContainer = document.getElementById("modal-player-container");
-    if (playerContainer) playerContainer.style.display = "block";
-    
-    updateVideoSource();
-    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-    addToContinueWatching(currentItem);
-    enterCinemaMode();
-    
-    setTimeout(triggerPopUnder, 2500);
+
+    requireLogin(() => {
+
+        document.querySelectorAll('.episode-item')
+            .forEach(el => el.classList.remove('active'));
+
+        if (element) element.classList.add('active');
+
+        currentTVState.currentEpNum = epNum;
+
+        const playerContainer = document.getElementById("modal-player-container");
+        if (playerContainer) playerContainer.style.display = "block";
+
+        updateVideoSource();
+
+        document.querySelector('.modal-content').scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        addToContinueWatching(currentItem);
+
+        enterCinemaMode();
+
+        setTimeout(triggerPopUnder, 2500);
+
+    });
+
 }
 
 function startPlayback() {
-    const playerContainer = document.getElementById("modal-player-container");
-    if (playerContainer) playerContainer.style.display = "block";
-    
-    updateVideoSource();
-    document.querySelector('.modal-content').scrollTo({ top: 0, behavior: 'smooth' });
-    addToContinueWatching(currentItem);
-    enterCinemaMode();
-    
-    setTimeout(triggerPopUnder, 2500);
+
+    requireLogin(() => {
+
+        const playerContainer = document.getElementById("modal-player-container");
+        if (playerContainer) playerContainer.style.display = "block";
+
+        updateVideoSource();
+        document.querySelector('.modal-content').scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        addToContinueWatching(currentItem);
+        enterCinemaMode();
+
+        setTimeout(triggerPopUnder, 2500);
+
+    });
+
 }
 
 function displayCards(data, containerId) {

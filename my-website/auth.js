@@ -38,7 +38,7 @@ function continuePendingPlayback() {
 
 function googleLogin() {
     if (googleLoginInProgress) return;
-    if (auth.currentUser) return;
+    if (isLoggedIn()) return;
 
     googleLoginInProgress = true;
     closeLoginModal();
@@ -90,6 +90,10 @@ function registerAccount() {
         alert("Please enter your email and password.");
         return;
     }
+    if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+}
 
     if (registerInProgress) return;
     registerInProgress = true;
@@ -103,6 +107,7 @@ function registerAccount() {
         registerInProgress = false;
     });
 }
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 function forgotPassword() {
     const email = document.getElementById("login-email").value.trim();

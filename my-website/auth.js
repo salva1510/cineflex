@@ -1,5 +1,5 @@
 // ======================================
-// CINEFLEX AUTH v2.0 (UPDATED WITH MODAL LAZY-LOAD)
+// CINEFLEX AUTH v2.0 (UPDATED & FIXED)
 // ======================================
 
 let pendingPlayback = null;
@@ -19,7 +19,6 @@ function requireLogin(callback) {
     openLoginModal();
 }
 
-continuePendingPlayback();
 function continuePendingPlayback() {
     if (pendingPlayback) {
         const play = pendingPlayback;
@@ -91,13 +90,11 @@ auth.onAuthStateChanged((user) => {
 
     if (user) {
         console.log("Logged in:", user.email);
-
-        closeLoginModal();
-
+        
+        // Dito natin inilagay ang pag-load ng user data at pending playback
         if (typeof loadUserData === "function") {
-    loadUserData();
-}
-    
+            loadUserData();
+        }
         continuePendingPlayback();
 
         if (info) {
@@ -145,7 +142,7 @@ auth.onAuthStateChanged((user) => {
             logoutBtn.style.display = "none";
         }
 
-        // IPINALIT NA LOGIC: Buksan lang ang login modal kung may sinubukang i-play ang user habang naka-logout
+        // Buksan lang ang login modal kung may sinubukang i-play ang user habang naka-logout
         if (pendingPlayback) {
             openLoginModal();
         }

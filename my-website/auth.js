@@ -235,6 +235,6 @@ function openLoginModal() {
 function closeLoginModal() {
     const modal = document.getElementById("login-modal");
     if (modal) {
-        modal.style.display = "none";
+        modal.remove();
     }
 }

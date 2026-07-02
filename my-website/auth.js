@@ -61,6 +61,15 @@ function googleLogin() {
 }
 
 function emailLogin() {
+    const btn = document.querySelector("#login-modal button");
+btn.disabled = true;
+
+...
+
+.finally(() => {
+    btn.disabled = false;
+    emailLoginInProgress = false;
+});
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
 
@@ -234,6 +243,6 @@ function openLoginModal() {
 function closeLoginModal() {
     const modal = document.getElementById("login-modal");
     if (modal) {
-        modal.remove();
+        modal.style.display = "none";
     }
 }

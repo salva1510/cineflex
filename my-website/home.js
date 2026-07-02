@@ -1064,3 +1064,48 @@ document.addEventListener("visibilitychange",()=>{
 });
 
 console.log("Performance Engine Loaded");
+// ===========================
+// FIREBASE CLOUD SYNC
+// ===========================
+
+async function saveUserData() {
+
+    if (!auth.currentUser) return;
+
+    await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .set({
+            watchlist: watchlist,
+            continueWatching: continueWatching
+        }, { merge: true });
+
+}
+
+async function loadUserData() {
+
+    if (!auth.currentUser) return;
+
+    const doc = await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .get();
+
+    if (!doc.exists) return;
+
+    const data = doc.data();
+
+    watchlist = data.watchlist || [];
+    continueWatching = data.continueWatching || [];
+
+    localStorage.setItem(
+        "cineflex_watchlist",
+        JSON.stringify(watchlist)
+    );
+
+    localStorage.setItem(
+        "cineflex_recent",
+        JSON.stringify(continueWatching)
+    );
+
+    updateContinueUI();
+
+}

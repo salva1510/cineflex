@@ -19,6 +19,11 @@ function requireLogin(callback) {
     openLoginModal();
 }
 
+if (typeof loadUserData === "function") {
+    loadUserData();
+}
+
+continuePendingPlayback();
 function continuePendingPlayback() {
     if (pendingPlayback) {
         const play = pendingPlayback;

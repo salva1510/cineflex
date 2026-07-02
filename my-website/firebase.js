@@ -13,50 +13,48 @@ const firebaseConfig = {
   measurementId: "G-95K8CPHPFM"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase (Isang beses lang dapat tinatawag)
+const app = firebase.initializeApp(firebaseConfig);
 
 // Services
-const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Google Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
-
 googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
-// Persistence
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+// Ligtas na i-set ang Local Persistence upang manatiling nakalogin ang user kahit i-refresh ang browser
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() => {
+      console.log("🔒 Auth Persistence set to LOCAL successfully");
+  })
+  .catch((error) => {
+      console.error("⚠️ Auth Persistence Error:", error.message);
+  });
 
-// Current User
+// Current User State Holder
 let currentUser = null;
 
 // Listen Login State
 auth.onAuthStateChanged((user) => {
-
     currentUser = user;
 
     if (user) {
-
-        console.log("✅ Logged In:", user.displayName);
-
+        console.log("✅ Logged In:", user.displayName || user.email);
+        
         window.dispatchEvent(
             new CustomEvent("cineflex-login", {
                 detail: user
             })
         );
-
     } else {
-
         console.log("❌ Logged Out");
-
+        
         window.dispatchEvent(
             new CustomEvent("cineflex-logout")
         );
-
     }
-
 });

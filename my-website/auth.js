@@ -62,8 +62,28 @@ if (googleBtn) googleBtn.disabled = true;
             err.code !== "auth/cancelled-popup-request" &&
             err.code !== "auth/popup-closed-by-user"
         ) {
-            alert(err.message);
-        }
+            switch(err.code){
+
+case "auth/user-not-found":
+alert("No account found.");
+break;
+
+case "auth/wrong-password":
+alert("Incorrect password.");
+break;
+
+case "auth/invalid-email":
+alert("Invalid email.");
+break;
+
+case "auth/email-already-in-use":
+alert("Email already registered.");
+break;
+
+default:
+alert(err.message);
+
+}
     })
     .finally(() => {
         googleLoginInProgress = false;
@@ -181,7 +201,7 @@ if (typeof auth !== "undefined" && auth) {
             continuePendingPlayback();
 
             if (info) {
-                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}`;
+                const avatarUrl = user.photoURL || `user.photoURL || "images/default-avatar.png"(user.displayName || user.email)}`;
                 info.innerHTML = `
                     <img src="${avatarUrl}" style="width:55px; height:55px; border-radius:50%; margin-right:12px;">
                     <div>
@@ -265,3 +285,20 @@ function closeLoginModal() {
         modal.remove();
     }
 }
+document.addEventListener("keydown", function(e){
+
+if(
+e.key==="Enter" &&
+document.getElementById("login-modal")
+){
+emailLogin();
+}
+
+});
+setTimeout(()=>{
+document.getElementById("login-email").focus();
+},100);
+
+auth.signInWithPopup(...)
+auth.signInWithEmailAndPassword(...)
+auth.createUserWithEmailAndPassword(...)

@@ -280,6 +280,7 @@ function toggleWatchlist() {
         if (wlBtn) wlBtn.innerHTML = `<i class="fa-solid fa-plus"></i> My List`;
     }
     localStorage.setItem("cineflex_watchlist", JSON.stringify(watchlist));
+  saveUserData();
 }
 
 function viewWatchlist() {
@@ -543,6 +544,7 @@ function addToContinueWatching(item) {
   continueWatching.unshift(item);
   if (continueWatching.length > 10) continueWatching.pop();
   localStorage.setItem("cineflex_recent", JSON.stringify(continueWatching));
+  saveUserData();
   updateContinueUI();
 }
 

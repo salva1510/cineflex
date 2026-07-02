@@ -389,3 +389,67 @@ auth.onAuthStateChanged((user)=>{
     }
 
 });
+window.addEventListener("cineflex-login", (e)=>{
+
+    const user = e.detail;
+
+    const info = document.getElementById("accountInfo");
+    const logout = document.getElementById("logoutBtn");
+
+    if(info){
+
+        info.innerHTML = `
+        <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email)}"
+        style="
+        width:55px;
+        height:55px;
+        border-radius:50%;
+        margin-right:12px;
+        ">
+
+        <div>
+
+        <b>${user.displayName || "Cineflex User"}</b><br>
+
+        <small>${user.email}</small><br>
+
+        <span style="color:#2ecc71">
+        ● Logged In
+        </span>
+
+        </div>
+        `;
+
+    }
+
+    if(logout){
+
+        logout.style.display="flex";
+
+    }
+
+});
+
+window.addEventListener("cineflex-logout", ()=>{
+
+    const info=document.getElementById("accountInfo");
+
+    const logout=document.getElementById("logoutBtn");
+
+    if(info){
+
+        info.innerHTML=`
+        <i class="fa-solid fa-user"></i>
+
+        Guest
+        `;
+
+    }
+
+    if(logout){
+
+        logout.style.display="none";
+
+    }
+
+});

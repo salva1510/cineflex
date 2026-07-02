@@ -4,12 +4,14 @@
 
 let pendingPlayback = null;
 
+if (typeof auth === "undefined") {
+    console.error("Firebase Auth is not initialized.");
+}
 // --- AUTH UTILITIES ---
 
 function isLoggedIn() {
-    return auth.currentUser != null;
+    return !!(auth && auth.currentUser);
 }
-
 function requireLogin(callback) {
     if (isLoggedIn()) {
         callback();
@@ -30,6 +32,8 @@ function continuePendingPlayback() {
 // --- FIREBASE AUTH ACTIONS ---
 
 function googleLogin() {
+
+    if (!auth.currentUser) {
 
     closeLoginModal();
 

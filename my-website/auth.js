@@ -3,6 +3,35 @@
 // ======================================
 
 let pendingPlayback = null;
+let googleLoginInProgress = false;
+
+function googleLogin() {
+
+    if (googleLoginInProgress) return;
+
+    googleLoginInProgress = true;
+
+    closeLoginModal();
+
+    auth.signInWithPopup(googleProvider)
+    .then(() => {
+        console.log("Google Login Success");
+    })
+    .catch(err => {
+
+        if (
+            err.code !== "auth/cancelled-popup-request" &&
+            err.code !== "auth/popup-closed-by-user"
+        ) {
+            alert(err.message);
+        }
+
+    })
+    .finally(() => {
+        googleLoginInProgress = false;
+    });
+
+}
 
 if (typeof auth === "undefined") {
     console.error("Firebase Auth is not initialized.");
@@ -92,19 +121,17 @@ function forgotPassword() {
     .catch(err => alert(err.message));
 }
 
-function logout() {
+async function logout() {
 
     pendingPlayback = null;
 
-    auth.signOut()
-    .then(() => {
-
+    try {
+        await auth.signOut();
         closeLoginModal();
-
         console.log("Logged out");
-
-    })
-    .catch(err => alert(err.message));
+    } catch (err) {
+        alert(err.message);
+    }
 
 }
 
@@ -123,7 +150,7 @@ auth.onAuthStateChanged((user) => {
         
         // Dito natin inilagay ang pag-load ng user data at pending playback
         if (typeof loadUserData === "function") {
-    loadUserData().catch(console.error);
+    Promise.resolve(loadUserData()).catch(console.error);
 }
         continuePendingPlayback();
 

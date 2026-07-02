@@ -37,6 +37,16 @@ function continuePendingPlayback() {
 // --- FIREBASE AUTH ACTIONS ---
 
 function googleLogin() {
+    const googleBtn = document.getElementById("google-login-btn");
+
+if (googleBtn) googleBtn.disabled = true;
+
+...
+
+.finally(()=>{
+    googleLoginInProgress = false;
+    if (googleBtn) googleBtn.disabled = false;
+});
     if (googleLoginInProgress) return;
     if (isLoggedIn()) return;
 

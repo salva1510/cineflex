@@ -107,7 +107,6 @@ function registerAccount() {
         registerInProgress = false;
     });
 }
-const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 function forgotPassword() {
     const email = document.getElementById("login-email").value.trim();

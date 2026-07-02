@@ -526,3 +526,32 @@ input:checked + .slider:before { transform: translateX(14px); }
     color: #757575; 
     margin: 0;
 }
+/* Scrollable Menu Drawer Fix */
+.menu-drawer{
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+}
+
+.drawer-links{
+    padding-bottom:120px;
+}
+
+.menu-drawer::-webkit-scrollbar{
+    width:6px;
+}
+
+.menu-drawer::-webkit-scrollbar-thumb{
+    background:#555;
+    border-radius:20px;
+}
+.drawer-links{
+    height:100%;
+}
+
+.drawer-links{
+    display:flex;
+    flex-direction:column;
+    padding-bottom:100px;
+}

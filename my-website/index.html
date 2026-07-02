@@ -51,14 +51,14 @@
     .action-btn-large { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.95rem; transition: 0.2s ease; }
     .action-btn-large:hover { background: rgba(255, 255, 255, 0.2); }
 
-    /* Drawer Auth Buttons */
+    /* Drawer Auth Buttons - Iniba ang mga ID para iwas clash sa Modal */
     .drawer-auth-btn { width: 100%; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; margin-top: 8px; transition: 0.2s; }
-    #email-login-btn { background: #e50914; color: white; }
-    #email-login-btn:hover { background: #b80710; }
-    #register-submit-btn { background: #333; color: white; border: 1px solid #444; }
-    #register-submit-btn:hover { background: #444; }
-    #google-login-btn { background: white; color: black; }
-    #google-login-btn:hover { background: #e6e6e6; }
+    #drawer-email-login-btn { background: #e50914; color: white; }
+    #drawer-email-login-btn:hover { background: #b80710; }
+    #drawer-register-submit-btn { background: #333; color: white; border: 1px solid #444; }
+    #drawer-register-submit-btn:hover { background: #444; }
+    #drawer-google-login-btn { background: white; color: black; }
+    #drawer-google-login-btn:hover { background: #e6e6e6; }
   </style>
 </head>
 <body>
@@ -105,15 +105,15 @@
                 </div>
             </div>
 
-            <!-- Auth Action Buttons (Naka-grupo para iwas static layout conflict) -->
+            <!-- Auth Action Buttons (May bagong IDs at tinatawag na ang tamang openLoginModal) -->
             <div id="auth-buttons-group" style="margin-top: 10px;">
-                <button id="email-login-btn" class="drawer-auth-btn" onclick="loginWithEmail()">
+                <button id="drawer-email-login-btn" class="drawer-auth-btn" onclick="openLoginModal()">
                     <i class="fa-solid fa-envelope"></i> Login with Email
                 </button>
-                <button id="register-submit-btn" class="drawer-auth-btn" onclick="registerAccount()">
+                <button id="drawer-register-submit-btn" class="drawer-auth-btn" onclick="registerAccount()">
                     Create Account
                 </button>
-                <button id="google-login-btn" class="drawer-auth-btn" onclick="googleLogin()">
+                <button id="drawer-google-login-btn" class="drawer-auth-btn" onclick="googleLogin()">
                     <i class="fa-brands fa-google"></i> Continue with Google
                 </button>
             </div>

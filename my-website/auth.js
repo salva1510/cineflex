@@ -19,10 +19,6 @@ function requireLogin(callback) {
     openLoginModal();
 }
 
-if (typeof loadUserData === "function") {
-    loadUserData();
-}
-
 continuePendingPlayback();
 function continuePendingPlayback() {
     if (pendingPlayback) {
@@ -95,7 +91,13 @@ auth.onAuthStateChanged((user) => {
 
     if (user) {
         console.log("Logged in:", user.email);
-        
+
+        closeLoginModal();
+
+        if (typeof loadUserData === "function") {
+    loadUserData();
+}
+    
         continuePendingPlayback();
 
         if (info) {

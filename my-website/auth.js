@@ -1,46 +1,20 @@
 // ======================================
-// CINEFLEX AUTH v2.0 (UPDATED & FIXED)
+// CINEFLEX AUTH v2.0 (FIXED & CLEANED)
 // ======================================
 
 let pendingPlayback = null;
 let googleLoginInProgress = false;
 
-function googleLogin() {
-
-    if (googleLoginInProgress) return;
-
-    googleLoginInProgress = true;
-
-    closeLoginModal();
-
-    auth.signInWithPopup(googleProvider)
-    .then(() => {
-        console.log("Google Login Success");
-    })
-    .catch(err => {
-
-        if (
-            err.code !== "auth/cancelled-popup-request" &&
-            err.code !== "auth/popup-closed-by-user"
-        ) {
-            alert(err.message);
-        }
-
-    })
-    .finally(() => {
-        googleLoginInProgress = false;
-    });
-
-}
-
 if (typeof auth === "undefined") {
     console.error("Firebase Auth is not initialized.");
 }
+
 // --- AUTH UTILITIES ---
 
 function isLoggedIn() {
     return !!(auth && auth.currentUser);
 }
+
 function requireLogin(callback) {
     if (isLoggedIn()) {
         callback();
@@ -61,9 +35,10 @@ function continuePendingPlayback() {
 // --- FIREBASE AUTH ACTIONS ---
 
 function googleLogin() {
+    if (googleLoginInProgress) return;
+    if (auth.currentUser) return; // Wag nang mag-login kung naka-login na
 
-    if (!auth.currentUser) {
-
+    googleLoginInProgress = true;
     closeLoginModal();
 
     auth.signInWithPopup(googleProvider)
@@ -71,24 +46,25 @@ function googleLogin() {
         console.log("Google Login Success");
     })
     .catch(err => {
-
         if (
-            err.code === "auth/cancelled-popup-request" ||
-            err.code === "auth/popup-closed-by-user"
+            err.code !== "auth/cancelled-popup-request" &&
+            err.code !== "auth/popup-closed-by-user"
         ) {
-            return;
+            alert(err.message);
         }
-
-        alert(err.message);
-
+    })
+    .finally(() => {
+        googleLoginInProgress = false;
     });
-
 }
 
 function emailLogin() {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
-
+if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+}
     auth.signInWithEmailAndPassword(email, password)
     .then(() => {
         closeLoginModal();
@@ -122,9 +98,7 @@ function forgotPassword() {
 }
 
 async function logout() {
-
     pendingPlayback = null;
-
     try {
         await auth.signOut();
         closeLoginModal();
@@ -132,12 +106,15 @@ async function logout() {
     } catch (err) {
         alert(err.message);
     }
-
 }
 
 // --- CENTRAL STATE MANAGEMENT ---
 
-auth.onAuthStateChanged((user) => {
+if (auth) {
+    auth.onAuthStateChanged((user) => {
+        // existing code
+    });
+}
     const info = document.getElementById("accountInfo");
     const logoutBtn = document.getElementById("logoutBtn");
     const photo = document.getElementById("userPhoto");
@@ -148,10 +125,10 @@ auth.onAuthStateChanged((user) => {
     if (user) {
         console.log("Logged in:", user.email);
         
-        // Dito natin inilagay ang pag-load ng user data at pending playback
+        // Pag-load ng user data at pending playback
         if (typeof loadUserData === "function") {
-    Promise.resolve(loadUserData()).catch(console.error);
-}
+            Promise.resolve(loadUserData()).catch(console.error);
+        }
         continuePendingPlayback();
 
         if (info) {

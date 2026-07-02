@@ -92,6 +92,15 @@ btn.disabled = true;
 }
 
 function registerAccount() {
+    const registerBtn = document.getElementById("register-submit-btn");
+if (registerBtn) registerBtn.disabled = true;
+
+...
+
+.finally(() => {
+    registerInProgress = false;
+    if (registerBtn) registerBtn.disabled = false;
+});
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
 

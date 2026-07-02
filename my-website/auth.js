@@ -38,6 +38,8 @@ function continuePendingPlayback() {
 window.addEventListener("cineflex-login", () => {
 
     closeLoginModal();
+    
+    loadUserData();
 
     continuePendingPlayback();
 

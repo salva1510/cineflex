@@ -28,10 +28,6 @@ if (typeof auth === "undefined") {
     console.error("Firebase Auth is not initialized.");
 }
 
-if (typeof googleProvider === "undefined") {
-    var googleProvider = typeof firebase !== "undefined" ? new firebase.auth.GoogleAuthProvider() : null;
-}
-
 if (typeof auth !== "undefined" && auth) {
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {

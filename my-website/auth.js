@@ -1,5 +1,5 @@
 // ======================================
-// CINEFLEX AUTH v2.0 (FIXED & CLEANED)
+// CINEFLEX AUTH v2.0 (FULLY FIXED & CLEANED)
 // ======================================
 
 let pendingPlayback = null;
@@ -38,7 +38,7 @@ function continuePendingPlayback() {
 
 function googleLogin() {
     if (googleLoginInProgress) return;
-    if (auth.currentUser) return; // Wag nang mag-login kung naka-login na
+    if (auth.currentUser) return;
 
     googleLoginInProgress = true;
     closeLoginModal();
@@ -63,51 +63,45 @@ function googleLogin() {
 function emailLogin() {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
-if (emailLoginInProgress) return;
 
-emailLoginInProgress = true;
+    if (!email || !password) {
+        alert("Please enter your email and password.");
+        return;
+    }
 
-auth.signInWithEmailAndPassword(email, password)
-.then(() => {
-    closeLoginModal();
-})
-.catch(err => alert(err.message))
-.finally(() => {
-    emailLoginInProgress = false;
-});
+    if (emailLoginInProgress) return;
+    emailLoginInProgress = true;
+
     auth.signInWithEmailAndPassword(email, password)
     .then(() => {
         closeLoginModal();
     })
-    .catch(err => alert(err.message));
+    .catch(err => alert(err.message))
+    .finally(() => {
+        emailLoginInProgress = false;
+    });
 }
 
 function registerAccount() {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
 
+    if (!email || !password) {
+        alert("Please enter your email and password.");
+        return;
+    }
+
+    if (registerInProgress) return;
+    registerInProgress = true;
+
     auth.createUserWithEmailAndPassword(email, password)
-        if (!email || !password) {
-    alert("Please enter your email and password.");
-    return;
-}
-
-if (registerInProgress) return;
-
-registerInProgress = true;
-
-auth.createUserWithEmailAndPassword(email,password)
-.then(()=>{
-    closeLoginModal();
-})
-.catch(err=>alert(err.message))
-.finally(()=>{
-    registerInProgress = false;
-});
     .then(() => {
         closeLoginModal();
     })
-    .catch(err => alert(err.message));
+    .catch(err => alert(err.message))
+    .finally(() => {
+        registerInProgress = false;
+    });
 }
 
 function forgotPassword() {
@@ -137,78 +131,74 @@ async function logout() {
 
 // --- CENTRAL STATE MANAGEMENT ---
 
-if (auth) {
+if (typeof auth !== "undefined" && auth) {
     auth.onAuthStateChanged((user) => {
-        // existing code
+        const info = document.getElementById("accountInfo");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const photo = document.getElementById("userPhoto");
+        const name = document.getElementById("userName");
+        const email = document.getElementById("userEmail");
+        const badge = document.getElementById("userBadge");
+
+        if (user) {
+            console.log("Logged in:", user.email);
+            
+            if (typeof loadUserData === "function") {
+                Promise.resolve(loadUserData()).catch(console.error);
+            }
+            continuePendingPlayback();
+
+            if (info) {
+                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}`;
+                info.innerHTML = `
+                    <img src="${avatarUrl}" style="width:55px; height:55px; border-radius:50%; margin-right:12px;">
+                    <div>
+                        <b>${user.displayName || "Cineflex User"}</b><br>
+                        <small>${user.email}</small><br>
+                        <span style="color:#2ecc71">● Logged In</span>
+                    </div>
+                `;
+            }
+
+            if (photo) photo.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}`;
+            if (name) name.innerText = user.displayName || "User";
+            if (email) email.innerText = user.email;
+            if (badge) badge.innerText = "CINEFLEX MEMBER";
+            if (logoutBtn) logoutBtn.style.display = "flex";
+
+        } else {
+            console.log("Logged out");
+
+            if (info) {
+                info.innerHTML = `<i class="fa-solid fa-user"></i> Guest`;
+            }
+
+            if (photo) {
+                photo.src = "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
+            }
+
+            if (name) {
+                name.innerText = "Guest";
+            }
+
+            if (email) {
+                email.innerText = "Not logged in";
+            }
+
+            if (badge) {
+                badge.innerText = "FREE MEMBER";
+            }
+
+            if (logoutBtn) {
+                logoutBtn.style.display = "none";
+            }
+
+            if (pendingPlayback) {
+                openLoginModal();
+            }
+        }
     });
 }
-    const info = document.getElementById("accountInfo");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const photo = document.getElementById("userPhoto");
-    const name = document.getElementById("userName");
-    const email = document.getElementById("userEmail");
-    const badge = document.getElementById("userBadge");
-
-    if (user) {
-        console.log("Logged in:", user.email);
-        
-        // Pag-load ng user data at pending playback
-        if (typeof loadUserData === "function") {
-            Promise.resolve(loadUserData()).catch(console.error);
-        }
-        continuePendingPlayback();
-
-        if (info) {
-            const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}`;
-            info.innerHTML = `
-                <img src="${avatarUrl}" style="width:55px; height:55px; border-radius:50%; margin-right:12px;">
-                <div>
-                    <b>${user.displayName || "Cineflex User"}</b><br>
-                    <small>${user.email}</small><br>
-                    <span style="color:#2ecc71">● Logged In</span>
-                </div>
-            `;
-        }
-
-        if (photo) photo.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}`;
-        if (name) name.innerText = user.displayName || "User";
-        if (email) email.innerText = user.email;
-        if (badge) badge.innerText = "CINEFLEX MEMBER";
-        if (logoutBtn) logoutBtn.style.display = "flex";
-
-    } else {
-        console.log("Logged out");
-
-        if (info) {
-            info.innerHTML = `<i class="fa-solid fa-user"></i> Guest`;
-        }
-
-        if (photo) {
-            photo.src = "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
-        }
-
-        if (name) {
-            name.innerText = "Guest";
-        }
-
-        if (email) {
-            email.innerText = "Not logged in";
-        }
-
-        if (badge) {
-            badge.innerText = "FREE MEMBER";
-        }
-
-        if (logoutBtn) {
-            logoutBtn.style.display = "none";
-        }
-
-        // Buksan lang ang login modal kung may sinubukang i-play ang user habang naka-logout
-        if (pendingPlayback) {
-            openLoginModal();
-        }
-    }
-});
 
 // --- MODAL UI HANDLERS ---
 

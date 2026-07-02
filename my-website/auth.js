@@ -30,12 +30,26 @@ function continuePendingPlayback() {
 // --- FIREBASE AUTH ACTIONS ---
 
 function googleLogin() {
+
+    closeLoginModal();
+
     auth.signInWithPopup(googleProvider)
     .then(() => {
         console.log("Google Login Success");
-        closeLoginModal();
     })
-    .catch(err => alert(err.message));
+    .catch(err => {
+
+        if (
+            err.code === "auth/cancelled-popup-request" ||
+            err.code === "auth/popup-closed-by-user"
+        ) {
+            return;
+        }
+
+        alert(err.message);
+
+    });
+
 }
 
 function emailLogin() {
@@ -75,7 +89,19 @@ function forgotPassword() {
 }
 
 function logout() {
-    auth.signOut();
+
+    pendingPlayback = null;
+
+    auth.signOut()
+    .then(() => {
+
+        closeLoginModal();
+
+        console.log("Logged out");
+
+    })
+    .catch(err => alert(err.message));
+
 }
 
 // --- CENTRAL STATE MANAGEMENT ---
@@ -93,8 +119,8 @@ auth.onAuthStateChanged((user) => {
         
         // Dito natin inilagay ang pag-load ng user data at pending playback
         if (typeof loadUserData === "function") {
-            loadUserData();
-        }
+    loadUserData().catch(console.error);
+}
         continuePendingPlayback();
 
         if (info) {

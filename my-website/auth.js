@@ -4,6 +4,8 @@
 
 let pendingPlayback = null;
 let googleLoginInProgress = false;
+let emailLoginInProgress = false;
+let registerInProgress = false;
 
 if (typeof auth === "undefined") {
     console.error("Firebase Auth is not initialized.");
@@ -61,10 +63,18 @@ function googleLogin() {
 function emailLogin() {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
-if (!email || !password) {
-    alert("Please enter your email and password.");
-    return;
-}
+if (emailLoginInProgress) return;
+
+emailLoginInProgress = true;
+
+auth.signInWithEmailAndPassword(email, password)
+.then(() => {
+    closeLoginModal();
+})
+.catch(err => alert(err.message))
+.finally(() => {
+    emailLoginInProgress = false;
+});
     auth.signInWithEmailAndPassword(email, password)
     .then(() => {
         closeLoginModal();
@@ -77,6 +87,23 @@ function registerAccount() {
     const password = document.getElementById("login-password").value;
 
     auth.createUserWithEmailAndPassword(email, password)
+        if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+}
+
+if (registerInProgress) return;
+
+registerInProgress = true;
+
+auth.createUserWithEmailAndPassword(email,password)
+.then(()=>{
+    closeLoginModal();
+})
+.catch(err=>alert(err.message))
+.finally(()=>{
+    registerInProgress = false;
+});
     .then(() => {
         closeLoginModal();
     })

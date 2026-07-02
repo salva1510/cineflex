@@ -1,0 +1,431 @@
+/* ==========================================================================
+   CINEFLEX - HOME.CSS (UPDATED WITH SCROLLABLE MENU DRAWER)
+   ========================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #111;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Header & Navigation */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    z-index: 1000;
+    transition: 0.5s;
+}
+
+header.sticky {
+    padding: 15px 50px;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #222;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 700;
+    color: #e50914;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    color: #e50914;
+}
+
+.search-box {
+    position: relative;
+    width: 300px;
+    margin-right: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 8px 40px 8px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-box input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #e50914;
+}
+
+.search-box i {
+    position: absolute;
+    right: 15px;
+    top: 50px;
+    transform: translateY(-50%);
+    color: #fff;
+    cursor: pointer;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-profile img {
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   MENU DRAWER SECTION (ANG BINAGO AT INAYOS)
+   ========================================================================== */
+.menu-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh; /* Binago mula 100% para sakto sa screen */
+    background: rgba(0,0,0,.95);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    transition: .4s;
+    padding: 20px;
+    box-sizing: border-box;
+    border-left: 1px solid #333;
+
+    /* Inilagay ang mga ito para gumana ang scroll kapag mahaba ang menu */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.menu-drawer.active {
+    right: 0;
+}
+
+.drawer-close {
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+}
+
+.drawer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.drawer-links li {
+    margin-bottom: 20px;
+}
+
+.drawer-links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    transition: 0.3s;
+}
+
+.drawer-links li a:hover {
+    color: #e50914;
+}
+
+/* Custom Scrollbar para sa Menu Drawer */
+.menu-drawer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menu-drawer::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 20px;
+}
+
+.menu-drawer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ==========================================================================
+   ANG MGA SUSUNOD NA CODE AY ANG KASALUKUYANG DISENYO NG IYONG HOME PAGE
+   ========================================================================== */
+
+/* Banner / Hero Section */
+.banner {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=1920') no-repeat center center/cover;
+}
+
+.banner-content {
+    max-width: 600px;
+    z-index: 10;
+}
+
+.banner-title {
+    font-size: 55px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.banner-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.rating {
+    color: #ffb400;
+    font-weight: 600;
+}
+
+.banner-desc {
+    font-size: 16px;
+    color: #ddd;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.banner-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.btn-play {
+    background-color: #fff;
+    color: #000;
+}
+
+.btn-play:hover {
+    background-color: #e50914;
+    color: #fff;
+}
+
+.btn-info {
+    background-color: rgba(109, 109, 110, 0.7);
+    color: #fff;
+}
+
+.btn-info:hover {
+    background-color: rgba(109, 109, 110, 0.4);
+}
+
+/* Movie Rows / Sliders */
+.movies-container {
+    padding: 40px 50px;
+    background-color: #111;
+    position: relative;
+    top: -50px;
+    z-index: 20;
+}
+
+.movie-row {
+    margin-bottom: 40px;
+}
+
+.row-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.movies-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+}
+
+.movies-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.movie-card {
+    position: relative;
+    min-width: 200px;
+    height: 300px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    z-index: 30;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    opacity: 0;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.movie-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.card-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.card-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* Footer Section */
+footer {
+    padding: 50px 0;
+    background-color: #111;
+    border-top: 1px solid #222;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.footer-links li a {
+    color: #666;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-links li a:hover {
+    color: #fff;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 968px) {
+    header, header.sticky {
+        padding: 15px 30px;
+    }
+    .nav-links, .search-box, .user-profile {
+        display: none;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .banner {
+        padding: 0 30px;
+    }
+    .banner-title {
+        font-size: 40px;
+    }
+    .movies-container {
+        padding: 20px 30px;
+    }
+}

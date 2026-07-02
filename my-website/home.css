@@ -563,3 +563,19 @@ input:checked + .slider:before { transform: translateX(14px); }
 .menu-drawer *{
     pointer-events:auto;
 }
+#auth-buttons-group{
+    display:block !important;
+    width:100%;
+    margin-top:15px;
+}
+
+.drawer-auth-btn{
+    display:flex !important;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+}
+
+.drawer-section:last-child{
+    padding-bottom:120px;
+}

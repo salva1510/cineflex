@@ -49,7 +49,7 @@ auth.getRedirectResult()
 let currentUser = null;
 
 // Listen Login State
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
 
     currentUser = user;
 
@@ -57,16 +57,17 @@ auth.onAuthStateChanged((user) => {
 
         console.log("✅ Logged In:", user.displayName);
 
+        await loadProfiles();
+
         window.dispatchEvent(
             new CustomEvent("cineflex-login", {
                 detail: user
             })
         );
-      
-    loadProfiles();
+
     } else {
 
-        console.log("❌ Logged Out");
+        currentProfile = null;
 
         window.dispatchEvent(
             new CustomEvent("cineflex-logout")

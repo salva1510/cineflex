@@ -1074,26 +1074,40 @@ console.log("Performance Engine Loaded");
 
 async function saveUserData() {
 
-    if (!auth.currentUser) return;
+    if (!auth.currentUser || !currentProfile) return;
 
     await db.collection("users")
         .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(currentProfile)
         .set({
+
             watchlist: watchlist,
             continueWatching: continueWatching
-        }, { merge: true });
+
+        }, { merge:true });
 
 }
 
 async function loadUserData() {
 
-    if (!auth.currentUser) return;
+    if (!auth.currentUser || !currentProfile) return;
 
     const doc = await db.collection("users")
         .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(currentProfile)
         .get();
 
-    if (!doc.exists) return;
+    if (!doc.exists) {
+
+        watchlist = [];
+        continueWatching = [];
+
+        updateContinueUI();
+        return;
+
+    }
 
     const data = doc.data();
 

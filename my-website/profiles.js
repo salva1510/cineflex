@@ -153,3 +153,127 @@ Add Profile
     }
 
 }
+// =======================================
+// CINEFLEX PROFILE SYSTEM v1.0
+// Part 2
+// =======================================
+
+// -------------------------------
+// Create Profile
+// -------------------------------
+
+async function createProfile() {
+
+    if (profiles.length >= 5) {
+        alert("Maximum of 5 profiles only.");
+        return;
+    }
+
+    const name = prompt("Profile Name");
+
+    if (!name) return;
+
+    const profile = {
+
+        id: Date.now().toString(),
+
+        name: name,
+
+        avatar: DEFAULT_AVATARS[
+            profiles.length % DEFAULT_AVATARS.length
+        ],
+
+        watchlist: [],
+
+        continueWatching: [],
+
+        history: []
+
+    };
+
+    profiles.push(profile);
+
+    await saveProfiles();
+
+    renderProfiles();
+
+}
+
+// -------------------------------
+// Select Profile
+// -------------------------------
+
+function selectProfile(index){
+
+    activeProfile = profiles[index];
+
+    localStorage.setItem(
+        "cineflex_active_profile",
+        JSON.stringify(activeProfile)
+    );
+
+    watchlist = activeProfile.watchlist || [];
+
+    continueWatching =
+        activeProfile.continueWatching || [];
+
+    localStorage.setItem(
+        "cineflex_watchlist",
+        JSON.stringify(watchlist)
+    );
+
+    localStorage.setItem(
+        "cineflex_recent",
+        JSON.stringify(continueWatching)
+    );
+
+    updateContinueUI();
+
+    document
+        .getElementById("profile-screen")
+        .classList.remove("active");
+
+}
+
+// -------------------------------
+// Delete Profile
+// -------------------------------
+
+async function deleteProfile(index){
+
+    if(!confirm("Delete this profile?"))
+        return;
+
+    profiles.splice(index,1);
+
+    await saveProfiles();
+
+    renderProfiles();
+
+}
+
+// -------------------------------
+// Save Active Profile
+// -------------------------------
+
+async function saveActiveProfile(){
+
+    if(!activeProfile) return;
+
+    activeProfile.watchlist =
+        watchlist;
+
+    activeProfile.continueWatching =
+        continueWatching;
+
+    const i = profiles.findIndex(p=>p.id===activeProfile.id);
+
+    if(i>-1){
+
+        profiles[i]=activeProfile;
+
+        await saveProfiles();
+
+    }
+
+}

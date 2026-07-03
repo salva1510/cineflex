@@ -29,6 +29,21 @@ googleProvider.setCustomParameters({
 
 // Persistence
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+auth.getRedirectResult()
+
+.then((result) => {
+
+    if (result.user) {
+        console.log("Google Redirect Login Success");
+    }
+
+})
+
+.catch((error) => {
+
+    console.error(error);
+
+});
 
 // Current User
 let currentUser = null;

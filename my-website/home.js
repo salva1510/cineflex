@@ -976,12 +976,18 @@ async function loadProfiles() {
         .get();
 
     profiles = [];
-    doc.forEach(d => {
-        profiles.push({
-            id: d.id,
-            ...d.data()
-        });
+
+doc.forEach(d => {
+    profiles.push({
+        id: d.id,
+        ...d.data()
     });
+});
+
+if (profiles.length === 0) {
+    await createDefaultProfile();
+    return;
+}
 
     const savedProfile = localStorage.getItem("cineflex_profile");
     if (savedProfile && profiles.find(p => p.id === savedProfile)) {

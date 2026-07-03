@@ -1219,15 +1219,15 @@ function showProfileSelector(){
 }
 
 // Select profile
-function selectProfile(id){
+async function selectProfile(id){
 
-    currentProfile=id;
+    currentProfile = id;
 
-    document
-    .getElementById("profile-selector")
-    .style.display="none";
+    document.getElementById("profile-selector").style.display = "none";
 
-    console.log("Current Profile:",id);
+    await loadUserData();
+
+    console.log("Current Profile:", id);
 
 }
 

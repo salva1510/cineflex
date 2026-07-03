@@ -281,6 +281,7 @@ function toggleWatchlist() {
     }
     localStorage.setItem("cineflex_watchlist", JSON.stringify(watchlist));
   saveUserData();
+saveActiveProfile();
 }
 
 function viewWatchlist() {

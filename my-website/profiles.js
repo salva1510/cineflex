@@ -1,181 +1,125 @@
 // ================================
-// CINEFLEX PROFILE SYSTEM v1.0
+// CINEFLEX PROFILES ENGINE
+// v1.0
 // ================================
 
-let activeProfile = null;
 let profiles = [];
+let activeProfile = null;
 
 async function loadProfiles() {
 
     if (!auth.currentUser) return;
 
-    const doc = await db.collection("users")
-        .doc(auth.currentUser.uid)
-        .collection("profiles")
-        .get();
+    const ref = db.collection("users")
+        .doc(auth.currentUser.uid);
 
-    profiles = [];
+    const doc = await ref.get();
 
-    doc.forEach(d => {
+    if (!doc.exists) {
 
-        profiles.push({
-            id: d.id,
-            ...d.data()
-        });
+        profiles = [{
+            id: "default",
+            name: "Main",
+            avatar: "👤",
+            kids: false
+        }];
 
-    });
+        activeProfile = profiles[0];
 
-    if (profiles.length === 0) {
+        await ref.set({
+            profiles: profiles,
+            activeProfile: "default"
+        }, { merge:true });
 
-        await createDefaultProfile();
+    } else {
+
+        const data = doc.data();
+
+        profiles = data.profiles || [{
+            id:"default",
+            name:"Main",
+            avatar:"👤",
+            kids:false
+        }];
+
+        const activeId = data.activeProfile || "default";
+
+        activeProfile =
+            profiles.find(p=>p.id===activeId) ||
+            profiles[0];
 
     }
 
-    showProfileSelector();
+    renderProfiles();
 
 }
 
-async function createDefaultProfile() {
+function renderProfiles(){
 
-    const ref = db.collection("users")
-        .doc(auth.currentUser.uid)
-        .collection("profiles")
-        .doc();
+    const container=document.getElementById("profiles-list");
 
-    await ref.set({
+    if(!container) return;
 
-        name: auth.currentUser.displayName || "My Profile",
+    container.innerHTML="";
 
-        avatar: auth.currentUser.photoURL ||
+    profiles.forEach(profile=>{
 
-        "https://ui-avatars.com/api/?name=C",
+        container.innerHTML+=`
 
-        kids:false,
+        <div class="profile-card"
+             onclick="selectProfile('${profile.id}')">
 
-        created:Date.now()
+            <div class="profile-avatar">
+
+                ${profile.avatar}
+
+            </div>
+
+            <div class="profile-name">
+
+                ${profile.name}
+
+            </div>
+
+        </div>
+
+        `;
 
     });
-
-    loadProfiles();
-
-}
-
-function showProfileSelector(){
-
-    let html=`
-
-<div id="profile-screen">
-
-<div class="profile-box">
-
-<h2>Who's Watching?</h2>
-
-<div class="profile-list">
-
-`;
-
-profiles.forEach(profile=>{
-
-html+=`
-
-<div class="profile-card"
-
-onclick="selectProfile('${profile.id}')">
-
-<img src="${profile.avatar}">
-
-<p>${profile.name}</p>
-
-</div>
-
-`;
-
-});
-
-html+=`
-
-<div class="profile-card"
-
-onclick="createNewProfile()">
-
-<div class="plus">+</div>
-
-<p>Add Profile</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-const old=document.getElementById("profile-screen");
-
-if(old) old.remove();
-
-document.body.insertAdjacentHTML("beforeend",html);
 
 }
 
 async function selectProfile(id){
 
-activeProfile=id;
+    activeProfile=
+        profiles.find(p=>p.id===id);
 
-localStorage.setItem("cineflex_profile",id);
+    await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .set({
 
-document.getElementById("profile-screen").remove();
+            activeProfile:id
 
-loadProfileData();
+        },{merge:true});
 
-}
+    closeProfiles();
 
-async function createNewProfile(){
-
-const name=prompt("Profile name");
-
-if(!name) return;
-
-await db.collection("users")
-
-.doc(auth.currentUser.uid)
-
-.collection("profiles")
-
-.add({
-
-name,
-
-avatar:"https://ui-avatars.com/api/?name="+encodeURIComponent(name),
-
-kids:false,
-
-created:Date.now()
-
-});
-
-loadProfiles();
+    loadUserData();
 
 }
 
-async function loadProfileData(){
+function openProfiles(){
 
-if(!activeProfile) return;
+    document
+        .getElementById("profiles-modal")
+        .style.display="flex";
 
-const doc=await db.collection("users")
+}
 
-.doc(auth.currentUser.uid)
+function closeProfiles(){
 
-.collection("profiles")
-
-.doc(activeProfile)
-
-.get();
-
-if(!doc.exists) return;
-
-console.log("Current profile:",doc.data().name);
+    document
+        .getElementById("profiles-modal")
+        .style.display="none";
 
 }

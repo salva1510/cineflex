@@ -546,6 +546,7 @@ function addToContinueWatching(item) {
   if (continueWatching.length > 10) continueWatching.pop();
   localStorage.setItem("cineflex_recent", JSON.stringify(continueWatching));
   saveUserData();
+saveActiveProfile();
   updateContinueUI();
 }
 

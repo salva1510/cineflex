@@ -53,6 +53,23 @@ function googleLogin() {
     if (isMobile) {
 
         auth.signInWithRedirect(googleProvider);
+       auth.getRedirectResult()
+.then((result) => {
+
+    if (result.user) {
+
+        window.dispatchEvent(
+            new CustomEvent("cineflex-login", {
+                detail: result.user
+            })
+        );
+
+    }
+
+})
+.catch((error) => {
+    console.error(error);
+}); 
 
     } else {
 

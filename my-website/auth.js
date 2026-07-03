@@ -47,38 +47,15 @@ window.addEventListener("cineflex-login", () => {
 
 function googleLogin() {
 
-    const isMobile =
-        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-
-        auth.signInWithRedirect(googleProvider);
-       auth.getRedirectResult()
-.then((result) => {
-
-    if (result.user) {
-
-        window.dispatchEvent(
-            new CustomEvent("cineflex-login", {
-                detail: result.user
-            })
-        );
-
-    }
-
-})
-.catch((error) => {
-    console.error(error);
-}); 
-
-    } else {
-
-        auth.signInWithPopup(googleProvider);
-
-    }
+    auth.signInWithPopup(googleProvider)
+        .then((result) => {
+            console.log("LOGIN SUCCESS", result.user);
+        })
+        .catch((e) => {
+            console.error(e);
+        });
 
 }
-
 auth.onAuthStateChanged((user) => {
 
     console.log("AUTH STATE:", user);

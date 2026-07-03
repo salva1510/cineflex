@@ -1154,13 +1154,13 @@ async function loadProfiles() {
     });
 
     // Kung wala pang profile
-    if (profiles.length === 0) {
+    const savedProfile = localStorage.getItem("cineflex_profile");
 
-        await createDefaultProfile();
+if (savedProfile && profiles.find(p => p.id === savedProfile)) {
 
-        return;
+    await selectProfile(savedProfile);
 
-    }
+} else {
 
     showProfileSelector();
 
@@ -1222,6 +1222,9 @@ function showProfileSelector(){
 async function selectProfile(id){
 
     currentProfile = id;
+
+    // Save selected profile
+    localStorage.setItem("cineflex_profile", id);
 
     document.getElementById("profile-selector").style.display = "none";
 

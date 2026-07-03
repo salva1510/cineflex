@@ -947,6 +947,8 @@ async function loadUserData() {
         watchlist = [];
         continueWatching = [];
         updateContinueUI();
+
+getRecommendedContent();
         return;
     }
 

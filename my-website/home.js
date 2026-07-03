@@ -1001,12 +1001,18 @@ if (profiles.length === 0) {
 async function createDefaultProfile() {
     const name = auth.currentUser.displayName || "Profile";
     await db.collection("users")
-        .doc(auth.currentUser.uid)
-        .collection("profiles")
-        .add({
-            name: name,
-            avatar: auth.currentUser.photoURL || "https://ui-avatars.com/api/?name=" + encodeURIComponent(name)
-        });
+.doc(auth.currentUser.uid)
+.collection("profiles")
+.add({
+
+    name:name,
+    avatar:auth.currentUser.photoURL ||
+    "https://ui-avatars.com/api/?name="+encodeURIComponent(name),
+
+    watchlist:[],
+    continueWatching:[]
+
+});
     loadProfiles();
 }
 

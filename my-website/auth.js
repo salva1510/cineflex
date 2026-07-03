@@ -303,19 +303,7 @@ auth.onAuthStateChanged((user)=>{
     }
 
 });
-window.addEventListener("load", () => {
 
-    auth.onAuthStateChanged((user) => {
-
-        if (!user) {
-            openLoginModal();
-        } else {
-            closeLoginModal();
-        }
-
-    });
-
-});
 auth.onAuthStateChanged((user) => {
 
     const info = document.getElementById("accountInfo");
@@ -346,6 +334,15 @@ auth.onAuthStateChanged((user) => {
     }
 
 });
+
+auth.onAuthStateChanged((user) => {
+
+    if (user) {
+        closeLoginModal();
+    }
+
+});
+
 auth.onAuthStateChanged((user)=>{
 
     const photo=document.getElementById("userPhoto");

@@ -80,9 +80,20 @@ function googleLogin() {
 }
 
 auth.onAuthStateChanged((user) => {
-    console.log("AUTH STATE:", user);
-});
 
+    console.log("AUTH STATE:", user);
+
+    if (user) {
+
+        loadUserData();
+
+        closeLoginModal();
+
+        continuePendingPlayback();
+
+    }
+
+});
 function emailLogin() {
 
     const email =

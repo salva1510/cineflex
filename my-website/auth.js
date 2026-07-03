@@ -47,19 +47,18 @@ window.addEventListener("cineflex-login", () => {
 
 function googleLogin() {
 
-    auth.signInWithPopup(googleProvider)
+    const isMobile =
+        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    .then(() => {
+    if (isMobile) {
 
-        console.log("Google Login Success");
+        auth.signInWithRedirect(googleProvider);
 
-    })
+    } else {
 
-    .catch(err => {
+        auth.signInWithPopup(googleProvider);
 
-        alert(err.message);
-
-    });
+    }
 
 }
 

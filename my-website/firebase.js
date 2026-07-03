@@ -62,7 +62,8 @@ auth.onAuthStateChanged((user) => {
                 detail: user
             })
         );
-
+      
+    loadProfiles();
     } else {
 
         console.log("❌ Logged Out");

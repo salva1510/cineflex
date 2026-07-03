@@ -1113,3 +1113,131 @@ async function loadUserData() {
     updateContinueUI();
 
 }
+// ======================================
+// CINEFLEX PROFILE ENGINE v1.0
+// ======================================
+
+let currentProfile = null;
+let profiles = [];
+
+// Load profiles from Firebase
+async function loadProfiles() {
+
+    if (!auth.currentUser) return;
+
+    const doc = await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .get();
+
+    profiles = [];
+
+    doc.forEach(d => {
+        profiles.push({
+            id: d.id,
+            ...d.data()
+        });
+    });
+
+    // Kung wala pang profile
+    if (profiles.length === 0) {
+
+        await createDefaultProfile();
+
+        return;
+
+    }
+
+    showProfileSelector();
+
+}
+
+// Create default profile
+async function createDefaultProfile() {
+
+    const name = auth.currentUser.displayName || "Profile";
+
+    await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .add({
+
+            name: name,
+
+            avatar:
+            auth.currentUser.photoURL ||
+            "https://ui-avatars.com/api/?name="+encodeURIComponent(name)
+
+        });
+
+    loadProfiles();
+
+}
+
+// Show Profile Screen
+function showProfileSelector(){
+
+    const selector =
+    document.getElementById("profile-selector");
+
+    const container =
+    document.getElementById("profiles");
+
+    container.innerHTML="";
+
+    profiles.forEach(profile=>{
+
+        container.innerHTML += `
+        <div class="profile-card"
+        onclick="selectProfile('${profile.id}')">
+
+            <img src="${profile.avatar}">
+
+            <span>${profile.name}</span>
+
+        </div>
+        `;
+
+    });
+
+    selector.style.display="flex";
+
+}
+
+// Select profile
+function selectProfile(id){
+
+    currentProfile=id;
+
+    document
+    .getElementById("profile-selector")
+    .style.display="none";
+
+    console.log("Current Profile:",id);
+
+}
+
+// Add profile
+async function createProfile(){
+
+    const name =
+    prompt("Profile name");
+
+    if(!name) return;
+
+    await db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("profiles")
+    .add({
+
+        name:name,
+
+        avatar:
+        "https://ui-avatars.com/api/?name="+
+        encodeURIComponent(name)
+
+    });
+
+    loadProfiles();
+
+}

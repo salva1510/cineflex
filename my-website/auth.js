@@ -300,7 +300,17 @@ auth.onAuthStateChanged((user)=>{
 
 });
 window.addEventListener("load", () => {
-    openLoginModal();
+
+    auth.onAuthStateChanged((user) => {
+
+        if (!user) {
+            openLoginModal();
+        } else {
+            closeLoginModal();
+        }
+
+    });
+
 });
 auth.onAuthStateChanged((user) => {
 

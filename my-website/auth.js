@@ -62,6 +62,10 @@ function googleLogin() {
 
 }
 
+auth.onAuthStateChanged((user) => {
+    console.log("AUTH STATE:", user);
+});
+
 function emailLogin() {
 
     const email =

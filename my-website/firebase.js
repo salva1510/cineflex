@@ -1,142 +1,196 @@
-//
-// ======================================
-// CINEFLEX FIREBASE CORE v5.0
-// ======================================
-// FIXED: auth + db + safety + null guards
-//
+// ===========================================
+// CINEFLEX FIREBASE ENGINE v6
+// ===========================================
 
-// Firebase init (expected already loaded in HTML)
+// Firebase Config
 const firebaseConfig = {
-    // ❗ PALITAN MO ITO SA CONFIG MO
+    apiKey: "AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk",
+    authDomain: "cineflex-login-b8380.firebaseapp.com",
+    projectId: "cineflex-login-b8380",
+    storageBucket: "cineflex-login-b8380.firebasestorage.app",
+    messagingSenderId: "453926417888",
+    appId: "1:453926417888:web:4c13aefa06f5aed559e785",
+    measurementId: "G-95K8CPHPFM"
 };
 
-// Initialize Firebase safely
+// Prevent duplicate initialization
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// Services
+// Firebase Services
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Google Auth Provider
+// Google Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-// ======================================
-// GLOBAL SAFE STORAGE
-// ======================================
+googleProvider.setCustomParameters({
+    prompt: "select_account"
+});
 
-window.auth = auth;
-window.db = db;
-window.googleProvider = googleProvider;
+// Persistence
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+.catch(console.error);
 
-// ======================================
-// SAFE USER DATA STORAGE
-// ======================================
+// Current User
+let currentUser = null;
 
-window.userDataCache = {
-    watchlist: [],
-    continueWatching: []
-};
+// ===========================================
+// AUTH STATE
+// ===========================================
 
-// ======================================
-// SAFE FIRESTORE HELPERS
-// ======================================
+auth.onAuthStateChanged(async (user) => {
 
-function getUserRef() {
+    currentUser = user;
+
+    if (user) {
+
+        console.log("✅ Logged In:", user.email);
+
+        window.dispatchEvent(new CustomEvent("cineflex-login", {
+            detail: user
+        }));
+
+    } else {
+
+        console.log("❌ Logged Out");
+
+        localStorage.removeItem("cineflex_profile");
+
+        window.dispatchEvent(new Event("cineflex-logout"));
+
+    }
+
+});
+
+// ===========================================
+// USER DATA
+// ===========================================
+
+async function saveCloudData(profileId, data) {
+
+    if (!auth.currentUser) return;
+
+    await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(profileId)
+        .set(data, {
+            merge: true
+        });
+
+}
+
+async function loadCloudData(profileId) {
+
     if (!auth.currentUser) return null;
-    return db.collection("users").doc(auth.currentUser.uid);
+
+    const doc = await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(profileId)
+        .get();
+
+    if (!doc.exists) return null;
+
+    return doc.data();
+
 }
 
-// ======================================
-// SAFE LOAD USER DATA
-// ======================================
+// ===========================================
+// PROFILES
+// ===========================================
 
-async function loadUserData() {
+async function getProfiles() {
 
-    const userRef = getUserRef();
-    if (!userRef) return;
+    if (!auth.currentUser) return [];
 
-    try {
+    const snap = await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .get();
 
-        const doc = await userRef
-            .collection("profiles")
-            .doc(window.currentProfile || "default")
-            .get();
+    let list = [];
 
-        if (!doc.exists) {
+    snap.forEach(doc => {
 
-            window.userDataCache.watchlist = [];
-            window.userDataCache.continueWatching = [];
+        list.push({
 
-            localStorage.setItem("cineflex_watchlist", "[]");
-            localStorage.setItem("cineflex_recent", "[]");
+            id: doc.id,
 
-            if (typeof updateContinueUI === "function") {
-                updateContinueUI();
-            }
+            ...doc.data()
 
-            return;
-        }
+        });
 
-        const data = doc.data();
+    });
 
-        window.userDataCache.watchlist = data.watchlist || [];
-        window.userDataCache.continueWatching = data.continueWatching || [];
+    return list;
 
-        localStorage.setItem("cineflex_watchlist", JSON.stringify(window.userDataCache.watchlist));
-        localStorage.setItem("cineflex_recent", JSON.stringify(window.userDataCache.continueWatching));
-
-        if (typeof updateContinueUI === "function") {
-            updateContinueUI();
-        }
-
-    } catch (err) {
-        console.error("loadUserData error:", err);
-    }
 }
 
-// ======================================
-// SAFE SAVE USER DATA
-// ======================================
+async function createProfile(name, avatar) {
 
-async function saveUserData() {
+    if (!auth.currentUser) return;
 
-    const userRef = getUserRef();
-    if (!userRef) return;
+    const ref = db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc();
 
-    try {
+    await ref.set({
 
-        await userRef
-            .collection("profiles")
-            .doc(window.currentProfile || "default")
-            .set({
-                watchlist: JSON.parse(localStorage.getItem("cineflex_watchlist") || "[]"),
-                continueWatching: JSON.parse(localStorage.getItem("cineflex_recent") || "[]")
-            }, { merge: true });
+        name,
 
-    } catch (err) {
-        console.error("saveUserData error:", err);
-    }
+        avatar,
+
+        watchlist: [],
+
+        continueWatching: [],
+
+        favorites: [],
+
+        history: [],
+
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+    return ref.id;
+
 }
 
-// ======================================
-// SYNC HELPERS
-// ======================================
+async function deleteProfile(profileId) {
 
-function syncLocalToCloud() {
-    saveUserData();
+    if (!auth.currentUser) return;
+
+    await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(profileId)
+        .delete();
+
 }
 
-function syncCloudToLocal() {
-    loadUserData();
+// ===========================================
+// LOGOUT
+// ===========================================
+
+async function logout() {
+
+    localStorage.removeItem("cineflex_profile");
+
+    await auth.signOut();
+
 }
 
-// Auto sync every 20 seconds
-setInterval(() => {
-    if (auth.currentUser && window.currentProfile) {
-        saveUserData();
-    }
-}, 20000);
+// ===========================================
+// READY
+// ===========================================
 
-console.log("🔥 Cineflex Firebase Core v5 loaded");
+console.log("==================================");
+console.log(" Cineflex Firebase Engine v6");
+console.log(" Firebase Connected");
+console.log(" Cloud Sync Ready");
+console.log(" Google Login Ready");
+console.log("==================================");

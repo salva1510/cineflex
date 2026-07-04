@@ -1,125 +1,260 @@
-// ================================
-// CINEFLEX PROFILES ENGINE
-// v1.0
-// ================================
+// ======================================
+// CINEFLEX PROFILE ENGINE v5.0
+// ======================================
 
+let currentProfile = null;
 let profiles = [];
-let activeProfile = null;
+
+// ======================================
+// LOAD PROFILES
+// ======================================
 
 async function loadProfiles() {
 
     if (!auth.currentUser) return;
 
-    const ref = db.collection("users")
-        .doc(auth.currentUser.uid);
+    try {
 
-    const doc = await ref.get();
+        const snap = await db
+            .collection("users")
+            .doc(auth.currentUser.uid)
+            .collection("profiles")
+            .get();
 
-    if (!doc.exists) {
+        profiles = [];
 
-        profiles = [{
-            id: "default",
-            name: "Main",
-            avatar: "👤",
-            kids: false
-        }];
+        snap.forEach(doc => {
 
-        activeProfile = profiles[0];
+            profiles.push({
+                id: doc.id,
+                ...doc.data()
+            });
 
-        await ref.set({
-            profiles: profiles,
-            activeProfile: "default"
-        }, { merge:true });
+        });
 
-    } else {
+        // gumawa ng default profile kung wala pa
+        if (profiles.length === 0) {
 
-        const data = doc.data();
+            await createDefaultProfile();
+            return;
 
-        profiles = data.profiles || [{
-            id:"default",
-            name:"Main",
-            avatar:"👤",
-            kids:false
-        }];
+        }
 
-        const activeId = data.activeProfile || "default";
+        const saved =
+            localStorage.getItem("cineflex_profile");
 
-        activeProfile =
-            profiles.find(p=>p.id===activeId) ||
-            profiles[0];
+        if (
+            saved &&
+            profiles.find(p => p.id === saved)
+        ) {
+
+            await selectProfile(saved);
+
+        } else {
+
+            showProfileSelector();
+
+        }
+
+    } catch (e) {
+
+        console.error(e);
 
     }
 
-    renderProfiles();
+}
+
+// ======================================
+// DEFAULT PROFILE
+// ======================================
+
+async function createDefaultProfile() {
+
+    const name =
+        auth.currentUser.displayName ||
+        "Profile";
+
+    await db
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .add({
+
+            name,
+
+            avatar:
+                auth.currentUser.photoURL ||
+                "https://ui-avatars.com/api/?name=" +
+                encodeURIComponent(name)
+
+        });
+
+    loadProfiles();
 
 }
 
-function renderProfiles(){
+// ======================================
+// SHOW PROFILE SCREEN
+// ======================================
 
-    const container=document.getElementById("profiles-list");
+function showProfileSelector() {
 
-    if(!container) return;
+    const modal =
+        document.getElementById("profile-selector");
 
-    container.innerHTML="";
+    const list =
+        document.getElementById("profiles");
 
-    profiles.forEach(profile=>{
+    if (!modal || !list) return;
 
-        container.innerHTML+=`
+    list.innerHTML = "";
 
-        <div class="profile-card"
-             onclick="selectProfile('${profile.id}')">
+    profiles.forEach(profile => {
 
-            <div class="profile-avatar">
+        list.innerHTML += `
 
-                ${profile.avatar}
+<div class="profile-card"
+onclick="selectProfile('${profile.id}')">
 
-            </div>
+<img
+src="${profile.avatar}"
+class="profile-avatar">
 
-            <div class="profile-name">
+<div class="profile-name">
+${profile.name}
+</div>
 
-                ${profile.name}
+</div>
 
-            </div>
-
-        </div>
-
-        `;
+`;
 
     });
 
+    modal.style.display = "flex";
+
 }
 
-async function selectProfile(id){
+// ======================================
+// SELECT PROFILE
+// ======================================
 
-    activeProfile=
-        profiles.find(p=>p.id===id);
+async function selectProfile(id) {
 
-    await db.collection("users")
+    currentProfile = id;
+
+    localStorage.setItem(
+        "cineflex_profile",
+        id
+    );
+
+    document.getElementById(
+        "profile-selector"
+    ).style.display = "none";
+
+    if (typeof loadUserData === "function") {
+
+        await loadUserData();
+
+    }
+
+    console.log(
+        "Current Profile:",
+        currentProfile
+    );
+
+}
+
+// ======================================
+// ADD PROFILE
+// ======================================
+
+async function createProfile() {
+
+    const name =
+        prompt("Profile name");
+
+    if (!name) return;
+
+    await db
+        .collection("users")
         .doc(auth.currentUser.uid)
-        .set({
+        .collection("profiles")
+        .add({
 
-            activeProfile:id
+            name,
 
-        },{merge:true});
+            avatar:
+                "https://ui-avatars.com/api/?name=" +
+                encodeURIComponent(name)
 
-    closeProfiles();
+        });
 
-    loadUserData();
-
-}
-
-function openProfiles(){
-
-    document
-        .getElementById("profiles-modal")
-        .style.display="flex";
+    loadProfiles();
 
 }
 
-function closeProfiles(){
+// ======================================
+// DELETE PROFILE
+// ======================================
 
-    document
-        .getElementById("profiles-modal")
-        .style.display="none";
+async function deleteProfile(id) {
+
+    if (!confirm("Delete profile?"))
+        return;
+
+    await db
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(id)
+        .delete();
+
+    if (currentProfile === id) {
+
+        currentProfile = null;
+
+        localStorage.removeItem(
+            "cineflex_profile"
+        );
+
+    }
+
+    loadProfiles();
 
 }
+
+// ======================================
+// RENAME PROFILE
+// ======================================
+
+async function renameProfile(id) {
+
+    const p =
+        profiles.find(x => x.id === id);
+
+    if (!p) return;
+
+    const newName =
+        prompt(
+            "New profile name",
+            p.name
+        );
+
+    if (!newName) return;
+
+    await db
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .doc(id)
+        .update({
+
+            name: newName
+
+        });
+
+    loadProfiles();
+
+}
+
+console.log("✅ Profile Engine Loaded");

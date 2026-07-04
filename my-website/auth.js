@@ -1,12 +1,12 @@
 // ======================================
-// CINEFLEX AUTH v2.0
-// Part 1
+// CINEFLEX AUTH v5.0
+// Stable Version
 // ======================================
 
 let pendingPlayback = null;
 
 function isLoggedIn() {
-    return auth.currentUser != null;
+    return auth.currentUser !== null;
 }
 
 function requireLogin(callback) {
@@ -17,63 +17,39 @@ function requireLogin(callback) {
     }
 
     pendingPlayback = callback;
-
     openLoginModal();
 }
 
 function continuePendingPlayback() {
 
     if (pendingPlayback) {
-
-        const play = pendingPlayback;
-
+        const fn = pendingPlayback;
         pendingPlayback = null;
+        fn();
+    }
 
-        play();
+}
+
+// ======================================
+// LOGIN
+// ======================================
+
+async function googleLogin() {
+
+    try {
+
+        await auth.signInWithPopup(googleProvider);
+
+    } catch (e) {
+
+        console.error(e);
+        alert(e.message);
 
     }
 
 }
 
-window.addEventListener("cineflex-login", () => {
-
-    closeLoginModal();
-
-    loadUserData();
-
-    loadProfiles();
-
-    continuePendingPlayback();
-
-});
-
-function googleLogin() {
-
-    auth.signInWithPopup(googleProvider)
-        .then((result) => {
-            console.log("LOGIN SUCCESS", result.user);
-        })
-        .catch((e) => {
-            console.error(e);
-        });
-
-}
-auth.onAuthStateChanged((user) => {
-
-    console.log("AUTH STATE:", user);
-
-    if (user) {
-
-        loadUserData();
-
-        closeLoginModal();
-
-        continuePendingPlayback();
-
-    }
-
-});
-function emailLogin() {
+async function emailLogin() {
 
     const email =
         document.getElementById("login-email").value.trim();
@@ -81,17 +57,26 @@ function emailLogin() {
     const password =
         document.getElementById("login-password").value;
 
-    auth.signInWithEmailAndPassword(email,password)
+    if (!email || !password) {
 
-    .catch(err=>{
+        alert("Please enter email and password.");
+        return;
 
-        alert(err.message);
+    }
 
-    });
+    try {
+
+        await auth.signInWithEmailAndPassword(email, password);
+
+    } catch (e) {
+
+        alert(e.message);
+
+    }
 
 }
 
-function registerAccount(){
+async function registerAccount() {
 
     const email =
         document.getElementById("login-email").value.trim();
@@ -99,50 +84,60 @@ function registerAccount(){
     const password =
         document.getElementById("login-password").value;
 
-    auth.createUserWithEmailAndPassword(email,password)
+    if (!email || !password) {
 
-    .catch(err=>{
+        alert("Please enter email and password.");
+        return;
 
-        alert(err.message);
+    }
 
-    });
+    try {
+
+        await auth.createUserWithEmailAndPassword(email, password);
+
+    } catch (e) {
+
+        alert(e.message);
+
+    }
 
 }
-// ======================================
-// CINEFLEX AUTH v2.0
-// Part 2
-// ======================================
 
-function forgotPassword() {
+async function forgotPassword() {
 
-    const email = document.getElementById("login-email").value.trim();
+    const email =
+        document.getElementById("login-email").value.trim();
 
     if (!email) {
-        alert("Please enter your email address first.");
+
+        alert("Enter your email first.");
         return;
+
     }
 
-    auth.sendPasswordResetEmail(email)
+    try {
 
-    .then(() => {
+        await auth.sendPasswordResetEmail(email);
 
-        alert("Password reset email has been sent.");
+        alert("Password reset email sent.");
 
-    })
+    } catch (e) {
 
-    .catch(err => {
+        alert(e.message);
 
-        alert(err.message);
-
-    });
+    }
 
 }
 
-function logout() {
+async function logout() {
 
-    auth.signOut();
+    await auth.signOut();
 
 }
+
+// ======================================
+// LOGIN MODAL
+// ======================================
 
 function openLoginModal() {
 
@@ -179,14 +174,8 @@ border-radius:12px;
 box-sizing:border-box;
 ">
 
-<h2 style="
-margin:0 0 20px;
-text-align:center;
-color:white;
-">
-
+<h2 style="color:white;text-align:center;margin-bottom:20px;">
 CINEFLEX LOGIN
-
 </h2>
 
 <input
@@ -210,46 +199,46 @@ placeholder="Password"
 style="
 width:100%;
 padding:12px;
-margin-bottom:18px;
+margin-bottom:15px;
 background:#222;
 border:none;
 color:white;
 border-radius:6px;
 ">
 
-<button onclick="emailLogin()" style="
+<button
+onclick="emailLogin()"
+style="
 width:100%;
 padding:12px;
 background:#e50914;
 color:white;
 border:none;
 border-radius:6px;
-font-weight:bold;
 margin-bottom:10px;
 cursor:pointer;
 ">
-
 LOGIN
-
 </button>
 
-<button onclick="googleLogin()" style="
+<button
+onclick="googleLogin()"
+style="
 width:100%;
 padding:12px;
 background:white;
 color:black;
 border:none;
 border-radius:6px;
-font-weight:bold;
 margin-bottom:10px;
 cursor:pointer;
 ">
-
 Continue with Google
-
 </button>
 
-<button onclick="registerAccount()" style="
+<button
+onclick="registerAccount()"
+style="
 width:100%;
 padding:12px;
 background:#444;
@@ -259,22 +248,20 @@ border-radius:6px;
 margin-bottom:10px;
 cursor:pointer;
 ">
-
 Create Account
-
 </button>
 
-<button onclick="forgotPassword()" style="
+<button
+onclick="forgotPassword()"
+style="
 width:100%;
 padding:12px;
 background:transparent;
-color:#00bfff;
 border:none;
+color:#00bfff;
 cursor:pointer;
 ">
-
 Forgot Password?
-
 </button>
 
 </div>
@@ -287,7 +274,8 @@ Forgot Password?
 
 function closeLoginModal() {
 
-    const modal = document.getElementById("login-modal");
+    const modal =
+        document.getElementById("login-modal");
 
     if (modal) {
 
@@ -297,176 +285,85 @@ function closeLoginModal() {
 
 }
 
-auth.onAuthStateChanged((user)=>{
+// ======================================
+// AUTH STATE
+// ======================================
 
-    if(user){
+auth.onAuthStateChanged(async (user) => {
 
-        console.log("Logged in:",user.email);
+    const photo =
+        document.getElementById("userPhoto");
 
-    }else{
+    const name =
+        document.getElementById("userName");
 
-        console.log("Logged out");
+    const email =
+        document.getElementById("userEmail");
 
-    }
+    const badge =
+        document.getElementById("userBadge");
 
-});
-
-auth.onAuthStateChanged((user) => {
-
-    const info = document.getElementById("accountInfo");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutBtn =
+        document.getElementById("logoutBtn");
 
     if (user) {
 
-        if(info){
-            info.innerHTML =
-            `<i class="fa-solid fa-user"></i> ${user.displayName || user.email}`;
+        if (photo) {
+
+            photo.src =
+                user.photoURL ||
+                "https://ui-avatars.com/api/?name=" +
+                encodeURIComponent(user.displayName || user.email);
+
         }
 
-        if(logoutBtn){
+        if (name)
+            name.innerText =
+                user.displayName || "User";
+
+        if (email)
+            email.innerText =
+                user.email;
+
+        if (badge)
+            badge.innerText =
+                "CINEFLEX MEMBER";
+
+        if (logoutBtn)
             logoutBtn.style.display = "flex";
-        }
 
-    } else {
-
-        if(info){
-            info.innerHTML =
-            `<i class="fa-solid fa-user"></i> Guest`;
-        }
-
-        if(logoutBtn){
-            logoutBtn.style.display = "none";
-        }
-
-    }
-
-});
-
-auth.onAuthStateChanged((user) => {
-
-    if (user) {
         closeLoginModal();
-    }
 
-});
+        if (typeof loadProfiles === "function") {
 
-auth.onAuthStateChanged((user)=>{
+            await loadProfiles();
 
-    const photo=document.getElementById("userPhoto");
-    const name=document.getElementById("userName");
-    const email=document.getElementById("userEmail");
-    const badge=document.getElementById("userBadge");
-    const logout=document.getElementById("logoutBtn");
-
-    if(user){
-
-        if(photo){
-            photo.src=user.photoURL ||
-            "https://ui-avatars.com/api/?name="+encodeURIComponent(user.displayName||user.email);
         }
 
-        if(name){
-            name.innerText=user.displayName || "User";
-        }
-
-        if(email){
-            email.innerText=user.email;
-        }
-
-        if(badge){
-            badge.innerText="CINEFLEX MEMBER";
-        }
-
-        if(logout){
-            logout.style.display="flex";
-        }
-
-    }else{
-
-        if(photo){
-            photo.src="https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
-        }
-
-        if(name){
-            name.innerText="Guest";
-        }
-
-        if(email){
-            email.innerText="Not logged in";
-        }
-
-        if(badge){
-            badge.innerText="FREE MEMBER";
-        }
-
-        if(logout){
-            logout.style.display="none";
-        }
+        continuePendingPlayback();
 
     }
 
-});
-window.addEventListener("cineflex-login", (e)=>{
+    else {
 
-    const user = e.detail;
+        if (photo)
+            photo.src =
+                "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
 
-    const info = document.getElementById("accountInfo");
-    const logout = document.getElementById("logoutBtn");
+        if (name)
+            name.innerText = "Guest";
 
-    if(info){
+        if (email)
+            email.innerText = "Not logged in";
 
-        info.innerHTML = `
-        <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email)}"
-        style="
-        width:55px;
-        height:55px;
-        border-radius:50%;
-        margin-right:12px;
-        ">
+        if (badge)
+            badge.innerText = "FREE MEMBER";
 
-        <div>
-
-        <b>${user.displayName || "Cineflex User"}</b><br>
-
-        <small>${user.email}</small><br>
-
-        <span style="color:#2ecc71">
-        ● Logged In
-        </span>
-
-        </div>
-        `;
-
-    }
-
-    if(logout){
-
-        logout.style.display="flex";
+        if (logoutBtn)
+            logoutBtn.style.display = "none";
 
     }
 
 });
 
-window.addEventListener("cineflex-logout", ()=>{
-
-    const info=document.getElementById("accountInfo");
-
-    const logout=document.getElementById("logoutBtn");
-
-    if(info){
-
-        info.innerHTML=`
-        <i class="fa-solid fa-user"></i>
-
-        Guest
-        `;
-
-    }
-
-    if(logout){
-
-        logout.style.display="none";
-
-    }
-
-});
+console.log("✅ Auth Engine Loaded");

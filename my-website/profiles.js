@@ -1,5 +1,5 @@
 // ======================================
-// CINEFLEX PROFILE ENGINE v5.0
+// CINEFLEX PROFILE SYSTEM v6 (NETFLIX UPGRADE)
 // ======================================
 
 let currentProfile = null;
@@ -10,11 +10,9 @@ let profiles = [];
 // ======================================
 
 async function loadProfiles() {
-
     if (!auth.currentUser) return;
 
     try {
-
         const snap = await db
             .collection("users")
             .doc(auth.currentUser.uid)
@@ -24,114 +22,81 @@ async function loadProfiles() {
         profiles = [];
 
         snap.forEach(doc => {
-
             profiles.push({
                 id: doc.id,
                 ...doc.data()
             });
-
         });
 
-        // gumawa ng default profile kung wala pa
+        // create default if empty
         if (profiles.length === 0) {
-
-            await createDefaultProfile();
+            await createProfileAuto();
             return;
-
         }
 
-        const saved =
-            localStorage.getItem("cineflex_profile");
+        const saved = localStorage.getItem("cineflex_profile");
 
-        if (
-            saved &&
-            profiles.find(p => p.id === saved)
-        ) {
-
+        if (saved && profiles.find(p => p.id === saved)) {
             await selectProfile(saved);
-
         } else {
-
-            showProfileSelector();
-
+            renderProfiles();
         }
 
-    } catch (e) {
-
-        console.error(e);
-
+    } catch (err) {
+        console.error("Load profiles error:", err);
     }
-
 }
 
 // ======================================
-// DEFAULT PROFILE
+// CREATE DEFAULT PROFILE
 // ======================================
 
-async function createDefaultProfile() {
-
+async function createProfileAuto() {
     const name =
-        auth.currentUser.displayName ||
-        "Profile";
+        auth.currentUser.displayName || "Profile";
 
-    await db
-        .collection("users")
+    await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
         .add({
-
             name,
-
-            avatar:
-                auth.currentUser.photoURL ||
-                "https://ui-avatars.com/api/?name=" +
-                encodeURIComponent(name)
-
+            avatar: auth.currentUser.photoURL ||
+                "https://ui-avatars.com/api/?name=" + encodeURIComponent(name),
+            kids: false,
+            createdAt: Date.now()
         });
 
     loadProfiles();
-
 }
 
 // ======================================
-// SHOW PROFILE SCREEN
+// RENDER PROFILES (NETFLIX STYLE)
 // ======================================
 
-function showProfileSelector() {
+function renderProfiles() {
+    const container = document.getElementById("profiles");
+    container.innerHTML = "";
 
-    const modal =
-        document.getElementById("profile-selector");
-
-    const list =
-        document.getElementById("profiles");
-
-    if (!modal || !list) return;
-
-    list.innerHTML = "";
-
-    profiles.forEach(profile => {
-
-        list.innerHTML += `
-
-<div class="profile-card"
-onclick="selectProfile('${profile.id}')">
-
-<img
-src="${profile.avatar}"
-class="profile-avatar">
-
-<div class="profile-name">
-${profile.name}
-</div>
-
-</div>
-
-`;
-
+    profiles.forEach(p => {
+        container.innerHTML += `
+        <div class="profile-card" onclick="selectProfile('${p.id}')">
+            <img class="profile-avatar" src="${p.avatar}">
+            <div class="profile-name">${p.name}</div>
+        </div>`;
     });
 
-    modal.style.display = "flex";
-
+    // ADD PROFILE CARD
+    container.innerHTML += `
+    <div class="profile-card" onclick="createProfile()">
+        <div class="profile-avatar" style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:40px;
+            background:#333;
+        ">+</div>
+        <div class="profile-name">Add Profile</div>
+    </div>`;
 }
 
 // ======================================
@@ -139,58 +104,37 @@ ${profile.name}
 // ======================================
 
 async function selectProfile(id) {
-
     currentProfile = id;
+    localStorage.setItem("cineflex_profile", id);
 
-    localStorage.setItem(
-        "cineflex_profile",
-        id
-    );
-
-    document.getElementById(
-        "profile-selector"
-    ).style.display = "none";
+    document.getElementById("profile-selector").style.display = "none";
 
     if (typeof loadUserData === "function") {
-
         await loadUserData();
-
     }
 
-    console.log(
-        "Current Profile:",
-        currentProfile
-    );
-
+    console.log("Selected Profile:", currentProfile);
 }
 
 // ======================================
-// ADD PROFILE
+// CREATE PROFILE (MODERN)
 // ======================================
 
 async function createProfile() {
-
-    const name =
-        prompt("Profile name");
-
+    const name = prompt("Enter profile name:");
     if (!name) return;
 
-    await db
-        .collection("users")
+    await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
         .add({
-
             name,
-
-            avatar:
-                "https://ui-avatars.com/api/?name=" +
-                encodeURIComponent(name)
-
+            avatar: "https://ui-avatars.com/api/?name=" + encodeURIComponent(name),
+            kids: false,
+            createdAt: Date.now()
         });
 
     loadProfiles();
-
 }
 
 // ======================================
@@ -198,29 +142,20 @@ async function createProfile() {
 // ======================================
 
 async function deleteProfile(id) {
+    if (!confirm("Delete this profile?")) return;
 
-    if (!confirm("Delete profile?"))
-        return;
-
-    await db
-        .collection("users")
+    await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
         .doc(id)
         .delete();
 
     if (currentProfile === id) {
-
         currentProfile = null;
-
-        localStorage.removeItem(
-            "cineflex_profile"
-        );
-
+        localStorage.removeItem("cineflex_profile");
     }
 
     loadProfiles();
-
 }
 
 // ======================================
@@ -228,33 +163,29 @@ async function deleteProfile(id) {
 // ======================================
 
 async function renameProfile(id) {
-
-    const p =
-        profiles.find(x => x.id === id);
-
+    const p = profiles.find(x => x.id === id);
     if (!p) return;
 
-    const newName =
-        prompt(
-            "New profile name",
-            p.name
-        );
-
+    const newName = prompt("Rename profile:", p.name);
     if (!newName) return;
 
-    await db
-        .collection("users")
+    await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
         .doc(id)
         .update({
-
             name: newName
-
         });
 
     loadProfiles();
-
 }
 
-console.log("✅ Profile Engine Loaded");
+// ======================================
+// INIT
+// ======================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadProfiles();
+});
+
+console.log("✅ CineFlex Profiles v6 Loaded");

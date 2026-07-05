@@ -34,7 +34,28 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <!-- MAIN APP WRAPPER (for future use / home redirect system) -->
 <div id="app-wrapper"></div>
+    
+<div id="addProfileModal" class="profile-modal hidden">
+    <div class="profile-modal-content">
+        <h2>Add Profile</h2>
 
+        <input
+            type="text"
+            id="newProfileName"
+            placeholder="Profile name"
+            maxlength="20">
+
+        <label class="kids-option">
+            <input type="checkbox" id="kidsProfile">
+            Kids Profile
+        </label>
+
+        <div class="modal-buttons">
+            <button onclick="closeAddProfile()">Cancel</button>
+            <button onclick="saveProfile()">Create</button>
+        </div>
+    </div>
+</div>
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>

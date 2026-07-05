@@ -120,19 +120,37 @@ async function selectProfile(id) {
 // CREATE PROFILE (MODERN)
 // ======================================
 
-async function createProfile() {
-    const name = prompt("Enter profile name:");
-    if (!name) return;
+function createProfile(){
+    document.getElementById("addProfileModal").classList.remove("hidden");
+}
+
+function closeAddProfile(){
+    document.getElementById("addProfileModal").classList.add("hidden");
+}
+
+async function saveProfile(){
+
+    const name=document.getElementById("newProfileName").value.trim();
+
+    if(!name) return;
+
+    const kids=document.getElementById("kidsProfile").checked;
 
     await db.collection("users")
-        .doc(auth.currentUser.uid)
-        .collection("profiles")
-        .add({
-            name,
-            avatar: "https://ui-avatars.com/api/?name=" + encodeURIComponent(name),
-            kids: false,
-            createdAt: Date.now()
-        });
+    .doc(auth.currentUser.uid)
+    .collection("profiles")
+    .add({
+        name,
+        avatar:"https://ui-avatars.com/api/?name="+encodeURIComponent(name),
+        kids,
+        createdAt:Date.now()
+    });
+
+    closeAddProfile();
+
+    document.getElementById("newProfileName").value="";
+
+    document.getElementById("kidsProfile").checked=false;
 
     loadProfiles();
 }

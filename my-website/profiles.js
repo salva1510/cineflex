@@ -207,3 +207,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 console.log("✅ CineFlex Profiles v6 Loaded");
+
+// Kunin ang lahat ng profile cards
+const profileCards = document.querySelectorAll('.profile-card');
+
+profileCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Kunin ang pangalan ng profile (halimbawa: mula sa <p> tag sa loob ng card)
+        const profileName = card.querySelector('p').innerText;
+        
+        // I-save sa localStorage para magamit sa ibang pages
+        localStorage.setItem('selectedProfile', profileName);
+        
+        // Mag-redirect sa home page
+        window.location.href = 'home.html';
+    });
+});

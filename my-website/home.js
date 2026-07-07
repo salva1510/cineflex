@@ -1063,3 +1063,16 @@ async function createProfile(){
 
     loadProfiles();
 }
+// Kunin ang profile mula sa storage
+const activeProfile = localStorage.getItem('selectedProfile');
+
+// I-display ang welcome message kung may nakapili na ng profile
+if (activeProfile) {
+    console.log("Welcome back, " + activeProfile);
+    // Pwede mong ilagay ito sa isang <div> sa home.html
+    // document.getElementById('welcome-message').innerText = "Welcome, " + activeProfile;
+} else {
+    // Kung walang napiling profile, ibalik sa profiles page
+    window.location.href = 'profiles.html';
+}
+

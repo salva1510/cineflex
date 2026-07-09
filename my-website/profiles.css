@@ -141,3 +141,56 @@ body:has(.profile-modal:not(.hidden)) .bottom-nav{
   .mini-action{width:36px;height:36px}
   .profile-default-pill,.profile-kids-pill{font-size:8px;padding:4px 6px}
 }
+
+
+/* =========================================================
+   CINEFLEX PROFILE + DRAWER LOGIN FIX v15
+   ========================================================= */
+.profile-manage-actions{
+  top:auto !important;
+  bottom:42px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  display:flex !important;
+  gap:7px !important;
+  background:rgba(0,0,0,.78) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  padding:7px !important;
+  border-radius:16px !important;
+  z-index:30 !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.45) !important;
+}
+.mini-action{
+  width:auto !important;
+  min-width:60px !important;
+  height:38px !important;
+  border-radius:12px !important;
+  padding:0 10px !important;
+  display:inline-flex !important;
+  gap:6px !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+}
+.mini-action span{display:inline !important;margin:0 !important;color:inherit !important;font-size:12px !important}
+.mini-action.danger{background:#b00610 !important;border-color:#ff3340 !important;color:#fff !important;}
+.mini-action.gold{background:#3b2b02 !important;border-color:#ffd36a !important;color:#ffd36a !important;}
+.drawer-login-actions{display:grid;gap:10px;margin-top:12px;}
+.drawer-auth-btn{width:100%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;border-radius:14px;padding:12px 14px;font-weight:900;text-align:left;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.drawer-auth-btn.google{background:#fff;color:#151515;}
+.drawer-account-actions{margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:8px;}
+.drawer-profile-section{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);border-radius:18px;padding:12px;margin-bottom:18px;}
+.drawer-profile-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;font-weight:900;}
+.drawer-profile-head button{border:1px solid rgba(255,255,255,.18);background:#e50914;color:#fff;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;}
+.drawer-profiles{display:grid;gap:8px;}
+.drawer-profile{width:100%;border:1px solid transparent;background:rgba(255,255,255,.06);color:#fff;border-radius:14px;padding:8px;display:flex;align-items:center;gap:10px;text-align:left;}
+.drawer-profile.active{border-color:#e50914;background:rgba(229,9,20,.16);}
+.drawer-profile img{width:36px;height:36px;border-radius:9px;object-fit:cover;}
+.drawer-profile span{flex:1;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.drawer-profile em{font-size:9px;background:#ffd400;color:#111;border-radius:999px;padding:3px 5px;font-style:normal;font-weight:950;}
+.drawer-profile b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;}
+.drawer-add-profile{width:100%;margin-top:9px;border:1px dashed rgba(255,255,255,.28);background:transparent;color:#fff;border-radius:14px;padding:11px 12px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:900;}
+@media(max-width:520px){
+  .profile-manage-actions{bottom:38px !important;gap:5px !important;padding:5px !important;}
+  .mini-action{min-width:52px !important;height:34px !important;padding:0 7px !important;font-size:11px !important;}
+  .mini-action span{font-size:11px !important;}
+}

@@ -332,6 +332,11 @@ auth.onAuthStateChanged(async (user) => {
         if (logoutBtn)
             logoutBtn.style.display = "flex";
 
+        const drawerLoginActions = document.getElementById("drawerLoginActions");
+        const drawerAccountActions = document.getElementById("drawerAccountActions");
+        if (drawerLoginActions) drawerLoginActions.style.display = "none";
+        if (drawerAccountActions) drawerAccountActions.style.display = "block";
+
         closeLoginModal();
 
         if (typeof loadProfiles === "function") {
@@ -361,6 +366,11 @@ auth.onAuthStateChanged(async (user) => {
 
         if (logoutBtn)
             logoutBtn.style.display = "none";
+
+        const drawerLoginActions = document.getElementById("drawerLoginActions");
+        const drawerAccountActions = document.getElementById("drawerAccountActions");
+        if (drawerLoginActions) drawerLoginActions.style.display = "grid";
+        if (drawerAccountActions) drawerAccountActions.style.display = "none";
 
     }
 

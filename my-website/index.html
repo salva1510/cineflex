@@ -88,12 +88,21 @@ CINEFLEX PROFILE SELECTOR
   <span></span><span></span><span></span>
 </div>
 
+<div id="drawer-backdrop" class="drawer-backdrop" onclick="closeMenuDrawer()"></div>
 <div id="menu-drawer" class="menu-drawer">
     <div class="drawer-header">
         <h3>CINEFLEX</h3>
-        <span class="close-drawer" onclick="closeMenuDrawer()">&times;</span>
+        <button class="close-drawer" onclick="closeMenuDrawer()" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="drawer-links">
+        <div class="drawer-section drawer-profile-section">
+            <div class="drawer-profile-head">
+                <span>Who's Watching?</span>
+                <button onclick="toggleManageProfiles()" type="button">Manage</button>
+            </div>
+            <div id="drawer-profiles" class="drawer-profiles"></div>
+            <button class="drawer-add-profile" onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
+        </div>
         <div class="drawer-section">
             <h4>Personal</h4>
             <div class="drawer-item" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i> My List</div>

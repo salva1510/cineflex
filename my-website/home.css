@@ -881,3 +881,157 @@ body::before {
   .modal { padding: 10px !important; align-items: flex-end !important; }
   .modal-content { max-height: 92vh !important; border-radius: 24px 24px 0 0 !important; }
 }
+
+/* =========================================================
+   CINEFLEX DRAWER PROFILE SWITCHER + CLOSE BUTTON PATCH v11
+   ========================================================= */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.58);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: .28s ease;
+  z-index: 1999;
+}
+.drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+body.drawer-open { overflow: hidden; }
+.menu-drawer {
+  width: min(390px, 92vw) !important;
+  overflow-y: auto;
+  padding: 18px !important;
+}
+.close-drawer {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 1.15rem;
+  transition: .22s ease;
+}
+.close-drawer:hover,
+.close-drawer:active {
+  background: #e50914;
+  transform: rotate(90deg) scale(1.05);
+}
+.drawer-profile-section {
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 22px;
+  background: radial-gradient(circle at top left, rgba(229,9,20,.22), rgba(255,255,255,.055) 44%, rgba(255,255,255,.025));
+  box-shadow: 0 18px 45px rgba(0,0,0,.32);
+}
+.drawer-profile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.drawer-profile-head span {
+  color: #fff;
+  font-size: .95rem;
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+.drawer-profile-head button,
+.drawer-add-profile {
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+}
+.drawer-profile-head button {
+  padding: 7px 11px;
+  font-size: .76rem;
+}
+.drawer-profiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+}
+.drawer-profile {
+  position: relative;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 16px;
+  background: rgba(0,0,0,.25);
+  color: #fff;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+  transition: .2s ease;
+}
+.drawer-profile:hover,
+.drawer-profile.active {
+  background: rgba(229,9,20,.18);
+  border-color: rgba(229,9,20,.8);
+  transform: translateY(-2px);
+}
+.drawer-profile img {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #111;
+  flex: 0 0 auto;
+}
+.drawer-profile span {
+  font-size: .86rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.drawer-profile em {
+  position: absolute;
+  right: 6px;
+  top: 5px;
+  font-style: normal;
+  font-size: .52rem;
+  color: #111;
+  background: #ffd166;
+  border-radius: 999px;
+  padding: 2px 5px;
+  font-weight: 900;
+}
+.drawer-profile b {
+  position: absolute;
+  right: 6px;
+  bottom: 5px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.16);
+  font-size: .7rem;
+}
+.drawer-add-profile {
+  width: 100%;
+  margin-top: 11px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e50914, #ff4052);
+}
+@media (max-width: 420px) {
+  .drawer-profiles { grid-template-columns: 1fr; }
+  .menu-drawer { width: 90vw !important; }
+}

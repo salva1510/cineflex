@@ -28,6 +28,7 @@
 
   const $ = (id) => document.getElementById(id);
   const safeText = (value) => String(value || "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+  const isProfilesPage = () => location.pathname.indexOf("profiles.html") !== -1;
 
   function toast(message) {
     const old = document.querySelector(".toast-profile");
@@ -79,6 +80,42 @@
     }
   }
 
+  function ensureDrawerProfiles() {
+    const drawerLinks = document.querySelector("#menu-drawer .drawer-links");
+    if (!drawerLinks || $("drawer-profiles")) return;
+    drawerLinks.insertAdjacentHTML("afterbegin", `
+      <div class="drawer-section drawer-profile-section">
+        <div class="drawer-profile-head">
+          <span>Who's Watching?</span>
+          <button onclick="toggleManageProfiles()" type="button">Manage</button>
+        </div>
+        <div id="drawer-profiles" class="drawer-profiles"></div>
+        <button class="drawer-add-profile" onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
+      </div>`);
+  }
+
+  function renderDrawerProfiles() {
+    ensureDrawerProfiles();
+    const wrap = $("drawer-profiles");
+    if (!wrap) return;
+    const activeId = localStorage.getItem("cineflex_profile");
+    wrap.innerHTML = "";
+    state.profiles.forEach(profile => {
+      const name = safeText(profile.name || "Profile");
+      const avatar = safeText(profile.avatar || DEFAULT_AVATARS[0]);
+      const active = profile.id === activeId ? "active" : "";
+      wrap.insertAdjacentHTML("beforeend", `
+        <button type="button" class="drawer-profile ${active}" onclick="selectProfile('${profile.id}')">
+          <img src="${avatar}" alt="${name}">
+          <span>${name}</span>
+          ${profile.kids ? '<em>KIDS</em>' : ''}
+          ${state.manageMode ? `<b onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></b>` : ''}
+        </button>`);
+    });
+    const addBtn = document.querySelector(".drawer-add-profile");
+    if (addBtn) addBtn.style.display = state.profiles.length >= MAX_PROFILES ? "none" : "flex";
+  }
+
   async function collectionRef() {
     if (!window.auth || !window.db || !auth.currentUser) return null;
     return db.collection("users").doc(auth.currentUser.uid).collection("profiles");
@@ -98,11 +135,13 @@
         return;
       }
       const saved = localStorage.getItem("cineflex_profile");
-      if (saved && state.profiles.some(p => p.id === saved) && location.pathname.indexOf("profiles.html") === -1) {
-        await selectProfile(saved, true);
-      } else {
-        renderProfiles();
+      renderDrawerProfiles();
+      if (!isProfilesPage()) {
+        const usableId = (saved && state.profiles.some(p => p.id === saved)) ? saved : state.profiles[0].id;
+        await selectProfile(usableId, true);
+        return;
       }
+      renderProfiles();
     } catch (err) {
       console.error("CineFlex profiles load error:", err);
       toast("Hindi ma-load ang profiles. Check Firebase rules.");
@@ -126,6 +165,12 @@
   }
 
   function renderProfiles() {
+    renderDrawerProfiles();
+    if (!isProfilesPage()) {
+      const selectorOnly = $("profile-selector");
+      if (selectorOnly) selectorOnly.style.display = "none";
+      return;
+    }
     const selector = $("profile-selector");
     const container = $("profiles") || $("profiles-list");
     if (!container || !selector) return;
@@ -152,8 +197,10 @@
     window.CF_CURRENT_PROFILE = id;
     const selector = $("profile-selector");
     if (selector) selector.style.display = "none";
+    renderDrawerProfiles();
     if (typeof window.loadUserData === "function") await window.loadUserData();
-    if (location.pathname.indexOf("profiles.html") !== -1 && !silent) window.location.href = "index.html";
+    if (typeof window.closeMenuDrawer === "function" && !silent) window.closeMenuDrawer();
+    if (isProfilesPage() && !silent) window.location.href = "index.html";
   }
 
   function renderAvatarPicker() {
@@ -225,6 +272,7 @@
   };
   window.toggleManageProfiles = function () {
     state.manageMode = !state.manageMode;
+    renderDrawerProfiles();
     renderProfiles();
   };
   window.selectProfile = selectProfile;
@@ -239,6 +287,7 @@
   });
   document.addEventListener("DOMContentLoaded", () => {
     ensureSelector();
+    ensureDrawerProfiles();
     ensureModal();
     if (window.auth && auth.onAuthStateChanged) auth.onAuthStateChanged(user => user && loadProfiles());
     else loadProfiles();

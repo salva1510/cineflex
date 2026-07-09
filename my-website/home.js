@@ -509,8 +509,22 @@ function displayDramaBoxCards(data, containerId) {
 }
 
 // --- MGA DRAWER, MODAL, AT SEARCH NAV INTERFACES ---
-function openMenuDrawer() { document.getElementById("menu-drawer").classList.add("active"); }
-function closeMenuDrawer() { document.getElementById("menu-drawer").classList.remove("active"); }
+function openMenuDrawer() {
+  const drawer = document.getElementById("menu-drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
+  if (!drawer) return;
+  const isOpen = drawer.classList.contains("active");
+  drawer.classList.toggle("active", !isOpen);
+  backdrop && backdrop.classList.toggle("active", !isOpen);
+  document.body.classList.toggle("drawer-open", !isOpen);
+}
+function closeMenuDrawer() {
+  const drawer = document.getElementById("menu-drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
+  drawer && drawer.classList.remove("active");
+  backdrop && backdrop.classList.remove("active");
+  document.body.classList.remove("drawer-open");
+}
 function closeModal() { 
   document.getElementById("details-modal").style.display = "none"; 
   document.getElementById("modal-video-iframe").src = ""; 

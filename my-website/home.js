@@ -1704,3 +1704,114 @@ async function createProfile(){
   window.addEventListener('load', () => { patchComments(); cfUpdateCommentAuthUI(); setTimeout(patchComments, 1200); });
   if(document.readyState !== 'loading'){ patchComments(); cfUpdateCommentAuthUI(); }
 })();
+
+
+// ===========================================
+// CINEFLEX COMMUNITY RATINGS v1
+// Like / Dislike / 1-5 stars per movie/series
+// ===========================================
+(function(){
+  let cfRatingUnsub = null;
+  let cfActiveRatingKey = null;
+  let cfUserRatingCache = { reaction:null, stars:0 };
+
+  function hasFirestore(){ return typeof db !== 'undefined' && db && typeof db.collection === 'function'; }
+  function getUser(){ try { return (typeof auth !== 'undefined' && auth) ? auth.currentUser : (window.currentUser || null); } catch(e){ return window.currentUser || null; } }
+  function titleKey(item){
+    if(!item) return null;
+    const type = currentTVState && currentTVState.type ? currentTVState.type : ((item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie');
+    return `${type}_${item.id}`;
+  }
+  function titleType(){ return currentTVState && currentTVState.type ? currentTVState.type : (currentItem && (currentItem.first_air_date || currentItem.name || currentItem.media_type === 'tv') ? 'tv' : 'movie'); }
+  function setText(id, value){ const el=document.getElementById(id); if(el) el.textContent=value; }
+  function updateAuthNote(){ const note=document.getElementById('cf-rating-login-note'); if(note) note.style.display=getUser()?'none':'block'; }
+  function updateButtons(stats){
+    const likes = stats.likes || 0, dislikes = stats.dislikes || 0, starCount = stats.starCount || 0, starSum = stats.starSum || 0;
+    const average = starCount ? (starSum / starCount) : 0;
+    setText('cf-like-count', likes);
+    setText('cf-dislike-count', dislikes);
+    setText('cf-rating-average', starCount ? average.toFixed(1) : '--');
+    setText('cf-rating-summary', starCount ? `${starCount} user rating${starCount===1?'':'s'} • ${likes} likes • ${dislikes} dislikes` : 'Wala pang rating. Ikaw ang unang mag-rate.');
+    document.getElementById('cf-like-btn')?.classList.toggle('active', cfUserRatingCache.reaction === 'like');
+    document.getElementById('cf-dislike-btn')?.classList.toggle('active', cfUserRatingCache.reaction === 'dislike');
+    document.querySelectorAll('.cf-stars button').forEach((btn, idx)=>btn.classList.toggle('active', idx < (cfUserRatingCache.stars || 0)));
+    updateAuthNote();
+  }
+  async function loadUserRating(key){
+    const user=getUser(); cfUserRatingCache={reaction:null, stars:0};
+    if(!user || !hasFirestore()) return;
+    try{
+      const doc=await db.collection('cineflex_ratings').doc(key).collection('users').doc(user.uid).get();
+      if(doc.exists){ const d=doc.data()||{}; cfUserRatingCache={reaction:d.reaction||null, stars:Number(d.stars||0)}; }
+    }catch(e){ console.warn('CineFlex user rating read blocked:', e.message||e); }
+  }
+  window.cfLoadRatingForCurrent = async function(){
+    if(!currentItem) return;
+    const box=document.getElementById('cf-rating-box'); if(!box) return;
+    const key=titleKey(currentItem); cfActiveRatingKey=key; updateAuthNote();
+    if(cfRatingUnsub){ try{ cfRatingUnsub(); }catch(e){} cfRatingUnsub=null; }
+    setText('cf-rating-summary','Loading community score...');
+    await loadUserRating(key);
+    if(!hasFirestore()){ updateButtons({}); setText('cf-rating-summary','Community rating needs Firebase Firestore.'); return; }
+    try{
+      cfRatingUnsub = db.collection('cineflex_ratings').doc(key).onSnapshot((doc)=>{
+        if(cfActiveRatingKey !== key) return;
+        updateButtons(doc.exists ? (doc.data()||{}) : {});
+      }, (err)=>{ console.warn('CineFlex ratings read blocked:', err.message||err); setText('cf-rating-summary','Hindi ma-load ang ratings. I-check ang Firestore rules.'); });
+    }catch(e){ console.warn('CineFlex ratings error:', e.message||e); updateButtons({}); }
+  };
+
+  async function saveRating(next){
+    const user=getUser();
+    if(!currentItem) return;
+    if(!user){ updateAuthNote(); if(typeof openLoginModal==='function') openLoginModal(); return; }
+    if(!hasFirestore()){ alert('Firebase Firestore is not ready.'); return; }
+    const key=titleKey(currentItem), type=titleType();
+    const prev={...cfUserRatingCache};
+    const reaction = next.reaction !== undefined ? next.reaction : prev.reaction;
+    const stars = next.stars !== undefined ? Number(next.stars||0) : Number(prev.stars||0);
+    try{
+      const batch=db.batch();
+      const ratingRef=db.collection('cineflex_ratings').doc(key);
+      const userRef=ratingRef.collection('users').doc(user.uid);
+      const delta={
+        titleKey:key, tmdbId:currentItem.id, type,
+        title: currentItem.title || currentItem.name || 'Untitled',
+        updatedAtMs: Date.now()
+      };
+      if(prev.reaction !== reaction){
+        if(prev.reaction === 'like') delta.likes = firebase.firestore.FieldValue.increment(-1);
+        if(prev.reaction === 'dislike') delta.dislikes = firebase.firestore.FieldValue.increment(-1);
+        if(reaction === 'like') delta.likes = firebase.firestore.FieldValue.increment(1);
+        if(reaction === 'dislike') delta.dislikes = firebase.firestore.FieldValue.increment(1);
+      }
+      if(prev.stars !== stars){
+        if(prev.stars > 0){ delta.starCount = firebase.firestore.FieldValue.increment(-1); delta.starSum = firebase.firestore.FieldValue.increment(-prev.stars); }
+        if(stars > 0){ delta.starCount = firebase.firestore.FieldValue.increment(1); delta.starSum = firebase.firestore.FieldValue.increment(stars); }
+      }
+      batch.set(ratingRef, delta, {merge:true});
+      batch.set(userRef, {uid:user.uid, reaction, stars, updatedAtMs:Date.now(), displayName:user.displayName||'', photoURL:user.photoURL||''}, {merge:true});
+      cfUserRatingCache={reaction, stars}; updateButtons({});
+      await batch.commit();
+    }catch(e){ console.warn('CineFlex rating save blocked:', e.message||e); alert('Hindi na-save ang rating. I-check ang Firestore rules o internet connection.'); }
+  }
+  window.cfReactToTitle = function(reaction){ const current=cfUserRatingCache.reaction; saveRating({ reaction: current === reaction ? null : reaction }); };
+  window.cfRateTitle = function(stars){ saveRating({ stars: Number(stars||0) }); };
+
+  const patchRatings = () => {
+    if(typeof window.showDetails === 'function' && !window.showDetails.__cfRatingsPatched){
+      const oldShow = window.showDetails;
+      const patchedShow = async function(){ const result = await oldShow.apply(this, arguments); setTimeout(()=>window.cfLoadRatingForCurrent && window.cfLoadRatingForCurrent(), 300); return result; };
+      patchedShow.__cfRatingsPatched = true; window.showDetails = patchedShow;
+    }
+    if(typeof window.closeModal === 'function' && !window.closeModal.__cfRatingsPatched){
+      const oldClose = window.closeModal;
+      const patchedClose = function(){ if(cfRatingUnsub){ try{cfRatingUnsub();}catch(e){} cfRatingUnsub=null; } cfActiveRatingKey=null; return oldClose.apply(this, arguments); };
+      patchedClose.__cfRatingsPatched = true; window.closeModal = patchedClose;
+    }
+  };
+  window.addEventListener('cineflex-login', () => setTimeout(()=>{ updateAuthNote(); window.cfLoadRatingForCurrent && window.cfLoadRatingForCurrent(); }, 400));
+  window.addEventListener('cineflex-logout', () => setTimeout(()=>{ cfUserRatingCache={reaction:null,stars:0}; updateAuthNote(); window.cfLoadRatingForCurrent && window.cfLoadRatingForCurrent(); }, 400));
+  window.addEventListener('load', () => { patchRatings(); updateAuthNote(); setTimeout(patchRatings, 1300); });
+  if(document.readyState !== 'loading'){ patchRatings(); updateAuthNote(); }
+})();

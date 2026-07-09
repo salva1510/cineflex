@@ -1233,3 +1233,30 @@ body.drawer-open { overflow: hidden; }
   .cf-comment-hint{ max-width:145px; }
   .cf-comments-list{ max-height:360px; }
 }
+
+
+/* CINEFLEX COMMUNITY RATING */
+.cf-rating-box{
+  margin: 14px 0 18px;
+  padding: 18px;
+  border: 1px solid rgba(0,229,255,.18);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(0,229,255,.08), rgba(124,58,237,.10), rgba(255,255,255,.03));
+  box-shadow: 0 18px 45px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.cf-rating-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;}
+.cf-rating-top h3{margin:0 0 5px;font-size:1.05rem;display:flex;align-items:center;gap:9px;}
+.cf-rating-top h3 i{color:#ffd166;text-shadow:0 0 18px rgba(255,209,102,.55);}
+.cf-rating-summary{margin:0;color:rgba(255,255,255,.68);font-size:.88rem;}
+.cf-rating-score{min-width:82px;text-align:center;border-radius:18px;padding:10px 12px;background:rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.12);}
+.cf-rating-score span{font-size:1.7rem;font-weight:900;line-height:1;color:#fff;}
+.cf-rating-score small{color:rgba(255,255,255,.58);font-weight:700;}
+.cf-rating-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cf-rating-actions button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:white;border-radius:999px;padding:10px 14px;font-weight:800;cursor:pointer;transition:.18s ease;}
+.cf-rating-actions button:hover{transform:translateY(-2px);background:rgba(255,255,255,.14);}
+.cf-rating-actions button.active{background:linear-gradient(135deg,#00e5ff,#7c3aed);border-color:rgba(255,255,255,.35);box-shadow:0 0 22px rgba(0,229,255,.25);}
+.cf-stars{display:flex;gap:3px;border-radius:999px;padding:5px 8px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.10);}
+.cf-stars button{font-size:1.15rem;padding:6px 4px;background:transparent;border:0;color:rgba(255,255,255,.35);}
+.cf-stars button.active,.cf-stars button:hover{color:#ffd166;text-shadow:0 0 14px rgba(255,209,102,.45);transform:scale(1.08);}
+.cf-rating-login-note{margin:10px 0 0;color:rgba(255,255,255,.55);font-size:.82rem;}
+@media(max-width:700px){.cf-rating-box{padding:14px;border-radius:18px}.cf-rating-top{align-items:flex-start}.cf-rating-score{min-width:70px}.cf-rating-actions button{padding:10px 12px}.cf-stars{width:100%;justify-content:center}.cf-stars button{font-size:1.35rem;padding:8px 7px}}

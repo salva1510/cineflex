@@ -6,10 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cineflex</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="home.css?v=3.0">
+  <link rel="stylesheet" href="home.css?v=1.1">
+  <link rel="stylesheet" href="profiles.css?v=7.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
@@ -68,7 +66,7 @@ CINEFLEX PROFILE SELECTOR
 
         <div id="profiles" class="profiles"></div>
 
-        <button onclick="createProfile()">
+        <button onclick="openAddProfile()">
             + Add Profile
         </button>
 
@@ -81,12 +79,6 @@ CINEFLEX PROFILE SELECTOR
         <button id="installBtn" style="display:none; background: #e50914; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-weight: bold;">Install</button>
     </div>
 </nav>
-
-<div class="cf-progress-bar" id="cf-progress-bar"></div>
-
-<div class="cf-ambient" aria-hidden="true">
-  <span></span><span></span><span></span>
-</div>
 
 <div id="menu-drawer" class="menu-drawer">
     <div class="drawer-header">
@@ -151,6 +143,16 @@ CINEFLEX PROFILE SELECTOR
 
     </div>
 
+    <div class="drawer-item" onclick="openLoginModal()" id="loginBtn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Login
+    </div>
+
+    <div class="drawer-item" onclick="switchProfile()" id="switchProfileBtn" style="display:none;">
+        <i class="fa-solid fa-users"></i>
+        Switch Profile
+    </div>
+
     <div class="drawer-item" onclick="logout()" id="logoutBtn" style="display:none;">
         <i class="fa-solid fa-right-from-bracket"></i>
         Logout
@@ -170,39 +172,14 @@ CINEFLEX PROFILE SELECTOR
         onmouseup="handleMouseUp()"
         onmouseleave="handleMouseLeave()">
   <div class="banner-content">
-    <div class="hero-kicker"><i class="fa-solid fa-crown"></i> CineFlex Premium Stream</div>
     <h1 id="banner-title">Loading...</h1>
     <p id="banner-desc"></p>
-    <div class="hero-meta-strip">
-      <span><i class="fa-solid fa-fire"></i> Trending</span>
-      <span><i class="fa-solid fa-star"></i> HD Picks</span>
-      <span><i class="fa-solid fa-bolt"></i> Fast Play</span>
-    </div>
     <div class="banner-buttons">
       <button class="play-btn" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Watch Now</button>
-      <button class="info-btn hero-more-btn" onclick="showBannerDetails()"><i class="fa-solid fa-circle-info"></i> Details</button>
     </div>
   </div>
   <div class="banner-fade"></div>
 </header>
-
-<section class="cf-studio-panel" aria-label="CineFlex highlights">
-  <div class="studio-card studio-main">
-    <span class="studio-label">Today's Mode</span>
-    <strong>Unlimited Movie Night</strong>
-    <p>Swipe, search, save, and continue watching with a cleaner premium feel.</p>
-  </div>
-  <div class="studio-card">
-    <i class="fa-solid fa-mobile-screen-button"></i>
-    <strong>Mobile First</strong>
-    <p>Mas smooth sa phone, mas compact ang actions.</p>
-  </div>
-  <div class="studio-card">
-    <i class="fa-solid fa-wand-magic-sparkles"></i>
-    <strong>Fresh Layout</strong>
-    <p>Glass effects, glow cards, at modern spacing.</p>
-  </div>
-</section>
 
 <main class="content">
     <section class="row" id="continue-watching-section" style="display:none;">
@@ -298,25 +275,31 @@ CINEFLEX PROFILE SELECTOR
     </div>
     <div id="search-results" class="search-results-grid"></div>
 </div>
-  <div id="profiles-modal" class="profiles-modal">
+  
+<div id="addProfileModal" class="profile-modal hidden">
+    <div class="profile-modal-content">
+        <h2>Add Profile</h2>
 
-    <div class="profiles-box">
+        <input type="text" id="newProfileName" placeholder="Profile name" maxlength="20">
 
-        <h2>Who's Watching?</h2>
+        <label class="kids-option">
+            <input type="checkbox" id="kidsProfile">
+            Kids Profile
+        </label>
 
-        <div id="profiles-list"></div>
-
+        <div class="modal-buttons">
+            <button onclick="closeAddProfile()">Cancel</button>
+            <button onclick="saveProfile()">Create</button>
+        </div>
     </div>
-
 </div>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
-<script src="firebase.js"></script>
-  <script src="home.js?v=3.0"></script>
-<script src="auth.js"></script>
-  <script src="profiles.js?v=1.0"></script>
-  <link rel="stylesheet" href="profiles.css">
+<script src="firebase.js?v=7.0"></script>
+<script src="home.js?v=7.0"></script>
+<script src="auth.js?v=7.0"></script>
+<script src="profiles.js?v=7.0"></script>
 </body>
 </html>

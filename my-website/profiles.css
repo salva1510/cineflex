@@ -104,3 +104,40 @@ body:has(.profile-modal:not(.hidden)) .bottom-nav{
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* =========================================================
+   CINEFLEX PROFILE MANAGEMENT v14 — delete/default upgrade
+========================================================= */
+.profile-default-pill{
+  position:absolute;
+  left:10px;
+  top:10px;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background:linear-gradient(135deg,#ffd36a,#ffb400);
+  color:#141414;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:950;
+  padding:4px 7px;
+  letter-spacing:.4px;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
+.profile-manage-actions{
+  top:104px !important;
+  background:rgba(0,0,0,.45);
+  padding:6px;
+  border-radius:999px;
+  backdrop-filter:blur(12px);
+}
+.mini-action.danger:hover{background:#ff2634;border-color:#ff2634;color:#fff}
+.mini-action.gold:hover{background:#ffd36a;border-color:#ffd36a;color:#111}
+.kids-option + .kids-option{margin-top:9px}
+.drawer-profile b.delete:hover{background:#ff2634!important;color:#fff!important}
+.drawer-profile b.star:hover,.drawer-profile b.star.active{background:#ffd36a!important;color:#111!important}
+@media(max-width:760px){
+  .profile-manage-actions{top:calc(100% - 58px) !important}
+  .mini-action{width:36px;height:36px}
+  .profile-default-pill,.profile-kids-pill{font-size:8px;padding:4px 6px}
+}

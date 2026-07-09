@@ -1815,3 +1815,62 @@ async function createProfile(){
   window.addEventListener('load', () => { patchRatings(); updateAuthNote(); setTimeout(patchRatings, 1300); });
   if(document.readyState !== 'loading'){ patchRatings(); updateAuthNote(); }
 })();
+
+/* =========================================================
+   CINEFLEX 2.0 FOUNDATION BRIDGE
+   Cinematic hero trailer, live metrics, and safe UI refresh.
+========================================================= */
+(function(){
+  let cfHeroToken = 0;
+  function cfEnsureFoundation(){
+    if(window.CineFlexFoundation && typeof window.CineFlexFoundation.refresh === 'function') window.CineFlexFoundation.refresh();
+  }
+  function cfTypeOf(item){ return (item && (item.media_type === 'tv' || item.first_air_date || (!item.title && item.name))) ? 'tv' : 'movie'; }
+  async function cfLoadHeroTrailer(item){
+    const box = document.getElementById('cf-hero-video');
+    if(!box || !item || !item.id) return;
+    const token = ++cfHeroToken;
+    box.classList.remove('active');
+    box.innerHTML = '';
+    try{
+      const type = cfTypeOf(item);
+      const res = await fetch(`${BASE_URL}/${type}/${item.id}/videos?api_key=${API_KEY}`);
+      const data = await res.json();
+      if(token !== cfHeroToken) return;
+      const videos = (data.results || []);
+      const picked = videos.find(v => v.site === 'YouTube' && /trailer/i.test(v.type || '')) || videos.find(v => v.site === 'YouTube');
+      if(!picked || !picked.key) return;
+      box.innerHTML = `<iframe title="CineFlex hero preview" src="https://www.youtube.com/embed/${picked.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${picked.key}&playsinline=1&modestbranding=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" loading="lazy"></iframe>`;
+      setTimeout(()=>{ if(token === cfHeroToken) box.classList.add('active'); }, 600);
+    }catch(e){ console.warn('CineFlex hero trailer unavailable:', e.message || e); }
+  }
+  function cfUpdateHeroMetrics(item){
+    const rating = document.getElementById('cf-hero-rating');
+    const viewers = document.getElementById('cf-hero-viewers');
+    if(rating){
+      const score = Number(item && item.vote_average ? item.vote_average : 0);
+      rating.textContent = score ? `${score.toFixed(1)} TMDB` : 'CineFlex Pick';
+    }
+    if(viewers){
+      const live = document.getElementById('cf-section-online-count')?.textContent || document.getElementById('cf-live-online-count')?.textContent || 'Live';
+      viewers.textContent = `${live} online`;
+    }
+  }
+  if(typeof setBanner === 'function' && !setBanner.__cfIdentityPatched){
+    const oldSetBanner = setBanner;
+    setBanner = function(item){
+      const out = oldSetBanner.apply(this, arguments);
+      cfEnsureFoundation();
+      cfUpdateHeroMetrics(item);
+      cfLoadHeroTrailer(item);
+      const progress = document.querySelector('#cf-hero-progress span');
+      if(progress){ progress.style.animation = 'none'; progress.offsetHeight; progress.style.animation = ''; }
+      return out;
+    };
+    setBanner.__cfIdentityPatched = true;
+  }
+  window.addEventListener('load', ()=>{
+    cfEnsureFoundation();
+    setTimeout(()=>{ if(trendingItems && trendingItems[currentBannerIndex]) setBanner(trendingItems[currentBannerIndex]); }, 900);
+  });
+})();

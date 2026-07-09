@@ -388,13 +388,9 @@ function updateVideoSource() {
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("webkitallowfullscreen", "true");
     iframe.setAttribute("playsinline", "true");
-    // Build23: sandbox removed for external embeds to avoid blocking zxcstream
-    iframe.removeAttribute("sandbox");
+    iframe.removeAttribute("sandbox"); // external embed providers like zxcstream can break when sandboxed
     
-    document.body.classList.add("cf-player-playing");
-    document.body.classList.remove("cf-player-loaded");
     iframe.src = finalUrl;
-    setTimeout(() => document.body.classList.add("cf-player-loaded"), 5200);
 }
 
 function switchServer(serverNum) {
@@ -1148,4 +1144,367 @@ async function createProfile(){
     improveSearch();
     addDragHint();
   });
+})();
+
+// =====================================================
+// CINEFLEX COMMUNITY EDITION - SPRINT 1 REAL BUILD
+// Live online viewers + watching now + CineFlex trending
+// =====================================================
+(function CineFlexCommunitySprint1(){
+  const HEARTBEAT_MS = 20000;
+  const ONLINE_WINDOW_MS = 70000;
+  const SESSION_KEY = 'cineflex_session_id_v1';
+  const WATCHING_KEY = 'cineflex_current_watching_v1';
+  const LOCAL_TREND_KEY = 'cineflex_local_trending_v1';
+  let heartbeatTimer = null;
+  let uiTimer = null;
+  let currentWatching = null;
+  let lastOnlineCount = 1;
+  let lastWatchingCount = 0;
+
+  function getSessionId(){
+    let id = localStorage.getItem(SESSION_KEY);
+    if(!id){
+      id = 'cf_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+      localStorage.setItem(SESSION_KEY, id);
+    }
+    return id;
+  }
+
+  function getUserLabel(){
+    const u = (window.auth && window.auth.currentUser) || window.currentUser || null;
+    if(!u) return { uid: null, name: 'Guest Viewer', email: null, type: 'guest' };
+    return { uid: u.uid, name: u.displayName || u.email || 'CineFlex User', email: u.email || null, type: 'user' };
+  }
+
+  function titleKey(item){
+    if(!item || !item.id) return null;
+    const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
+    return `${type}_${item.id}`;
+  }
+
+  function normalizeTitle(item){
+    if(!item || !item.id) return null;
+    const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
+    return {
+      id: item.id,
+      key: `${type}_${item.id}`,
+      type,
+      title: item.title || item.name || 'Untitled',
+      poster_path: item.poster_path || null,
+      backdrop_path: item.backdrop_path || null,
+      media_type: type
+    };
+  }
+
+  function nowMs(){ return Date.now(); }
+
+  function hasDb(){ return !!(window.db && window.firebase && firebase.firestore); }
+
+  function safeText(n, fallback='0'){
+    return typeof n === 'number' && isFinite(n) ? String(n) : fallback;
+  }
+
+  function ensureCommunityUI(){
+    if(!document.getElementById('cf-floating-live')){
+      const float = document.createElement('div');
+      float.id = 'cf-floating-live';
+      float.className = 'cf-floating-live';
+      float.innerHTML = `
+        <div class="cf-live-pill" title="Live viewers on CineFlex">
+          <span class="cf-live-dot"></span><span id="cf-live-online-count">1</span> online
+        </div>
+        <div class="cf-live-pill" id="cf-current-watch-pill" style="display:none;">
+          <i class="fa-solid fa-eye"></i><span id="cf-live-watching-count">0</span> watching this
+        </div>`;
+      document.body.appendChild(float);
+    }
+
+    const nav = document.querySelector('.nav-right') || document.querySelector('nav') || document.querySelector('.navbar') || document.querySelector('header');
+    if(nav && !document.getElementById('cf-top-live-pill')){
+      const pill = document.createElement('div');
+      pill.id = 'cf-top-live-pill';
+      pill.className = 'cf-live-pill';
+      pill.innerHTML = `<span class="cf-live-dot"></span><span id="cf-top-online-count">1</span> online`;
+      nav.appendChild(pill);
+    }
+
+    const drawer = document.getElementById('menu-drawer');
+    if(drawer && !document.getElementById('cf-drawer-community-card')){
+      const card = document.createElement('div');
+      card.id = 'cf-drawer-community-card';
+      card.className = 'drawer-community-card';
+      card.innerHTML = `
+        <strong><i class="fa-solid fa-signal"></i> CineFlex Live</strong>
+        <div class="rowline"><span>Online viewers</span><b id="cf-drawer-online-count">1</b></div>
+        <div class="rowline"><span>Watching this title</span><b id="cf-drawer-watching-count">0</b></div>
+        <small>Real-time count, private at walang user names na ipinapakita.</small>`;
+      const links = drawer.querySelector('.drawer-links') || drawer;
+      links.insertBefore(card, links.firstChild);
+    }
+
+    const main = document.querySelector('main');
+    if(main && !document.getElementById('cf-community-section')){
+      const sec = document.createElement('section');
+      sec.id = 'cf-community-section';
+      sec.className = 'cf-community-section';
+      sec.innerHTML = `
+        <div class="cf-community-head">
+          <h2><i class="fa-solid fa-fire" style="color:#ff3b7a"></i> Live on CineFlex</h2>
+          <span class="cf-live-pill"><span class="cf-live-dot"></span><span id="cf-section-online-count">1</span> online</span>
+        </div>
+        <div class="cf-community-grid">
+          <div class="cf-community-card"><span>Online right now</span><strong id="cf-card-online-count">1</strong><small>active viewers on the website</small></div>
+          <div class="cf-community-card"><span>Watching current title</span><strong id="cf-card-watching-count">0</strong><small>updates while users play videos</small></div>
+          <div class="cf-community-card"><span>Community activity</span><strong id="cf-card-activity-count">Live</strong><small>foundation for trending, watch party, and admin stats</small></div>
+        </div>
+        <div class="cf-community-head" style="margin-top:24px;">
+          <h2><i class="fa-solid fa-chart-line" style="color:#00e5ff"></i> Trending in CineFlex</h2>
+          <small style="color:#9fb0c4;">based on plays on your site</small>
+        </div>
+        <div id="cf-live-trending-list" class="cf-trending-list"></div>`;
+      const firstRow = main.querySelector('.row');
+      if(firstRow) main.insertBefore(sec, firstRow.nextSibling); else main.prepend(sec);
+    }
+  }
+
+  function updateCountsUI(online, watching){
+    lastOnlineCount = online || lastOnlineCount || 1;
+    lastWatchingCount = watching || 0;
+    const idsOnline = ['cf-live-online-count','cf-top-online-count','cf-drawer-online-count','cf-section-online-count','cf-card-online-count'];
+    idsOnline.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = safeText(lastOnlineCount, '1'); });
+    const idsWatching = ['cf-live-watching-count','cf-drawer-watching-count','cf-card-watching-count'];
+    idsWatching.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = safeText(lastWatchingCount, '0'); });
+    const watchPill = document.getElementById('cf-current-watch-pill');
+    if(watchPill) watchPill.style.display = currentWatching ? 'inline-flex' : 'none';
+  }
+
+  function getLocalTrending(){
+    try { return JSON.parse(localStorage.getItem(LOCAL_TREND_KEY) || '{}'); } catch(e) { return {}; }
+  }
+
+  function saveLocalTrending(obj){
+    localStorage.setItem(LOCAL_TREND_KEY, JSON.stringify(obj));
+  }
+
+  function bumpLocalTrending(item){
+    const t = normalizeTitle(item);
+    if(!t) return;
+    const map = getLocalTrending();
+    const old = map[t.key] || {};
+    map[t.key] = { ...t, plays: (old.plays || 0) + 1, lastPlayedAt: nowMs() };
+    saveLocalTrending(map);
+    renderLocalTrending();
+  }
+
+  function renderLocalTrending(remoteItems){
+    const list = document.getElementById('cf-live-trending-list');
+    if(!list) return;
+    let items = Array.isArray(remoteItems) ? remoteItems : Object.values(getLocalTrending());
+    items = items.sort((a,b) => (b.plays || 0) - (a.plays || 0)).slice(0, 10);
+    if(!items.length){
+      list.innerHTML = `<div class="cf-community-card" style="min-width:260px;"><span>Wala pang play data</span><strong>Start watching</strong><small>Magkakaroon ng CineFlex trending kapag may nanood.</small></div>`;
+      return;
+    }
+    list.innerHTML = items.map((it, idx) => {
+      const img = it.backdrop_path || it.poster_path;
+      const src = img ? `${IMG_URL}${img}` : '';
+      return `<div class="cf-trending-item" onclick="cfOpenTrendingTitle('${it.type || it.media_type || 'movie'}', '${it.id}')">
+        ${src ? `<img src="${src}" loading="lazy" onerror="this.style.display='none'">` : `<div style="height:107px;background:#15151d"></div>`}
+        <div class="cf-trending-info"><b>#${idx+1} ${it.title || 'Untitled'}</b><small>${it.plays || 0} plays today</small></div>
+      </div>`;
+    }).join('');
+  }
+
+  window.cfOpenTrendingTitle = async function(type, id){
+    try {
+      const data = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}`).then(r=>r.json());
+      showDetails({...data, media_type:type});
+    } catch(e) { console.warn('Open trending failed', e); }
+  };
+
+  async function sendHeartbeat(){
+    ensureCommunityUI();
+    const watching = currentWatching || (() => { try { return JSON.parse(localStorage.getItem(WATCHING_KEY) || 'null'); } catch(e){ return null; }})();
+    const user = getUserLabel();
+    const payload = {
+      sessionId: getSessionId(),
+      uid: user.uid,
+      userType: user.type,
+      displayName: user.name,
+      email: user.email,
+      page: location.pathname,
+      titleKey: watching ? watching.key : null,
+      titleId: watching ? watching.id : null,
+      titleType: watching ? watching.type : null,
+      titleName: watching ? watching.title : null,
+      lastActiveMs: nowMs(),
+      lastActiveAt: hasDb() ? firebase.firestore.FieldValue.serverTimestamp() : null,
+      userAgent: navigator.userAgent.slice(0, 180)
+    };
+
+    if(hasDb()){
+      try {
+        await db.collection('cineflex_presence').doc(getSessionId()).set(payload, { merge:true });
+      } catch(e) {
+        console.warn('CineFlex presence write blocked:', e.message || e);
+      }
+    }
+    updateLiveCounts();
+  }
+
+  async function updateLiveCounts(){
+    const cutoff = nowMs() - ONLINE_WINDOW_MS;
+    let online = 1;
+    let watching = currentWatching ? 1 : 0;
+    if(hasDb()){
+      try {
+        const onlineSnap = await db.collection('cineflex_presence').where('lastActiveMs', '>', cutoff).get();
+        online = Math.max(onlineSnap.size, 1);
+        if(currentWatching){
+          const watchSnap = await db.collection('cineflex_presence')
+            .where('lastActiveMs', '>', cutoff)
+            .where('titleKey', '==', currentWatching.key)
+            .get();
+          watching = watchSnap.size;
+        }
+      } catch(e) {
+        console.warn('CineFlex live count read blocked:', e.message || e);
+      }
+    }
+    updateCountsUI(online, watching);
+  }
+
+  async function recordPlay(item){
+    const t = normalizeTitle(item);
+    if(!t) return;
+    bumpLocalTrending(t);
+    if(hasDb()){
+      try {
+        const key = `${t.key}_${new Date().toISOString().slice(0,10)}`;
+        await db.collection('cineflex_title_activity').doc(key).set({
+          ...t,
+          date: new Date().toISOString().slice(0,10),
+          plays: firebase.firestore.FieldValue.increment(1),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedMs: nowMs()
+        }, { merge:true });
+      } catch(e){
+        console.warn('CineFlex activity write blocked:', e.message || e);
+      }
+    }
+    loadRemoteTrending();
+  }
+
+  async function loadRemoteTrending(){
+    renderLocalTrending();
+    if(!hasDb()) return;
+    try {
+      const today = new Date().toISOString().slice(0,10);
+      const snap = await db.collection('cineflex_title_activity')
+        .where('date', '==', today)
+        .orderBy('plays', 'desc')
+        .limit(10)
+        .get();
+      const items = [];
+      snap.forEach(doc => items.push(doc.data()));
+      if(items.length) renderLocalTrending(items);
+    } catch(e) {
+      console.warn('CineFlex trending read blocked or index needed:', e.message || e);
+    }
+  }
+
+  function setCurrentWatching(item){
+    const t = normalizeTitle(item);
+    currentWatching = t;
+    if(t) localStorage.setItem(WATCHING_KEY, JSON.stringify(t));
+    updateCountsUI(lastOnlineCount, t ? Math.max(lastWatchingCount, 1) : 0);
+    sendHeartbeat();
+  }
+
+  function clearCurrentWatching(){
+    currentWatching = null;
+    localStorage.removeItem(WATCHING_KEY);
+    sendHeartbeat();
+  }
+
+  function startTimers(){
+    if(heartbeatTimer) clearInterval(heartbeatTimer);
+    if(uiTimer) clearInterval(uiTimer);
+    sendHeartbeat();
+    heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_MS);
+    uiTimer = setInterval(updateLiveCounts, 15000);
+  }
+
+  function patchExistingFunctions(){
+    const oldStart = window.startPlayback;
+    if(typeof oldStart === 'function' && !oldStart.__cfCommunityPatched){
+      const patched = function(){
+        if(window.currentItem) { setCurrentWatching(window.currentItem); recordPlay(window.currentItem); }
+        return oldStart.apply(this, arguments);
+      };
+      patched.__cfCommunityPatched = true;
+      window.startPlayback = patched;
+    }
+
+    const oldEp = window.playSpecificEpisode;
+    if(typeof oldEp === 'function' && !oldEp.__cfCommunityPatched){
+      const patchedEp = function(){
+        if(window.currentItem) { setCurrentWatching(window.currentItem); recordPlay(window.currentItem); }
+        return oldEp.apply(this, arguments);
+      };
+      patchedEp.__cfCommunityPatched = true;
+      window.playSpecificEpisode = patchedEp;
+    }
+
+    const oldTrailer = window.playTrailer;
+    if(typeof oldTrailer === 'function' && !oldTrailer.__cfCommunityPatched){
+      const patchedTrailer = function(){
+        if(window.currentItem) setCurrentWatching(window.currentItem);
+        return oldTrailer.apply(this, arguments);
+      };
+      patchedTrailer.__cfCommunityPatched = true;
+      window.playTrailer = patchedTrailer;
+    }
+
+    const oldClose = window.closeModal;
+    if(typeof oldClose === 'function' && !oldClose.__cfCommunityPatched){
+      const patchedClose = function(){
+        clearCurrentWatching();
+        return oldClose.apply(this, arguments);
+      };
+      patchedClose.__cfCommunityPatched = true;
+      window.closeModal = patchedClose;
+    }
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if(hasDb()){
+      try { db.collection('cineflex_presence').doc(getSessionId()).set({ lastActiveMs: 0, titleKey: null }, { merge:true }); } catch(e) {}
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) sendHeartbeat();
+    else { sendHeartbeat(); loadRemoteTrending(); }
+  });
+
+  window.addEventListener('cineflex-login', () => setTimeout(sendHeartbeat, 400));
+  window.addEventListener('cineflex-logout', () => setTimeout(sendHeartbeat, 400));
+
+  window.addEventListener('load', () => {
+    ensureCommunityUI();
+    patchExistingFunctions();
+    startTimers();
+    loadRemoteTrending();
+    setTimeout(patchExistingFunctions, 1200);
+    setTimeout(loadRemoteTrending, 2200);
+  });
+
+  if(document.readyState !== 'loading'){
+    ensureCommunityUI();
+    patchExistingFunctions();
+    startTimers();
+    loadRemoteTrending();
+  }
 })();

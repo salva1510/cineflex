@@ -1035,3 +1035,54 @@ body.drawer-open { overflow: hidden; }
   .drawer-profiles { grid-template-columns: 1fr; }
   .menu-drawer { width: 90vw !important; }
 }
+
+/* ==========================================
+   CINEFLEX COMMUNITY EDITION - SPRINT 1
+   Live online viewers + watching now UI
+   ========================================== */
+.cf-live-pill {
+  display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+  background:rgba(0,229,255,.10); border:1px solid rgba(0,229,255,.28); color:#e9fbff;
+  font-size:.82rem; font-weight:700; letter-spacing:.2px; box-shadow:0 0 18px rgba(0,229,255,.10);
+  backdrop-filter:blur(10px); white-space:nowrap;
+}
+.cf-live-dot { width:8px; height:8px; border-radius:50%; background:#16f28b; box-shadow:0 0 12px #16f28b; animation:cfPulse 1.4s infinite; }
+@keyframes cfPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.45);opacity:.55} }
+.cf-floating-live {
+  position:fixed; right:14px; bottom:92px; z-index:1600; display:flex; flex-direction:column; gap:8px;
+  max-width:230px; pointer-events:none;
+}
+.cf-floating-live .cf-live-pill { pointer-events:auto; box-shadow:0 18px 35px rgba(0,0,0,.35), 0 0 22px rgba(114,0,255,.18); }
+.cf-community-section { margin:28px 0 6px; padding:0 4%; }
+.cf-community-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.cf-community-head h2 { margin:0; font-size:1.35rem; letter-spacing:.2px; }
+.cf-community-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:14px; }
+.cf-community-card {
+  position:relative; overflow:hidden; border-radius:18px; padding:16px; min-height:100px;
+  background:linear-gradient(135deg, rgba(0,229,255,.12), rgba(114,0,255,.14) 55%, rgba(255,0,92,.10));
+  border:1px solid rgba(255,255,255,.10); box-shadow:0 16px 35px rgba(0,0,0,.28);
+}
+.cf-community-card:before { content:""; position:absolute; inset:-40%; background:radial-gradient(circle, rgba(255,255,255,.10), transparent 42%); transform:translateX(-35%); }
+.cf-community-card strong { position:relative; display:block; font-size:1.75rem; margin-top:6px; }
+.cf-community-card span, .cf-community-card small { position:relative; color:#b9c7d5; }
+.cf-watchnow-badge {
+  display:inline-flex; align-items:center; gap:7px; margin:8px 0 2px; padding:7px 10px; border-radius:999px;
+  color:#fff; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-weight:700; font-size:.82rem;
+}
+.cf-trending-list { display:flex; gap:12px; overflow-x:auto; padding:4px 0 12px; scrollbar-width:none; }
+.cf-trending-list::-webkit-scrollbar { display:none; }
+.cf-trending-item { min-width:190px; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); cursor:pointer; transition:.22s ease; }
+.cf-trending-item:hover { transform:translateY(-4px); border-color:rgba(0,229,255,.4); }
+.cf-trending-item img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#111; }
+.cf-trending-info { padding:10px; }
+.cf-trending-info b { display:block; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cf-trending-info small { color:#a7b0bd; }
+.drawer-community-card { margin:10px 0 16px; padding:14px; border-radius:16px; background:rgba(0,229,255,.08); border:1px solid rgba(0,229,255,.18); }
+.drawer-community-card .rowline { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0; color:#ddd; }
+.drawer-community-card strong { color:#fff; }
+@media (max-width: 720px) {
+  .cf-floating-live { right:10px; bottom:78px; }
+  .cf-live-pill { padding:7px 10px; font-size:.76rem; }
+  .cf-community-section { padding:0 14px; }
+  .cf-community-head h2 { font-size:1.1rem; }
+}

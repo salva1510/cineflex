@@ -22,8 +22,16 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Expose services so every CineFlex script uses the same Firebase session
+window.auth = auth;
+window.db = db;
+window.googleProvider = null;
+window.cineflexAuthReady = false;
+
 // Google Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+window.googleProvider = googleProvider;
+auth.useDeviceLanguage();
 
 googleProvider.setCustomParameters({
     prompt: "select_account"
@@ -37,32 +45,78 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 let currentUser = null;
 
 // ===========================================
-// AUTH STATE
+// AUTH STATE + GOOGLE REDIRECT HANDLER v7
 // ===========================================
 
-auth.onAuthStateChanged(async (user) => {
+window.cineflexAuthReady = false;
+window.cineflexRedirectChecked = false;
+window.currentUser = null;
 
-    currentUser = user;
+function hasPendingGoogleRedirect() {
+    const pending = localStorage.getItem("cineflex_google_redirect_pending") === "1";
+    const pendingTime = Number(localStorage.getItem("cineflex_google_redirect_time") || 0);
+    return pending && Date.now() - pendingTime < 180000;
+}
 
-    if (user) {
+function clearPendingGoogleRedirect() {
+    localStorage.removeItem("cineflex_google_redirect_pending");
+    localStorage.removeItem("cineflex_google_redirect_time");
+}
 
-        console.log("✅ Logged In:", user.email);
+async function bootCineFlexAuth() {
+    window.cineflexAuthReady = false;
+    window.cineflexRedirectChecked = false;
 
-        window.dispatchEvent(new CustomEvent("cineflex-login", {
-            detail: user
-        }));
-
-    } else {
-
-        console.log("❌ Logged Out");
-
-        localStorage.removeItem("cineflex_profile");
-
-        window.dispatchEvent(new Event("cineflex-logout"));
-
+    try {
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    } catch (e) {
+        console.warn("Firebase persistence warning:", e);
     }
 
-});
+    try {
+        const result = await auth.getRedirectResult();
+        window.cineflexRedirectChecked = true;
+        if (result && result.user) {
+            clearPendingGoogleRedirect();
+            window.currentUser = result.user;
+            localStorage.setItem("cineflex_last_login_email", result.user.email || "google");
+            console.log("✅ Google Redirect Login:", result.user.email);
+            window.dispatchEvent(new CustomEvent("cineflex-login", { detail: result.user }));
+        }
+    } catch (e) {
+        window.cineflexRedirectChecked = true;
+        clearPendingGoogleRedirect();
+        console.error("Google redirect result error:", e);
+        window.dispatchEvent(new CustomEvent("cineflex-auth-error", { detail: e }));
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+        currentUser = user;
+        window.currentUser = user;
+        window.cineflexAuthReady = true;
+
+        if (user) {
+            clearPendingGoogleRedirect();
+            localStorage.setItem("cineflex_last_login_email", user.email || "google");
+            console.log("✅ Logged In:", user.email);
+            window.dispatchEvent(new CustomEvent("cineflex-login", { detail: user }));
+            return;
+        }
+
+        // Huwag muna gawing Guest habang kababalik lang galing Google redirect.
+        if (!window.cineflexRedirectChecked || hasPendingGoogleRedirect()) {
+            console.log("⏳ Waiting for Google redirect/session restore...");
+            window.dispatchEvent(new Event("cineflex-auth-pending"));
+            return;
+        }
+
+        console.log("❌ Logged Out");
+        localStorage.removeItem("cineflex_profile");
+        window.dispatchEvent(new Event("cineflex-logout"));
+    });
+}
+
+bootCineFlexAuth();
 
 // ===========================================
 // USER DATA

@@ -1,5 +1,5 @@
 // =========================================================
-// CINEFLEX PROFILES — NETFLIX PROFILE MANAGEMENT v14
+// CINEFLEX PROFILES — NETFLIX PROFILE MANAGEMENT v15
 // Safe drop-in: works on profiles.html and index.html.
 // =========================================================
 (function () {
@@ -81,6 +81,36 @@
     }
   }
 
+
+  function updateDrawerAccount(user) {
+    const loginActions = $("drawerLoginActions");
+    const accountActions = $("drawerAccountActions");
+    const logoutBtn = $("logoutBtn");
+    const photo = $("userPhoto");
+    const name = $("userName");
+    const email = $("userEmail");
+    const badge = $("userBadge");
+    const activeProfile = state.profiles.find(p => p.id === localStorage.getItem("cineflex_profile"));
+
+    if (user) {
+      if (photo) photo.src = activeProfile?.avatar || user.photoURL || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.displayName || user.email || "User") + "&background=e50914&color=fff";
+      if (name) name.textContent = activeProfile?.name || user.displayName || "CineFlex User";
+      if (email) email.textContent = user.email || "Logged in";
+      if (badge) badge.textContent = activeProfile?.kids ? "KIDS PROFILE" : "CINEFLEX MEMBER";
+      if (loginActions) loginActions.style.display = "none";
+      if (accountActions) accountActions.style.display = "block";
+      if (logoutBtn) logoutBtn.style.display = "flex";
+    } else {
+      if (photo) photo.src = "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
+      if (name) name.textContent = "Guest";
+      if (email) email.textContent = "Not logged in";
+      if (badge) badge.textContent = "FREE MEMBER";
+      if (loginActions) loginActions.style.display = "grid";
+      if (accountActions) accountActions.style.display = "none";
+      if (logoutBtn) logoutBtn.style.display = "none";
+    }
+  }
+
   function ensureDrawerProfiles() {
     const drawerLinks = document.querySelector("#menu-drawer .drawer-links");
     if (!drawerLinks || $("drawer-profiles")) return;
@@ -97,6 +127,7 @@
 
   function renderDrawerProfiles() {
     ensureDrawerProfiles();
+    updateDrawerAccount((window.auth && auth.currentUser) || null);
     const wrap = $("drawer-profiles");
     if (!wrap) return;
     const activeId = localStorage.getItem("cineflex_profile");
@@ -236,7 +267,7 @@
           <img class="profile-avatar" src="${avatar}" alt="${name}">
           ${profile.kids ? '<span class="profile-kids-pill">KIDS</span>' : ''}
           ${profile.id === state.defaultProfileId ? '<span class="profile-default-pill"><i class="fa-solid fa-star"></i> DEFAULT</span>' : ''}
-          ${state.manageMode ? `<div class="profile-manage-actions"><button class="mini-action" title="Edit" onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></button><button class="mini-action danger" title="Delete" onclick="event.stopPropagation(); deleteProfile('${profile.id}')"><i class="fa-solid fa-trash"></i></button><button class="mini-action gold" title="Set default" onclick="event.stopPropagation(); setDefaultProfile('${profile.id}')"><i class="fa-solid fa-star"></i></button></div>` : ''}
+          ${state.manageMode ? `<div class="profile-manage-actions"><button class="mini-action" title="Edit" onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i><span>Edit</span></button><button class="mini-action danger" title="Delete" onclick="event.stopPropagation(); deleteProfile('${profile.id}')"><i class="fa-solid fa-trash"></i><span>Delete</span></button><button class="mini-action gold" title="Set default" onclick="event.stopPropagation(); setDefaultProfile('${profile.id}')"><i class="fa-solid fa-star"></i><span>Default</span></button></div>` : ''}
           <div class="profile-name">${name}</div>
         </div>`);
     });
@@ -400,9 +431,9 @@ Mawawala ang profile data nito sa account mo.`);
     ensureSelector();
     ensureDrawerProfiles();
     ensureModal();
-    if (window.auth && auth.onAuthStateChanged) auth.onAuthStateChanged(user => user && loadProfiles());
+    if (window.auth && auth.onAuthStateChanged) auth.onAuthStateChanged(user => { updateDrawerAccount(user); if (user) loadProfiles(); });
     else loadProfiles();
   });
 
-  console.log("✅ CineFlex Profiles Management v14 Loaded");
+  console.log("✅ CineFlex Profiles Management v15 Loaded");
 })();

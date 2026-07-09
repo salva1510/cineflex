@@ -22,8 +22,16 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Expose services so every CineFlex script uses the same Firebase session
+window.auth = auth;
+window.db = db;
+window.googleProvider = null;
+window.cineflexAuthReady = false;
+
 // Google Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+window.googleProvider = googleProvider;
+auth.useDeviceLanguage();
 
 googleProvider.setCustomParameters({
     prompt: "select_account"
@@ -43,6 +51,8 @@ let currentUser = null;
 auth.onAuthStateChanged(async (user) => {
 
     currentUser = user;
+    window.currentUser = user;
+    window.cineflexAuthReady = true;
 
     if (user) {
 
@@ -53,6 +63,16 @@ auth.onAuthStateChanged(async (user) => {
         }));
 
     } else {
+
+        const pendingGoogleRedirect = localStorage.getItem("cineflex_google_redirect_pending") === "1";
+        const pendingTime = Number(localStorage.getItem("cineflex_google_redirect_time") || 0);
+        const stillReturningFromGoogle = pendingGoogleRedirect && Date.now() - pendingTime < 120000;
+
+        if (stillReturningFromGoogle) {
+            console.log("⏳ Waiting for Google redirect session...");
+            window.dispatchEvent(new Event("cineflex-auth-pending"));
+            return;
+        }
 
         console.log("❌ Logged Out");
 

@@ -34,15 +34,57 @@ function continuePendingPlayback() {
 // LOGIN
 // ======================================
 
+function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
+
+function markGoogleLoginPending() {
+    localStorage.setItem("cineflex_google_redirect_pending", "1");
+    localStorage.setItem("cineflex_google_redirect_time", String(Date.now()));
+}
+
+function clearGoogleLoginPending() {
+    localStorage.removeItem("cineflex_google_redirect_pending");
+    localStorage.removeItem("cineflex_google_redirect_time");
+}
+
 async function googleLogin() {
 
     try {
+        const provider = window.googleProvider || googleProvider;
+        provider.setCustomParameters({ prompt: "select_account" });
+        if (window.firebase && firebase.auth) {
+            await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        }
 
-        await auth.signInWithPopup(googleProvider);
+        // Mobile browsers/PWA often block or lose popup auth. Redirect is safer.
+        if (isMobileDevice()) {
+            markGoogleLoginPending();
+            await auth.signInWithRedirect(provider);
+            return;
+        }
+
+        await auth.signInWithPopup(provider);
+        clearGoogleLoginPending();
 
     } catch (e) {
 
         console.error(e);
+
+        if (e && (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request")) {
+            try {
+                markGoogleLoginPending();
+                await auth.signInWithRedirect(window.googleProvider || googleProvider);
+                return;
+            } catch (redirectErr) {
+                console.error(redirectErr);
+                clearGoogleLoginPending();
+                alert(redirectErr.message);
+                return;
+            }
+        }
+
+        clearGoogleLoginPending();
         alert(e.message);
 
     }
@@ -286,6 +328,25 @@ function closeLoginModal() {
 }
 
 // ======================================
+// GOOGLE REDIRECT RESULT FIX
+// ======================================
+
+(async function handleGoogleRedirectResult() {
+    try {
+        if (!auth || typeof auth.getRedirectResult !== "function") return;
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+            clearGoogleLoginPending();
+            console.log("✅ Google redirect login restored:", result.user.email);
+            window.dispatchEvent(new CustomEvent("cineflex-login", { detail: result.user }));
+        }
+    } catch (err) {
+        console.error("Google redirect result error:", err);
+        clearGoogleLoginPending();
+    }
+})();
+
+// ======================================
 // AUTH STATE
 // ======================================
 
@@ -307,6 +368,8 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById("logoutBtn");
 
     if (user) {
+
+        clearGoogleLoginPending();
 
         if (photo) {
 
@@ -350,6 +413,15 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     else {
+
+        const pendingGoogleRedirect = localStorage.getItem("cineflex_google_redirect_pending") === "1";
+        const pendingTime = Number(localStorage.getItem("cineflex_google_redirect_time") || 0);
+        if (pendingGoogleRedirect && Date.now() - pendingTime < 120000) {
+            if (name) name.innerText = "Signing in...";
+            if (email) email.innerText = "Google login is loading";
+            if (badge) badge.innerText = "PLEASE WAIT";
+            return;
+        }
 
         if (photo)
             photo.src =

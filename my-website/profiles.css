@@ -61,3 +61,46 @@
   .avatar-picker{gap:8px;margin-bottom:10px}
   .modal-x{top:12px;right:12px;background:#e50914;border-color:#e50914}
 }
+
+/* =========================================================
+   CINEFLEX PROFILE MODAL FOOTER FIX v13
+   Fix: bottom navigation/footer was covering Create buttons
+========================================================= */
+.profile-modal{
+  z-index: 30000 !important;
+  padding-bottom: max(18px, env(safe-area-inset-bottom)) !important;
+}
+.profile-modal-content{
+  max-height: calc(100dvh - 24px) !important;
+  padding-bottom: 0 !important;
+}
+.profile-modal .modal-buttons{
+  z-index: 30002 !important;
+  padding-bottom: max(18px, calc(env(safe-area-inset-bottom) + 18px)) !important;
+}
+.profile-modal .cf-profile-btn{
+  position: relative;
+  z-index: 30003 !important;
+}
+
+@media(max-width:520px){
+  .profile-modal{
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  .profile-modal-content{
+    max-height: calc(100dvh - 10px) !important;
+    border-radius: 24px 24px 0 0 !important;
+  }
+  .profile-modal .modal-buttons{
+    position: sticky !important;
+    bottom: 0 !important;
+    background: linear-gradient(180deg, rgba(12,12,12,.05), rgba(12,12,12,.98) 32%, #101010 100%) !important;
+  }
+}
+
+/* Hide the floating bottom nav while the profile modal is open when supported */
+body:has(.profile-modal:not(.hidden)) .bottom-nav{
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

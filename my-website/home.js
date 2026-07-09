@@ -11,6 +11,8 @@ let trendingItems = [];
 let currentBannerIndex = 0;
 let currentTVState = { season: 1, episode: 1, currentEpNum: 1, type: 'movie' };
 let activeServer = 1;
+let cfPlayerHideTimer = null;
+let cfPlayerIsMini = false;
 
 // --- LOCAL STORAGE DATA STORES ---
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
@@ -78,6 +80,9 @@ function triggerPopUnder() {
 async function enterCinemaMode() {
   const playerContainer = document.getElementById("modal-player-container");
   if (!playerContainer) return;
+  playerContainer.classList.remove("cf-mini-player");
+  playerContainer.classList.add("cf-fullscreen-clean");
+  cfPlayerIsMini = false;
   try {
     if (playerContainer.requestFullscreen) {
       await playerContainer.requestFullscreen();
@@ -96,12 +101,82 @@ document.addEventListener('fullscreenchange', handleFullscreenExit);
 document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
 
 function handleFullscreenExit() {
+  const playerContainer = document.getElementById("modal-player-container");
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (playerContainer) playerContainer.classList.remove("cf-fullscreen-clean");
     if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
       screen.orientation.unlock();
     }
   }
 }
+
+function showPlayerShell() {
+  const playerContainer = document.getElementById("modal-player-container");
+  const loader = document.getElementById("cf-player-loading");
+  const title = document.getElementById("cf-player-title");
+  if (playerContainer) {
+    playerContainer.style.display = "block";
+    playerContainer.classList.remove("cf-mini-player", "cf-controls-hidden");
+    cfPlayerIsMini = false;
+  }
+  if (loader) loader.classList.remove("hidden");
+  if (title && currentItem) title.textContent = currentItem.title || currentItem.name || "CineFlex Player";
+  revealPlayerControls();
+}
+
+function revealPlayerControls() {
+  const playerContainer = document.getElementById("modal-player-container");
+  if (!playerContainer) return;
+  playerContainer.classList.remove("cf-controls-hidden");
+  clearTimeout(cfPlayerHideTimer);
+  cfPlayerHideTimer = setTimeout(() => {
+    if (playerContainer.style.display !== "none" && !cfPlayerIsMini) {
+      playerContainer.classList.add("cf-controls-hidden");
+    }
+  }, 3800);
+}
+
+function closeVideoOnly() {
+  const playerContainer = document.getElementById("modal-player-container");
+  const iframe = document.getElementById("modal-video-iframe");
+  if (iframe) iframe.src = "";
+  if (playerContainer) {
+    playerContainer.style.display = "none";
+    playerContainer.classList.remove("cf-mini-player", "cf-fullscreen-clean", "cf-controls-hidden");
+  }
+  cfPlayerIsMini = false;
+}
+
+function minimizePlayer() {
+  const playerContainer = document.getElementById("modal-player-container");
+  const modal = document.getElementById("details-modal");
+  if (!playerContainer) return;
+  playerContainer.classList.add("cf-mini-player");
+  playerContainer.classList.remove("cf-fullscreen-clean", "cf-controls-hidden");
+  cfPlayerIsMini = true;
+  if (modal) modal.style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+function restoreMiniPlayer() {
+  const playerContainer = document.getElementById("modal-player-container");
+  const modal = document.getElementById("details-modal");
+  if (modal) modal.style.display = "flex";
+  if (playerContainer) {
+    playerContainer.classList.remove("cf-mini-player");
+    playerContainer.style.display = "block";
+  }
+  cfPlayerIsMini = false;
+  revealPlayerControls();
+}
+
+function closeMiniPlayer(event) {
+  if (event) event.stopPropagation();
+  closeVideoOnly();
+}
+
+document.addEventListener("mousemove", revealPlayerControls);
+document.addEventListener("touchstart", revealPlayerControls, { passive: true });
 
 async function init() {
   try {
@@ -369,6 +444,8 @@ async function loadEpisodes(seriesId, seasonNum) {
 function updateVideoSource() {
     const iframe = document.getElementById("modal-video-iframe");
     if (!iframe || !currentItem) return;
+    const loader = document.getElementById("cf-player-loading");
+    if (loader) loader.classList.remove("hidden");
 
     const movieId = currentItem.id;
     const season = currentTVState.season;
@@ -422,8 +499,7 @@ function playSpecificEpisode(epNum, element) {
 
         currentTVState.currentEpNum = epNum;
 
-        const playerContainer = document.getElementById("modal-player-container");
-        if (playerContainer) playerContainer.style.display = "block";
+        showPlayerShell();
 
         updateVideoSource();
 
@@ -440,8 +516,7 @@ function playSpecificEpisode(epNum, element) {
 
 function startPlayback() {
     requireLogin(() => {
-        const playerContainer = document.getElementById("modal-player-container");
-        if (playerContainer) playerContainer.style.display = "block";
+        showPlayerShell();
 
         updateVideoSource();
         document.querySelector('.modal-content').scrollTo({
@@ -526,8 +601,9 @@ function closeMenuDrawer() {
   document.body.classList.remove("drawer-open");
 }
 function closeModal() { 
-  document.getElementById("details-modal").style.display = "none"; 
-  document.getElementById("modal-video-iframe").src = ""; 
+  const modal = document.getElementById("details-modal");
+  if (modal) modal.style.display = "none"; 
+  closeVideoOnly();
   document.body.style.overflow = "auto"; 
   if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
      screen.orientation.unlock();
@@ -1137,6 +1213,11 @@ async function createProfile(){
         scroller.setAttribute('aria-label', 'Swipe movie row');
       });
     };
+
+    const player = document.getElementById('modal-player-container');
+    if (player) player.addEventListener('click', (e) => {
+      if (player.classList.contains('cf-mini-player') && !e.target.closest('button')) restoreMiniPlayer();
+    });
 
     updateProgress();
     updateNav();

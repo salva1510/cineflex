@@ -260,11 +260,31 @@ CINEFLEX PROFILE SELECTOR
       <div class="modal-banner" id="modal-banner"><span class="close-modal" onclick="closeModal()">&times;</span></div>
       <div class="modal-body">
         
-        <div id="modal-player-container" class="modal-player-wrapper">
-            <div class="server-tabs"></div>
-            <button class="fullscreen-btn" onclick="enterCinemaMode()" style="position: absolute; top: 50px; left: 50%; transform: translateX(-50%); z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.8rem; backdrop-filter: blur(4px); display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                <i class="fa-solid fa-expand"></i> Fullscreen Mode
-            </button>
+        <div id="modal-player-container" class="modal-player-wrapper cf-player-shell">
+            <div id="cf-player-loading" class="cf-player-loading">
+                <div class="cf-loader-logo">CINE<span>FLEX</span></div>
+                <div class="cf-loader-bar"><i></i></div>
+                <small>Loading secure stream...</small>
+            </div>
+
+            <div id="cf-player-controls" class="cf-player-controls">
+                <button class="cf-control-btn cf-back-btn" onclick="minimizePlayer()" type="button" aria-label="Back to browse">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="cf-player-title" id="cf-player-title">CineFlex Player</div>
+                <button class="cf-control-btn cf-fullscreen-btn" onclick="enterCinemaMode()" type="button" aria-label="Fullscreen">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+                <button class="cf-control-btn cf-player-close" onclick="closeVideoOnly()" type="button" aria-label="Close video">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="server-tabs cf-server-tabs">
+                <button id="srv1-btn" class="srv-btn active" onclick="switchServer(1)" type="button">Server 1</button>
+                <button id="srv2-btn" class="srv-btn" onclick="switchServer(2)" type="button">Server 2</button>
+            </div>
+
             <div class="iframe-container">
                 <iframe id="modal-video-iframe" src="" allow="autoplay; fullscreen" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" scrolling="no"></iframe>
             </div>
@@ -333,8 +353,6 @@ CINEFLEX PROFILE SELECTOR
   <script src="home.js?v=3.0"></script>
 <script src="auth.js"></script>
   <script src="profiles.js?v=1.0"></script>
-  <script src="cineflex-ultimate-build19.js?v=19.0"></script>
   <link rel="stylesheet" href="profiles.css">
-  <link rel="stylesheet" href="cineflex-ultimate-build19.css?v=19.0">
 </body>
 </html>

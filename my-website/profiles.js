@@ -1,5 +1,5 @@
 // =========================================================
-// CINEFLEX PROFILES — NETFLIX CREATE PROFILE PREMIUM v10
+// CINEFLEX PROFILES — NETFLIX CREATE PROFILE PREMIUM v12
 // Safe drop-in: works on profiles.html and index.html.
 // =========================================================
 (function () {
@@ -116,17 +116,63 @@
     if (addBtn) addBtn.style.display = state.profiles.length >= MAX_PROFILES ? "none" : "flex";
   }
 
-  async function collectionRef() {
-    if (!window.auth || !window.db || !auth.currentUser) return null;
-    return db.collection("users").doc(auth.currentUser.uid).collection("profiles");
+  function waitForFirebaseUser(timeoutMs = 9000) {
+    return new Promise((resolve) => {
+      const started = Date.now();
+      const getUser = () => (window.auth && window.auth.currentUser) || (typeof auth !== "undefined" && auth.currentUser) || null;
+      const existing = getUser();
+      if (existing) return resolve(existing);
+
+      let done = false;
+      const finish = (user) => {
+        if (done) return;
+        done = true;
+        resolve(user || getUser());
+      };
+
+      try {
+        const authObj = window.auth || (typeof auth !== "undefined" ? auth : null);
+        if (authObj && typeof authObj.onAuthStateChanged === "function") {
+          const unsub = authObj.onAuthStateChanged((user) => {
+            if (user) {
+              try { unsub && unsub(); } catch(e) {}
+              finish(user);
+            }
+          });
+        }
+      } catch(e) {}
+
+      const timer = setInterval(() => {
+        const user = getUser();
+        if (user || Date.now() - started > timeoutMs) {
+          clearInterval(timer);
+          finish(user);
+        }
+      }, 180);
+    });
+  }
+
+  async function collectionRef(showMessage = false) {
+    const authObj = window.auth || (typeof auth !== "undefined" ? auth : null);
+    const dbObj = window.db || (typeof db !== "undefined" ? db : null);
+    if (!authObj || !dbObj) {
+      if (showMessage) toast("Firebase hindi pa loaded. Refresh muna kung kailangan.");
+      return null;
+    }
+    const user = authObj.currentUser || await waitForFirebaseUser();
+    if (!user) {
+      if (showMessage) toast("Hindi pa ready ang Google login session. Sandali lang tapos subukan ulit.");
+      return null;
+    }
+    return dbObj.collection("users").doc(user.uid).collection("profiles");
   }
 
   async function loadProfiles() {
     ensureSelector();
     ensureModal();
-    if (!window.auth || !window.db || !auth.currentUser) return;
     try {
-      const ref = await collectionRef();
+      const ref = await collectionRef(false);
+      if (!ref) return;
       const snap = await ref.orderBy("createdAt", "asc").get().catch(() => ref.get());
       state.profiles = [];
       snap.forEach(doc => state.profiles.push({ id: doc.id, ...doc.data() }));
@@ -149,12 +195,14 @@
   }
 
   async function createDefaultProfile() {
-    const ref = await collectionRef();
-    if (!ref) return;
-    const name = (auth.currentUser.displayName || "Main").slice(0, 20);
+    const authObj = window.auth || (typeof auth !== "undefined" ? auth : null);
+    const user = authObj?.currentUser || await waitForFirebaseUser();
+    const ref = await collectionRef(false);
+    if (!ref || !user) return;
+    const name = (user.displayName || "Main").slice(0, 20);
     await ref.add({
       name,
-      avatar: auth.currentUser.photoURL || DEFAULT_AVATARS[0],
+      avatar: user.photoURL || DEFAULT_AVATARS[0],
       kids: false,
       watchlist: [],
       continueWatching: [],
@@ -244,18 +292,28 @@
   window.saveProfile = async function () {
     const name = ($("newProfileName")?.value || "").trim().slice(0, 20);
     if (!name) return toast("Lagyan muna ng profile name.");
-    const ref = await collectionRef();
-    if (!ref) return toast("Login muna bago gumawa ng profile.");
-    const payload = { name, avatar: state.selectedAvatar, kids: !!$("kidsProfile")?.checked, updatedAt: Date.now() };
-    if (state.editingId) {
-      await ref.doc(state.editingId).set(payload, { merge: true });
-      toast("Profile updated.");
-    } else {
-      await ref.add({ ...payload, watchlist: [], continueWatching: [], createdAt: Date.now() });
-      toast("Profile created.");
+    const saveBtn = $("saveProfileBtn");
+    const originalText = state.editingId ? "Save Changes" : "Create Profile";
+    try {
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Saving..."; }
+      const ref = await collectionRef(true);
+      if (!ref) return;
+      const payload = { name, avatar: state.selectedAvatar, kids: !!$("kidsProfile")?.checked, updatedAt: Date.now() };
+      if (state.editingId) {
+        await ref.doc(state.editingId).set(payload, { merge: true });
+        toast("Profile updated.");
+      } else {
+        await ref.add({ ...payload, watchlist: [], continueWatching: [], createdAt: Date.now() });
+        toast("Profile created.");
+      }
+      closeAddProfile();
+      await loadProfiles();
+    } catch (err) {
+      console.error("CineFlex save profile error:", err);
+      toast("Hindi na-save ang profile. Check Firebase rules o internet.");
+    } finally {
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = originalText; }
     }
-    closeAddProfile();
-    await loadProfiles();
   };
   window.editProfile = function (id) {
     const profile = state.profiles.find(p => p.id === id);
@@ -264,7 +322,8 @@
   window.deleteProfile = async function (id) {
     if (state.profiles.length <= 1) return toast("Kailangan may kahit isang profile.");
     if (!confirm("Delete this profile?")) return;
-    const ref = await collectionRef();
+    const ref = await collectionRef(true);
+    if (!ref) return;
     await ref.doc(id).delete();
     if (localStorage.getItem("cineflex_profile") === id) localStorage.removeItem("cineflex_profile");
     toast("Profile deleted.");
@@ -293,5 +352,5 @@
     else loadProfiles();
   });
 
-  console.log("✅ CineFlex Profiles Premium v10 Loaded");
+  console.log("✅ CineFlex Profiles Premium v12 Loaded");
 })();

@@ -34,68 +34,17 @@ function continuePendingPlayback() {
 // LOGIN
 // ======================================
 
-function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-}
-
-function markGoogleLoginPending() {
-    localStorage.setItem("cineflex_google_redirect_pending", "1");
-    localStorage.setItem("cineflex_google_redirect_time", String(Date.now()));
-}
-
-function clearGoogleLoginPending() {
-    localStorage.removeItem("cineflex_google_redirect_pending");
-    localStorage.removeItem("cineflex_google_redirect_time");
-}
-
 async function googleLogin() {
 
-    const buttons = document.querySelectorAll('button[onclick="googleLogin()"], .drawer-auth-btn.google');
-    buttons.forEach(btn => { btn.disabled = true; btn.dataset.oldText = btn.innerHTML; btn.innerHTML = "Signing in..."; });
-
     try {
-        const provider = window.googleProvider || googleProvider;
-        provider.setCustomParameters({ prompt: "select_account" });
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-        // Try popup first even on Android. It often works better than redirect on mobile/PWA/WebView.
-        try {
-            const result = await auth.signInWithPopup(provider);
-            clearGoogleLoginPending();
-            if (result && result.user) {
-                window.currentUser = result.user;
-                window.dispatchEvent(new CustomEvent("cineflex-login", { detail: result.user }));
-            }
-            return;
-        } catch (popupErr) {
-            console.warn("Google popup failed, trying redirect:", popupErr);
-            const redirectCodes = [
-                "auth/popup-blocked",
-                "auth/popup-closed-by-user",
-                "auth/cancelled-popup-request",
-                "auth/operation-not-supported-in-this-environment"
-            ];
-            if (!isMobileDevice() && !redirectCodes.includes(popupErr.code)) throw popupErr;
-        }
-
-        markGoogleLoginPending();
-        await auth.signInWithRedirect(provider);
+        await auth.signInWithPopup(googleProvider);
 
     } catch (e) {
-        console.error("Google login error:", e);
-        clearGoogleLoginPending();
 
-        let msg = e.message || "Google login failed.";
-        if (e.code === "auth/unauthorized-domain") {
-            msg = "Hindi pa authorized ang domain sa Firebase. Sa Firebase Console > Authentication > Settings > Authorized domains, idagdag ang www.cineflex.online at cineflex.online.";
-        }
-        if (e.code === "auth/operation-not-allowed") {
-            msg = "Hindi pa naka-enable ang Google provider sa Firebase Authentication > Sign-in method.";
-        }
-        alert(msg);
+        console.error(e);
+        alert(e.message);
 
-    } finally {
-        buttons.forEach(btn => { btn.disabled = false; if (btn.dataset.oldText) btn.innerHTML = btn.dataset.oldText; });
     }
 
 }
@@ -359,8 +308,6 @@ auth.onAuthStateChanged(async (user) => {
 
     if (user) {
 
-        clearGoogleLoginPending();
-
         if (photo) {
 
             photo.src =
@@ -385,11 +332,6 @@ auth.onAuthStateChanged(async (user) => {
         if (logoutBtn)
             logoutBtn.style.display = "flex";
 
-        const drawerLoginActions = document.getElementById("drawerLoginActions");
-        const drawerAccountActions = document.getElementById("drawerAccountActions");
-        if (drawerLoginActions) drawerLoginActions.style.display = "none";
-        if (drawerAccountActions) drawerAccountActions.style.display = "block";
-
         closeLoginModal();
 
         if (typeof loadProfiles === "function") {
@@ -403,15 +345,6 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     else {
-
-        const pendingGoogleRedirect = localStorage.getItem("cineflex_google_redirect_pending") === "1";
-        const pendingTime = Number(localStorage.getItem("cineflex_google_redirect_time") || 0);
-        if (pendingGoogleRedirect && Date.now() - pendingTime < 120000) {
-            if (name) name.innerText = "Signing in...";
-            if (email) email.innerText = "Google login is loading";
-            if (badge) badge.innerText = "PLEASE WAIT";
-            return;
-        }
 
         if (photo)
             photo.src =
@@ -429,21 +362,8 @@ auth.onAuthStateChanged(async (user) => {
         if (logoutBtn)
             logoutBtn.style.display = "none";
 
-        const drawerLoginActions = document.getElementById("drawerLoginActions");
-        const drawerAccountActions = document.getElementById("drawerAccountActions");
-        if (drawerLoginActions) drawerLoginActions.style.display = "grid";
-        if (drawerAccountActions) drawerAccountActions.style.display = "none";
-
     }
 
 });
 
-
-window.addEventListener("cineflex-auth-error", function(e) {
-    const err = e.detail || {};
-    if (err.code === "auth/unauthorized-domain") {
-        alert("Firebase Authorized Domain kulang. Idagdag sa Firebase: www.cineflex.online at cineflex.online");
-    }
-});
-
-console.log("✅ Auth Engine Loaded v17");
+console.log("✅ Auth Engine Loaded");

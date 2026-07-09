@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="home.css?v=3.0">
-  <link rel="stylesheet" href="profiles.css?v=15.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
@@ -161,15 +160,9 @@ CINEFLEX PROFILE SELECTOR
 
     </div>
 
-    <div id="drawerLoginActions" class="drawer-login-actions">
-        <button class="drawer-auth-btn google" onclick="googleLogin()" type="button"><i class="fa-brands fa-google"></i> Login with Google</button>
-        <button class="drawer-auth-btn" onclick="openLoginModal()" type="button"><i class="fa-solid fa-envelope"></i> Email Login / Create Account</button>
-    </div>
-
-    <div id="drawerAccountActions" class="drawer-account-actions" style="display:none;">
-        <div class="drawer-item" onclick="createProfile()"><i class="fa-solid fa-user-plus"></i> Add Profile</div>
-        <div class="drawer-item" onclick="toggleManageProfiles()"><i class="fa-solid fa-user-pen"></i> Manage Profiles</div>
-        <div class="drawer-item" onclick="logout()" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+    <div class="drawer-item" onclick="logout()" id="logoutBtn" style="display:none;">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
     </div>
 
 </div>

@@ -924,11 +924,12 @@ console.log("Performance Engine Loaded");
 // ===========================
 
 async function saveUserData() {
-    if (!auth.currentUser || !currentProfile) return;
+    const activeProfile = localStorage.getItem("cineflex_profile") || (typeof currentProfile !== "undefined" ? currentProfile : null);
+    if (!auth.currentUser || !activeProfile) return;
     await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
-        .doc(currentProfile)
+        .doc(activeProfile)
         .set({
             watchlist: watchlist,
             continueWatching: continueWatching
@@ -936,11 +937,12 @@ async function saveUserData() {
 }
 
 async function loadUserData() {
-    if (!auth.currentUser || !currentProfile) return;
+    const activeProfile = localStorage.getItem("cineflex_profile") || (typeof currentProfile !== "undefined" ? currentProfile : null);
+    if (!auth.currentUser || !activeProfile) return;
     const doc = await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("profiles")
-        .doc(currentProfile)
+        .doc(activeProfile)
         .get();
 
     if (!doc.exists) {

@@ -256,7 +256,27 @@ function changeBanner(dir) {
     setBanner(trendingItems[currentBannerIndex]);
 }
 
+
+function ensureDetailsCloseButton() {
+  const modalContent = document.querySelector('#details-modal .modal-content');
+  if (!modalContent) return;
+  let btn = modalContent.querySelector('.cineflex-details-close');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.className = 'cineflex-details-close close-modal';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Close movie details');
+    btn.textContent = '✕';
+    btn.onclick = closeModal;
+    modalContent.prepend(btn);
+  }
+  btn.style.display = 'flex';
+  btn.style.visibility = 'visible';
+  btn.style.opacity = '1';
+}
+
 async function showDetails(item) {
+  ensureDetailsCloseButton();
   currentItem = item;
   const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
   currentTVState.type = type;
@@ -1257,3 +1277,5 @@ async function createProfile(){
     addDragHint();
   });
 })();
+
+window.addEventListener("DOMContentLoaded", ensureDetailsCloseButton);

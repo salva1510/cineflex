@@ -1176,3 +1176,67 @@ body.drawer-open { overflow: hidden; }
   .cf-server-tabs .srv-btn { padding: 7px 11px; font-size: .75rem; }
   .cf-mini-player { left: 12px !important; right: 12px !important; bottom: calc(84px + env(safe-area-inset-bottom)) !important; width: auto !important; }
 }
+
+
+/* =========================================================
+   CINEFLEX BUILD 22 - MOVIE POSTER CLOSE BUTTON HARD FIX
+   ========================================================= */
+#details-modal .modal-content {
+  position: relative !important;
+}
+
+#details-modal .cineflex-details-close {
+  position: fixed !important;
+  top: calc(14px + env(safe-area-inset-top)) !important;
+  right: calc(14px + env(safe-area-inset-right)) !important;
+  z-index: 999999 !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  background: rgba(0,0,0,.78) !important;
+  color: #fff !important;
+  font-size: 1.55rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.75), 0 0 0 2px rgba(229,9,20,.15) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateZ(0) !important;
+}
+
+#details-modal .cineflex-details-close:hover,
+#details-modal .cineflex-details-close:active {
+  background: #e50914 !important;
+  transform: scale(1.05) translateZ(0) !important;
+}
+
+#modal-player-container:fullscreen .cf-player-close,
+#modal-player-container:-webkit-full-screen .cf-player-close,
+#modal-player-container:-moz-full-screen .cf-player-close {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 640px) {
+  #details-modal .cineflex-details-close {
+    top: calc(10px + env(safe-area-inset-top)) !important;
+    right: 10px !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    font-size: 1.45rem !important;
+  }
+}

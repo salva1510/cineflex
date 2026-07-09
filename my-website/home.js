@@ -962,6 +962,170 @@ getRecommendedContent();
 }
 
 // ======================================
-// PROFILE ENGINE REMOVED FROM home.js
-// profiles.js is now the only profile controller to avoid login/profile conflicts.
+// CINEFLEX PROFILE ENGINE v1.0
 // ======================================
+
+let currentProfile = null;
+let profiles = [];
+
+// Load profiles from Firebase
+async function loadProfiles() {
+    if (!auth.currentUser) return;
+
+    const doc = await db.collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("profiles")
+        .get();
+
+    profiles = [];
+
+doc.forEach(d => {
+    profiles.push({
+        id: d.id,
+        ...d.data()
+    });
+});
+
+if (profiles.length === 0) {
+    await createDefaultProfile();
+    return;
+}
+
+    const savedProfile = localStorage.getItem("cineflex_profile");
+    if (savedProfile && profiles.find(p => p.id === savedProfile)) {
+        await selectProfile(savedProfile);
+    } else {
+        showProfileSelector();
+    }
+}
+
+// Create default profile
+async function createDefaultProfile() {
+    const name = auth.currentUser.displayName || "Profile";
+    await db.collection("users")
+.doc(auth.currentUser.uid)
+.collection("profiles")
+.add({
+
+    name:name,
+    avatar:auth.currentUser.photoURL ||
+    "https://ui-avatars.com/api/?name="+encodeURIComponent(name),
+
+    watchlist:[],
+    continueWatching:[]
+
+});
+    loadProfiles();
+}
+
+// Show Profile Screen
+function showProfileSelector(){
+    const selector = document.getElementById("profile-selector");
+    const container = document.getElementById("profiles");
+    if (!container || !selector) return;
+
+    container.innerHTML = "";
+    profiles.forEach(profile => {
+        container.innerHTML += `
+        <div class="profile-card" onclick="selectProfile('${profile.id}')">
+            <img src="${profile.avatar}">
+            <span>${profile.name}</span>
+        </div>
+        `;
+    });
+    selector.style.display = "flex";
+}
+
+// Select profile (Inayos na gamit ang ASYNC)
+async function selectProfile(id){
+    currentProfile = id;
+    localStorage.setItem("cineflex_profile", id);
+    
+    const selector = document.getElementById("profile-selector");
+    if (selector) selector.style.display = "none";
+
+    await loadUserData();
+    console.log("Current Profile:", id);
+}
+
+// Add profile
+async function createProfile(){
+    const name = prompt("Profile name");
+    if(!name) return;
+
+    await db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("profiles")
+    .add({
+        name: name,
+        avatar: "https://ui-avatars.com/api/?name=" + encodeURIComponent(name)
+    });
+
+    loadProfiles();
+}
+
+// =========================================================
+// CINEFLEX MAANGAS PREMIUM UI UPGRADE v3.0
+// Safe UI-only layer. Hindi nito binabago ang API/player logic.
+// =========================================================
+(function cineflexPremiumUI(){
+  const ready = (fn) => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn();
+
+  ready(() => {
+    const progress = document.getElementById('cf-progress-bar');
+    const navItems = Array.from(document.querySelectorAll('.bottom-nav .nav-item'));
+    const rows = Array.from(document.querySelectorAll('.row'));
+
+    const updateProgress = () => {
+      if (!progress) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progress.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    };
+
+    const updateNav = () => {
+      navItems.forEach(item => item.classList.remove('active'));
+      if (window.scrollY < 180 && navItems[0]) navItems[0].classList.add('active');
+    };
+
+    const revealRows = () => {
+      rows.forEach(row => {
+        const rect = row.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 70) row.classList.add('cf-visible');
+      });
+    };
+
+    window.addEventListener('scroll', () => {
+      updateProgress();
+      updateNav();
+      revealRows();
+    }, { passive: true });
+
+    document.addEventListener('click', (event) => {
+      const item = event.target.closest('.bottom-nav .nav-item');
+      if (!item) return;
+      navItems.forEach(nav => nav.classList.remove('active'));
+      item.classList.add('active');
+    });
+
+    const improveSearch = () => {
+      const input = document.getElementById('searchInput');
+      if (!input) return;
+      input.setAttribute('autocomplete', 'off');
+      input.setAttribute('inputmode', 'search');
+      input.setAttribute('aria-label', 'Search CineFlex');
+    };
+
+    const addDragHint = () => {
+      document.querySelectorAll('.scroller').forEach(scroller => {
+        scroller.setAttribute('aria-label', 'Swipe movie row');
+      });
+    };
+
+    updateProgress();
+    updateNav();
+    revealRows();
+    improveSearch();
+    addDragHint();
+  });
+})();

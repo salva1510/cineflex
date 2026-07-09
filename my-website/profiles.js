@@ -3,13 +3,17 @@
 // Netflix-style profile selection with Firestore sync
 // ======================================
 
-let currentProfile = null;
-let profiles = [];
-let profilesLoadedForUser = null;
+var currentProfile = window.currentProfile || null;
+var profiles = window.profiles || [];
+var profilesLoadedForUser = null;
+window.currentProfile = currentProfile;
+window.profiles = profiles;
 
 function resetProfiles() {
     currentProfile = null;
     profiles = [];
+    window.currentProfile = null;
+    window.profiles = profiles;
     profilesLoadedForUser = null;
     localStorage.removeItem("cineflex_profile");
     localStorage.removeItem("cineflex_profile_name");
@@ -49,7 +53,7 @@ function saveProfileLocal(profile) {
 }
 
 async function ensureDefaultProfile() {
-    if (!auth.currentUser) return null;
+    if (typeof auth === "undefined" || !auth.currentUser) return null;
 
     const user = auth.currentUser;
     const defaultName = user.displayName || (user.email ? user.email.split("@")[0] : "Main");
@@ -75,7 +79,7 @@ async function ensureDefaultProfile() {
 async function loadProfiles(options = {}) {
     const forceSelector = !!options.forceSelector;
 
-    if (!auth.currentUser) {
+    if (typeof auth === "undefined" || !auth.currentUser) {
         resetProfiles();
         return;
     }
@@ -89,6 +93,7 @@ async function loadProfiles(options = {}) {
             .get();
 
         profiles = [];
+        window.profiles = profiles;
         snap.forEach(doc => profiles.push({ id: doc.id, ...doc.data() }));
 
         if (profiles.length === 0) {
@@ -180,20 +185,21 @@ async function selectProfile(id, options = {}) {
 }
 
 function switchProfile() {
-    if (!auth.currentUser) {
+    if (typeof auth === "undefined" || !auth.currentUser) {
         if (typeof openLoginModal === "function") openLoginModal();
         return;
     }
 
     localStorage.removeItem("cineflex_profile");
     currentProfile = null;
+    window.currentProfile = null;
     renderProfiles();
     showProfileSelector();
     if (typeof closeMenuDrawer === "function") closeMenuDrawer();
 }
 
 function openAddProfile() {
-    if (!auth.currentUser) {
+    if (typeof auth === "undefined" || !auth.currentUser) {
         if (typeof openLoginModal === "function") openLoginModal();
         return;
     }
@@ -215,7 +221,7 @@ function closeAddProfile() {
 }
 
 async function saveProfile() {
-    if (!auth.currentUser) return;
+    if (typeof auth === "undefined" || !auth.currentUser) return;
 
     const input = document.getElementById("newProfileName");
     const kidsInput = document.getElementById("kidsProfile");
@@ -261,7 +267,7 @@ async function saveProfile() {
 }
 
 async function deleteProfile(id) {
-    if (!auth.currentUser) return;
+    if (typeof auth === "undefined" || !auth.currentUser) return;
 
     if (profiles.length <= 1) {
         alert("Kailangan may at least 1 profile.");
@@ -295,7 +301,7 @@ async function deleteProfile(id) {
 }
 
 async function renameProfile(id) {
-    if (!auth.currentUser) return;
+    if (typeof auth === "undefined" || !auth.currentUser) return;
 
     const profile = profiles.find(p => p.id === id);
     if (!profile) return;
@@ -322,7 +328,7 @@ async function renameProfile(id) {
     }
 }
 
-window.addEventListener("cineflex-login", () => loadProfiles());
+window.addEventListener("cineflex-login", () => { if (typeof auth !== "undefined" && auth.currentUser) loadProfiles(); });
 window.addEventListener("cineflex-logout", resetProfiles);
 
 document.addEventListener("DOMContentLoaded", () => {

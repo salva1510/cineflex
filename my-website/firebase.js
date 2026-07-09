@@ -22,8 +22,13 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Expose Firebase services for other scripts loaded after this file
+window.auth = auth;
+window.db = db;
+
 // Google Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+window.googleProvider = googleProvider;
 
 googleProvider.setCustomParameters({
     prompt: "select_account"

@@ -7,7 +7,7 @@ let pendingPlayback = null;
 let authBusy = false;
 
 function isLoggedIn() {
-    return !!(window.auth && auth.currentUser);
+    return !!(typeof auth !== "undefined" && auth.currentUser);
 }
 
 function requireLogin(callback) {
@@ -178,7 +178,7 @@ async function logout() {
         if (typeof hideProfileSelector === "function") hideProfileSelector();
 
         await auth.signOut();
-        openLoginModal();
+        // Login modal should open only when user plays video or taps Login.
     } catch (error) {
         console.error("Logout error:", error);
         alert("Hindi natuloy ang logout. Pakisubukan ulit.");
@@ -272,7 +272,7 @@ function updateAccountUI(user, profile = null) {
 }
 
 async function handleRedirectLoginResult() {
-    if (!auth || !auth.getRedirectResult) return;
+    if (typeof auth === "undefined" || !auth.getRedirectResult) return;
 
     try {
         const result = await auth.getRedirectResult();
@@ -286,7 +286,7 @@ async function handleRedirectLoginResult() {
     }
 }
 
-if (window.auth) {
+if (typeof auth !== "undefined") {
     handleRedirectLoginResult();
 
     auth.onAuthStateChanged(async (user) => {

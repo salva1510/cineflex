@@ -282,6 +282,29 @@ CINEFLEX PROFILE SELECTOR
             <button id="modal-download-btn" class="action-btn-large" onclick="triggerDownload()" style="background: rgba(46, 204, 113, 0.1); border-color: rgba(46, 204, 113, 0.2); color: #2ecc71;"><i class="fa-solid fa-download"></i> Download</button>
         </div>
 
+        
+
+        <section id="cf-comments-box" class="cf-comments-box" aria-label="CineFlex comments">
+            <div class="cf-comments-head">
+                <h3><i class="fa-solid fa-comments"></i> Community Comments</h3>
+                <span id="cf-comments-count" class="cf-comments-count">0 comments</span>
+            </div>
+            <p id="cf-comment-login-note" class="cf-comment-login-note">Mag-login muna para makapag-comment. Puwede pa ring basahin ng lahat ang comments.</p>
+            <div class="cf-comment-form">
+                <img id="cf-comment-user-avatar" class="cf-comment-avatar" src="icon-192.png" alt="User">
+                <div class="cf-comment-input-wrap">
+                    <textarea id="cf-comment-input" class="cf-comment-input" maxlength="500" placeholder="Magkwento tungkol sa movie na ito... maganda ba? sulit ba panoorin?"></textarea>
+                    <div class="cf-comment-actions">
+                        <span class="cf-comment-hint">Max 500 characters • be respectful</span>
+                        <button id="cf-comment-send" class="cf-comment-send" type="button" onclick="cfPostComment()"><i class="fa-solid fa-paper-plane"></i> Post</button>
+                    </div>
+                </div>
+            </div>
+            <div id="cf-comments-list" class="cf-comments-list">
+                <div class="cf-comment-empty">Loading comments...</div>
+            </div>
+        </section>
+
         <div class="cast-section">
             <h4>Top Cast</h4>
             <div class="cast-scroller" id="modal-cast"></div>

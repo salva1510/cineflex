@@ -242,6 +242,7 @@ async function showDetails(item) {
       document.body.style.overflow = "hidden";
       document.querySelector('.modal-content').scrollTo({ top: 0 });
     }
+    if (window.cfLoadCommentsForCurrent) setTimeout(window.cfLoadCommentsForCurrent, 250);
   } catch (err) { console.error("Details Error:", err); }
 }
 
@@ -1507,4 +1508,199 @@ async function createProfile(){
     startTimers();
     loadRemoteTrending();
   }
+})();
+
+// ===========================================
+// CINEFLEX COMMUNITY COMMENTS v1
+// Real-time comments per movie/series using Firestore
+// ===========================================
+(function(){
+  let cfCommentsUnsub = null;
+  let cfActiveCommentKey = null;
+
+  function cfHasFirestore(){ return typeof db !== 'undefined' && db && typeof db.collection === 'function'; }
+  function cfGetUser(){
+    try { return (typeof auth !== 'undefined' && auth) ? auth.currentUser : (window.currentUser || null); }
+    catch(e){ return window.currentUser || null; }
+  }
+  function cfTitleKey(item){
+    if(!item) return null;
+    const type = currentTVState && currentTVState.type ? currentTVState.type : ((item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie');
+    return `${type}_${item.id}`;
+  }
+  function cfEscape(value){
+    return String(value || '')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+  function cfRelativeTime(date){
+    if(!date) return 'now';
+    const seconds = Math.max(1, Math.floor((Date.now() - date.getTime()) / 1000));
+    if(seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if(minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if(hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if(days < 7) return `${days}d ago`;
+    return date.toLocaleDateString();
+  }
+  function cfUpdateCommentAuthUI(){
+    const user = cfGetUser();
+    const note = document.getElementById('cf-comment-login-note');
+    const input = document.getElementById('cf-comment-input');
+    const send = document.getElementById('cf-comment-send');
+    const avatar = document.getElementById('cf-comment-user-avatar');
+    if(note) note.style.display = user ? 'none' : 'block';
+    if(input){
+      input.disabled = !user;
+      input.placeholder = user ? 'Magkwento tungkol sa movie na ito... maganda ba? sulit ba panoorin?' : 'Mag-login muna para makapag-comment...';
+    }
+    if(send) send.disabled = !user;
+    if(avatar) avatar.src = (user && user.photoURL) ? user.photoURL : 'icon-192.png';
+  }
+  function cfRenderComments(docs){
+    const list = document.getElementById('cf-comments-list');
+    const count = document.getElementById('cf-comments-count');
+    if(count) count.textContent = `${docs.length} comment${docs.length === 1 ? '' : 's'}`;
+    if(!list) return;
+    if(!docs.length){
+      list.innerHTML = '<div class="cf-comment-empty">Wala pang comments. Ikaw ang unang magkwento kung maganda ang movie na ito.</div>';
+      return;
+    }
+    list.innerHTML = docs.map(doc => {
+      const c = doc.data ? doc.data() : doc;
+      const created = c.createdAt && c.createdAt.toDate ? c.createdAt.toDate() : (c.createdAtMs ? new Date(c.createdAtMs) : null);
+      const avatar = c.photoURL || 'icon-192.png';
+      return `<div class="cf-comment-item">
+        <img class="cf-comment-avatar" src="${cfEscape(avatar)}" alt="">
+        <div class="cf-comment-body">
+          <div class="cf-comment-meta">
+            <span class="cf-comment-name">${cfEscape(c.displayName || 'CineFlex User')}</span>
+            <span class="cf-comment-time">${cfEscape(cfRelativeTime(created))}</span>
+          </div>
+          <div class="cf-comment-text">${cfEscape(c.text)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.cfLoadCommentsForCurrent = function(){
+    const box = document.getElementById('cf-comments-box');
+    const list = document.getElementById('cf-comments-list');
+    const count = document.getElementById('cf-comments-count');
+    if(!box || !currentItem) return;
+    cfUpdateCommentAuthUI();
+    const key = cfTitleKey(currentItem);
+    cfActiveCommentKey = key;
+    if(count) count.textContent = 'Loading...';
+    if(list) list.innerHTML = '<div class="cf-comment-empty">Loading comments...</div>';
+
+    if(cfCommentsUnsub){
+      try { cfCommentsUnsub(); } catch(e) {}
+      cfCommentsUnsub = null;
+    }
+    if(!cfHasFirestore()){
+      if(list) list.innerHTML = '<div class="cf-comment-empty">Comments need Firebase Firestore connection.</div>';
+      return;
+    }
+    try {
+      cfCommentsUnsub = db.collection('cineflex_comments').doc(key).collection('items')
+        .orderBy('createdAtMs', 'desc')
+        .limit(50)
+        .onSnapshot((snap) => {
+          if(cfActiveCommentKey !== key) return;
+          const docs = [];
+          snap.forEach(d => docs.push(d));
+          cfRenderComments(docs);
+        }, (err) => {
+          console.warn('CineFlex comments read blocked:', err.message || err);
+          if(list) list.innerHTML = '<div class="cf-comment-empty">Hindi ma-load ang comments. I-check ang Firestore rules.</div>';
+        });
+    } catch(e){
+      console.warn('CineFlex comments error:', e.message || e);
+      if(list) list.innerHTML = '<div class="cf-comment-empty">Hindi ma-load ang comments ngayon.</div>';
+    }
+  };
+
+  window.cfPostComment = async function(){
+    const user = cfGetUser();
+    const input = document.getElementById('cf-comment-input');
+    const send = document.getElementById('cf-comment-send');
+    if(!currentItem || !input) return;
+    if(!user){
+      cfUpdateCommentAuthUI();
+      if(typeof openLoginModal === 'function') openLoginModal();
+      return;
+    }
+    const text = input.value.trim().replace(/\s+\n/g, '\n');
+    if(!text){ input.focus(); return; }
+    if(text.length > 500){ alert('Hanggang 500 characters lang muna ang comment.'); return; }
+    if(!cfHasFirestore()){ alert('Firebase Firestore is not ready.'); return; }
+    const key = cfTitleKey(currentItem);
+    const type = currentTVState && currentTVState.type ? currentTVState.type : 'movie';
+    try {
+      if(send) send.disabled = true;
+      await db.collection('cineflex_comments').doc(key).collection('items').add({
+        titleKey: key,
+        tmdbId: currentItem.id,
+        type,
+        title: currentItem.title || currentItem.name || 'Untitled',
+        text,
+        uid: user.uid,
+        displayName: user.displayName || (user.email ? user.email.split('@')[0] : 'CineFlex User'),
+        photoURL: user.photoURL || '',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAtMs: Date.now(),
+        likes: 0,
+        status: 'visible'
+      });
+      await db.collection('cineflex_comment_stats').doc(key).set({
+        titleKey: key,
+        tmdbId: currentItem.id,
+        type,
+        title: currentItem.title || currentItem.name || 'Untitled',
+        lastCommentAtMs: Date.now(),
+        commentCount: firebase.firestore.FieldValue.increment(1)
+      }, { merge:true });
+      input.value = '';
+    } catch(e){
+      console.warn('CineFlex comment post blocked:', e.message || e);
+      alert('Hindi na-post ang comment. I-check ang Firestore rules o internet connection.');
+    } finally {
+      cfUpdateCommentAuthUI();
+    }
+  };
+
+  // Patch showDetails and closeModal safely without touching the player logic.
+  const patchComments = () => {
+    if(typeof window.showDetails === 'function' && !window.showDetails.__cfCommentsPatched){
+      const oldShow = window.showDetails;
+      const patchedShow = async function(){
+        const result = await oldShow.apply(this, arguments);
+        setTimeout(() => window.cfLoadCommentsForCurrent && window.cfLoadCommentsForCurrent(), 250);
+        return result;
+      };
+      patchedShow.__cfCommentsPatched = true;
+      window.showDetails = patchedShow;
+    }
+    if(typeof window.closeModal === 'function' && !window.closeModal.__cfCommentsPatched){
+      const oldClose = window.closeModal;
+      const patchedClose = function(){
+        if(cfCommentsUnsub){ try { cfCommentsUnsub(); } catch(e){} cfCommentsUnsub = null; }
+        cfActiveCommentKey = null;
+        return oldClose.apply(this, arguments);
+      };
+      patchedClose.__cfCommentsPatched = true;
+      window.closeModal = patchedClose;
+    }
+  };
+
+  window.addEventListener('cineflex-login', () => setTimeout(() => { cfUpdateCommentAuthUI(); window.cfLoadCommentsForCurrent && window.cfLoadCommentsForCurrent(); }, 300));
+  window.addEventListener('cineflex-logout', () => setTimeout(cfUpdateCommentAuthUI, 300));
+  window.addEventListener('load', () => { patchComments(); cfUpdateCommentAuthUI(); setTimeout(patchComments, 1200); });
+  if(document.readyState !== 'loading'){ patchComments(); cfUpdateCommentAuthUI(); }
 })();

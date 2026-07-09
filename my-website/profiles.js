@@ -1,5 +1,5 @@
 // =========================================================
-// CINEFLEX PROFILES — NETFLIX CREATE PROFILE PREMIUM v12
+// CINEFLEX PROFILES — NETFLIX PROFILE MANAGEMENT v14
 // Safe drop-in: works on profiles.html and index.html.
 // =========================================================
 (function () {
@@ -23,7 +23,8 @@
     profiles: [],
     manageMode: false,
     editingId: null,
-    selectedAvatar: DEFAULT_AVATARS[0]
+    selectedAvatar: DEFAULT_AVATARS[0],
+    defaultProfileId: localStorage.getItem("cineflex_default_profile") || ""
   };
 
   const $ = (id) => document.getElementById(id);
@@ -51,7 +52,7 @@
           <p class="modal-copy">Gumawa ng profile na parang Netflix: sariling avatar, kids mode, watchlist at continue watching.</p>
           <div class="profile-editor-row">
             <div class="selected-avatar-wrap"><img id="selectedAvatarPreview" class="selected-avatar" alt="Selected avatar"><span id="kidsBadgePreview" class="kids-badge-preview hidden">KIDS</span></div>
-            <div class="profile-fields"><input type="text" id="newProfileName" placeholder="Profile name" maxlength="20" autocomplete="off"><label class="kids-option"><input type="checkbox" id="kidsProfile"><span>Kids Profile</span></label></div>
+            <div class="profile-fields"><input type="text" id="newProfileName" placeholder="Profile name" maxlength="20" autocomplete="off"><label class="kids-option"><input type="checkbox" id="kidsProfile"><span>Kids Profile</span></label><label class="kids-option"><input type="checkbox" id="defaultProfile"><span>Default Profile</span></label></div>
           </div>
           <div class="avatar-title">Choose avatar</div>
           <div id="avatarPicker" class="avatar-picker"></div>
@@ -76,7 +77,7 @@
     if (box && !box.querySelector(".profile-actions")) {
       const oldButton = Array.from(box.children).find(el => el.tagName === "BUTTON");
       if (oldButton) oldButton.remove();
-      box.insertAdjacentHTML("beforeend", `<div class="profile-actions"><button class="cf-profile-btn ghost" onclick="toggleManageProfiles()"><i class="fa-solid fa-pen"></i> Manage Profiles</button><button class="cf-profile-btn" onclick="createProfile()"><i class="fa-solid fa-plus"></i> Add Profile</button></div>`);
+      box.insertAdjacentHTML("beforeend", `<div class="profile-actions"><button class="cf-profile-btn ghost" onclick="toggleManageProfiles()" id="manageProfilesBtn"><i class="fa-solid fa-pen"></i> Manage Profiles</button><button class="cf-profile-btn" onclick="createProfile()"><i class="fa-solid fa-plus"></i> Add Profile</button></div>`);
     }
   }
 
@@ -109,7 +110,7 @@
           <img src="${avatar}" alt="${name}">
           <span>${name}</span>
           ${profile.kids ? '<em>KIDS</em>' : ''}
-          ${state.manageMode ? `<b onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></b>` : ''}
+          ${state.manageMode ? `<b title="Edit" onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></b><b title="Delete" class="delete" onclick="event.stopPropagation(); deleteProfile('${profile.id}')"><i class="fa-solid fa-trash"></i></b><b title="Default" class="star ${profile.id === state.defaultProfileId ? 'active' : ''}" onclick="event.stopPropagation(); setDefaultProfile('${profile.id}')"><i class="fa-solid fa-star"></i></b>` : ''}
         </button>`);
     });
     const addBtn = document.querySelector(".drawer-add-profile");
@@ -180,10 +181,13 @@
         await createDefaultProfile();
         return;
       }
+      const firebaseDefault = state.profiles.find(p => p.isDefault)?.id;
+      state.defaultProfileId = localStorage.getItem("cineflex_default_profile") || firebaseDefault || state.profiles[0].id;
+      localStorage.setItem("cineflex_default_profile", state.defaultProfileId);
       const saved = localStorage.getItem("cineflex_profile");
       renderDrawerProfiles();
       if (!isProfilesPage()) {
-        const usableId = (saved && state.profiles.some(p => p.id === saved)) ? saved : state.profiles[0].id;
+        const usableId = (saved && state.profiles.some(p => p.id === saved)) ? saved : (state.defaultProfileId || state.profiles[0].id);
         await selectProfile(usableId, true);
         return;
       }
@@ -207,7 +211,8 @@
       watchlist: [],
       continueWatching: [],
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      isDefault: true
     });
     await loadProfiles();
   }
@@ -230,7 +235,8 @@
         <div class="profile-card" onclick="selectProfile('${profile.id}')">
           <img class="profile-avatar" src="${avatar}" alt="${name}">
           ${profile.kids ? '<span class="profile-kids-pill">KIDS</span>' : ''}
-          ${state.manageMode ? `<div class="profile-manage-actions"><button class="mini-action" onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></button><button class="mini-action" onclick="event.stopPropagation(); deleteProfile('${profile.id}')"><i class="fa-solid fa-trash"></i></button></div>` : ''}
+          ${profile.id === state.defaultProfileId ? '<span class="profile-default-pill"><i class="fa-solid fa-star"></i> DEFAULT</span>' : ''}
+          ${state.manageMode ? `<div class="profile-manage-actions"><button class="mini-action" title="Edit" onclick="event.stopPropagation(); editProfile('${profile.id}')"><i class="fa-solid fa-pen"></i></button><button class="mini-action danger" title="Delete" onclick="event.stopPropagation(); deleteProfile('${profile.id}')"><i class="fa-solid fa-trash"></i></button><button class="mini-action gold" title="Set default" onclick="event.stopPropagation(); setDefaultProfile('${profile.id}')"><i class="fa-solid fa-star"></i></button></div>` : ''}
           <div class="profile-name">${name}</div>
         </div>`);
     });
@@ -267,6 +273,7 @@
     $("saveProfileBtn").textContent = profile ? "Save Changes" : "Create Profile";
     $("newProfileName").value = profile?.name || "";
     $("kidsProfile").checked = !!profile?.kids;
+    if ($("defaultProfile")) $("defaultProfile").checked = profile ? (profile.id === state.defaultProfileId || !!profile.isDefault) : false;
     $("kidsBadgePreview").classList.toggle("hidden", !$("kidsProfile").checked);
     renderAvatarPicker();
     $("addProfileModal").classList.remove("hidden");
@@ -298,12 +305,28 @@
       if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Saving..."; }
       const ref = await collectionRef(true);
       if (!ref) return;
-      const payload = { name, avatar: state.selectedAvatar, kids: !!$("kidsProfile")?.checked, updatedAt: Date.now() };
+      const makeDefault = !!$("defaultProfile")?.checked;
+      const payload = { name, avatar: state.selectedAvatar, kids: !!$("kidsProfile")?.checked, updatedAt: Date.now(), isDefault: makeDefault };
+      if (makeDefault) {
+        const snap = await ref.get();
+        const jobs = [];
+        snap.forEach(doc => jobs.push(ref.doc(doc.id).set({ isDefault: false }, { merge: true })));
+        await Promise.all(jobs);
+      }
       if (state.editingId) {
         await ref.doc(state.editingId).set(payload, { merge: true });
+        if (makeDefault) {
+          state.defaultProfileId = state.editingId;
+          localStorage.setItem("cineflex_default_profile", state.editingId);
+        }
         toast("Profile updated.");
       } else {
-        await ref.add({ ...payload, watchlist: [], continueWatching: [], createdAt: Date.now() });
+        const newDoc = await ref.add({ ...payload, watchlist: [], continueWatching: [], createdAt: Date.now() });
+        if (makeDefault || state.profiles.length === 0) {
+          state.defaultProfileId = newDoc.id;
+          localStorage.setItem("cineflex_default_profile", newDoc.id);
+          await ref.doc(newDoc.id).set({ isDefault: true }, { merge: true });
+        }
         toast("Profile created.");
       }
       closeAddProfile();
@@ -320,17 +343,46 @@
     if (profile) openEditor(profile);
   };
   window.deleteProfile = async function (id) {
-    if (state.profiles.length <= 1) return toast("Kailangan may kahit isang profile.");
-    if (!confirm("Delete this profile?")) return;
+    const profile = state.profiles.find(p => p.id === id);
+    if (!profile) return;
+    if (state.profiles.length <= 1) return toast("Hindi puwedeng burahin ang huling profile.");
+    const ok = confirm(`Delete profile "${profile.name || 'Profile'}"?
+
+Mawawala ang profile data nito sa account mo.`);
+    if (!ok) return;
     const ref = await collectionRef(true);
     if (!ref) return;
     await ref.doc(id).delete();
     if (localStorage.getItem("cineflex_profile") === id) localStorage.removeItem("cineflex_profile");
+    if (state.defaultProfileId === id) {
+      const nextProfile = state.profiles.find(p => p.id !== id);
+      state.defaultProfileId = nextProfile?.id || "";
+      if (state.defaultProfileId) {
+        localStorage.setItem("cineflex_default_profile", state.defaultProfileId);
+        await ref.doc(state.defaultProfileId).set({ isDefault: true }, { merge: true });
+      } else {
+        localStorage.removeItem("cineflex_default_profile");
+      }
+    }
     toast("Profile deleted.");
+    await loadProfiles();
+  };
+  window.setDefaultProfile = async function (id) {
+    const ref = await collectionRef(true);
+    if (!ref) return;
+    const snap = await ref.get();
+    const jobs = [];
+    snap.forEach(doc => jobs.push(ref.doc(doc.id).set({ isDefault: doc.id === id }, { merge: true })));
+    await Promise.all(jobs);
+    state.defaultProfileId = id;
+    localStorage.setItem("cineflex_default_profile", id);
+    toast("Default profile set.");
     await loadProfiles();
   };
   window.toggleManageProfiles = function () {
     state.manageMode = !state.manageMode;
+    const manageBtn = $("manageProfilesBtn");
+    if (manageBtn) manageBtn.innerHTML = state.manageMode ? '<i class="fa-solid fa-check"></i> Done' : '<i class="fa-solid fa-pen"></i> Manage Profiles';
     renderDrawerProfiles();
     renderProfiles();
   };
@@ -352,5 +404,5 @@
     else loadProfiles();
   });
 
-  console.log("✅ CineFlex Profiles Premium v12 Loaded");
+  console.log("✅ CineFlex Profiles Management v14 Loaded");
 })();

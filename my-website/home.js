@@ -13,6 +13,19 @@ let currentTVState = { season: 1, episode: 1, currentEpNum: 1, type: 'movie' };
 let activeServer = 1;
 let cfPlayerHideTimer = null;
 let cfPlayerIsMini = false;
+let cfPlayerLoadTimer = null;
+
+function hidePlayerLoader() {
+  const loader = document.getElementById("cf-player-loading");
+  if (loader) loader.classList.add("hidden");
+}
+
+function startPlayerLoaderFallback() {
+  clearTimeout(cfPlayerLoadTimer);
+  cfPlayerLoadTimer = setTimeout(() => {
+    hidePlayerLoader();
+  }, 6500);
+}
 
 // --- LOCAL STORAGE DATA STORES ---
 let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
@@ -120,6 +133,7 @@ function showPlayerShell() {
     cfPlayerIsMini = false;
   }
   if (loader) loader.classList.remove("hidden");
+  startPlayerLoaderFallback();
   if (title && currentItem) title.textContent = currentItem.title || currentItem.name || "CineFlex Player";
   revealPlayerControls();
 }
@@ -446,6 +460,7 @@ function updateVideoSource() {
     if (!iframe || !currentItem) return;
     const loader = document.getElementById("cf-player-loading");
     if (loader) loader.classList.remove("hidden");
+    startPlayerLoaderFallback();
 
     const movieId = currentItem.id;
     const season = currentTVState.season;
@@ -465,7 +480,17 @@ function updateVideoSource() {
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("webkitallowfullscreen", "true");
     iframe.setAttribute("playsinline", "true");
-    iframe.setAttribute("sandbox", "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation allow-downloads");
+    // Do not sandbox the external player. Some embed providers need redirects/popups/scripts.
+    iframe.removeAttribute("sandbox");
+
+    iframe.onload = () => {
+        clearTimeout(cfPlayerLoadTimer);
+        hidePlayerLoader();
+    };
+    iframe.onerror = () => {
+        clearTimeout(cfPlayerLoadTimer);
+        hidePlayerLoader();
+    };
     
     iframe.src = finalUrl;
 }
@@ -846,6 +871,12 @@ const iframePlayer = document.getElementById("modal-video-iframe");
 if (iframePlayer) {
     iframePlayer.addEventListener("load", () => {
         console.log("Player Loaded");
+        clearTimeout(cfPlayerLoadTimer);
+        hidePlayerLoader();
+    });
+    iframePlayer.addEventListener("error", () => {
+        clearTimeout(cfPlayerLoadTimer);
+        hidePlayerLoader();
     });
 }
 

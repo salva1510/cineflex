@@ -468,28 +468,11 @@ function displayCards(data, containerId) {
         trendingBadge = `<div class="netflix-num-badge">${index + 1}</div>`;
     }
 
-    const cardKey = window.CFCardUI ? window.CFCardUI.register(item) : `legacy-${item.id}`;
-    const title = (item.title || item.name || 'Untitled').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const year = (item.release_date || item.first_air_date || '').slice(0, 4);
-    const rating = Number(item.vote_average || 0).toFixed(1);
     return `
-    <article class="${isNetflix ? 'netflix-item-container cf-media-card cf-rank-card' : 'card cf-media-card'}" tabindex="0" data-cf-card-key="${cardKey}" aria-label="${title}" onclick="CFCardUI.open('${cardKey}')">
+    <div class="${isNetflix ? 'netflix-item-container' : 'card'}" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
         ${trendingBadge}
-        <div class="cf-card-media">
-          <div class="cf-card-skeleton" aria-hidden="true"></div>
-          <img src="${IMG_URL}${item.poster_path}" loading="lazy" decoding="async" class="${isNetflix ? 'netflix-num-poster' : ''}" alt="${title} poster">
-          <div class="cf-card-badge-row"><span class="cf-card-rating"><i class="fa-solid fa-star"></i> ${rating}</span>${index < 3 ? '<span class="cf-card-trending">HOT</span>' : ''}</div>
-          <div class="cf-card-progress" hidden><span></span></div>
-        </div>
-        <div class="cf-card-peek" aria-hidden="true">
-          <div class="cf-card-peek-copy"><strong>${title}</strong><small>${year || 'Featured'} · ${item.media_type === 'tv' || item.first_air_date ? 'Series' : 'Movie'}</small></div>
-          <div class="cf-card-actions">
-            <button type="button" class="cf-card-action cf-card-play" aria-label="Play ${title}" onclick="event.stopPropagation(); CFCardUI.play('${cardKey}')"><i class="fa-solid fa-play"></i></button>
-            <button type="button" class="cf-card-action" aria-label="Add ${title} to My List" onclick="event.stopPropagation(); CFCardUI.toggleList('${cardKey}', this)"><i class="fa-solid fa-plus"></i></button>
-            <button type="button" class="cf-card-action" aria-label="More information about ${title}" onclick="event.stopPropagation(); CFCardUI.open('${cardKey}')"><i class="fa-solid fa-circle-info"></i></button>
-          </div>
-        </div>
-    </article>`;
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy" class="${isNetflix ? 'netflix-num-poster' : ''}">
+    </div>`;
   }).join('');
 
   const viewAllCard = document.createElement('div');
@@ -506,24 +489,16 @@ function displayDramaBoxCards(data, containerId) {
   
   container.innerHTML = data.filter(i => i.poster_path).map((item) => {
     const simulatedEpisodes = 60 + (item.id % 40);
-    const cardKey = window.CFCardUI ? window.CFCardUI.register(item) : `legacy-${item.id}`;
-    const title = (item.title || item.name || 'Untitled').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return `
-    <article class="card dramabox-card cf-media-card" tabindex="0" data-cf-card-key="${cardKey}" onclick="CFCardUI.open('${cardKey}')">
-        <div class="cf-card-media">
-          <div class="cf-card-skeleton" aria-hidden="true"></div>
-          <img src="${IMG_URL}${item.poster_path}" loading="lazy" decoding="async" alt="${title} poster">
-          <div class="card-badges"><span class="badge-episodes">Ep. ${simulatedEpisodes}</span></div>
+    <div class="card dramabox-card" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy">
+        <div class="card-badges">
+            <span class="badge-episodes">Ep. ${simulatedEpisodes}</span>
         </div>
-        <div class="cf-card-peek" aria-hidden="true">
-          <div class="cf-card-peek-copy"><strong>${title}</strong><small>Mini Drama · ${simulatedEpisodes} episodes</small></div>
-          <div class="cf-card-actions">
-            <button type="button" class="cf-card-action cf-card-play" onclick="event.stopPropagation(); CFCardUI.play('${cardKey}')" aria-label="Play ${title}"><i class="fa-solid fa-play"></i></button>
-            <button type="button" class="cf-card-action" onclick="event.stopPropagation(); CFCardUI.toggleList('${cardKey}', this)" aria-label="Add ${title} to My List"><i class="fa-solid fa-plus"></i></button>
-            <button type="button" class="cf-card-action" onclick="event.stopPropagation(); CFCardUI.open('${cardKey}')" aria-label="More information"><i class="fa-solid fa-circle-info"></i></button>
-          </div>
+        <div class="card-info-overlay">
+            <p class="card-title">${item.title || item.name}</p>
         </div>
-    </article>`;
+    </div>`;
   }).join('');
 
   const viewAllCard = document.createElement('div');

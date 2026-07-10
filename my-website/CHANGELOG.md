@@ -24,3 +24,12 @@
 - Added hero metadata and a functional per-profile My List action.
 - Added mobile-specific hero layout and reduced-motion support.
 - Removed the old duplicated hero bridge from `home.js`.
+
+## Build 2.1 — Smart Discovery & Retention
+- Added personalized “Para Sa’yo” recommendations based on local profile activity.
+- Upgraded Continue Watching cards with progress, resume labels, match scores, and landscape artwork.
+- Added CineFlex Daily Pick.
+- Added local, privacy-friendly taste signals and playback-session progress fallback.
+- Preserved authentication, profiles, comments, ratings, player, and Firebase logic.
+
+Note: The external iframe player is cross-origin, so exact playback time cannot always be read directly. Build 2.1 safely estimates progress from active viewing sessions unless the provider exposes a compatible player API.

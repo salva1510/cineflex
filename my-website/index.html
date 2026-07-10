@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/core/identity.css?v=2.1">
   <link rel="stylesheet" href="css/modules/hero.css?v=2.2">
   <link rel="stylesheet" href="css/core/signature.css?v=1.0">
+  <link rel="stylesheet" href="css/modules/personalized.css?v=2.1">
   <link rel="stylesheet" href="profiles.css?v=15.1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -238,7 +239,17 @@ CINEFLEX PROFILE SELECTOR
   <button class="cf-dock-chip" data-target="#kids-section" type="button">✨ Family Time</button>
 </section>
 
+<div id="cf-daily-pick" class="cf-daily-pick" aria-label="CineFlex daily pick"></div>
+
 <main class="content">
+    <section class="row cf-personal-row" id="for-you-section">
+      <div class="cf-personal-head">
+        <div class="cf-personal-title"><i class="fa-solid fa-wand-magic-sparkles"></i><div><span class="cf-personal-kicker">Personalized For This Profile</span><h2>Para Sa’yo</h2></div></div>
+        <span class="cf-personal-note">Learns from your watches, opens, and My List</span>
+      </div>
+      <div class="cf-smart-scroller" id="for-you-list"><div class="cf-empty-personal">Preparing your personal picks...</div></div>
+    </section>
+
     <section class="row" id="continue-watching-section" style="display:none;">
         <h2>Continue Watching</h2>
         <div class="scroller" id="continue-list"></div>
@@ -402,6 +413,7 @@ CINEFLEX PROFILE SELECTOR
   <script src="home.js?v=3.1"></script>
   <script src="js/modules/hero.js?v=2.2"></script>
   <script src="js/core/signature.js?v=1.0"></script>
+  <script src="js/modules/personalized.js?v=2.1"></script>
 <script src="auth.js?v=3.1"></script>
   <script src="profiles.js?v=15.1"></script>
 </body>

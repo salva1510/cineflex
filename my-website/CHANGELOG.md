@@ -1,3 +1,13 @@
+# CineFlex Build 3.0 — Community Foundation
+
+- Added Watch Party room creation and six-character join codes.
+- Added shareable invite links.
+- Added Firebase real-time party chat and emoji reactions.
+- Added participant presence, host identity, and room status.
+- Added host Start / Resync commands for shared title and episode state.
+- Added responsive CineFlex Together lounge UI.
+- Preserved authentication, profiles, comments, player, ratings, Smart Discovery, and Continue Watching.
+
 # CineFlex Changelog
 
 ## v2.0.1-cleanup

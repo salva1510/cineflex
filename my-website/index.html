@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="home.css?v=3.1">
   <link rel="stylesheet" href="css/core/identity.css?v=2.1">
+  <link rel="stylesheet" href="css/modules/hero.css?v=2.2">
   <link rel="stylesheet" href="profiles.css?v=15.1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -201,6 +202,11 @@ CINEFLEX PROFILE SELECTOR
     </div>
   </div>
   <div class="banner-fade"></div>
+  <div class="cf-hero-nav" aria-label="Featured title controls">
+    <button id="cf-hero-prev" type="button" aria-label="Previous featured title"><i class="fa-solid fa-chevron-left"></i></button>
+    <button id="cf-hero-next" type="button" aria-label="Next featured title"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+  <div id="cf-hero-dots" class="cf-hero-dots" aria-label="Featured title position"></div>
 </header>
 
 <section class="cf-studio-panel" aria-label="CineFlex highlights">
@@ -383,6 +389,7 @@ CINEFLEX PROFILE SELECTOR
 <script src="firebase.js?v=3.1"></script>
   <script src="js/core/foundation.js?v=2.1"></script>
   <script src="home.js?v=3.1"></script>
+  <script src="js/modules/hero.js?v=2.2"></script>
 <script src="auth.js?v=3.1"></script>
   <script src="profiles.js?v=15.1"></script>
 </body>

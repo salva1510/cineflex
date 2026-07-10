@@ -44,3 +44,5 @@ self.addEventListener("fetch", event => {
     }).catch(() => cached))
   );
 });
+
+// Hero Engine 2.0 assets are cached on first request.

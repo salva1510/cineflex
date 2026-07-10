@@ -16,3 +16,11 @@
 - Comments.
 - Ratings.
 - Live viewers/community features.
+
+## v2.2.0 — Hero Engine 2.0
+- Added modular `js/modules/hero.js` and `css/modules/hero.css`.
+- Added cinematic featured-title rotation, progress indicator, dots, and manual controls.
+- Added muted YouTube trailer preview with safe fallback to the TMDB backdrop.
+- Added hero metadata and a functional per-profile My List action.
+- Added mobile-specific hero layout and reduced-motion support.
+- Removed the old duplicated hero bridge from `home.js`.

@@ -169,6 +169,8 @@ function changeBanner(dir) {
 
 async function showDetails(item) {
   currentItem = item;
+  window.currentItem = currentItem;
+  window.currentTVState = currentTVState;
   const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
   currentTVState.type = type;
   activeServer = 1; 
@@ -343,6 +345,7 @@ function setupSeasonSelector(series) {
 async function loadEpisodes(seriesId, seasonNum) {
     const data = await fetch(`${BASE_URL}/tv/${seriesId}/season/${seasonNum}?api_key=${API_KEY}`).then(r => r.json());
     currentTVState.season = seasonNum;
+    window.currentTVState = currentTVState;
     const epList = document.getElementById("episode-list");
     
     if (epList) {
@@ -422,6 +425,7 @@ function playSpecificEpisode(epNum, element) {
         if (element) element.classList.add('active');
 
         currentTVState.currentEpNum = epNum;
+        window.currentTVState = currentTVState;
 
         const playerContainer = document.getElementById("modal-player-container");
         if (playerContainer) playerContainer.style.display = "block";

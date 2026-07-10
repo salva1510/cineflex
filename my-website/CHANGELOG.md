@@ -24,3 +24,11 @@
 - Added hero metadata and a functional per-profile My List action.
 - Added mobile-specific hero layout and reduced-motion support.
 - Removed the old duplicated hero bridge from `home.js`.
+
+
+## v2.3.0 — Movie Cards 2.0
+- Added premium glass/neon movie cards with skeleton loading.
+- Added quick Play, My List, and More Info actions.
+- Added desktop hover and mobile long-press quick peek.
+- Added rating/trending badges and Continue Watching progress support.
+- Added lazy image decoding, keyboard support, and reduced-motion handling.

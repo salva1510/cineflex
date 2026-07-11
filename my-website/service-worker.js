@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v3.4-progression";
+const CACHE_NAME = "cineflex-build-4.1-admin-studio";
 
 const CORE_ASSETS = [
   "/",

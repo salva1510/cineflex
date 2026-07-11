@@ -20,3 +20,10 @@
 - Host Start / Resync command.
 - Real-time chat and emoji reactions.
 - Existing authentication, profiles, comments, recommendations, and player flow.
+
+## Build 4.1 — Admin Studio
+- Rebuilt `admin.html` as a responsive CineFlex Admin Studio.
+- Added dashboard counts and Watch Party room monitoring.
+- Added Firestore-backed homepage announcement, featured title, badge, headline, and maintenance controls.
+- Added `admin-homepage.js` to deliver published settings to the main website in real time.
+- Added dedicated Admin Studio styling and refreshed PWA cache version.

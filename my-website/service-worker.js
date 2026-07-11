@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-3-2-public-rooms";
+const CACHE_NAME = "cineflex-build-3-3-community-chat";
 
 const CORE_ASSETS = [
   "/",

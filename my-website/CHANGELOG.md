@@ -27,3 +27,12 @@
 - Added Firestore-backed homepage announcement, featured title, badge, headline, and maintenance controls.
 - Added `admin-homepage.js` to deliver published settings to the main website in real time.
 - Added dedicated Admin Studio styling and refreshed PWA cache version.
+
+## Build 4.2 — Content Management & Analytics
+- Added viewer Request Center for movies, TV series, and anime.
+- Added Broken Link / playback issue reports with selected title and episode metadata.
+- Added real-time CineFlex notification center.
+- Added Admin request and report workflows with status controls.
+- Added TMDB Quick Import and imported-content library.
+- Added basic request/report analytics.
+- Updated PWA cache to Build 4.2.

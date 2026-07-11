@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-4.1-admin-studio";
+const CACHE_NAME = "cineflex-build-4.2-content-management";
 
 const CORE_ASSETS = [
   "/",
@@ -13,6 +13,8 @@ const CORE_ASSETS = [
   "/js/core/foundation.js",
   "/css/modules/watch-party.css",
   "/js/modules/watch-party.js",
+  "/css/modules/content-center.css",
+  "/js/modules/content-center.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

@@ -14,7 +14,7 @@
   document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{
     document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
     document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(btn.dataset.page).classList.add('active');
-    const labels={dashboard:['Dashboard','Live overview of your CineFlex platform'],homepage:['Homepage Editor','Publish announcements and featured content without editing code'],rooms:['Live Rooms','Monitor active Watch Party rooms'],settings:['Settings','Control platform-wide notices']};
+    const labels={dashboard:['Dashboard','Live overview of your CineFlex platform'],homepage:['Homepage Editor','Publish announcements and featured content without editing code'],rooms:['Live Rooms','Monitor active Watch Party rooms'],requests:['Requests','Review content requests from viewers'],reports:['Link Reports','Resolve broken player and episode reports'],notifications:['Notifications','Publish real-time updates to CineFlex users'],importer:['TMDB Import','Fetch and save content metadata quickly'],analytics:['Analytics','Platform request and report insights'],settings:['Settings','Control platform-wide notices']};
     $('pageTitle').textContent=labels[btn.dataset.page][0];$('pageSubtitle').textContent=labels[btn.dataset.page][1];
   }));
 

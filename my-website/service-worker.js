@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-4.3.1-admin-access";
+const CACHE_NAME = "cineflex-build-5.0-ai-discovery";
 
 const CORE_ASSETS = [
   "/",
@@ -17,6 +17,8 @@ const CORE_ASSETS = [
   "/js/modules/content-center.js",
   "/admin43.css",
   "/js/modules/moderation-guard.js",
+  "/css/modules/ai-assistant.css",
+  "/js/modules/ai-assistant.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

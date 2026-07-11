@@ -1,3 +1,12 @@
+# CineFlex Build 5.0 — Smart Assistant & Discovery 2.0
+
+- Added CineFlex Smart Assistant with natural-language mood, genre, language, year, and media-type discovery.
+- Added “similar to” title recommendations using TMDB recommendation endpoints.
+- Added Smart Discovery 2.0 personalized homepage row.
+- Added local taste/query learning without exposing private data to a third-party AI API.
+- Added mobile-first assistant panel and quick prompt chips.
+- Updated PWA cache version and assets.
+
 # CineFlex Build 4.3 — Moderation, Roles & Security
 
 - Role-based Admin Studio access foundation

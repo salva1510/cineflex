@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-4.2-content-management";
+const CACHE_NAME = "cineflex-build-4.3-moderation-security";
 
 const CORE_ASSETS = [
   "/",
@@ -15,6 +15,8 @@ const CORE_ASSETS = [
   "/js/modules/watch-party.js",
   "/css/modules/content-center.css",
   "/js/modules/content-center.js",
+  "/admin43.css",
+  "/js/modules/moderation-guard.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

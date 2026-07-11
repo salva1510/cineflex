@@ -1,3 +1,12 @@
+# CineFlex Build 4.3 — Moderation, Roles & Security
+
+- Role-based Admin Studio access foundation
+- User suspension, mute, warning, and restore controls
+- App-wide suspension enforcement
+- Admin audit trail
+- Delegated admin roles
+- Updated PWA cache
+
 # CineFlex Build 3.2 — Public Rooms & Live Presence
 
 ## Added

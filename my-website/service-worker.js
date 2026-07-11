@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-4.3-moderation-security";
+const CACHE_NAME = "cineflex-build-4.3.1-admin-access";
 
 const CORE_ASSETS = [
   "/",

@@ -9,7 +9,33 @@
   function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600)}
   function safeDate(value){try{return value&&value.toDate?value.toDate():new Date(value||Date.now())}catch{return new Date()}}
   function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-  function isAdmin(user){return !!user && ADMIN_EMAILS.includes(String(user.email||'').toLowerCase())}
+  function normalizedEmail(user){
+    return String(user && user.email || '').trim().toLowerCase();
+  }
+
+  async function resolveAdminAccess(user){
+    if(!user) return {allowed:false, role:'viewer'};
+
+    const email = normalizedEmail(user);
+    if(ADMIN_EMAILS.includes(email)) {
+      return {allowed:true, role:'super_admin'};
+    }
+
+    try {
+      const roleDoc = await db.collection('cineflexAdmins').doc(user.uid).get();
+      if(roleDoc.exists){
+        const data = roleDoc.data() || {};
+        const validRoles = ['super_admin','moderator','content_manager','support'];
+        if(data.active !== false && validRoles.includes(data.role)){
+          return {allowed:true, role:data.role};
+        }
+      }
+    } catch(error){
+      console.warn('Admin role lookup failed:', error);
+    }
+
+    return {allowed:false, role:'viewer'};
+  }
 
   document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{
     document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
@@ -51,9 +77,28 @@
   $('saveConfig').addEventListener('click',saveConfig);$('resetConfig').addEventListener('click',()=>applyForm(currentConfig));$('saveSettings').addEventListener('click',saveConfig);
 
   auth.onAuthStateChanged(async user=>{
-    if(!user){$('lockMessage').textContent='Please log in to your CineFlex admin account first.';$('backHome').hidden=false;return}
-    if(!isAdmin(user)){$('lockMessage').textContent='This Google account is not authorized for Admin Studio.';$('backHome').hidden=false;return}
-    $('adminPhoto').src=user.photoURL||'icon-192.png';$('adminName').textContent=user.displayName||user.email;$('adminLock').remove();await Promise.all([loadDashboard(),loadConfig()]);
+    if(!user){
+      $('lockMessage').textContent='Please log in to your CineFlex admin account first.';
+      $('backHome').hidden=false;
+      return;
+    }
+
+    // Refresh the account so email and provider data are current in installed PWAs.
+    try { await user.reload(); user = auth.currentUser || user; } catch(error) { console.warn('User reload failed:', error); }
+
+    const access = await resolveAdminAccess(user);
+    if(!access.allowed){
+      const email = normalizedEmail(user) || 'no email detected';
+      $('lockMessage').textContent=`Signed in as ${email}. This account is not authorized for Admin Studio.`;
+      $('backHome').hidden=false;
+      return;
+    }
+
+    window.CINEFLEX_ADMIN_ROLE = access.role;
+    $('adminPhoto').src=user.photoURL||'icon-192.png';
+    $('adminName').textContent=user.displayName||user.email||'Admin';
+    $('adminLock').remove();
+    await Promise.all([loadDashboard(),loadConfig()]);
   });
   window.addEventListener('beforeunload',()=>unsubscribeRooms&&unsubscribeRooms());
 })();

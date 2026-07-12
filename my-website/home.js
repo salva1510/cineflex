@@ -167,6 +167,85 @@ function changeBanner(dir) {
     setBanner(trendingItems[currentBannerIndex]);
 }
 
+
+function cfEscapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+function cfFormatRuntime(minutes) {
+  const total = Number(minutes || 0);
+  if (!total) return '';
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  return h ? `${h}h ${m}m` : `${m}m`;
+}
+
+function cfGetCertification(details, type) {
+  if (type === 'movie') {
+    const countries = details.release_dates?.results || [];
+    const preferred = countries.find(x => x.iso_3166_1 === 'US') || countries.find(x => x.iso_3166_1 === 'PH') || countries[0];
+    return preferred?.release_dates?.find(x => x.certification)?.certification || '';
+  }
+  const ratings = details.content_ratings?.results || [];
+  return (ratings.find(x => x.iso_3166_1 === 'US') || ratings.find(x => x.iso_3166_1 === 'PH') || ratings[0])?.rating || '';
+}
+
+function cfComputeMatch(details) {
+  const vote = Math.max(0, Math.min(10, Number(details.vote_average || 0)));
+  const popularity = Math.min(100, Math.log10(Math.max(1, Number(details.popularity || 1))) * 34);
+  let score = 68 + vote * 2.2 + popularity * .08;
+  try {
+    const history = JSON.parse(localStorage.getItem('cineflex_recent') || '[]');
+    const list = JSON.parse(localStorage.getItem('cineflex_watchlist') || '[]');
+    const genreIds = new Set([...(history || []), ...(list || [])].flatMap(x => x.genre_ids || []));
+    const overlap = (details.genres || []).filter(g => genreIds.has(g.id)).length;
+    score += Math.min(7, overlap * 2.5);
+  } catch (_) {}
+  return Math.max(72, Math.min(99, Math.round(score)));
+}
+
+function cfRenderPremiumDetails(details, credits, type) {
+  const date = details.release_date || details.first_air_date || '';
+  const year = date ? new Date(date).getFullYear() : '';
+  const runtime = type === 'tv'
+    ? cfFormatRuntime((details.episode_run_time || [])[0])
+    : cfFormatRuntime(details.runtime);
+  const certification = cfGetCertification(details, type);
+  const score = Number(details.vote_average || 0);
+  const match = cfComputeMatch(details);
+  const meta = document.getElementById('modal-meta-row');
+  const matchBadge = document.getElementById('modal-match-badge');
+  const facts = document.getElementById('modal-facts');
+  if (matchBadge) matchBadge.textContent = `${match}% Match`;
+  if (meta) {
+    const pieces = [
+      year && `<span>${year}</span>`,
+      certification && `<span class="cf-certification">${cfEscapeHtml(certification)}</span>`,
+      runtime && `<span>${runtime}</span>`,
+      score > 0 && `<span class="cf-tmdb-score"><i class="fa-solid fa-star"></i> ${score.toFixed(1)}</span>`,
+      `<span class="cf-quality-pill">HD</span>`
+    ].filter(Boolean);
+    meta.innerHTML = pieces.join('');
+  }
+  if (!facts) return;
+  const director = (credits.crew || []).find(p => p.job === 'Director');
+  const creators = details.created_by || [];
+  const creatorText = director?.name || creators.map(x => x.name).slice(0, 2).join(', ');
+  const cast = (credits.cast || []).slice(0, 4).map(x => x.name).join(', ');
+  const genres = (details.genres || []).map(x => x.name).join(', ');
+  const countries = (details.production_countries || details.origin_country || []).map(x => x.name || x).slice(0, 2).join(', ');
+  const language = (details.spoken_languages || []).map(x => x.english_name || x.name).filter(Boolean).slice(0, 2).join(', ');
+  const rows = [
+    cast && ['Starring', cast],
+    creatorText && [type === 'movie' ? 'Director' : 'Creator', creatorText],
+    genres && ['Genres', genres],
+    language && ['Language', language],
+    countries && ['Country', countries],
+    details.status && ['Status', details.status]
+  ].filter(Boolean);
+  facts.innerHTML = rows.map(([label,value]) => `<div><span>${label}:</span> ${cfEscapeHtml(value)}</div>`).join('');
+}
+
 async function showDetails(item) {
   currentItem = item;
   window.currentItem = currentItem;
@@ -186,14 +265,16 @@ async function showDetails(item) {
 
   try {
     const [details, credits, recs] = await Promise.all([
-      fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}`).then(r => r.json()),
+      fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}&append_to_response=${type === 'movie' ? 'release_dates' : 'content_ratings'}`).then(r => r.json()),
       fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/${type}/${item.id}/recommendations?api_key=${API_KEY}`).then(r => r.json())
     ]);
 
     document.getElementById("modal-title").innerText = item.title || item.name;
     document.getElementById("modal-desc").innerText = item.overview || "";
-    document.getElementById("modal-banner").style.backgroundImage = `url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
+    const heroPath = details.backdrop_path || item.backdrop_path || details.poster_path || item.poster_path;
+    document.getElementById("modal-banner").style.backgroundImage = heroPath ? `linear-gradient(to top, #141414 0%, transparent 55%), url(https://image.tmdb.org/t/p/original${heroPath})` : 'none';
+    cfRenderPremiumDetails(details, credits, type);
     
     const recContainer = document.getElementById("modal-recommendations");
     if (recContainer) {
@@ -472,10 +553,14 @@ function displayCards(data, containerId) {
         trendingBadge = `<div class="netflix-num-badge">${index + 1}</div>`;
     }
 
+    const title = item.title || item.name || 'Untitled';
+    const year = (item.release_date || item.first_air_date || '').slice(0, 4);
+    const score = Number(item.vote_average || 0);
     return `
-    <div class="${isNetflix ? 'netflix-item-container' : 'card'}" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+    <div class="${isNetflix ? 'netflix-item-container' : 'card cf-premium-card'}" tabindex="0" onclick='showDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})' aria-label="Open ${cfEscapeHtml(title)} details">
         ${trendingBadge}
-        <img src="${IMG_URL}${item.poster_path}" loading="lazy" class="${isNetflix ? 'netflix-num-poster' : ''}">
+        <img src="${IMG_URL}${item.poster_path}" loading="lazy" class="${isNetflix ? 'netflix-num-poster' : ''}" alt="${cfEscapeHtml(title)} poster">
+        ${!isNetflix ? `<div class="cf-card-badges"><span>HD</span>${score ? `<span class="cf-card-rating"><i class="fa-solid fa-star"></i> ${score.toFixed(1)}</span>` : ''}</div><div class="cf-card-overlay"><strong>${cfEscapeHtml(title)}</strong><small>${year || 'CineFlex'} • Recommended</small></div>` : ''}
     </div>`;
   }).join('');
 

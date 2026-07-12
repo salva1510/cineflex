@@ -1,0 +1,91 @@
+/* CineFlex Build 6.1 — Architecture & stream selector */
+.cf61-server-tabs{display:flex!important;align-items:stretch;justify-content:center;gap:8px;padding:10px 12px 6px;overflow-x:auto;scrollbar-width:none}.cf61-server-tabs::-webkit-scrollbar{display:none}.cf61-server-btn{min-width:96px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 13px!important;white-space:nowrap}.cf61-server-btn span{font-size:.82rem}.cf61-server-btn small{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;opacity:.65}.cf61-server-btn.active small{opacity:.88}.cf61-stream-status{margin:0 auto 8px;width:max-content;max-width:calc(100% - 24px);padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:#c9c9c9;font-size:.72rem;line-height:1.2;text-align:center;backdrop-filter:blur(8px)}.cf61-stream-status[data-tone="ok"]{color:#8ce9ae}.cf61-stream-status[data-tone="warn"]{color:#ffd479}.cf61-stream-status[data-tone="error"]{color:#ff9b9b}@media(max-width:600px){.cf61-server-tabs{justify-content:flex-start}.cf61-server-btn{min-width:88px;padding:7px 11px!important}.cf61-stream-status{font-size:.68rem}}
+
+/* Build 6.1.1 — Player regression fix */
+#modal-player-container > .cf61-server-tabs{
+  position:absolute!important;
+  top:8px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:120;
+  width:auto;
+  max-width:calc(100% - 110px);
+  padding:0!important;
+  background:rgba(8,8,8,.64);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  backdrop-filter:blur(10px);
+}
+#modal-player-container > .cf61-stream-status{
+  position:absolute;
+  top:54px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:119;
+  margin:0;
+  pointer-events:none;
+}
+#modal-player-container > .iframe-container{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+}
+#modal-player-container .fullscreen-btn{
+  display:flex!important;
+  top:auto!important;
+  bottom:14px!important;
+  left:auto!important;
+  right:14px!important;
+  transform:none!important;
+  z-index:130!important;
+}
+#modal-player-container:fullscreen,
+#modal-player-container:-webkit-full-screen,
+#modal-player-container.cf-cinema-fallback{
+  width:100vw!important;
+  max-width:none!important;
+  height:100vh!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  border-radius:0!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483646!important;
+  background:#000!important;
+}
+#modal-player-container:fullscreen > .iframe-container,
+#modal-player-container:-webkit-full-screen > .iframe-container,
+#modal-player-container.cf-cinema-fallback > .iframe-container{
+  position:absolute!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+}
+#modal-player-container:fullscreen iframe,
+#modal-player-container:-webkit-full-screen iframe,
+#modal-player-container.cf-cinema-fallback iframe{
+  width:100vw!important;
+  height:100vh!important;
+  object-fit:contain!important;
+}
+#modal-player-container:fullscreen > .cf61-server-tabs,
+#modal-player-container:-webkit-full-screen > .cf61-server-tabs,
+#modal-player-container.cf-cinema-fallback > .cf61-server-tabs{
+  top:10px;
+  opacity:.2;
+  transition:opacity .2s;
+}
+#modal-player-container:fullscreen:hover > .cf61-server-tabs,
+#modal-player-container:-webkit-full-screen:hover > .cf61-server-tabs,
+#modal-player-container.cf-cinema-fallback:hover > .cf61-server-tabs{
+  opacity:1;
+}
+body.cf-cinema-open{overflow:hidden!important;touch-action:none}
+@media(max-width:650px){
+  #modal-player-container .fullscreen-btn{display:flex!important;width:auto!important;height:auto!important;padding:8px 12px!important}
+  #modal-player-container > .cf61-server-tabs{left:8px;right:8px;transform:none;max-width:none;justify-content:flex-start;border-radius:14px;padding:4px!important}
+  #modal-player-container > .cf61-stream-status{top:56px;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #modal-player-container .cf60-player-shell{padding-top:58px}
+}

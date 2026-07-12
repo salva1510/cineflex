@@ -4,6 +4,7 @@ const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 // --- PLAYERS DOMAINS ---
 const SERVER_1_URL = "https://peachify.top";
+const SERVER_2_URL = "https://peachify.top"; 
 
 let currentItem = null;
 let trendingItems = [];
@@ -461,10 +462,10 @@ function updateVideoSource() {
 
     if (currentTVState.type === 'tv') {
         let baseUrl = (activeServer === 1) ? SERVER_1_URL : SERVER_2_URL;
-        finalUrl = `${baseUrl}/player/tv/${movieId}/${season}/${episode}?dubLang=tl&dubType=0`;
+        finalUrl = `${baseUrl}/embed/tv/${movieId}/${season}/${episode}?autoPlay=true&autoNext=30`;
     } else {
         let baseUrl = (activeServer === 1) ? SERVER_1_URL : SERVER_2_URL;
-        finalUrl = `${baseUrl}/player/movie/${movieId}?dubLang=tl&dubType=0`;
+        finalUrl = `${baseUrl}/embed/movie/${movieId}?autoPlay=true`;
     }
 
     iframe.removeAttribute("src"); 
@@ -472,7 +473,7 @@ function updateVideoSource() {
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("webkitallowfullscreen", "true");
     iframe.setAttribute("mozallowfullscreen", "true");
-    iframe.removeAttribute("sandbox"); // external embed providers like zxcstream can break when sandboxed
+    iframe.removeAttribute("sandbox"); // Peachify requires normal iframe permissions for playback and fullscreen
     
     iframe.src = finalUrl;
 }
@@ -518,7 +519,7 @@ function playSpecificEpisode(epNum, element) {
         });
 
         addToContinueWatching(currentItem);
-        // Native zxcstream controls handle fullscreen.
+        enterCinemaMode();
         setTimeout(triggerPopUnder, 2500);
     });
 }
@@ -535,7 +536,7 @@ function startPlayback() {
         });
 
         addToContinueWatching(currentItem);
-        // Native zxcstream controls handle fullscreen.
+        enterCinemaMode();
         setTimeout(triggerPopUnder, 2500);
     });
 }

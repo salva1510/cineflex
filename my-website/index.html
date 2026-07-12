@@ -260,6 +260,21 @@ CINEFLEX PROFILE SELECTOR
         <div class="scroller" id="continue-list"></div>
     </section>
 
+    <section class="row cf-top10-section" id="top10-section">
+      <div class="cf-row-heading">
+        <div><span class="cf-row-kicker">Most watched across CineFlex</span><h2>Top 10 Today</h2></div>
+        <button class="cf-row-refresh" type="button" onclick="window.cfRefreshHome51?.()" aria-label="Refresh personalized rows"><i class="fa-solid fa-rotate"></i></button>
+      </div>
+      <div class="cf-top10-scroller" id="top10-list"><div class="cf-row-loading">Loading today’s chart...</div></div>
+    </section>
+
+    <section class="row cf-because-section" id="because-section" style="display:none;">
+      <div class="cf-row-heading">
+        <div><span class="cf-row-kicker">Picked from your recent activity</span><h2 id="because-title">Because You Watched</h2></div>
+      </div>
+      <div class="cf-smart-scroller" id="because-list"></div>
+    </section>
+
     <section class="row" id="netflix-movies-section">
         <h2>Netflix Movies</h2>
         <div class="scroller" id="netflix-movies-list"></div>
@@ -419,7 +434,8 @@ CINEFLEX PROFILE SELECTOR
   <script src="home.js?v=3.1"></script>
   <script src="js/modules/hero.js?v=2.2"></script>
   <script src="js/core/signature.js?v=1.0"></script>
-  <script src="js/modules/personalized.js?v=2.1"></script>
+  <script src="js/modules/personalized.js?v=2.2"></script>
+  <script src="js/modules/personal-home51.js?v=5.1"></script>
 <script src="auth.js?v=3.1"></script>
   <script src="profiles.js?v=15.1"></script>
   <script src="js/modules/watch-party.js?v=3.2"></script>

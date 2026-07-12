@@ -1,0 +1,7 @@
+CINEFLEX BUILD 6.1.4 — NATIVE EMBED PLAYER RESTORE
+
+- Removed custom player overlays, server selector, timer and custom fullscreen layer.
+- Restored direct interaction with the zxcstream embedded player.
+- Restored allowfullscreen/webkitallowfullscreen/mozallowfullscreen attributes.
+- Added fullscreen permission to the iframe allow policy for mobile browsers.
+- Kept the my-website root folder.

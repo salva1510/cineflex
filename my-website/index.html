@@ -64,6 +64,7 @@
     .action-btn-large:hover { background: rgba(255, 255, 255, 0.2); }
   </style>
   <link rel="stylesheet" href="css/modules/admin-homepage.css?v=4.1">
+  <link rel="stylesheet" href="css/modules/community53.css?v=5.3">
 </head>
 <body>
 <!-- ===========================
@@ -364,7 +365,20 @@ CINEFLEX PROFILE SELECTOR
         </section>
 
 
-        <section id="cf-comments-box" class="cf-comments-box" aria-label="CineFlex comments">
+        <section id="cf-reaction-box" class="cf-reaction-box" aria-label="Expressive reactions">
+  <div class="cf-community-head"><h3><i class="fa-solid fa-face-smile"></i> Quick Reactions</h3><small>Live community pulse</small></div>
+  <div class="cf-reaction-grid">
+    <button class="cf-emoji-reaction" data-cf-reaction="heart" onclick="cfCommunityReact('heart')"><b>❤️</b><span>Love</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="haha" onclick="cfCommunityReact('haha')"><b>😂</b><span>Haha</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="wow" onclick="cfCommunityReact('wow')"><b>😮</b><span>Wow</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="sad" onclick="cfCommunityReact('sad')"><b>😢</b><span>Sad</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="fire" onclick="cfCommunityReact('fire')"><b>🔥</b><span>Fire</span><em>0</em></button>
+  </div><p id="cf-community-login-note" class="cf-community-login">Mag-login para makapag-react.</p>
+</section>
+<section class="cf-achievement-box"><div class="cf-community-head"><h3><i class="fa-solid fa-trophy"></i> Your Achievements</h3><small>Keep watching</small></div><div id="cf-achievement-row" class="cf-badge-row"></div></section>
+<section class="cf-activity-box"><div class="cf-community-head"><h3><i class="fa-solid fa-bolt"></i> Community Activity</h3><small>Live updates</small></div><div id="cf-activity-list" class="cf-activity-list"><div class="cf-community-empty">Loading activity...</div></div></section>
+
+<section id="cf-comments-box" class="cf-comments-box" aria-label="CineFlex comments">
             <div class="cf-comments-head">
                 <h3><i class="fa-solid fa-comments"></i> Community Comments</h3>
                 <span id="cf-comments-count" class="cf-comments-count">0 comments</span>
@@ -442,6 +456,7 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/personalized.js?v=2.2"></script>
   <script src="js/modules/personal-home51.js?v=5.1"></script>
 <script src="auth.js?v=3.1"></script>
+  <script src="js/modules/community53.js?v=5.3"></script>
   <script src="profiles.js?v=15.1"></script>
   <script src="js/modules/watch-party.js?v=3.2"></script>
   <script src="js/modules/progression.js?v=3.4"></script>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-5.1-personal-home";
+const CACHE_NAME = "cineflex-build-5.3-community";
 
 const CORE_ASSETS = [
   "/",
@@ -21,6 +21,8 @@ const CORE_ASSETS = [
   "/js/modules/ai-assistant.js",
   "/js/modules/personalized.js",
   "/js/modules/personal-home51.js",
+  "/css/modules/community53.css",
+  "/js/modules/community53.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

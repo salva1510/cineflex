@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-6.1.4-player-ui-fix";
+const CACHE_NAME = "cineflex-build-6.1.5-native-fullscreen-fix";
 
 const CORE_ASSETS = [
   "/",
@@ -23,12 +23,7 @@ const CORE_ASSETS = [
   "/js/modules/personal-home51.js",
   "/css/modules/community53.css",
   "/js/modules/community53.js",
-  "/css/modules/player60.css",
-  "/js/modules/player60.js",
   "/js/core/api-client61.js",
-  "/css/modules/architecture61.css",
-  "/js/modules/stream-engine61.js",
-  "/js/modules/player-fullscreen-fix611.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

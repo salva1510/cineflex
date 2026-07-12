@@ -519,7 +519,7 @@ function playSpecificEpisode(epNum, element) {
         });
 
         addToContinueWatching(currentItem);
-        enterCinemaMode();
+        // Native zxcstream controls handle fullscreen.
         setTimeout(triggerPopUnder, 2500);
     });
 }
@@ -536,7 +536,7 @@ function startPlayback() {
         });
 
         addToContinueWatching(currentItem);
-        enterCinemaMode();
+        // Native zxcstream controls handle fullscreen.
         setTimeout(triggerPopUnder, 2500);
     });
 }

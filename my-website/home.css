@@ -1296,3 +1296,56 @@ body.drawer-open { overflow: hidden; }
 #modal-player-container .iframe-container{position:absolute;inset:0;width:100%;height:100%;}
 #modal-player-container #modal-video-iframe{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important;pointer-events:auto!important;}
 @media(max-width:650px){#modal-player-container{width:100%;aspect-ratio:16/9;border-radius:8px;}#modal-player-container #modal-video-iframe{pointer-events:auto!important;}}
+
+
+/* Build 6.1.5 — native embed fullscreen restoration */
+#modal-player-container {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 1050px !important;
+  aspect-ratio: 16 / 9 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+#modal-player-container > .iframe-container {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  z-index: 1 !important;
+}
+#modal-video-iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  object-fit: contain !important;
+  pointer-events: auto !important;
+  z-index: 2 !important;
+}
+#modal-player-container .cf60-player-shell,
+#modal-player-container .cf61-server-toggle,
+#modal-player-container .cf61-server-tabs,
+#modal-player-container .cf61-stream-status,
+#modal-player-container .cf-player-controls-hotspot,
+#modal-player-container .fullscreen-btn {
+  display: none !important;
+  pointer-events: none !important;
+}
+@media (max-width: 650px) {
+  #modal-player-container {
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 6px !important;
+  }
+  #modal-video-iframe {
+    touch-action: auto !important;
+  }
+}

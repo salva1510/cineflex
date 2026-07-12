@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-5.3-community";
+const CACHE_NAME = "cineflex-build-6.0-netflix-class";
 
 const CORE_ASSETS = [
   "/",
@@ -23,6 +23,8 @@ const CORE_ASSETS = [
   "/js/modules/personal-home51.js",
   "/css/modules/community53.css",
   "/js/modules/community53.js",
+  "/css/modules/player60.css",
+  "/js/modules/player60.js",
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png"

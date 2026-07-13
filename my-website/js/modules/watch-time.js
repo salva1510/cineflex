@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + ON-DEMAND MONETAG FLOW v7.1.2 */
+/* CINEFLEX WATCH TIME + CLICK-TO-LOAD MONETAG FLOW v7.2.1 */
 (function(){
   'use strict';
 
@@ -246,7 +246,8 @@
       frame.dataset.cfHeldSrc = frame.src;
       frame.src = 'about:blank';
     }
-    loadMonetagAfterExpiry();
+    // Do not initialize Monetag merely because time reached 0:00.
+    // It is loaded only after the user explicitly taps Support CineFlex.
     open(true);
   }
 

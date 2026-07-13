@@ -67,7 +67,7 @@
   <link rel="stylesheet" href="css/modules/community53.css?v=5.3">
   <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.1">
   <link rel="stylesheet" href="css/modules/desktop-row-scroll.css?v=1.0">
-  <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.0">
+  <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.1">
 </head>
 <body>
 <!-- ===========================
@@ -172,6 +172,13 @@ CINEFLEX PROFILE SELECTOR
             <h4>Personal</h4>
             <div class="drawer-item" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i> My List</div>
             <div class="drawer-item" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-clock-rotate-left"></i> History</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Browse Catalog</h4>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-movies')"><i class="fa-solid fa-border-all"></i> All Movies</div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-shows')"><i class="fa-solid fa-tv"></i> All TV Shows</div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('anime')"><i class="fa-solid fa-dragon"></i> Anime Catalog</div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('horror')"><i class="fa-solid fa-ghost"></i> Horror Movies</div>
         </div>
         <div class="drawer-section">
             <h4>Quick Categories</h4>
@@ -461,7 +468,7 @@ CINEFLEX PROFILE SELECTOR
   <button class="nav-item active" type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></button>
   <button class="nav-item" type="button" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
   <button class="nav-item" type="button" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i><span>My List</span></button>
-  <button class="nav-item" type="button" onclick="window.CineFlexParty && window.CineFlexParty.open()"><i class="fa-solid fa-users-viewfinder"></i><span>Party</span></button>
+  <button class="nav-item" type="button" onclick="cfOpenCatalog('all-movies')"><i class="fa-solid fa-clapperboard"></i><span>Movies</span></button>
   <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
 </nav>
 
@@ -494,7 +501,7 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/core/api-client61.js?v=6.1"></script>
   <script src="home.js?v=3.2"></script>
   <script src="js/modules/desktop-row-scroll.js?v=1.0"></script>
-  <script src="js/modules/catalog-browser.js?v=1.0"></script>
+  <script src="js/modules/catalog-browser.js?v=1.1"></script>
   <script src="js/modules/hero.js?v=2.2"></script>
   <script src="js/core/signature.js?v=1.0"></script>
   <script src="js/modules/personalized.js?v=2.2"></script>

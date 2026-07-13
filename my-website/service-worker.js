@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-7.1-monetag-watch-time";
+const CACHE_NAME = "cineflex-build-7.2.1-ads-on-support-click";
 
 const CORE_ASSETS = [
   "/",

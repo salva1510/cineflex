@@ -1,3 +1,26 @@
+// CINEFLEX 7.2.1 — remove stale third-party Monetag workers from older builds.
+// Keep only CineFlex's own /service-worker.js registration.
+(function cleanupLegacyMonetagWorkers(){
+  if (!("serviceWorker" in navigator)) return;
+  window.addEventListener("load", async () => {
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        const urls = [
+          registration.active?.scriptURL,
+          registration.waiting?.scriptURL,
+          registration.installing?.scriptURL
+        ].filter(Boolean);
+        const isCineFlexWorker = urls.some(url => /\/service-worker\.js(?:[?#]|$)/.test(url));
+        const isMonetagWorker = urls.some(url => /(?:3nbf4\.com|quge5\.com|\/sw\.js(?:[?#]|$))/i.test(url));
+        if (isMonetagWorker && !isCineFlexWorker) await registration.unregister();
+      }
+    } catch (error) {
+      console.warn("Legacy Monetag worker cleanup skipped:", error);
+    }
+  }, { once: true });
+})();
+
 const API_KEY = "742aa17a327005b91fb6602054523286";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";

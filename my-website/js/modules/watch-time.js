@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.0 */
+/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.1 */
 (function(){
   'use strict';
 
@@ -64,27 +64,36 @@
     return `${Math.floor(valueSafe / 60)}:${String(valueSafe % 60).padStart(2,'0')}`;
   }
 
+  function requestAddTime(){
+    if(isVip()){
+      window.showToast?.('VIP members already have unlimited watch time.');
+      return;
+    }
+    if(!user()){
+      if(typeof window.requireLogin === 'function') window.requireLogin(() => open(false));
+      else window.openLoginModal?.();
+      return;
+    }
+    open(false);
+  }
+
+  window.cfOpenAddTime = requestAddTime;
+
   function build(){
-    const actions = document.querySelector('.modal-actions-wrapper');
+    const actions = document.querySelector('.modal-actions-wrapper, .modal-actions, .details-actions');
     if(actions && !$('cfAddTimeAction')){
       actions.insertAdjacentHTML('beforeend', `
         <button id="cfAddTimeAction" class="action-btn-large cf-add-time-action" type="button">
           <i class="fa-solid fa-clock"></i>
           <span>Add Time</span>
-          <b id="cfAddTimeActionBalance">15:00</b>
+          <b id="cfAddTimeActionBalance">+15m</b>
         </button>`);
-      $('cfAddTimeAction').onclick = () => {
-        if(isVip()){
-          window.showToast?.('VIP members already have unlimited watch time.');
-          return;
-        }
-        if(!user()){
-          if(typeof window.requireLogin === 'function') window.requireLogin(() => open(false));
-          else window.openLoginModal?.();
-          return;
-        }
-        open(false);
-      };
+    }
+
+    const addTimeAction = $('cfAddTimeAction');
+    if(addTimeAction && !addTimeAction.dataset.cfBound){
+      addTimeAction.dataset.cfBound = '1';
+      addTimeAction.addEventListener('click', requestAddTime);
     }
 
     const playerBox = $('modal-player-container');

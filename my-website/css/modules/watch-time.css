@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME v7.0 */
+/* CINEFLEX WATCH TIME v8.0.0 */
 .cf-watchtime-chip{position:absolute;left:14px;bottom:14px;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;background:rgba(5,7,12,.88);border:1px solid rgba(255,255,255,.16);box-shadow:0 8px 28px rgba(0,0,0,.35);font-size:12px;font-weight:800;color:#fff;backdrop-filter:blur(12px)}
 .cf-watchtime-chip.low{border-color:#ffb020;color:#ffd37a}.cf-watchtime-chip.empty{border-color:#ff3344;color:#ff8790}.cf-watchtime-chip button{border:0;border-radius:999px;padding:6px 9px;background:#e50914;color:white;font:inherit;cursor:pointer}
 .cf-time-modal{position:fixed;inset:0;z-index:60000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}.cf-time-modal.open{display:flex}
@@ -21,3 +21,11 @@
 .cf-add-time-action b{margin-left:2px;padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.28);font-size:11px;line-height:1.2;color:#fff}
 .cf-add-time-action.low{border-color:#ffb020!important;color:#ffd37a!important}.cf-add-time-action.empty{border-color:#ff3344!important;background:rgba(255,51,68,.16)!important}
 @media(max-width:600px){.cf-add-time-action{flex:1 1 calc(50% - 6px);justify-content:center;min-height:46px}.cf-watchtime-chip{z-index:999!important}}
+
+
+/* Build 8 membership states */
+.cf-watchtime-chip.vip{border-color:rgba(255,202,68,.65);color:#ffe39a;background:rgba(30,22,4,.92)}
+.cf-watchtime-chip.vip i{color:#ffd257}
+.cf-add-time-action[hidden],#cfAddTimeMini[hidden]{display:none!important}
+.cf-add-time-action{position:relative}
+.cf-add-time-action b{white-space:nowrap}

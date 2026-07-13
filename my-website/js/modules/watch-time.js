@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + ISOLATED MONETAG SPONSOR FLOW v7.2.2 */
+/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.0 */
 (function(){
   'use strict';
 
@@ -18,6 +18,7 @@
   let claimTimer = null;
   let lastClaimAt = 0;
   let sponsorWindow = null;
+  let vipActive = false;
 
   function openSponsorWindow(){
     try {
@@ -43,6 +44,7 @@
   }
 
   function user(){ return window.auth?.currentUser || window.currentUser || null; }
+  function isVip(){ return vipActive || !!window.CineFlexMembership?.isVip?.(); }
 
   function playerActive(){
     const box = $('modal-player-container');
@@ -72,19 +74,16 @@
           <b id="cfAddTimeActionBalance">15:00</b>
         </button>`);
       $('cfAddTimeAction').onclick = () => {
-        if(seconds > 0){
-          window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+        if(isVip()){
+          window.showToast?.('VIP members already have unlimited watch time.');
           return;
         }
         if(!user()){
-          if(typeof window.requireLogin === 'function'){
-            window.requireLogin(() => open(true));
-          } else {
-            window.openLoginModal?.();
-          }
+          if(typeof window.requireLogin === 'function') window.requireLogin(() => open(false));
+          else window.openLoginModal?.();
           return;
         }
-        open(true);
+        open(false);
       };
     }
 
@@ -98,8 +97,9 @@
           <button type="button" id="cfAddTimeMini">+ Time</button>
         </div>`);
       $('cfAddTimeMini').onclick = () => {
-        if(seconds <= 0) open(true);
-        else window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+        if(isVip()) return window.showToast?.('VIP members have unlimited watch time.');
+        if(!user()) return window.requireLogin?.(() => open(false));
+        open(seconds <= 0);
       };
     }
 
@@ -144,7 +144,7 @@
     $('cfTimeTitle').textContent = expired ? 'Your watch time has ended' : 'Add Watch Time';
     $('cfTimeMessage').textContent = expired
       ? 'Support CineFlex to continue from the same movie.'
-      : 'Support CineFlex to add another 15 minutes.';
+      : `Stack another 15 minutes. Current balance: ${fmt(seconds)}.`;
     $('cfTimeClose').style.display = expired ? 'none' : '';
     if(!claimRunning) resetSponsorUI();
     setStatus('');
@@ -172,24 +172,38 @@
   }
 
   function render(){
-    const text = fmt(seconds);
+    const vip = isVip();
+    const text = vip ? '∞ Unlimited' : fmt(seconds);
     if($('cfWatchTimeText')) $('cfWatchTimeText').textContent = text;
     if($('cfTimeBalance')) $('cfTimeBalance').textContent = text;
-    if($('cfAddTimeActionBalance')) $('cfAddTimeActionBalance').textContent = text;
+    if($('cfAddTimeActionBalance')) $('cfAddTimeActionBalance').textContent = vip ? 'VIP' : `+15m • ${fmt(seconds)}`;
+
     const action = $('cfAddTimeAction');
     if(action){
-      action.classList.toggle('low', seconds > 0 && seconds <= 120);
-      action.classList.toggle('empty', seconds <= 0);
-      action.hidden = seconds > 0;
-      action.title = seconds <= 0 ? 'Add 15 minutes' : `Free watch time: ${text}`;
+      action.hidden = vip;
+      action.classList.toggle('low', !vip && seconds > 0 && seconds <= 120);
+      action.classList.toggle('empty', !vip && seconds <= 0);
+      action.title = vip ? 'Unlimited VIP watch time' : `Stack another 15 minutes • Current: ${fmt(seconds)}`;
+      const label = action.querySelector('span');
+      if(label) label.textContent = 'Add Time';
     }
+
     const chip = $('cfWatchTimeChip');
     if(chip){
-      chip.classList.toggle('low', seconds > 0 && seconds <= 120);
-      chip.classList.toggle('empty', seconds <= 0);
+      chip.classList.toggle('vip', vip);
+      chip.classList.toggle('low', !vip && seconds > 0 && seconds <= 120);
+      chip.classList.toggle('empty', !vip && seconds <= 0);
+      const suffix = chip.querySelector('span');
+      if(suffix) suffix.innerHTML = vip
+        ? '<b id="cfWatchTimeText">∞ Unlimited</b>'
+        : `<b id="cfWatchTimeText">${fmt(seconds)}</b> left`;
     }
+
     const mini = $('cfAddTimeMini');
-    if(mini) mini.hidden = seconds > 0;
+    if(mini){
+      mini.hidden = vip;
+      mini.textContent = '+ Time';
+    }
   }
 
   async function loadBalance(){
@@ -213,7 +227,7 @@
       }
       loaded = true;
       render();
-      if(seconds <= 0 && playerActive()) stopPlaybackAndOpen();
+      if(seconds <= 0 && playerActive() && !isVip()) stopPlaybackAndOpen();
     } catch(error){
       console.warn('Watch time cloud load failed:', error);
       seconds = Math.max(0, Number(localStorage.getItem('cineflex_watch_seconds') || INITIAL_SECONDS));
@@ -238,6 +252,7 @@
   }
 
   function stopPlaybackAndOpen(){
+    if(isVip()) return;
     const frame = $('modal-video-iframe');
     if(frame && frame.src && frame.src !== 'about:blank'){
       frame.dataset.cfHeldSrc = frame.src;
@@ -259,7 +274,7 @@
   function run(){
     clearInterval(tick);
     tick = setInterval(() => {
-      if(!loaded || !playerActive()) return;
+      if(!loaded || !playerActive() || isVip()) return;
       if(seconds <= 0){ stopPlaybackAndOpen(); return; }
       seconds--;
       syncCounter++;
@@ -297,8 +312,8 @@
 
   async function beginSupportFlow(){
     if(claimRunning) return;
-    if(seconds > 0){
-      setStatus(`You still have ${fmt(seconds)} free watch time. Ads unlock at 0:00.`);
+    if(isVip()){
+      setStatus('VIP members already have unlimited watch time.');
       return;
     }
 
@@ -344,9 +359,23 @@
   }
 
   window.cfOpenWatchTime = () => {
-    if(seconds <= 0) open(true);
-    else window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+    if(isVip()) return window.showToast?.('VIP members have unlimited watch time.');
+    if(!user()) return window.requireLogin?.(() => open(false));
+    open(seconds <= 0);
   };
+  window.addEventListener('cineflex-membership-change', event => {
+    vipActive = !!event.detail?.vip;
+    render();
+    if(vipActive){
+      claimRunning = false;
+      clearInterval(claimTimer);
+      closeSponsorWindow();
+      $('cfWatchTimeModal')?.classList.remove('open');
+      resumePlayback();
+    } else if(loaded && seconds <= 0 && playerActive()){
+      stopPlaybackAndOpen();
+    }
+  });
   window.addEventListener('cineflex-login', loadBalance);
   window.addEventListener('cineflex-logout', () => {
     loaded = false;

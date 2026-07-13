@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-6.1.9-catalog-player-fix";
+const CACHE_NAME = "cineflex-build-7.1-monetag-watch-time";
 
 const CORE_ASSETS = [
   "/",
@@ -19,6 +19,8 @@ const CORE_ASSETS = [
   "/js/modules/moderation-guard.js",
   "/css/modules/ai-assistant.css",
   "/js/modules/ai-assistant.js",
+  "/css/modules/watch-time.css",
+  "/js/modules/watch-time.js",
   "/js/modules/personalized.js",
   "/js/modules/personal-home51.js",
   "/css/modules/community53.css",

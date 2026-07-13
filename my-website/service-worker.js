@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-6.1.8-mobile-catalog-nav";
+const CACHE_NAME = "cineflex-build-6.1.9-catalog-player-fix";
 
 const CORE_ASSETS = [
   "/",

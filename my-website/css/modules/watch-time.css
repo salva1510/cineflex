@@ -13,3 +13,11 @@
 .cf-sponsor-progress p{margin:0 0 11px!important;font-size:12px!important;color:#b9bec9!important}
 .cf-sponsor-track{height:7px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.09)}
 .cf-sponsor-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#e50914,#ff5560);transition:width .35s linear}
+
+
+/* Permanent Add Time action v7.1.1 */
+.cf-add-time-action{display:inline-flex!important;align-items:center;gap:8px;background:rgba(229,9,20,.12)!important;border:1px solid rgba(229,9,20,.42)!important;color:#fff!important}
+.cf-add-time-action:hover{background:rgba(229,9,20,.24)!important;border-color:rgba(255,64,74,.8)!important;transform:translateY(-1px)}
+.cf-add-time-action b{margin-left:2px;padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.28);font-size:11px;line-height:1.2;color:#fff}
+.cf-add-time-action.low{border-color:#ffb020!important;color:#ffd37a!important}.cf-add-time-action.empty{border-color:#ff3344!important;background:rgba(255,51,68,.16)!important}
+@media(max-width:600px){.cf-add-time-action{flex:1 1 calc(50% - 6px);justify-content:center;min-height:46px}.cf-watchtime-chip{z-index:999!important}}

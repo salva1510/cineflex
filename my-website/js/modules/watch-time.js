@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + MONETAG SUPPORT FLOW v7.1 */
+/* CINEFLEX WATCH TIME + ON-DEMAND MONETAG FLOW v7.1.2 */
 (function(){
   'use strict';
 
@@ -17,6 +17,33 @@
   let claimRunning = false;
   let claimTimer = null;
   let lastClaimAt = 0;
+  let monetagLoadPromise = null;
+
+  function loadMonetagAfterExpiry(){
+    if(seconds > 0) return Promise.resolve(false);
+    if(window.__cineflexMonetagLoaded) return Promise.resolve(true);
+    if(monetagLoadPromise) return monetagLoadPromise;
+
+    monetagLoadPromise = new Promise((resolve) => {
+      const existing = document.querySelector('script[data-cineflex-monetag="259251"]');
+      if(existing){
+        window.__cineflexMonetagLoaded = true;
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://quge5.com/88/tag.min.js';
+      script.async = true;
+      script.setAttribute('data-zone', '259251');
+      script.setAttribute('data-cfasync', 'false');
+      script.setAttribute('data-cineflex-monetag', '259251');
+      script.onload = () => { window.__cineflexMonetagLoaded = true; resolve(true); };
+      script.onerror = () => { monetagLoadPromise = null; resolve(false); };
+      document.head.appendChild(script);
+    });
+    return monetagLoadPromise;
+  }
 
   function user(){ return window.auth?.currentUser || window.currentUser || null; }
 
@@ -39,6 +66,31 @@
   }
 
   function build(){
+    const actions = document.querySelector('.modal-actions-wrapper');
+    if(actions && !$('cfAddTimeAction')){
+      actions.insertAdjacentHTML('beforeend', `
+        <button id="cfAddTimeAction" class="action-btn-large cf-add-time-action" type="button">
+          <i class="fa-solid fa-clock"></i>
+          <span>Add Time</span>
+          <b id="cfAddTimeActionBalance">15:00</b>
+        </button>`);
+      $('cfAddTimeAction').onclick = () => {
+        if(seconds > 0){
+          window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+          return;
+        }
+        if(!user()){
+          if(typeof window.requireLogin === 'function'){
+            window.requireLogin(() => open(true));
+          } else {
+            window.openLoginModal?.();
+          }
+          return;
+        }
+        open(true);
+      };
+    }
+
     const playerBox = $('modal-player-container');
     if(playerBox && !$('cfWatchTimeChip')){
       playerBox.style.position = playerBox.style.position || 'relative';
@@ -48,7 +100,10 @@
           <span><b id="cfWatchTimeText">15:00</b> left</span>
           <button type="button" id="cfAddTimeMini">+ Time</button>
         </div>`);
-      $('cfAddTimeMini').onclick = () => open(false);
+      $('cfAddTimeMini').onclick = () => {
+        if(seconds <= 0) open(true);
+        else window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+      };
     }
 
     if(!$('cfWatchTimeModal')){
@@ -123,11 +178,21 @@
     const text = fmt(seconds);
     if($('cfWatchTimeText')) $('cfWatchTimeText').textContent = text;
     if($('cfTimeBalance')) $('cfTimeBalance').textContent = text;
+    if($('cfAddTimeActionBalance')) $('cfAddTimeActionBalance').textContent = text;
+    const action = $('cfAddTimeAction');
+    if(action){
+      action.classList.toggle('low', seconds > 0 && seconds <= 120);
+      action.classList.toggle('empty', seconds <= 0);
+      action.hidden = seconds > 0;
+      action.title = seconds <= 0 ? 'Add 15 minutes' : `Free watch time: ${text}`;
+    }
     const chip = $('cfWatchTimeChip');
     if(chip){
       chip.classList.toggle('low', seconds > 0 && seconds <= 120);
       chip.classList.toggle('empty', seconds <= 0);
     }
+    const mini = $('cfAddTimeMini');
+    if(mini) mini.hidden = seconds > 0;
   }
 
   async function loadBalance(){
@@ -181,6 +246,7 @@
       frame.dataset.cfHeldSrc = frame.src;
       frame.src = 'about:blank';
     }
+    loadMonetagAfterExpiry();
     open(true);
   }
 
@@ -230,8 +296,14 @@
     }, 1100);
   }
 
-  function beginSupportFlow(){
+  async function beginSupportFlow(){
     if(claimRunning) return;
+    if(seconds > 0){
+      setStatus(`You still have ${fmt(seconds)} free watch time. Ads unlock at 0:00.`);
+      return;
+    }
+
+    await loadMonetagAfterExpiry();
     const now = Date.now();
     if(now - lastClaimAt < CLAIM_COOLDOWN_MS){
       setStatus('Please wait a moment before trying again.');
@@ -269,7 +341,10 @@
     }, 1000);
   }
 
-  window.cfOpenWatchTime = () => open(false);
+  window.cfOpenWatchTime = () => {
+    if(seconds <= 0) open(true);
+    else window.showToast?.(`You still have ${fmt(seconds)} free watch time.`);
+  };
   window.addEventListener('cineflex-login', loadBalance);
   window.addEventListener('cineflex-logout', () => {
     loaded = false;

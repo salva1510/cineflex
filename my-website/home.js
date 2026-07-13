@@ -1911,3 +1911,11 @@ async function createProfile(){
   window.addEventListener('load', () => { patchRatings(); updateAuthNote(); setTimeout(patchRatings, 1300); });
   if(document.readyState !== 'loading'){ patchRatings(); updateAuthNote(); }
 })();
+
+// CineFlex Top 10 desktop navigation
+function cfScrollTop10(direction) {
+  const row = document.getElementById('top10-list');
+  if (!row) return;
+  const amount = Math.max(320, Math.round(row.clientWidth * 0.78));
+  row.scrollBy({ left: direction * amount, behavior: 'smooth' });
+}

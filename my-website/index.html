@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/core/signature.css?v=1.0">
   <link rel="stylesheet" href="css/modules/personalized.css?v=2.1">
   <link rel="stylesheet" href="css/modules/watch-party.css?v=3.4">
-  <link rel="stylesheet" href="css/modules/content-center.css?v=4.2">
+  <link rel="stylesheet" href="css/modules/content-center.css?v=6.1.5">
   <link rel="stylesheet" href="css/modules/progression.css?v=3.4">
   <link rel="stylesheet" href="css/modules/ai-assistant.css?v=6.1.2">
   <link rel="stylesheet" href="profiles.css?v=15.1">
@@ -218,23 +218,7 @@ CINEFLEX PROFILE SELECTOR
   <div id="cf-hero-dots" class="cf-hero-dots" aria-label="Featured title position"></div>
 </header>
 
-<section class="cf-studio-panel" aria-label="CineFlex highlights">
-  <div class="studio-card studio-main">
-    <span class="studio-label">Today's Mode</span>
-    <strong>Unlimited Movie Night</strong>
-    <p>Swipe, search, save, and continue watching with a cleaner premium feel.</p>
-  </div>
-  <div class="studio-card">
-    <i class="fa-solid fa-mobile-screen-button"></i>
-    <strong>Mobile First</strong>
-    <p>Mas smooth sa phone, mas compact ang actions.</p>
-  </div>
-  <div class="studio-card">
-    <i class="fa-solid fa-wand-magic-sparkles"></i>
-    <strong>Fresh Layout</strong>
-    <p>Glass effects, glow cards, at modern spacing.</p>
-  </div>
-</section>
+
 
 <section class="cf-discovery-dock" aria-label="Quick discovery">
   <div class="cf-dock-label"><i class="fa-solid fa-compass"></i> Pick a vibe</div>
@@ -265,7 +249,11 @@ CINEFLEX PROFILE SELECTOR
     <section class="row cf-top10-section" id="top10-section">
       <div class="cf-row-heading">
         <div><span class="cf-row-kicker">Most watched across CineFlex</span><h2>Top 10 Today</h2></div>
-        <button class="cf-row-refresh" type="button" onclick="window.cfRefreshHome51?.()" aria-label="Refresh personalized rows"><i class="fa-solid fa-rotate"></i></button>
+        <div class="cf-top10-controls" aria-label="Top 10 navigation">
+          <button type="button" onclick="cfScrollTop10(-1)" aria-label="Scroll Top 10 left"><i class="fa-solid fa-chevron-left"></i></button>
+          <button type="button" onclick="cfScrollTop10(1)" aria-label="Scroll Top 10 right"><i class="fa-solid fa-chevron-right"></i></button>
+          <button class="cf-row-refresh" type="button" onclick="window.cfRefreshHome51?.()" aria-label="Refresh personalized rows"><i class="fa-solid fa-rotate"></i></button>
+        </div>
       </div>
       <div class="cf-top10-scroller" id="top10-list"><div class="cf-row-loading">Loading today’s chart...</div></div>
     </section>
@@ -415,11 +403,13 @@ CINEFLEX PROFILE SELECTOR
     </div>
 </div>
 
-<div class="bottom-nav">
-  <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></div>
-  <div class="nav-item" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
-  <div class="nav-item" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></div>
-</div>
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button class="nav-item active" type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="nav-item" type="button" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+  <button class="nav-item" type="button" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i><span>My List</span></button>
+  <button class="nav-item" type="button" onclick="window.CineFlexParty && window.CineFlexParty.open()"><i class="fa-solid fa-users-viewfinder"></i><span>Party</span></button>
+  <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
+</nav>
 
 <div id="search-overlay" class="search-overlay" style="display:none;">
     <div class="search-input-wrapper">
@@ -459,7 +449,7 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/watch-party.js?v=3.4"></script>
   <script src="js/modules/progression.js?v=3.4"></script>
   <script src="js/modules/admin-homepage.js?v=4.1"></script>
-  <script src="js/modules/content-center.js?v=4.2"></script>
+  <script src="js/modules/content-center.js?v=6.1.5"></script>
   <link rel="stylesheet" href="admin43.css?v=4.3">
   <script src="js/modules/moderation-guard.js?v=4.3"></script>
   <script src="js/modules/ai-assistant.js?v=6.1.2"></script>

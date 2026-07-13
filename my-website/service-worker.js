@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-6.1.7-option-a-peachify";
+const CACHE_NAME = "cineflex-build-6.1.8-mobile-catalog-nav";
 
 const CORE_ASSETS = [
   "/",

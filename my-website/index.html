@@ -65,6 +65,7 @@
   </style>
   <link rel="stylesheet" href="css/modules/admin-homepage.css?v=4.1">
   <link rel="stylesheet" href="css/modules/community53.css?v=5.3">
+  <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.0">
 </head>
 <body>
 <!-- ===========================
@@ -86,10 +87,19 @@ CINEFLEX PROFILE SELECTOR
     </div>
 
 </div>
-<nav class="navbar">
-    <div class="logo">CINEFLEX</div>
-    <div class="nav-icons">
-        <button id="installBtn" style="display:none; background: #e50914; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-weight: bold;">Install</button>
+<nav class="navbar cf-dulo-navbar">
+    <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home">CINEFLEX</button>
+    <div class="cf-desktop-nav" aria-label="Browse CineFlex">
+      <button class="active" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Home</button>
+      <button type="button" onclick="document.getElementById('trending-section')?.scrollIntoView({behavior:'smooth'})">Movies</button>
+      <button type="button" onclick="document.getElementById('kdrama-section')?.scrollIntoView({behavior:'smooth'})">TV Shows</button>
+      <button type="button" onclick="document.getElementById('anime-section')?.scrollIntoView({behavior:'smooth'})">Anime</button>
+      <button type="button" onclick="viewWatchlist()">Library</button>
+    </div>
+    <div class="nav-icons cf-nav-actions">
+      <button class="cf-nav-search" type="button" onclick="openSearch()" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button id="installBtn" class="cf-install-btn" style="display:none">Install</button>
+      <button class="cf-nav-menu" type="button" onclick="openMenuDrawer()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
     </div>
 </nav>
 

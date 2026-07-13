@@ -29,3 +29,10 @@
 .cf-add-time-action[hidden],#cfAddTimeMini[hidden]{display:none!important}
 .cf-add-time-action{position:relative}
 .cf-add-time-action b{white-space:nowrap}
+
+
+/* BUILD 8.0.2 — persistent drawer Add Time */
+.cf-drawer-add-time{width:100%;display:flex!important;align-items:center;gap:12px;text-align:left;border:1px solid rgba(229,9,20,.35)!important;background:linear-gradient(135deg,rgba(229,9,20,.18),rgba(255,255,255,.04))!important;color:#fff!important;border-radius:14px;padding:13px 14px;margin-top:10px;cursor:pointer}
+.cf-drawer-add-time>i:first-child{width:34px;height:34px;border-radius:10px;background:#e50914;display:grid;place-items:center;flex:none}
+.cf-drawer-add-time span{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.cf-drawer-add-time b{font-size:.92rem}.cf-drawer-add-time small{font-size:.72rem;color:#b8c0cc;font-weight:600}
+.cf-drawer-add-time[hidden]{display:none!important}

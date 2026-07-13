@@ -96,6 +96,29 @@
       addTimeAction.addEventListener('click', requestAddTime);
     }
 
+
+    // Always-visible Add Time entry inside the menu drawer for Free members.
+    const drawerLinks = document.querySelector('#menu-drawer .drawer-links');
+    if(drawerLinks && !$('cfDrawerAddTime')){
+      const membershipSection = $('cfMembershipCard')?.closest('.drawer-section');
+      const html = `
+        <button id="cfDrawerAddTime" class="drawer-item cf-drawer-add-time" type="button">
+          <i class="fa-solid fa-clock"></i>
+          <span><b>Add Watch Time</b><small id="cfDrawerTimeBalance">Current: ${fmt(seconds)} • +15 minutes</small></span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>`;
+      if(membershipSection) membershipSection.insertAdjacentHTML('beforeend', html);
+      else drawerLinks.insertAdjacentHTML('afterbegin', `<div class="drawer-section cf-watchtime-drawer-section">${html}</div>`);
+    }
+    const drawerAdd = $('cfDrawerAddTime');
+    if(drawerAdd && !drawerAdd.dataset.cfBound){
+      drawerAdd.dataset.cfBound = '1';
+      drawerAdd.addEventListener('click', () => {
+        try { window.closeMenuDrawer?.(); } catch(_) {}
+        requestAddTime();
+      });
+    }
+
     const playerBox = $('modal-player-container');
     if(playerBox && !$('cfWatchTimeChip')){
       playerBox.style.position = playerBox.style.position || 'relative';
@@ -213,6 +236,14 @@
       mini.hidden = vip;
       mini.textContent = '+ Time';
     }
+
+
+    const drawerAdd = $('cfDrawerAddTime');
+    if(drawerAdd){
+      drawerAdd.hidden = vip;
+      drawerAdd.style.display = vip ? 'none' : 'flex';
+    }
+    if($('cfDrawerTimeBalance')) $('cfDrawerTimeBalance').textContent = `Current: ${fmt(seconds)} • +15 minutes`;
   }
 
   async function loadBalance(){
@@ -402,5 +433,15 @@
     build();
     run();
     if(user()) loadBalance();
+  });
+
+
+  // Re-attach controls when the movie modal/drawer is re-rendered by other modules.
+  const uiObserver = new MutationObserver(() => {
+    if(document.body) build();
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    build();
+    uiObserver.observe(document.body, { childList:true, subtree:true });
   });
 })();

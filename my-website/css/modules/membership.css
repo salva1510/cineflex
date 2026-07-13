@@ -8,3 +8,7 @@
 #userBadge.cf-vip-badge{background:linear-gradient(135deg,#f3b315,#ff7b00)!important;color:#201300!important;box-shadow:0 4px 16px rgba(255,177,0,.24)}
 #userBadge.cf-free-badge{background:#e50914!important;color:#fff!important}
 .cf-user-vip .cf-watchtime-chip{border-color:rgba(255,200,73,.58);color:#ffe09a;background:rgba(31,22,4,.9)}
+
+/* Build 8.0.4 — visible premium account badge */
+.cf-premium-account-badge{display:inline-flex;align-items:center;justify-content:center;margin-top:7px;border:1px solid rgba(255,205,76,.45);background:rgba(255,190,40,.1);color:#ffd86a;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:950;letter-spacing:.65px;cursor:pointer}
+.cf-premium-account-badge.active{background:linear-gradient(135deg,#f7c640,#ff8a00);color:#211400;border-color:transparent;box-shadow:0 5px 16px rgba(255,170,0,.22)}

@@ -1,4 +1,4 @@
-/* CINEFLEX MEMBERSHIP FOUNDATION v8.0.0 */
+/* CINEFLEX MEMBERSHIP FOUNDATION v8.0.4 */
 (function(){
   'use strict';
 
@@ -41,6 +41,13 @@
       badge.textContent = vip ? '👑 VIP MEMBER' : 'FREE MEMBER';
       badge.classList.toggle('cf-vip-badge', vip);
       badge.classList.toggle('cf-free-badge', !vip);
+    }
+
+    const premiumBadge = $('cfPremiumBadge');
+    if(premiumBadge){
+      premiumBadge.textContent = vip ? '👑 PREMIUM VIP' : 'UPGRADE TO VIP';
+      premiumBadge.classList.toggle('active', vip);
+      premiumBadge.setAttribute('aria-label', vip ? `Premium VIP valid until ${expiryLabel()}` : 'View VIP membership');
     }
 
     const plan = $('cfMembershipPlan');
@@ -121,7 +128,8 @@
   };
 
   window.cfOpenMembershipInfo = openInfo;
-  window.addEventListener('cineflex-login', () => setTimeout(load, 100));
+  window.addEventListener('cineflex-login', () => { setTimeout(load, 100); setTimeout(render, 500); });
+  window.addEventListener('cineflex-profile-change', () => setTimeout(render, 50));
   window.addEventListener('cineflex-logout', load);
   document.addEventListener('DOMContentLoaded', () => {
     render();

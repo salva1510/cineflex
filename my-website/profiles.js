@@ -96,7 +96,12 @@
       if (photo) photo.src = activeProfile?.avatar || user.photoURL || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.displayName || user.email || "User") + "&background=e50914&color=fff";
       if (name) name.textContent = activeProfile?.name || user.displayName || "CineFlex User";
       if (email) email.textContent = user.email || "Logged in";
-      if (badge) badge.textContent = activeProfile?.kids ? "KIDS PROFILE" : "CINEFLEX MEMBER";
+      if (badge) {
+        const vip = !!window.CineFlexMembership?.isVip?.();
+        badge.textContent = vip ? "👑 PREMIUM MEMBER" : (activeProfile?.kids ? "KIDS PROFILE" : "FREE MEMBER");
+        badge.classList.toggle("cf-vip-badge", vip);
+        badge.classList.toggle("cf-free-badge", !vip);
+      }
       if (loginActions) loginActions.style.display = "none";
       if (accountActions) accountActions.style.display = "block";
       if (logoutBtn) logoutBtn.style.display = "flex";
@@ -320,16 +325,15 @@
     try { window.closeMenuDrawer?.(); } catch(e) {}
     document.body.classList.remove('drawer-open');
 
-    const authObj = window.auth || (typeof auth !== 'undefined' ? auth : null);
-    let activeUser = authObj?.currentUser || null;
+    // Firebase Auth can need a moment to restore the mobile/PWA session.
+    let activeUser = (window.auth || (typeof auth !== 'undefined' ? auth : null))?.currentUser || null;
+    if (!activeUser) activeUser = await waitForFirebaseUser(2200);
+
     if (!activeUser) {
-      if (typeof window.requireLogin === 'function') {
-        window.requireLogin(() => setTimeout(() => window.createProfile(), 150));
-      } else if (typeof window.openLoginModal === 'function') {
-        window.openLoginModal();
-      } else {
-        toast('Mag-login muna para gumawa ng profile.');
-      }
+      const reopen = () => setTimeout(() => window.createProfile(), 250);
+      if (typeof window.requireLogin === 'function') window.requireLogin(reopen);
+      else if (typeof window.openLoginModal === 'function') window.openLoginModal();
+      else toast('Mag-login muna para gumawa ng profile.');
       return;
     }
 
@@ -452,13 +456,17 @@ Mawawala ang profile data nito sa account mo.`);
     else loadProfiles();
   });
 
-  // Backup click handler for dynamically rendered Add Profile controls.
+  // Reliable handler for all static and dynamically rendered Add Profile controls.
   document.addEventListener('click', (event) => {
-    const trigger = event.target.closest('.drawer-add-profile, [data-cf-add-profile]');
+    const trigger = event.target.closest('.drawer-add-profile, [data-cf-add-profile], .cf-add-profile-trigger');
     if (!trigger) return;
     event.preventDefault();
     event.stopPropagation();
     window.createProfile();
+  }, true);
+
+  window.addEventListener('cineflex-membership-change', () => {
+    updateDrawerAccount((window.auth && auth.currentUser) || null);
   });
 
   console.log("✅ CineFlex Profiles Management v15.2 Loaded");

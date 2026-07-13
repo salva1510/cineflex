@@ -69,7 +69,7 @@
   <link rel="stylesheet" href="css/modules/desktop-row-scroll.css?v=1.0">
   <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.3">
   <link rel="stylesheet" href="css/modules/watch-time.css?v=8.0.2">
-  <link rel="stylesheet" href="css/modules/membership.css?v=8.0.3">
+  <link rel="stylesheet" href="css/modules/membership.css?v=8.0.4">
 </head>
 <body>
 <!-- ===========================
@@ -168,7 +168,7 @@ CINEFLEX PROFILE SELECTOR
                 <button onclick="toggleManageProfiles()" type="button">Manage</button>
             </div>
             <div id="drawer-profiles" class="drawer-profiles"></div>
-            <button class="drawer-add-profile" onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
+            <button class="drawer-add-profile cf-add-profile-trigger" data-cf-add-profile onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
         </div>
         <div class="drawer-section">
             <h4>Personal</h4>
@@ -231,6 +231,7 @@ CINEFLEX PROFILE SELECTOR
             font-size:11px;">
                 FREE MEMBER
             </div>
+            <button id="cfPremiumBadge" class="cf-premium-account-badge" type="button" onclick="cfOpenMembershipInfo()">UPGRADE TO VIP</button>
         </div>
 
     </div>
@@ -250,7 +251,7 @@ CINEFLEX PROFILE SELECTOR
     </div>
 
     <div id="drawerAccountActions" class="drawer-account-actions" style="display:none;">
-        <div class="drawer-item" onclick="createProfile()"><i class="fa-solid fa-user-plus"></i> Add Profile</div>
+        <div class="drawer-item cf-add-profile-trigger" data-cf-add-profile onclick="createProfile()"><i class="fa-solid fa-user-plus"></i> Add Profile</div>
         <div class="drawer-item" onclick="toggleManageProfiles()"><i class="fa-solid fa-user-pen"></i> Manage Profiles</div>
         <div class="drawer-item" onclick="logout()" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</div>
     </div>
@@ -524,7 +525,7 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/personal-home51.js?v=5.1"></script>
 <script src="auth.js?v=3.1"></script>
   <script src="js/modules/community53.js?v=5.3"></script>
-  <script src="profiles.js?v=15.2"></script>
+  <script src="profiles.js?v=15.4"></script>
   <script src="js/modules/watch-party.js?v=3.4"></script>
   <script src="js/modules/progression.js?v=3.4"></script>
   <script src="js/modules/admin-homepage.js?v=4.1"></script>
@@ -532,7 +533,7 @@ CINEFLEX PROFILE SELECTOR
   <link rel="stylesheet" href="admin43.css?v=4.3">
   <script src="js/modules/moderation-guard.js?v=4.3"></script>
   <script src="js/modules/ai-assistant.js?v=6.1.2"></script>
-  <script src="js/modules/membership.js?v=8.0.3"></script>
+  <script src="js/modules/membership.js?v=8.0.4"></script>
   <script src="js/modules/watch-time.js?v=8.0.3"></script>
 </body>
 </html>

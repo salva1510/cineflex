@@ -316,8 +316,25 @@
     state.selectedAvatar = src;
     renderAvatarPicker();
   };
-  window.createProfile = function () {
+  window.createProfile = async function () {
+    try { window.closeMenuDrawer?.(); } catch(e) {}
+    document.body.classList.remove('drawer-open');
+
+    const authObj = window.auth || (typeof auth !== 'undefined' ? auth : null);
+    let activeUser = authObj?.currentUser || null;
+    if (!activeUser) {
+      if (typeof window.requireLogin === 'function') {
+        window.requireLogin(() => setTimeout(() => window.createProfile(), 150));
+      } else if (typeof window.openLoginModal === 'function') {
+        window.openLoginModal();
+      } else {
+        toast('Mag-login muna para gumawa ng profile.');
+      }
+      return;
+    }
+
     if (state.profiles.length >= MAX_PROFILES) return toast("Maximum 5 profiles lang muna.");
+    ensureModal();
     openEditor(null);
   };
   window.closeAddProfile = function () {
@@ -435,5 +452,14 @@ Mawawala ang profile data nito sa account mo.`);
     else loadProfiles();
   });
 
-  console.log("✅ CineFlex Profiles Management v15 Loaded");
+  // Backup click handler for dynamically rendered Add Profile controls.
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('.drawer-add-profile, [data-cf-add-profile]');
+    if (!trigger) return;
+    event.preventDefault();
+    event.stopPropagation();
+    window.createProfile();
+  });
+
+  console.log("✅ CineFlex Profiles Management v15.2 Loaded");
 })();

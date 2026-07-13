@@ -1,0 +1,5 @@
+CineFlex Build 8.0.2
+- Add Time visible in movie details and menu drawer
+- Reattaches Add Time after dynamic renders
+- Add Profile closes drawer, requires login, and reliably opens editor
+- Profile modal raised above drawer/footer

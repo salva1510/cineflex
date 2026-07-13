@@ -436,10 +436,31 @@
   });
 
 
-  // Re-attach controls when the movie modal/drawer is re-rendered by other modules.
+  // Safely restore controls only when another module has actually replaced them.
+  // Do not call build() for every DOM mutation: render() also updates the DOM and
+  // would otherwise create an endless observer loop that freezes the splash screen.
+  let uiRepairQueued = false;
+  function controlsNeedRepair(){
+    const actions = document.querySelector('.modal-actions-wrapper, .modal-actions, .details-actions');
+    const drawerLinks = document.querySelector('#menu-drawer .drawer-links');
+    const playerBox = $('modal-player-container');
+    return !!(
+      !$('cfWatchTimeModal') ||
+      (actions && !$('cfAddTimeAction')) ||
+      (drawerLinks && !$('cfDrawerAddTime')) ||
+      (playerBox && !$('cfWatchTimeChip'))
+    );
+  }
+
   const uiObserver = new MutationObserver(() => {
-    if(document.body) build();
+    if(uiRepairQueued || !controlsNeedRepair()) return;
+    uiRepairQueued = true;
+    setTimeout(() => {
+      uiRepairQueued = false;
+      if(document.body && controlsNeedRepair()) build();
+    }, 120);
   });
+
   document.addEventListener('DOMContentLoaded', () => {
     build();
     uiObserver.observe(document.body, { childList:true, subtree:true });

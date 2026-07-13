@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + CLICK-TO-LOAD MONETAG FLOW v7.2.1 */
+/* CINEFLEX WATCH TIME + ISOLATED MONETAG SPONSOR FLOW v7.2.2 */
 (function(){
   'use strict';
 
@@ -17,32 +17,29 @@
   let claimRunning = false;
   let claimTimer = null;
   let lastClaimAt = 0;
-  let monetagLoadPromise = null;
+  let sponsorWindow = null;
 
-  function loadMonetagAfterExpiry(){
-    if(seconds > 0) return Promise.resolve(false);
-    if(window.__cineflexMonetagLoaded) return Promise.resolve(true);
-    if(monetagLoadPromise) return monetagLoadPromise;
+  function openSponsorWindow(){
+    try {
+      const token = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      sponsorWindow = window.open(
+        `cineflex-support.html?claim=${encodeURIComponent(token)}`,
+        `cineflexSponsor_${token}`,
+        'popup=yes,width=520,height=760,scrollbars=yes,resizable=yes'
+      );
+      return !!sponsorWindow;
+    } catch (error) {
+      console.warn('Sponsor page could not be opened:', error);
+      sponsorWindow = null;
+      return false;
+    }
+  }
 
-    monetagLoadPromise = new Promise((resolve) => {
-      const existing = document.querySelector('script[data-cineflex-monetag="259251"]');
-      if(existing){
-        window.__cineflexMonetagLoaded = true;
-        resolve(true);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://quge5.com/88/tag.min.js';
-      script.async = true;
-      script.setAttribute('data-zone', '259251');
-      script.setAttribute('data-cfasync', 'false');
-      script.setAttribute('data-cineflex-monetag', '259251');
-      script.onload = () => { window.__cineflexMonetagLoaded = true; resolve(true); };
-      script.onerror = () => { monetagLoadPromise = null; resolve(false); };
-      document.head.appendChild(script);
-    });
-    return monetagLoadPromise;
+  function closeSponsorWindow(){
+    try {
+      if(sponsorWindow && !sponsorWindow.closed) sponsorWindow.close();
+    } catch (_) {}
+    sponsorWindow = null;
   }
 
   function user(){ return window.auth?.currentUser || window.currentUser || null; }
@@ -286,6 +283,7 @@
       lastSupportRewardSeconds: REWARD_SECONDS
     });
     setStatus('Thank you! 15 minutes have been added.');
+    closeSponsorWindow();
     resumePlayback();
     window.showToast?.('15 minutes added to your watch time.');
     claimRunning = false;
@@ -304,7 +302,6 @@
       return;
     }
 
-    await loadMonetagAfterExpiry();
     const now = Date.now();
     if(now - lastClaimAt < CLAIM_COOLDOWN_MS){
       setStatus('Please wait a moment before trying again.');
@@ -312,6 +309,11 @@
     }
 
     lastClaimAt = now;
+    const sponsorOpened = openSponsorWindow();
+    if(!sponsorOpened){
+      setStatus('Your browser blocked the sponsor page. Allow pop-ups for CineFlex, then try again.');
+      return;
+    }
     claimRunning = true;
     const button = $('cfWatchAdBtn');
     const closeButton = $('cfTimeClose');
@@ -323,15 +325,14 @@
     button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sponsor experience started';
     closeButton.style.display = 'none';
     progress.hidden = false;
-    setStatus('A sponsor page or ad may open. Return to CineFlex and keep this page active.');
+    setStatus('The sponsor page opened in a separate tab. Return to CineFlex and keep this page active.');
 
     let remaining = SUPPORT_WAIT_SECONDS;
     secondsLabel.textContent = String(remaining);
     bar.style.width = '0%';
 
-    // Monetag MultiTag listens to genuine user interactions on the page.
-    // We intentionally do not simulate clicks or claim that an ad was completed.
-    window.dispatchEvent(new CustomEvent('cineflex-support-start', { detail:{ provider:'monetag' } }));
+    // Monetag runs only inside the isolated sponsor page, never in the main CineFlex page.
+    window.dispatchEvent(new CustomEvent('cineflex-support-start', { detail:{ provider:'monetag-isolated' } }));
 
     claimTimer = setInterval(() => {
       if(document.hidden) return;
@@ -352,6 +353,7 @@
     seconds = 0;
     claimRunning = false;
     clearInterval(claimTimer);
+    closeSponsorWindow();
     render();
   });
   window.addEventListener('beforeunload', saveBalance);

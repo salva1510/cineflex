@@ -114,3 +114,23 @@ body.cf-catalog-open{overflow:hidden}.cf-dulo-navbar{z-index:1300!important}
   .cf-catalog-filter{padding:9px 11px!important;font-size:.72rem!important}
   .cf-catalog-main{padding-left:10px!important;padding-right:10px!important}
 }
+
+/* Catalog playback/modal layering fix v1.3 */
+#details-modal.modal{
+  z-index:30000!important;
+}
+#details-modal .modal-content{
+  position:relative;
+  z-index:30001;
+}
+#details-modal #modal-player-container,
+#details-modal .iframe-container,
+#details-modal #modal-video-iframe{
+  z-index:30002;
+}
+body.cf-catalog-open:has(#details-modal[style*="display: flex"]) .cf-dulo-navbar,
+body.cf-catalog-open:has(#details-modal[style*="display:flex"]) .cf-dulo-navbar,
+body.cf-catalog-open:has(#details-modal[style*="display: flex"]) .bottom-nav,
+body.cf-catalog-open:has(#details-modal[style*="display:flex"]) .bottom-nav{
+  visibility:hidden;
+}

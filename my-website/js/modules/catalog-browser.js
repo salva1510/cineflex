@@ -30,7 +30,7 @@
   document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.cf-catalog-filter').forEach(b=>b.addEventListener('click',()=>select(b.dataset.filter)));
     $('cf-catalog-more')?.addEventListener('click',()=>load(false));
-    $('cf-catalog-grid')?.addEventListener('click',e=>{const c=e.target.closest('.cf-catalog-card');if(!c)return;try{const item=JSON.parse(decodeURIComponent(c.dataset.item));showDetails(item)}catch(err){console.error(err)}});
+    $('cf-catalog-grid')?.addEventListener('click',async e=>{const c=e.target.closest('.cf-catalog-card');if(!c)return;e.preventDefault();e.stopPropagation();try{const item=JSON.parse(decodeURIComponent(c.dataset.item));if(typeof window.showDetails!=='function')throw new Error('CineFlex details player is not ready.');await window.showDetails(item);const modal=$('details-modal');if(modal){modal.style.display='flex';modal.style.zIndex='30000'}}catch(err){console.error('Catalog open error:',err);if(typeof window.showToast==='function')window.showToast('Unable to open this title. Please try again.')}});
     $('cf-catalog-grid')?.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('.cf-catalog-card'))e.target.closest('.cf-catalog-card').click()});
     $('cf-catalog-main')?.addEventListener('scroll',e=>{const el=e.currentTarget;if(el.scrollTop+el.clientHeight>=el.scrollHeight-500&&page<totalPages)load(false)});
   });

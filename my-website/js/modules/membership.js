@@ -1,7 +1,7 @@
 /* CINEFLEX MEMBERSHIP FOUNDATION v8.0.5 */
 (function(){
   'use strict';
-  const PRICE=10, GCASH='09365028152';
+  const PRICE=10, GCASH='09557243662';
   const state={loaded:false,plan:'free',vipExpiryMs:0};
   let unsubscribe=null, expiryTimer=null;
   const $=id=>document.getElementById(id);

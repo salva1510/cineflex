@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-7.2.1-ads-on-support-click";
+const CACHE_NAME = "cineflex-build-8.0.0-membership-part1";
 
 const CORE_ASSETS = [
   "/",
@@ -21,6 +21,9 @@ const CORE_ASSETS = [
   "/js/modules/ai-assistant.js",
   "/css/modules/watch-time.css",
   "/js/modules/watch-time.js",
+  "/css/modules/membership.css",
+  "/js/modules/membership.js",
+  "/cineflex-support.html",
   "/js/modules/personalized.js",
   "/js/modules/personal-home51.js",
   "/css/modules/community53.css",

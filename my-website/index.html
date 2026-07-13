@@ -68,7 +68,8 @@
   <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.1">
   <link rel="stylesheet" href="css/modules/desktop-row-scroll.css?v=1.0">
   <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.3">
-  <link rel="stylesheet" href="css/modules/watch-time.css?v=7.2.1">
+  <link rel="stylesheet" href="css/modules/watch-time.css?v=8.0.0">
+  <link rel="stylesheet" href="css/modules/membership.css?v=8.0.0">
 </head>
 <body>
 <!-- ===========================
@@ -237,6 +238,15 @@ CINEFLEX PROFILE SELECTOR
     <div id="drawerLoginActions" class="drawer-login-actions">
         <button class="drawer-auth-btn google" onclick="googleLogin()" type="button"><i class="fa-brands fa-google"></i> Login with Google</button>
         <button class="drawer-auth-btn" onclick="openLoginModal()" type="button"><i class="fa-solid fa-envelope"></i> Email Login / Create Account</button>
+    </div>
+
+    <div id="cfMembershipCard" class="cf-membership-card" onclick="cfOpenMembershipInfo()" role="button" tabindex="0">
+        <div class="cf-membership-emblem"><i id="cfMembershipIcon" class="fa-solid fa-user"></i></div>
+        <div class="cf-membership-copy">
+            <strong id="cfMembershipPlan">Free Member</strong>
+            <small id="cfMembershipDetail">15-minute watch balance</small>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#737b88"></i>
     </div>
 
     <div id="drawerAccountActions" class="drawer-account-actions" style="display:none;">
@@ -517,6 +527,7 @@ CINEFLEX PROFILE SELECTOR
   <link rel="stylesheet" href="admin43.css?v=4.3">
   <script src="js/modules/moderation-guard.js?v=4.3"></script>
   <script src="js/modules/ai-assistant.js?v=6.1.2"></script>
-  <script src="js/modules/watch-time.js?v=7.2.1"></script>
+  <script src="js/modules/membership.js?v=8.0.0"></script>
+  <script src="js/modules/watch-time.js?v=8.0.0"></script>
 </body>
 </html>

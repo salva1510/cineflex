@@ -65,7 +65,8 @@
   </style>
   <link rel="stylesheet" href="css/modules/admin-homepage.css?v=4.1">
   <link rel="stylesheet" href="css/modules/community53.css?v=5.3">
-  <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.0">
+  <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.1">
+  <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.0">
 </head>
 <body>
 <!-- ===========================
@@ -90,10 +91,10 @@ CINEFLEX PROFILE SELECTOR
 <nav class="navbar cf-dulo-navbar">
     <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home">CINEFLEX</button>
     <div class="cf-desktop-nav" aria-label="Browse CineFlex">
-      <button class="active" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Home</button>
-      <button type="button" onclick="document.getElementById('trending-section')?.scrollIntoView({behavior:'smooth'})">Movies</button>
-      <button type="button" onclick="document.getElementById('kdrama-section')?.scrollIntoView({behavior:'smooth'})">TV Shows</button>
-      <button type="button" onclick="document.getElementById('anime-section')?.scrollIntoView({behavior:'smooth'})">Anime</button>
+      <button class="active" type="button" onclick="cfCloseCatalog(); window.scrollTo({top:0,behavior:'smooth'})">Home</button>
+      <button type="button" onclick="cfOpenCatalog('all-movies')">Movies</button>
+      <button type="button" onclick="cfOpenCatalog('all-shows')">TV Shows</button>
+      <button type="button" onclick="cfOpenCatalog('anime')">Anime</button>
       <button type="button" onclick="viewWatchlist()">Library</button>
     </div>
     <div class="nav-icons cf-nav-actions">
@@ -104,6 +105,48 @@ CINEFLEX PROFILE SELECTOR
 </nav>
 
 <div class="cf-progress-bar" id="cf-progress-bar"></div>
+
+<section id="cf-catalog" class="cf-catalog" aria-hidden="true">
+  <div class="cf-catalog-shell">
+    <aside class="cf-catalog-sidebar" aria-label="Browse categories">
+      <button class="cf-catalog-mobile-close" type="button" onclick="cfToggleCatalogSidebar(false)" aria-label="Close categories"><i class="fa-solid fa-xmark"></i></button>
+      <div class="cf-catalog-group">
+        <button class="cf-catalog-filter active" data-filter="all-movies"><i class="fa-solid fa-border-all"></i><span>All Movies</span></button>
+        <button class="cf-catalog-filter" data-filter="popular"><i class="fa-solid fa-fire-flame-curved"></i><span>Popular</span></button>
+        <button class="cf-catalog-filter" data-filter="top-rated"><i class="fa-solid fa-trophy"></i><span>Top Rated</span></button>
+        <button class="cf-catalog-filter" data-filter="in-theaters"><i class="fa-solid fa-clapperboard"></i><span>In Theaters</span></button>
+        <button class="cf-catalog-filter" data-filter="coming-soon"><i class="fa-regular fa-calendar"></i><span>Coming Soon</span></button>
+        <button class="cf-catalog-filter" data-filter="all-shows"><i class="fa-solid fa-tv"></i><span>All TV Shows</span></button>
+        <button class="cf-catalog-filter" data-filter="anime"><i class="fa-solid fa-dragon"></i><span>Anime</span></button>
+      </div>
+      <div class="cf-catalog-label">Genres</div>
+      <div class="cf-catalog-group">
+        <button class="cf-catalog-filter" data-filter="action"><i class="fa-solid fa-burst"></i><span>Action & Adventure</span></button>
+        <button class="cf-catalog-filter" data-filter="animation"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Animation</span></button>
+        <button class="cf-catalog-filter" data-filter="comedy"><i class="fa-regular fa-face-laugh"></i><span>Comedy</span></button>
+        <button class="cf-catalog-filter" data-filter="horror"><i class="fa-solid fa-ghost"></i><span>Horror</span></button>
+        <button class="cf-catalog-filter" data-filter="romance"><i class="fa-solid fa-heart"></i><span>Romance</span></button>
+        <button class="cf-catalog-filter" data-filter="scifi"><i class="fa-solid fa-rocket"></i><span>Sci-Fi & Fantasy</span></button>
+        <button class="cf-catalog-filter" data-filter="thriller"><i class="fa-solid fa-user-secret"></i><span>Thriller</span></button>
+        <button class="cf-catalog-filter" data-filter="family"><i class="fa-solid fa-children"></i><span>Family</span></button>
+      </div>
+    </aside>
+    <main class="cf-catalog-main">
+      <div class="cf-catalog-toolbar">
+        <button class="cf-catalog-category-toggle" type="button" onclick="cfToggleCatalogSidebar(true)"><i class="fa-solid fa-sliders"></i> Categories</button>
+        <div>
+          <p class="cf-catalog-eyebrow">Browse CineFlex</p>
+          <h1 id="cf-catalog-title">All Movies</h1>
+        </div>
+        <button class="cf-catalog-exit" type="button" onclick="cfCloseCatalog()"><i class="fa-solid fa-xmark"></i><span>Close</span></button>
+      </div>
+      <div id="cf-catalog-grid" class="cf-catalog-grid"></div>
+      <div id="cf-catalog-status" class="cf-catalog-status">Loading movies...</div>
+      <button id="cf-catalog-more" class="cf-catalog-more" type="button">Load more</button>
+    </main>
+  </div>
+  <button class="cf-catalog-sidebar-backdrop" type="button" onclick="cfToggleCatalogSidebar(false)" aria-label="Close categories"></button>
+</section>
 
 <div class="cf-ambient" aria-hidden="true">
   <span></span><span></span><span></span>
@@ -448,7 +491,8 @@ CINEFLEX PROFILE SELECTOR
 <script src="firebase.js?v=3.1"></script>
   <script src="js/core/foundation.js?v=2.1"></script>
   <script src="js/core/api-client61.js?v=6.1"></script>
-  <script src="home.js?v=3.1"></script>
+  <script src="home.js?v=3.2"></script>
+  <script src="js/modules/catalog-browser.js?v=1.0"></script>
   <script src="js/modules/hero.js?v=2.2"></script>
   <script src="js/core/signature.js?v=1.0"></script>
   <script src="js/modules/personalized.js?v=2.2"></script>

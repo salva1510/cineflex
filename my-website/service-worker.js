@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-8.0.0-membership-part1";
+const CACHE_NAME = "cineflex-build-8.0.1-add-time-drawer-fix";
 
 const CORE_ASSETS = [
   "/",

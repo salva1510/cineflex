@@ -1311,3 +1311,45 @@ body.drawer-open { overflow: hidden; }
 .bottom-nav .nav-item i{font-size:1.18rem}
 .bottom-nav .nav-item.active,.bottom-nav .nav-item:hover{background:linear-gradient(180deg,rgba(229,9,20,.12),transparent)!important;color:#fff!important}
 @media(max-width:600px){.cf-top10-controls>button:not(.cf-row-refresh){display:none}.bottom-nav{height:68px!important}.bottom-nav .nav-item span{font-size:.6rem}.bottom-nav .nav-item i{font-size:1.12rem}}
+
+
+/* CINEFLEX BUILD 8.0.1 — MOBILE DRAWER VISIBILITY FIX */
+@media (max-width: 768px) {
+  .menu-drawer {
+    top: 0 !important;
+    right: -100% !important;
+    bottom: 0 !important;
+    width: min(92vw, 390px) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overscroll-behavior: contain;
+  }
+  .menu-drawer.active { right: 0 !important; }
+  .menu-drawer .drawer-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    flex: 0 0 auto;
+    margin: 0 !important;
+    padding: max(14px, env(safe-area-inset-top)) 16px 13px !important;
+    background: rgba(5,5,8,.97);
+    backdrop-filter: blur(18px);
+  }
+  .menu-drawer .drawer-links {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px calc(110px + env(safe-area-inset-bottom)) !important;
+    scrollbar-width: thin;
+  }
+  .menu-drawer .drawer-section { margin-bottom: 18px !important; }
+  .menu-drawer .drawer-item,
+  .menu-drawer .drawer-auth-btn,
+  .menu-drawer .drawer-add-profile { min-height: 48px; }
+  body.drawer-open .bottom-nav { pointer-events: none; opacity: .28; }
+}

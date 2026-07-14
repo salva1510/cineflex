@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#030711"><title>CineFlex Admin Studio</title><link rel="stylesheet" href="admin.css?v=4.3.1"><link rel="stylesheet" href="admin43.css?v=4.3.1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script><script src="firebase.js?v=4.3.1"></script></head><body>
-<div id="adminLock" class="lock"><div class="lock-card"><i class="fa-solid fa-shield-halved"></i><h2>Checking admin access</h2><p id="lockMessage">Please wait while CineFlex verifies your account.</p><button id="backHome" class="ghost-btn" hidden onclick="location.href='index.html'">Back to CineFlex</button></div></div>
+<div id="adminLock" class="lock"><div class="lock-card"><i class="fa-solid fa-shield-halved"></i><h2>Checking admin access</h2><p id="lockMessage">Please wait while CineFlex verifies your account.</p><div id="adminLoginActions" style="display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px"><button id="adminGoogleLogin" class="primary-btn"><i class="fa-brands fa-google"></i> Login as Admin</button><button id="adminSignOut" class="ghost-btn" style="display:none">Use another account</button></div><button id="backHome" class="ghost-btn" hidden onclick="location.href='index.html'">Back to CineFlex</button></div></div>
 <div class="admin-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">C</div><div><strong>CINEFLEX</strong><small>ADMIN STUDIO 4.3.1</small></div></div><nav class="nav"><button class="nav-btn active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i>Dashboard</button><button class="nav-btn" data-page="homepage"><i class="fa-solid fa-wand-magic-sparkles"></i>Homepage Editor</button><button class="nav-btn" data-page="rooms"><i class="fa-solid fa-users-viewfinder"></i>Live Rooms</button><button class="nav-btn" data-page="requests"><i class="fa-solid fa-inbox"></i>Requests</button><button class="nav-btn" data-page="reports"><i class="fa-solid fa-triangle-exclamation"></i>Link Reports</button><button class="nav-btn" data-page="notifications"><i class="fa-solid fa-bell"></i>Notifications</button><button class="nav-btn" data-page="importer"><i class="fa-solid fa-wand-magic-sparkles"></i>TMDB Import</button><button class="nav-btn" data-page="analytics"><i class="fa-solid fa-chart-line"></i>Analytics</button><button class="nav-btn" data-page="settings"><i class="fa-solid fa-gear"></i>Settings</button></nav><div class="sidebar-foot"><button class="ghost-btn" onclick="location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Open website</button></div></aside>
 <main class="content"><header class="topbar"><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Live overview of your CineFlex platform</p></div><div class="admin-user"><img id="adminPhoto" alt=""><span id="adminName">Admin</span></div></header>
 <section id="dashboard" class="page active"><div class="stats"><article class="stat"><div class="icon"><i class="fa-solid fa-user-group"></i></div><b id="totalUsers">—</b><span>Registered users</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-address-card"></i></div><b id="totalProfiles">—</b><span>CineFlex profiles</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-tower-broadcast"></i></div><b id="activeRooms">—</b><span>Watch Party rooms</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-eye"></i></div><b id="liveViewers">—</b><span>Live room members</span></article></div><div class="grid-2"><div class="panel"><h2>Recent Watch Parties</h2><div id="recentRooms"><p>Loading activity…</p></div></div><div class="panel"><h2>Platform status</h2><div class="activity"><span>Firebase connection</span><span class="badge" id="firebaseStatus">Checking</span></div><div class="activity"><span>Homepage config</span><span class="badge" id="configStatus">Loading</span></div><div class="activity"><span>Admin access</span><span class="badge">Verified</span></div></div></div></section>
@@ -12,4 +12,143 @@
 <section id="importer" class="page"><div class="grid-2"><div class="panel"><h2>TMDB Quick Import</h2><div class="form-grid"><div class="field"><label>Media type</label><select id="importType"><option value="movie">Movie</option><option value="tv">TV Series</option></select></div><div class="field"><label>TMDB ID</label><input id="importId" inputmode="numeric" placeholder="Example: 550"></div></div><div class="actions"><button id="fetchTmdb" class="primary-btn"><i class="fa-solid fa-magnifying-glass"></i> Fetch Details</button></div><div id="importPreview" class="import-preview"><p class="muted">Enter a TMDB ID to preview content.</p></div></div><div class="panel"><h2>Imported Content</h2><div id="importedManager">Loading…</div></div></div></section>
 <section id="analytics" class="page"><div class="stats"><article class="stat"><div class="icon"><i class="fa-solid fa-inbox"></i></div><b id="analyticsRequests">—</b><span>Total requests</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-link-slash"></i></div><b id="analyticsReports">—</b><span>Link reports</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-bell"></i></div><b id="analyticsNotifications">—</b><span>Notifications</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-film"></i></div><b id="analyticsImports">—</b><span>Imported titles</span></article></div><div class="grid-2"><div class="panel"><h2>Request Breakdown</h2><div id="requestBreakdown"></div></div><div class="panel"><h2>Report Breakdown</h2><div id="reportBreakdown"></div></div></div></section>
 <section id="settings" class="page"><div class="panel"><h2>Platform settings</h2><div class="switch-row"><div><b>Maintenance notice</b><br><small>Shows a maintenance message without blocking admin access.</small></div><input id="maintenanceEnabled" class="switch" type="checkbox"></div><div class="field" style="margin-top:15px"><label>Maintenance message</label><textarea id="maintenanceMessage" maxlength="220" placeholder="CineFlex maintenance is in progress."></textarea></div><div class="actions"><button id="saveSettings" class="primary-btn">Save settings</button></div></div></section>
-</main></div><div id="toast" class="toast"></div><script src="admin.js?v=4.3.1"></script><script src="admin42.js?v=4.3.1"></script><script src="admin43.js?v=4.3.1"></script></body></html>
+</main></div><div id="toast" class="toast"></div>
+<script>
+(() => {
+  'use strict';
+
+  const OWNER_EMAIL = 'emviemsalva@gmail.com';
+  const lockMessage = document.getElementById('lockMessage');
+  const loginActions = document.getElementById('adminLoginActions');
+  const loginButton = document.getElementById('adminGoogleLogin');
+  const signOutButton = document.getElementById('adminSignOut');
+  const backHome = document.getElementById('backHome');
+  let adminScriptsLoaded = false;
+  let loginBusy = false;
+
+  function emailOf(user) {
+    return String(user && user.email || '').trim().toLowerCase();
+  }
+
+  function showLogin(message, hasCurrentAccount = false) {
+    lockMessage.textContent = message;
+    loginActions.style.display = 'flex';
+    loginButton.style.display = '';
+    signOutButton.style.display = hasCurrentAccount ? '' : 'none';
+    backHome.hidden = false;
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Could not load ' + src));
+      document.body.appendChild(script);
+    });
+  }
+
+  async function startAdminScripts() {
+    if (adminScriptsLoaded) return;
+    adminScriptsLoaded = true;
+    lockMessage.textContent = 'Admin account verified. Loading Admin Studio…';
+    loginActions.style.display = 'none';
+    backHome.hidden = true;
+
+    try {
+      await loadScript('admin.js?v=4.3.2');
+      await loadScript('admin42.js?v=4.3.2');
+      await loadScript('admin43.js?v=4.3.2');
+    } catch (error) {
+      adminScriptsLoaded = false;
+      console.error(error);
+      showLogin('Admin files failed to load. Refresh the page and try again.', true);
+    }
+  }
+
+  async function loginWithGoogle() {
+    if (loginBusy) return;
+    loginBusy = true;
+    loginButton.disabled = true;
+    lockMessage.textContent = 'Opening Google login…';
+
+    try {
+      // Remove anonymous/guest/null-email sessions before admin login.
+      if (auth.currentUser && !emailOf(auth.currentUser)) {
+        await auth.signOut();
+      }
+
+      const provider = window.googleProvider || new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+      // Popup is more reliable for the desktop Admin Studio.
+      const result = await auth.signInWithPopup(provider);
+      const email = emailOf(result.user);
+
+      if (email !== OWNER_EMAIL) {
+        showLogin(`Signed in as ${email || 'no email detected'}. Please select ${OWNER_EMAIL}.`, true);
+        return;
+      }
+
+      await result.user.getIdToken(true);
+      await startAdminScripts();
+    } catch (error) {
+      console.error('Admin Google login failed:', error);
+      if (error && (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user')) {
+        showLogin('Google login was blocked or closed. Allow pop-ups, then press Login as Admin again.');
+      } else {
+        showLogin('Google login failed: ' + (error.message || 'Unknown error'));
+      }
+    } finally {
+      loginBusy = false;
+      loginButton.disabled = false;
+    }
+  }
+
+  loginButton.addEventListener('click', loginWithGoogle);
+  signOutButton.addEventListener('click', async () => {
+    try {
+      await auth.signOut();
+      localStorage.removeItem('cineflex_last_login_email');
+      showLogin(`Signed out. Log in using ${OWNER_EMAIL}.`);
+    } catch (error) {
+      showLogin('Could not sign out: ' + error.message, true);
+    }
+  });
+
+  auth.onAuthStateChanged(async user => {
+    if (adminScriptsLoaded) return;
+
+    if (!user) {
+      showLogin(`Log in using ${OWNER_EMAIL} to open Admin Studio.`);
+      return;
+    }
+
+    try {
+      await user.reload();
+      user = auth.currentUser || user;
+    } catch (error) {
+      console.warn('Admin account refresh failed:', error);
+    }
+
+    const email = emailOf(user);
+    if (!email) {
+      showLogin('A guest or incomplete Firebase session was detected. Press Login as Admin to replace it.', true);
+      return;
+    }
+
+    if (email !== OWNER_EMAIL) {
+      showLogin(`Signed in as ${email}. Please use ${OWNER_EMAIL}.`, true);
+      return;
+    }
+
+    try {
+      await user.getIdToken(true);
+    } catch (error) {
+      console.warn('Token refresh failed:', error);
+    }
+    await startAdminScripts();
+  });
+})();
+</script></body></html>

@@ -329,3 +329,93 @@
   .hero-kicker { display: none !important; }
   #banner-desc { -webkit-line-clamp: 1 !important; }
 }
+
+/* =========================================================
+   CINEFLEX BUILD 8.5 — TITLE-ONLY CLICKABLE HERO
+   The artwork stays clean. Clicking/tapping the backdrop opens
+   the existing CineFlex details modal.
+   ========================================================= */
+.cf-title-only-hero {
+  cursor: pointer !important;
+  min-height: clamp(600px, 86vh, 940px) !important;
+}
+.cf-title-only-hero:focus-visible {
+  outline: 3px solid rgba(84, 224, 255, .95);
+  outline-offset: -5px;
+}
+.cf-title-only-hero .banner-content {
+  left: clamp(22px, 5vw, 78px) !important;
+  bottom: clamp(102px, 12vh, 145px) !important;
+  width: min(880px, 86vw) !important;
+  max-width: 880px !important;
+  pointer-events: none;
+}
+.cf-title-only-hero #banner-title {
+  max-width: 880px !important;
+  margin: 0 !important;
+  font-size: clamp(3rem, 8vw, 7.25rem) !important;
+  line-height: .9 !important;
+  letter-spacing: -.055em !important;
+  text-shadow: 0 5px 28px rgba(0,0,0,.98), 0 1px 2px rgba(0,0,0,1) !important;
+}
+.cf-title-only-hero #banner-desc,
+.cf-title-only-hero .cf-hero-meta,
+.cf-title-only-hero .hero-meta-strip,
+.cf-title-only-hero .banner-buttons,
+.cf-title-only-hero .cf-hero-eyebrow,
+.cf-title-only-hero .cf-hero-video {
+  display: none !important;
+}
+.cf-title-only-hero::before {
+  background:
+    linear-gradient(90deg, rgba(2,5,12,.62) 0%, rgba(2,5,12,.18) 42%, rgba(2,5,12,.02) 78%),
+    linear-gradient(0deg, rgba(5,7,11,.92) 0%, rgba(5,7,11,.18) 42%, transparent 68%) !important;
+}
+.cf-title-only-hero .banner-fade {
+  height: 38% !important;
+  background: linear-gradient(to top, rgba(5,7,11,.98), rgba(5,7,11,.28) 62%, transparent) !important;
+}
+.cf-title-only-hero.cf-hero-opening::after {
+  content: "Opening details…";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  padding: 12px 18px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  background: rgba(4,7,13,.72);
+  color: #fff;
+  font-weight: 800;
+  font-size: .88rem;
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+.cf-title-only-hero .cf-hero-nav,
+.cf-title-only-hero .cf-hero-dots,
+.cf-title-only-hero .cf-hero-progress {
+  pointer-events: auto;
+}
+@media (max-width: 760px) {
+  .cf-title-only-hero {
+    min-height: 80vh !important;
+    background-position: center 18% !important;
+  }
+  .cf-title-only-hero .banner-content {
+    left: 18px !important;
+    right: 18px !important;
+    bottom: 112px !important;
+    width: auto !important;
+  }
+  .cf-title-only-hero #banner-title {
+    max-width: 92vw !important;
+    font-size: clamp(2.65rem, 14vw, 5.15rem) !important;
+    line-height: .92 !important;
+  }
+  .cf-title-only-hero .hero-kicker {
+    display: inline-flex !important;
+    margin-bottom: 13px !important;
+    font-size: .72rem !important;
+  }
+}

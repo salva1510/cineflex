@@ -163,7 +163,9 @@
     updateMyListButton(item);
     updateDots();
     restartProgress();
-    loadTrailer(item);
+    // Title-only hero: preserve the clean poster artwork instead of autoplaying a trailer.
+    const videoBox = $('cf-hero-video');
+    if (videoBox) { videoBox.classList.remove('active'); videoBox.innerHTML = ''; }
   }
 
   function rotate(direction) {
@@ -207,8 +209,51 @@
     document.addEventListener('visibilitychange', () => { if (!document.hidden) restartRotation(); });
   }
 
+  function bindHeroDetailsOpen() {
+    const banner = $('banner');
+    if (!banner || banner.dataset.detailsOpenBound === '1') return;
+    banner.dataset.detailsOpenBound = '1';
+
+    let startX = 0;
+    let startY = 0;
+    let moved = false;
+
+    const isControl = (target) => Boolean(target && target.closest && target.closest('.cf-hero-nav, .cf-hero-dots, button, a, input, select, textarea'));
+    const openCurrentDetails = () => {
+      const item = getCurrent();
+      if (!item || typeof window.showDetails !== 'function') return;
+      banner.classList.add('cf-hero-opening');
+      try { window.showDetails(item); }
+      finally { setTimeout(() => banner.classList.remove('cf-hero-opening'), 350); }
+    };
+
+    banner.addEventListener('pointerdown', (event) => {
+      if (isControl(event.target)) return;
+      startX = event.clientX;
+      startY = event.clientY;
+      moved = false;
+    });
+
+    banner.addEventListener('pointermove', (event) => {
+      if (Math.abs(event.clientX - startX) > 12 || Math.abs(event.clientY - startY) > 12) moved = true;
+    });
+
+    banner.addEventListener('click', (event) => {
+      if (isControl(event.target) || moved) return;
+      openCurrentDetails();
+    });
+
+    banner.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      if (isControl(event.target)) return;
+      event.preventDefault();
+      openCurrentDetails();
+    });
+  }
+
   function init() {
     ensureHeroEnhancements();
+    bindHeroDetailsOpen();
     patchSetBanner();
     bindControls();
     startRotation();

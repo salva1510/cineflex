@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-8-4";
+const CACHE_NAME = "cineflex-build-8-5-banner-clean";
 
 const CORE_ASSETS = [
   "/",

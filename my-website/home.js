@@ -190,7 +190,7 @@ function setBanner(item) {
   if (!banner || !item) return;
   banner.style.backgroundImage = `linear-gradient(to top, var(--bg) 5%, transparent 60%), url(https://image.tmdb.org/t/p/original${item.backdrop_path})`;
   if (bTitle) bTitle.innerText = item.title || item.name;
-  if (bDesc) bDesc.innerText = item.overview ? item.overview.slice(0, 120) + "..." : "";
+  if (bDesc) bDesc.textContent = "";
 }
 
 function showBannerDetails() { 

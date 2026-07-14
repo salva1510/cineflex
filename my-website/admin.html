@@ -30,6 +30,8 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
   const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('email');
+  provider.addScope('profile');
   provider.setCustomParameters({ prompt: 'select_account' });
   window.auth = auth;
   window.db = db;
@@ -41,7 +43,13 @@
   let scriptsLoaded = false;
 
   function setMessage(text) { msg.textContent = text; }
-  function normalizeEmail(user) { return String(user && user.email || '').trim().toLowerCase(); }
+  function normalizeEmail(user) {
+    const direct = user && user.email;
+    const providerEmail = user && Array.isArray(user.providerData)
+      ? (user.providerData.find(p => p && p.providerId === 'google.com' && p.email) || {}).email
+      : '';
+    return String(direct || providerEmail || '').trim().toLowerCase();
+  }
   function loadAdminScripts() {
     if (scriptsLoaded) return;
     scriptsLoaded = true;
@@ -55,11 +63,28 @@
 
   async function login() {
     loginBtn.disabled = true;
-    setMessage('Opening Google login...');
+    setMessage('Resetting old session and opening Google login...');
     try {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+      // Important: remove the stale Firebase account that has no email
+      // before starting a fresh Google sign-in.
+      if (auth.currentUser && !normalizeEmail(auth.currentUser)) {
+        await auth.signOut();
+      }
+
       const result = await auth.signInWithPopup(provider);
       if (!result.user) throw new Error('Google login completed without a user account.');
+
+      await result.user.reload();
+      await result.user.getIdToken(true);
+      const freshUser = auth.currentUser || result.user;
+      const freshEmail = normalizeEmail(freshUser);
+
+      if (!freshEmail) {
+        await auth.signOut();
+        throw new Error('Google sign-in returned a Firebase account without an email. Delete the no-email user in Firebase Authentication, then sign in again.');
+      }
     } catch (e) {
       console.error('Admin login failed:', e);
       let friendly = e.message || 'Google login failed.';
@@ -89,9 +114,12 @@
       return;
     }
     if (!email) {
-      setMessage('This Firebase account has no email. Press Use another account and sign in with Google.');
-      loginBtn.hidden = true;
-      logoutBtn.hidden = false;
+      console.warn('Removing stale Firebase session with no email:', user.uid, user.providerData);
+      try { await auth.signOut(); } catch (e) { console.warn(e); }
+      setMessage('Old no-email Firebase session removed. Press Login as Admin and choose your Gmail.');
+      loginBtn.hidden = false;
+      loginBtn.disabled = false;
+      logoutBtn.hidden = true;
       return;
     }
     if (email !== OWNER_EMAIL) {

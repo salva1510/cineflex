@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-804";
+const CACHE_NAME = "cineflex-build-805-watchtime-admin";
 
 const CORE_ASSETS = [
   "/",

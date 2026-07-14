@@ -1,0 +1,18 @@
+CINEFLEX BUILD 8.3 — ADMIN PERMISSION FIX
+
+Fixed:
+- Updated the owner Firebase UID to M3GxGOkF9ZWoezkICNpvS5ID1Hz2.
+- VIP Manager now trusts the super_admin role verified by the Admin Studio login gate.
+- Instant VIP read/write permissions now match the actual owner account.
+- Homepage configuration access now matches the actual owner UID.
+- Admin asset versions and service-worker cache were bumped to Build 8.3.
+
+REQUIRED AFTER UPLOAD:
+1. Replace the website files with this build.
+2. Open Firebase Console > Firestore Database > Rules.
+3. Copy the full contents of firestore.rules from this build and click Publish.
+4. Sign out of Admin Studio, sign in again using emviemsalva@gmail.com, then hard refresh.
+5. Test Homepage Editor and VIP Manager.
+
+VIP path used by this build:
+users/{USER_UID}/membership/current

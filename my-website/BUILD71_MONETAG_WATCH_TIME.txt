@@ -1,0 +1,23 @@
+CINEFLEX BUILD 7.1 — MONETAG WATCH TIME
+
+Monetag MultiTag zone:
+259251
+
+Integrated script:
+https://quge5.com/88/tag.min.js
+
+FLOW
+1. Signed-in user receives an initial 15-minute balance.
+2. Balance decreases only while the embedded player is active and the tab is visible.
+3. When the balance reaches zero, the stream is held and the Add Watch Time modal appears.
+4. The user taps “Support CineFlex • +15 Minutes.”
+5. Monetag MultiTag may display an ad according to its own optimization and frequency rules.
+6. CineFlex runs a 20-second on-page support countdown. The countdown pauses while the tab is hidden.
+7. After the countdown, 15 minutes are added and the held movie resumes.
+
+IMPORTANT
+- MultiTag does not provide CineFlex with a verified rewarded-video completion callback.
+- The site therefore does not claim that a video ad was completed.
+- The added time is tied to completion of the visible CineFlex support countdown.
+- Do not add another all-in-one ad network script to the same page without testing conflicts.
+- Keep the existing Firestore watch-time rules from BUILD 7.0.

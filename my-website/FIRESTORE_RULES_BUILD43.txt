@@ -1,0 +1,35 @@
+// MERGE these blocks inside your existing:
+// service cloud.firestore { match /databases/{database}/documents { ... } }
+// Keep only ONE rules_version and ONE service block.
+
+function isOwner() {
+  return request.auth != null && request.auth.token.email == 'emviemsalva@gmail.com';
+}
+
+function adminDoc() {
+  return get(/databases/$(database)/documents/cineflexAdmins/$(request.auth.uid));
+}
+
+function hasAdminRole(roles) {
+  return request.auth != null && (
+    isOwner() ||
+    (adminDoc().data.active == true && adminDoc().data.role in roles)
+  );
+}
+
+match /cineflexAdmins/{uid} {
+  allow read: if request.auth != null && (isOwner() || request.auth.uid == uid);
+  allow create, update, delete: if isOwner();
+}
+
+match /userModeration/{uid} {
+  allow read: if request.auth != null && (request.auth.uid == uid || hasAdminRole(['super_admin','moderator','support']));
+  allow create, update: if hasAdminRole(['super_admin','moderator','support']);
+  allow delete: if hasAdminRole(['super_admin','moderator']);
+}
+
+match /adminAuditLogs/{id} {
+  allow read: if hasAdminRole(['super_admin','moderator','support']);
+  allow create: if hasAdminRole(['super_admin','moderator','support','content_manager']);
+  allow update, delete: if false;
+}

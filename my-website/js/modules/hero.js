@@ -15,52 +15,7 @@
   function ensureHeroEnhancements() {
     const banner = $('banner');
     const content = banner && banner.querySelector('.banner-content');
-    if (!banner || !content) return false;
-
-    if (!$('cf-hero-video')) {
-      const video = document.createElement('div');
-      video.id = 'cf-hero-video';
-      video.className = 'cf-hero-video';
-      banner.insertBefore(video, banner.firstChild);
-    }
-
-    if (!$('cf-hero-eyebrow')) {
-      const eyebrow = document.createElement('div');
-      eyebrow.id = 'cf-hero-eyebrow';
-      eyebrow.className = 'cf-hero-eyebrow';
-      eyebrow.innerHTML = '<span class="live-dot"></span><span>FEATURED ON CINEFLEX</span>';
-      content.insertBefore(eyebrow, content.firstChild);
-    }
-
-    if (!$('cf-hero-meta')) {
-      const meta = document.createElement('div');
-      meta.id = 'cf-hero-meta';
-      meta.className = 'cf-hero-meta';
-      const desc = $('banner-desc');
-      desc && desc.parentNode.insertBefore(meta, desc);
-    }
-
-    if (!$('cf-hero-mylist')) {
-      const buttons = content.querySelector('.banner-buttons');
-      if (buttons) {
-        const myList = document.createElement('button');
-        myList.id = 'cf-hero-mylist';
-        myList.type = 'button';
-        myList.className = 'cf-hero-mylist';
-        myList.innerHTML = '<i class="fa-solid fa-plus"></i><span>My List</span>';
-        myList.addEventListener('click', toggleHeroWatchlist);
-        buttons.appendChild(myList);
-      }
-    }
-
-    if (!$('cf-hero-progress')) {
-      const progress = document.createElement('div');
-      progress.id = 'cf-hero-progress';
-      progress.className = 'cf-hero-progress';
-      progress.innerHTML = '<span></span>';
-      banner.appendChild(progress);
-    }
-    return true;
+    return Boolean(banner && content);
   }
 
   function updateMyListButton(item) {
@@ -159,10 +114,6 @@
     const banner = $('banner');
     banner.classList.remove('cf-hero-ready');
     requestAnimationFrame(() => banner.classList.add('cf-hero-ready'));
-    updateMeta(item);
-    updateMyListButton(item);
-    updateDots();
-    restartProgress();
     // Title-only hero: preserve the clean poster artwork instead of autoplaying a trailer.
     const videoBox = $('cf-hero-video');
     if (videoBox) { videoBox.classList.remove('active'); videoBox.innerHTML = ''; }

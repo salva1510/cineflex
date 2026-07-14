@@ -419,3 +419,46 @@
     font-size: .72rem !important;
   }
 }
+
+
+/* CINEFLEX BUILD 8.2 — STRICT TITLE + WATCH ONLY HERO */
+.hero-kicker,
+.cf-hero-eyebrow,
+.cf-hero-meta,
+#banner-desc,
+.hero-meta-strip,
+.hero-more-btn,
+.cf-hero-mylist,
+.cf-hero-nav,
+.cf-hero-dots,
+.cf-hero-progress,
+.cf-hero-video {
+  display: none !important;
+}
+
+.banner-content {
+  width: min(720px, calc(100vw - 40px)) !important;
+  max-width: 720px !important;
+}
+
+#banner-title {
+  margin: 0 0 18px !important;
+  max-width: 720px !important;
+}
+
+.banner-buttons {
+  margin: 0 !important;
+}
+
+.banner-buttons .play-btn {
+  min-width: 150px;
+}
+
+@media (max-width: 760px) {
+  .banner-content {
+    bottom: 72px !important;
+  }
+  #banner-title {
+    margin-bottom: 14px !important;
+  }
+}

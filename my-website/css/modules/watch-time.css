@@ -36,3 +36,13 @@
 .cf-drawer-add-time>i:first-child{width:34px;height:34px;border-radius:10px;background:#e50914;display:grid;place-items:center;flex:none}
 .cf-drawer-add-time span{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.cf-drawer-add-time b{font-size:.92rem}.cf-drawer-add-time small{font-size:.72rem;color:#b8c0cc;font-weight:600}
 .cf-drawer-add-time[hidden]{display:none!important}
+
+
+/* BUILD 8.0.6 — Homepage upper-right Add Time */
+.cf-top-add-time{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 11px;border-radius:999px;border:1px solid rgba(229,9,20,.55);background:linear-gradient(135deg,rgba(229,9,20,.9),rgba(165,5,14,.9));color:#fff;font:inherit;font-size:12px;font-weight:850;cursor:pointer;box-shadow:0 7px 22px rgba(229,9,20,.22);white-space:nowrap}
+.cf-top-add-time:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.cf-top-add-time b{padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.28);font-size:10px}
+.cf-top-add-time.low{border-color:#ffb020}.cf-top-add-time.empty{animation:cfTimePulse 1.8s infinite}
+.cf-top-add-time[hidden]{display:none!important}
+@keyframes cfTimePulse{50%{box-shadow:0 0 0 7px rgba(229,9,20,0)}}
+@media(max-width:600px){.cf-top-add-time{padding:7px 9px}.cf-top-add-time span{display:none}.cf-top-add-time b{font-size:9px}.cf-nav-actions{gap:6px!important}}

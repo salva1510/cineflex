@@ -1,9 +1,9 @@
-/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.1 */
+/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.6 */
 (function(){
   'use strict';
 
-  const INITIAL_SECONDS = 15 * 60;
-  const REWARD_SECONDS = 15 * 60;
+  const INITIAL_SECONDS = 3 * 60 * 60;
+  const REWARD_SECONDS = 3 * 60 * 60;
   const SUPPORT_WAIT_SECONDS = 20;
   const SYNC_EVERY = 15;
   const CLAIM_COOLDOWN_MS = 10 * 1000;
@@ -61,7 +61,12 @@
 
   function fmt(value){
     const valueSafe = Math.max(0, Math.floor(value || 0));
-    return `${Math.floor(valueSafe / 60)}:${String(valueSafe % 60).padStart(2,'0')}`;
+    const hours = Math.floor(valueSafe / 3600);
+    const minutes = Math.floor((valueSafe % 3600) / 60);
+    const secs = valueSafe % 60;
+    return hours > 0
+      ? `${hours}:${String(minutes).padStart(2,'0')}:${String(secs).padStart(2,'0')}`
+      : `${minutes}:${String(secs).padStart(2,'0')}`;
   }
 
   function requestAddTime(){
@@ -80,43 +85,10 @@
   window.cfOpenAddTime = requestAddTime;
 
   function build(){
-    const actions = document.querySelector('.modal-actions-wrapper, .modal-actions, .details-actions');
-    if(actions && !$('cfAddTimeAction')){
-      actions.insertAdjacentHTML('beforeend', `
-        <button id="cfAddTimeAction" class="action-btn-large cf-add-time-action" type="button">
-          <i class="fa-solid fa-clock"></i>
-          <span>Add Time</span>
-          <b id="cfAddTimeActionBalance">+15m</b>
-        </button>`);
-    }
-
-    const addTimeAction = $('cfAddTimeAction');
-    if(addTimeAction && !addTimeAction.dataset.cfBound){
-      addTimeAction.dataset.cfBound = '1';
-      addTimeAction.addEventListener('click', requestAddTime);
-    }
-
-
-    // Always-visible Add Time entry inside the menu drawer for Free members.
-    const drawerLinks = document.querySelector('#menu-drawer .drawer-links');
-    if(drawerLinks && !$('cfDrawerAddTime')){
-      const membershipSection = $('cfMembershipCard')?.closest('.drawer-section');
-      const html = `
-        <button id="cfDrawerAddTime" class="drawer-item cf-drawer-add-time" type="button">
-          <i class="fa-solid fa-clock"></i>
-          <span><b>Add Watch Time</b><small id="cfDrawerTimeBalance">Current: ${fmt(seconds)} • +15 minutes</small></span>
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>`;
-      if(membershipSection) membershipSection.insertAdjacentHTML('beforeend', html);
-      else drawerLinks.insertAdjacentHTML('afterbegin', `<div class="drawer-section cf-watchtime-drawer-section">${html}</div>`);
-    }
-    const drawerAdd = $('cfDrawerAddTime');
-    if(drawerAdd && !drawerAdd.dataset.cfBound){
-      drawerAdd.dataset.cfBound = '1';
-      drawerAdd.addEventListener('click', () => {
-        try { window.closeMenuDrawer?.(); } catch(_) {}
-        requestAddTime();
-      });
+    const topAddTime = $('cfTopAddTime');
+    if(topAddTime && !topAddTime.dataset.cfBound){
+      topAddTime.dataset.cfBound = '1';
+      topAddTime.addEventListener('click', requestAddTime);
     }
 
     const playerBox = $('modal-player-container');
@@ -125,7 +97,7 @@
       playerBox.insertAdjacentHTML('beforeend', `
         <div id="cfWatchTimeChip" class="cf-watchtime-chip">
           <i class="fa-regular fa-clock"></i>
-          <span><b id="cfWatchTimeText">15:00</b> left</span>
+          <span><b id="cfWatchTimeText">3:00:00</b> left</span>
           <button type="button" id="cfAddTimeMini">+ Time</button>
         </div>`);
       $('cfAddTimeMini').onclick = () => {
@@ -141,8 +113,8 @@
           <div class="cf-time-card">
             <div class="cf-time-icon"><i class="fa-solid fa-hourglass-half"></i></div>
             <h2 id="cfTimeTitle">Add Watch Time</h2>
-            <p id="cfTimeMessage">Support CineFlex to add another 15 minutes.</p>
-            <div class="cf-time-balance">Current balance<strong id="cfTimeBalance">15:00</strong></div>
+            <p id="cfTimeMessage">Support CineFlex to add another 3 hours.</p>
+            <div class="cf-time-balance">Current balance<strong id="cfTimeBalance">3:00:00</strong></div>
 
             <div id="cfSponsorProgress" class="cf-sponsor-progress" hidden>
               <div class="cf-sponsor-ring"><strong id="cfSponsorSeconds">20</strong><span>sec</span></div>
@@ -152,7 +124,7 @@
 
             <div class="cf-time-actions">
               <button id="cfWatchAdBtn" class="cf-time-primary" type="button">
-                <i class="fa-solid fa-heart"></i> Support CineFlex • +15 Minutes
+                <i class="fa-solid fa-heart"></i> Support CineFlex • +3 Hours
               </button>
               <button id="cfTimeClose" class="cf-time-secondary" type="button">Maybe Later</button>
             </div>
@@ -176,7 +148,7 @@
     $('cfTimeTitle').textContent = expired ? 'Your watch time has ended' : 'Add Watch Time';
     $('cfTimeMessage').textContent = expired
       ? 'Support CineFlex to continue from the same movie.'
-      : `Stack another 15 minutes. Current balance: ${fmt(seconds)}.`;
+      : `Stack another 3 hours. Current balance: ${fmt(seconds)}.`;
     $('cfTimeClose').style.display = expired ? 'none' : '';
     if(!claimRunning) resetSponsorUI();
     setStatus('');
@@ -197,7 +169,7 @@
     if(progress) progress.hidden = true;
     if(button){
       button.disabled = false;
-      button.innerHTML = '<i class="fa-solid fa-heart"></i> Support CineFlex • +15 Minutes';
+      button.innerHTML = '<i class="fa-solid fa-heart"></i> Support CineFlex • +3 Hours';
     }
     if($('cfSponsorSeconds')) $('cfSponsorSeconds').textContent = String(SUPPORT_WAIT_SECONDS);
     if($('cfSponsorBar')) $('cfSponsorBar').style.width = '0%';
@@ -208,16 +180,14 @@
     const text = vip ? '∞ Unlimited' : fmt(seconds);
     if($('cfWatchTimeText')) $('cfWatchTimeText').textContent = text;
     if($('cfTimeBalance')) $('cfTimeBalance').textContent = text;
-    if($('cfAddTimeActionBalance')) $('cfAddTimeActionBalance').textContent = vip ? 'VIP' : `+15m • ${fmt(seconds)}`;
-
-    const action = $('cfAddTimeAction');
-    if(action){
-      action.hidden = vip;
-      action.classList.toggle('low', !vip && seconds > 0 && seconds <= 120);
-      action.classList.toggle('empty', !vip && seconds <= 0);
-      action.title = vip ? 'Unlimited VIP watch time' : `Stack another 15 minutes • Current: ${fmt(seconds)}`;
-      const label = action.querySelector('span');
-      if(label) label.textContent = 'Add Time';
+    const topAddTime = $('cfTopAddTime');
+    if(topAddTime){
+      topAddTime.hidden = vip;
+      topAddTime.classList.toggle('low', !vip && seconds > 0 && seconds <= 120);
+      topAddTime.classList.toggle('empty', !vip && seconds <= 0);
+      topAddTime.title = vip ? 'Unlimited VIP watch time' : `Add 3 hours • Current: ${fmt(seconds)}`;
+      const balance = $('cfTopAddTimeBalance');
+      if(balance) balance.textContent = `+3h • ${fmt(seconds)}`;
     }
 
     const chip = $('cfWatchTimeChip');
@@ -236,14 +206,6 @@
       mini.hidden = vip;
       mini.textContent = '+ Time';
     }
-
-
-    const drawerAdd = $('cfDrawerAddTime');
-    if(drawerAdd){
-      drawerAdd.hidden = vip;
-      drawerAdd.style.display = vip ? 'none' : 'flex';
-    }
-    if($('cfDrawerTimeBalance')) $('cfDrawerTimeBalance').textContent = `Current: ${fmt(seconds)} • +15 minutes`;
   }
 
   async function loadBalance(){
@@ -337,10 +299,10 @@
       supportClaims: firebase.firestore.FieldValue.increment(1),
       lastSupportRewardSeconds: REWARD_SECONDS
     });
-    setStatus('Thank you! 15 minutes have been added.');
+    setStatus('Thank you! 3 hours have been added.');
     closeSponsorWindow();
     resumePlayback();
-    window.showToast?.('15 minutes added to your watch time.');
+    window.showToast?.('3 hours added to your watch time.');
     claimRunning = false;
     clearInterval(claimTimer);
     claimTimer = null;
@@ -441,13 +403,10 @@
   // would otherwise create an endless observer loop that freezes the splash screen.
   let uiRepairQueued = false;
   function controlsNeedRepair(){
-    const actions = document.querySelector('.modal-actions-wrapper, .modal-actions, .details-actions');
-    const drawerLinks = document.querySelector('#menu-drawer .drawer-links');
     const playerBox = $('modal-player-container');
     return !!(
       !$('cfWatchTimeModal') ||
-      (actions && !$('cfAddTimeAction')) ||
-      (drawerLinks && !$('cfDrawerAddTime')) ||
+      !$('cfTopAddTime') ||
       (playerBox && !$('cfWatchTimeChip'))
     );
   }

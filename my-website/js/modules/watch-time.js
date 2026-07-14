@@ -1,4 +1,4 @@
-/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.6 */
+/* CINEFLEX WATCH TIME + MEMBERSHIP FOUNDATION v8.0.7 */
 (function(){
   'use strict';
 
@@ -182,12 +182,13 @@
     if($('cfTimeBalance')) $('cfTimeBalance').textContent = text;
     const topAddTime = $('cfTopAddTime');
     if(topAddTime){
-      topAddTime.hidden = vip;
+      topAddTime.hidden = false;
+      topAddTime.classList.toggle('vip', vip);
       topAddTime.classList.toggle('low', !vip && seconds > 0 && seconds <= 120);
       topAddTime.classList.toggle('empty', !vip && seconds <= 0);
       topAddTime.title = vip ? 'Unlimited VIP watch time' : `Add 3 hours • Current: ${fmt(seconds)}`;
       const balance = $('cfTopAddTimeBalance');
-      if(balance) balance.textContent = `+3h • ${fmt(seconds)}`;
+      if(balance) balance.textContent = vip ? 'VIP ∞' : `+3h • ${fmt(seconds)}`;
     }
 
     const chip = $('cfWatchTimeChip');

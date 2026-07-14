@@ -46,3 +46,18 @@
 .cf-top-add-time[hidden]{display:none!important}
 @keyframes cfTimePulse{50%{box-shadow:0 0 0 7px rgba(229,9,20,0)}}
 @media(max-width:600px){.cf-top-add-time{padding:7px 9px}.cf-top-add-time span{display:none}.cf-top-add-time b{font-size:9px}.cf-nav-actions{gap:6px!important}}
+
+
+/* BUILD 8.0.7 — force-visible upper-right Watch Time button */
+.navbar.cf-dulo-navbar .cf-nav-actions{margin-left:auto!important;flex:0 0 auto!important;display:flex!important;align-items:center!important;overflow:visible!important}
+#cfTopAddTime.cf-top-add-time{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:10060!important;flex:0 0 auto!important}
+#cfTopAddTime.cf-top-add-time.vip{background:linear-gradient(135deg,#7a5700,#d79b00)!important;border-color:#ffd76a!important}
+@media(max-width:899px){
+  .navbar.cf-dulo-navbar{overflow:visible!important}
+  #cfTopAddTime.cf-top-add-time{min-width:52px!important;justify-content:center!important;padding:7px 8px!important}
+  #cfTopAddTime.cf-top-add-time b{display:inline-block!important;max-width:88px;overflow:hidden;text-overflow:ellipsis}
+}
+@media(max-width:420px){
+  #cfTopAddTime.cf-top-add-time b{max-width:58px;font-size:8px!important}
+  .cf-nav-search,.cf-nav-menu{padding:0 10px!important}
+}

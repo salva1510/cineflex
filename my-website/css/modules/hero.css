@@ -205,3 +205,127 @@
   .banner-content, .cf-hero-video, .cf-hero-progress span { animation: none !important; transition: none !important; }
   .banner-content { opacity: 1; transform: none; }
 }
+
+/* =========================================================
+   CINEFLEX BUILD 8.1 — CLEAN LOWER HERO DETAILS
+   Keeps the artwork open while anchoring copy near the bottom.
+   ========================================================= */
+.banner {
+  align-items: stretch !important;
+  padding-bottom: 0 !important;
+}
+
+.banner-content {
+  position: absolute !important;
+  left: clamp(22px, 5vw, 78px) !important;
+  bottom: clamp(92px, 11vh, 132px) !important;
+  z-index: 8 !important;
+  width: min(650px, 72vw) !important;
+  max-width: 650px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Softer lower readability layer; the upper artwork remains unobstructed. */
+.banner-fade {
+  height: 52% !important;
+  top: auto !important;
+  bottom: 0 !important;
+  z-index: 5 !important;
+  background: linear-gradient(
+    to top,
+    rgba(5, 7, 11, .98) 0%,
+    rgba(5, 7, 11, .78) 32%,
+    rgba(5, 7, 11, .28) 68%,
+    transparent 100%
+  ) !important;
+  pointer-events: none;
+}
+
+/* Remove the heavy full-height dark veil from the image area. */
+.banner::before {
+  background:
+    linear-gradient(90deg, rgba(2,5,12,.76) 0%, rgba(2,5,12,.30) 38%, rgba(2,5,12,.04) 75%, rgba(2,5,12,.12) 100%),
+    linear-gradient(0deg, rgba(5,7,11,.78) 0%, transparent 48%) !important;
+}
+
+.banner-content h1,
+#banner-title {
+  margin-bottom: 12px !important;
+}
+
+#banner-desc {
+  margin-bottom: 14px !important;
+  max-width: 590px !important;
+  line-height: 1.48 !important;
+}
+
+.banner-buttons {
+  margin-top: 15px !important;
+}
+
+@media (max-width: 760px) {
+  .banner {
+    min-height: 76vh !important;
+    background-position: 64% 22% !important;
+  }
+
+  .banner-content {
+    left: 18px !important;
+    right: 18px !important;
+    bottom: 98px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .hero-kicker {
+    margin-bottom: 9px !important;
+    padding: 6px 10px !important;
+    font-size: .67rem !important;
+  }
+
+  #banner-title {
+    font-size: clamp(2rem, 10.8vw, 3.45rem) !important;
+    line-height: .92 !important;
+    margin-bottom: 9px !important;
+  }
+
+  #banner-desc {
+    -webkit-line-clamp: 2 !important;
+    font-size: .84rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 9px !important;
+  }
+
+  .banner-buttons {
+    margin-top: 10px !important;
+    gap: 8px !important;
+  }
+
+  .banner-buttons button {
+    min-height: 42px !important;
+    padding: 0 14px !important;
+  }
+
+  .banner-fade {
+    height: 57% !important;
+  }
+
+  .cf-hero-nav {
+    bottom: 48px !important;
+  }
+
+  .cf-hero-dots {
+    bottom: 31px !important;
+  }
+
+  .cf-hero-progress {
+    bottom: 17px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .banner-content { bottom: 92px !important; }
+  .hero-kicker { display: none !important; }
+  #banner-desc { -webkit-line-clamp: 1 !important; }
+}

@@ -1353,3 +1353,67 @@ body.drawer-open { overflow: hidden; }
   .menu-drawer .drawer-add-profile { min-height: 48px; }
   body.drawer-open .bottom-nav { pointer-events: none; opacity: .28; }
 }
+
+/* =========================================================
+   CINEFLEX BUILD 8.7 — PAGE SWIPE / STRETCH LOCK
+   Prevents horizontal page dragging and browser overscroll stretch.
+   ========================================================= */
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  overscroll-behavior-x: none;
+  background: #05070b;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow-x: clip !important;
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+  touch-action: pan-y pinch-zoom;
+  -webkit-text-size-adjust: 100%;
+  background: #05070b;
+}
+
+#app,
+main,
+.homepage,
+.page-wrapper,
+.content-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+img,
+video,
+iframe,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+/* Horizontal movie rows remain swipeable without moving the whole page. */
+.movie-row,
+.movie-list,
+.row-posters,
+.cf-top10-scroller,
+.horizontal-scroll,
+[class*="scroller"] {
+  overscroll-behavior-inline: contain;
+  touch-action: pan-x;
+}
+
+/* Vertical drawers and modals keep their own natural scrolling. */
+.menu-drawer .drawer-links,
+.modal-content,
+.episode-list-container,
+.cf-comments-list {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-build-805-watchtime-admin";
+const CACHE_NAME = "cineflex-build-8-1";
 
 const CORE_ASSETS = [
   "/",
@@ -59,12 +59,28 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const freshUI = url.origin === self.location.origin && (
+    event.request.mode === "navigate" || /\.(?:js|css|html)$/.test(url.pathname)
+  );
+
+  if (freshUI) {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
+        return response;
+      }).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
       const copy = response.clone();
       caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
       return response;
-    }).catch(() => cached))
+    }))
   );
 });
 

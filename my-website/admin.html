@@ -16,6 +16,7 @@
 (() => {
   'use strict';
   const OWNER_EMAIL = 'emviemsalva@gmail.com';
+  const OWNER_UID = '6t6m25YN7AM2d8iIecT6kUTC1me2';
   const firebaseConfig = {
     apiKey: 'AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk',
     authDomain: 'cineflex-login-b8380.firebaseapp.com',
@@ -69,7 +70,7 @@
 
       // Important: remove the stale Firebase account that has no email
       // before starting a fresh Google sign-in.
-      if (auth.currentUser && !normalizeEmail(auth.currentUser)) {
+      if (auth.currentUser && !normalizeEmail(auth.currentUser) && auth.currentUser.uid !== OWNER_UID) {
         await auth.signOut();
       }
 
@@ -81,9 +82,9 @@
       const freshUser = auth.currentUser || result.user;
       const freshEmail = normalizeEmail(freshUser);
 
-      if (!freshEmail) {
+      if (!freshEmail && freshUser.uid !== OWNER_UID) {
         await auth.signOut();
-        throw new Error('Google sign-in returned a Firebase account without an email. Delete the no-email user in Firebase Authentication, then sign in again.');
+        throw new Error('Google sign-in returned an account that is not the registered CineFlex owner.');
       }
     } catch (e) {
       console.error('Admin login failed:', e);
@@ -113,13 +114,12 @@
       logoutBtn.hidden = true;
       return;
     }
-    if (!email) {
-      console.warn('Removing stale Firebase session with no email:', user.uid, user.providerData);
-      try { await auth.signOut(); } catch (e) { console.warn(e); }
-      setMessage('Old no-email Firebase session removed. Press Login as Admin and choose your Gmail.');
-      loginBtn.hidden = false;
-      loginBtn.disabled = false;
-      logoutBtn.hidden = true;
+    if (user.uid === OWNER_UID) {
+      setMessage('Admin owner verified by Firebase UID. Loading Admin Studio...');
+      loginBtn.hidden = true;
+      logoutBtn.hidden = false;
+      window.CINEFLEX_ADMIN_ROLE = 'super_admin';
+      loadAdminScripts();
       return;
     }
     if (email !== OWNER_EMAIL) {

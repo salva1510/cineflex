@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const ADMIN_EMAILS = ['emviemsalva@gmail.com'];
+  const ADMIN_UIDS = ['6t6m25YN7AM2d8iIecT6kUTC1me2'];
   const CONFIG_REF = () => db.collection('cineflexConfig').doc('homepage');
   const $ = (id) => document.getElementById(id);
   let currentConfig = {};
@@ -17,7 +18,7 @@
     if(!user) return {allowed:false, role:'viewer'};
 
     const email = normalizedEmail(user);
-    if(ADMIN_EMAILS.includes(email)) {
+    if(ADMIN_UIDS.includes(user.uid) || ADMIN_EMAILS.includes(email)) {
       return {allowed:true, role:'super_admin'};
     }
 
@@ -68,7 +69,7 @@
     $('featuredType').value=c.featuredType||'auto';$('featuredId').value=c.featuredId||'';$('featuredBadge').value=c.featuredBadge||'CINEFLEX FEATURED';$('homepageHeadline').value=c.homepageHeadline||'Stream beyond limits';
     $('maintenanceEnabled').checked=!!c.maintenanceEnabled;$('maintenanceMessage').value=c.maintenanceMessage||'';updatePreview();
   }
-  function getForm(){return {announcementEnabled:$('announcementEnabled').checked,announcementText:$('announcementText').value.trim(),announcementType:$('announcementType').value,announcementLink:$('announcementLink').value.trim(),featuredType:$('featuredType').value,featuredId:$('featuredId').value.trim(),featuredBadge:$('featuredBadge').value.trim(),homepageHeadline:$('homepageHeadline').value.trim(),maintenanceEnabled:$('maintenanceEnabled').checked,maintenanceMessage:$('maintenanceMessage').value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:auth.currentUser.email}}
+  function getForm(){return {announcementEnabled:$('announcementEnabled').checked,announcementText:$('announcementText').value.trim(),announcementType:$('announcementType').value,announcementLink:$('announcementLink').value.trim(),featuredType:$('featuredType').value,featuredId:$('featuredId').value.trim(),featuredBadge:$('featuredBadge').value.trim(),homepageHeadline:$('homepageHeadline').value.trim(),maintenanceEnabled:$('maintenanceEnabled').checked,maintenanceMessage:$('maintenanceMessage').value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:(auth.currentUser.email || auth.currentUser.uid)}}
   function updatePreview(){const txt=$('announcementText').value.trim()||'Announcement preview';$('previewAnnouncement').textContent=txt;$('previewAnnouncement').style.display=$('announcementEnabled').checked?'block':'none';$('previewBadge').textContent=$('featuredBadge').value.trim()||'CINEFLEX FEATURED';$('previewHeadline').textContent=$('homepageHeadline').value.trim()||'Stream beyond limits'}
   document.querySelectorAll('#homepage input,#homepage textarea,#homepage select').forEach(el=>el.addEventListener('input',updatePreview));
 

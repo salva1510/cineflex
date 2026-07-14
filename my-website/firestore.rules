@@ -49,6 +49,21 @@ service cloud.firestore {
       ]);
     }
 
+    // Main user records: own account or Admin Studio lookup
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow update: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow delete: if isOwner();
+    }
+
+    // Legacy/profile directory used by Admin Studio
+    match /userProfiles/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if isOwner();
+    }
+
     match /users/{uid}/profiles/{profileId} {
       allow read, create, update, delete:
         if signedIn() && request.auth.uid == uid;
@@ -57,7 +72,7 @@ service cloud.firestore {
     match /users/{uid}/membership/{documentId} {
       allow read:
         if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create, update, delete: if isOwner();
+      allow create, update, delete: if hasAdminRole(["super_admin"]);
     }
 
     match /vipRequests/{requestId} {

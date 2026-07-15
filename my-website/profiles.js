@@ -283,6 +283,8 @@
   }
 
   async function selectProfile(id, silent) {
+    const previousProfileId = localStorage.getItem("cineflex_profile") || "";
+    window.dispatchEvent(new CustomEvent("cineflex:before-profile-switch", { detail: { from: previousProfileId, to: id } }));
     localStorage.setItem("cineflex_profile", id);
     window.CF_CURRENT_PROFILE = id;
     const selector = $("profile-selector");
@@ -290,6 +292,7 @@
     renderDrawerProfiles();
     if (typeof window.loadUserData === "function") await window.loadUserData();
     if (typeof window.closeMenuDrawer === "function" && !silent) window.closeMenuDrawer();
+    window.dispatchEvent(new CustomEvent("cineflex:profile-switched", { detail: { from: previousProfileId, to: id } }));
     if (isProfilesPage() && !silent) window.location.href = "index.html";
   }
 

@@ -1,0 +1,9 @@
+CineFlex Build 21.0 - Home Personalization & Tonight's Picks
+
+- New profile-aware Tonight's Picks row
+- Recommendations from recent watches and My List
+- Refresh recommendations
+- Hide titles you do not want to see
+- Profile greeting
+- Per-device hidden recommendation memory
+- No Firebase rules changes required

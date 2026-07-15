@@ -1,0 +1,12 @@
+CINEFLEX BUILD 17.0 — KIDS MODE & PARENTAL CONTROLS
+
+Added:
+- Profile-specific 4-digit parent PIN stored as a one-way hash
+- Parental Controls entry in menu drawer
+- PIN required before opening protected profile preferences
+- Kids Mode exit/change protection
+- Blocking for adult, horror, Vivamax and mature shortcuts
+- Session unlock and Lock Now control
+- Kids visual treatment and mobile-ready PIN gate
+
+Existing Firebase profiles, playback, Music, Radio and Live TV remain unchanged.

@@ -1,0 +1,11 @@
+CINEFLEX BUILD 20.0 — SEARCH & DISCOVERY
+
+- Unified search for Movies and TV Series
+- Filters: All, Movies, Series, My Activity
+- My List and Continue Watching matches
+- Live TV, Music and Radio discovery shortcuts
+- Recent searches with clear control
+- Optional voice search on compatible browsers
+- Debounced TMDB requests and request cancellation
+- Better loading, offline and empty states
+- Mobile and Smart TV friendly layout

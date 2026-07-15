@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v11.2.2";
+const CACHE_NAME = "cineflex-v22.0";
 
 const CORE_ASSETS = [
   "/",
@@ -13,6 +13,8 @@ const CORE_ASSETS = [
   "/js/core/foundation.js",
   "/css/modules/watch-party.css",
   "/js/modules/watch-party.js",
+  "/js/modules/watch-party-pro.js",
+  "/css/modules/watch-party-pro.css",
   "/css/modules/content-center.css",
   "/js/modules/content-center.js",
   "/admin43.css",
@@ -24,6 +26,14 @@ const CORE_ASSETS = [
   "/css/modules/membership.css",
   "/css/modules/mobile-layout-fix-v91.css",
   "/js/modules/membership.js",
+  "/css/modules/activity-center13.css",
+  "/js/modules/activity-center13.js",
+  "/css/modules/performance14.css",
+  "/js/modules/performance14.js",
+  "/css/modules/smart-tv15.css",
+  "/js/modules/smart-tv15.js",
+  "/css/modules/profile-personalization16.css",
+  "/js/modules/profile-personalization16.js",
   "/cineflex-support.html",
   "/js/modules/personalized.js",
   "/js/modules/personal-home51.js",

@@ -1,0 +1,12 @@
+CINEFLEX BUILD 22.0 — CONTINUE WATCHING PRO
+
+Added:
+- Progress bars and watched percentage
+- Resume and remove controls
+- Clear All for the active profile
+- Last-watched labels
+- Up to 20 recent titles
+- Per-profile compatibility with Build 16 personalization
+- Updated PWA cache to v22.0
+
+Core Firebase, player, Live TV, Music, Radio, Watch Party, Search and Admin Studio were not replaced.

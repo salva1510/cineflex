@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="css/modules/content-center.css?v=6.1.5">
   <link rel="stylesheet" href="css/modules/progression.css?v=3.4">
   <link rel="stylesheet" href="css/modules/ai-assistant.css?v=10.0">
+  <link rel="stylesheet" href="css/modules/music-hub.css?v=11.0">
   <link rel="stylesheet" href="profiles.css?v=15.2">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -176,6 +177,7 @@ CINEFLEX PROFILE SELECTOR
             <h4>Browse Catalog</h4>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-movies')"><i class="fa-solid fa-border-all"></i> All Movies</div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-shows')"><i class="fa-solid fa-tv"></i> All TV Shows</div>
+            <div class="drawer-item" onclick="cfOpenMusic()"><i class="fa-solid fa-music"></i> Music Hub <span style="margin-left:auto;color:#4ade80;font-size:.68rem;font-weight:900">NEW</span></div>
             <div class="drawer-item" onclick="cfOpenLiveTV()"><i class="fa-solid fa-tower-broadcast"></i> Live TV Philippines <span style="margin-left:auto;color:#ff3344;font-size:.68rem;font-weight:900">LIVE</span></div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('anime')"><i class="fa-solid fa-dragon"></i> Anime Catalog</div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('horror')"><i class="fa-solid fa-ghost"></i> Horror Movies</div>
@@ -447,6 +449,7 @@ CINEFLEX PROFILE SELECTOR
   <button id="cfTopAddTime" class="nav-item cf-footer-add-time" type="button" aria-label="Add 3 hours watch time"><i class="fa-solid fa-clock"></i><span>Add Time</span><b id="cfTopAddTimeBalance">+3h</b></button>
   <button class="nav-item" type="button" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i><span>My List</span></button>
   <button class="nav-item" type="button" onclick="cfOpenLiveTV()"><i class="fa-solid fa-tower-broadcast"></i><span>Live TV</span></button>
+  <button class="nav-item" type="button" onclick="cfOpenMusic()"><i class="fa-solid fa-music"></i><span>Music</span></button>
   <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
 </nav>
 
@@ -498,5 +501,6 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/watch-time.js?v=8.0.7"></script>
   <script src="js/modules/tv-edition.js?v=9.0"></script>
   <script src="js/modules/live-tv.js?v=10.0"></script>
+  <script src="js/modules/music-hub.js?v=11.0"></script>
 </body>
 </html>

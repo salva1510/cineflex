@@ -1,6 +1,0 @@
-CineFlex Build 22.0.4 Recovery
-- Restored Build 21 stable application scripts
-- Removed intro completely
-- One-time service worker/cache reset
-- Temporarily disabled SW registration
-- Runtime core-file watchdog

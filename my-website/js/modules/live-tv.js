@@ -3,13 +3,13 @@
 
   const STORAGE_KEY='cineflex_live_tv_favorites_v1';
   const CHANNELS=[
-    {id:'ptv',name:'PTV Philippines',short:'PTV',category:'News',type:'Government / News',official:'https://www.youtube.com/@ptvph/streams',embed:''},
-    {id:'untv',name:'UNTV News and Rescue',short:'UNTV',category:'News',type:'News / Public Service',official:'https://www.youtube.com/@UNTVNewsandRescue/streams',embed:''},
-    {id:'net25',name:'NET25',short:'NET25',category:'Entertainment',type:'News / Entertainment',official:'https://www.youtube.com/@NET25TV/streams',embed:''},
-    {id:'kapamilya',name:'Kapamilya Online Live',short:'KOL',category:'Entertainment',type:'Entertainment',official:'https://www.youtube.com/@abscbnentertainment/streams',embed:''},
-    {id:'gmanews',name:'GMA Integrated News',short:'GMA',category:'News',type:'News / Special Coverage',official:'https://www.youtube.com/@gmanews/streams',embed:''},
-    {id:'news5',name:'News5Everywhere',short:'NEWS5',category:'News',type:'News / Public Affairs',official:'https://www.youtube.com/@News5Everywhere/streams',embed:''},
-    {id:'senate',name:'Senate of the Philippines',short:'SENATE',category:'Government',type:'Government',official:'https://www.youtube.com/@SenatePhilippines/streams',embed:''},
+    {id:'ptv',name:'PTV Philippines',short:'PTV',category:'News',type:'Government / News',official:'https://www.youtube.com/@ptvph/streams',embed:'https://www.youtube.com/embed/919y7TykVSI?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'untv',name:'UNTV News and Rescue',short:'UNTV',category:'News',type:'News / Public Service',official:'https://www.youtube.com/@UNTVNewsandRescue/streams',embed:'https://www.youtube.com/embed/ZYkKqMtj1j8?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'net25',name:'NET25',short:'NET25',category:'Entertainment',type:'News / Entertainment',official:'https://www.youtube.com/@NET25TV/streams',embed:'https://www.youtube.com/embed/KceiqFBQniQ?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'kapamilya',name:'Kapamilya Online Live',short:'KOL',category:'Entertainment',type:'Entertainment',official:'https://www.youtube.com/@abscbnentertainment/streams',embed:'https://www.youtube.com/embed/msN5sDbJSAA?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'gmanews',name:'GMA Integrated News',short:'GMA',category:'News',type:'News / Special Coverage',official:'https://www.youtube.com/@gmanews/streams',embed:'https://www.youtube.com/embed/MsKTo8lbQKo?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'news5',name:'News5Everywhere',short:'NEWS5',category:'News',type:'News / Public Affairs',official:'https://www.youtube.com/@News5Everywhere/streams',embed:'https://www.youtube.com/embed/0dXpRXHNHJ4?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
+    {id:'senate',name:'Senate of the Philippines',short:'SENATE',category:'Government',type:'Government',official:'https://www.youtube.com/@SenatePhilippines/streams',embed:'https://www.youtube.com/embed/Wd1coDCNakU?autoplay=1&rel=0&modestbranding=1&playsinline=1'},
     {id:'house',name:'House of Representatives',short:'HOUSE',category:'Government',type:'Government',official:'https://www.youtube.com/@HouseofRepsPH/streams',embed:''}
   ];
 
@@ -48,9 +48,9 @@
 
     <div id="cfLivePlayer" class="cf-live-player" aria-hidden="true"><div class="cf-live-player-card">
       <div class="cf-live-player-top"><div><span class="cf-player-live">LIVE</span><h3 id="cfLivePlayerTitle">Live channel</h3></div><div class="cf-live-player-tools"><button onclick="cfToggleCurrentFavorite()" id="cfLivePlayerFav" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfLiveFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseLivePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
-      <div id="cfLiveScreen" class="cf-live-screen"><iframe id="cfLiveIframe" title="CineFlex Live TV player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe><div id="cfLiveFallback" class="cf-live-fallback"><i class="fa-solid fa-satellite-dish"></i><h3 id="cfLivePlayerName"></h3><p>This broadcaster does not currently provide a permanent authorized embed. Open its official live page to watch the active broadcast.</p><a id="cfLiveOfficialLink" class="cf-live-primary" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Watch Official Live</a></div></div>
+      <div id="cfLiveScreen" class="cf-live-screen"><iframe id="cfLiveIframe" title="CineFlex Live TV player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe><div id="cfLiveFallback" class="cf-live-fallback"><i class="fa-solid fa-satellite-dish"></i><h3 id="cfLivePlayerName"></h3><p>The official embedded broadcast is unavailable or not scheduled right now. Use the broadcaster page only as a backup.</p><a id="cfLiveOfficialLink" class="cf-live-primary" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Watch Official Live</a></div></div>
       <div class="cf-live-channel-controls"><button onclick="cfLivePrevious()"><i class="fa-solid fa-backward-step"></i><span>Previous</span></button><div id="cfLiveNowPlaying">Official PH channel</div><button onclick="cfLiveNext()"><span>Next</span><i class="fa-solid fa-forward-step"></i></button></div>
-      <div class="cf-live-note"><i class="fa-solid fa-shield-halved"></i> CineFlex does not host or restream TV broadcasts. Only official or authorized player links should be configured.</div>
+      <div class="cf-live-note"><i class="fa-solid fa-shield-halved"></i> Direct playback uses official broadcaster embeds. Live availability and embed permission remain controlled by each broadcaster.</div>
     </div></div>`;}
 
   function init(){if(document.getElementById('cfLiveTvShell'))return;document.body.insertAdjacentHTML('beforeend',markup());}

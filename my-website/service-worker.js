@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v22.0.2-enter-fix";
+const CACHE_NAME = "cineflex-v22.0.3-safe-startup";
 
 const CORE_ASSETS = [
   "/",

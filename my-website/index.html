@@ -85,6 +85,27 @@
   <link rel="stylesheet" href="css/search-discovery20.css?v=20.0">
 </head>
 <body>
+<script>
+(function(){
+  function forceOpenCineFlex(){
+    try {
+      document.documentElement.classList.add('cf-app-ready');
+      document.body.style.opacity='1';
+      document.body.style.visibility='visible';
+      document.body.style.pointerEvents='auto';
+      ['cineflexIntro','splash-overlay','startup-overlay','app-loader'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el){ el.style.display='none'; el.remove(); }
+      });
+    } catch(e) {}
+  }
+  forceOpenCineFlex();
+  document.addEventListener('DOMContentLoaded', forceOpenCineFlex, {once:true});
+  window.addEventListener('load', forceOpenCineFlex, {once:true});
+  setTimeout(forceOpenCineFlex, 300);
+  setTimeout(forceOpenCineFlex, 1500);
+})();
+</script>
 <!-- ===========================
 CINEFLEX PROFILE SELECTOR
 =========================== -->
@@ -481,7 +502,6 @@ CINEFLEX PROFILE SELECTOR
     </div>
 
 </div>
-  <script src="./cineflex-intro.js?v=22.0.2"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
@@ -522,6 +542,5 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/parental-controls17.js?v=17.0"></script>
   <script src="js/modules/search-discovery20.js?v=20.0"></script>
   <script src="js/modules/home-personalization21.js?v=21.0"></script>
-  <script src="js/modules/continue-watching22.js?v=22.0"></script>
 </body>
 </html>

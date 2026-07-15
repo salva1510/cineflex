@@ -1,0 +1,5 @@
+CineFlex Build 22.0.3 Safe Startup
+- Intro disabled
+- Continue Watching Pro temporarily disabled
+- Startup overlays force-removed
+- Cache bumped

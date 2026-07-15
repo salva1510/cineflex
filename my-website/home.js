@@ -1320,25 +1320,11 @@ async function createProfile(){
   }
 
   function ensureCommunityUI(){
-    if(!document.getElementById('cf-floating-live')){
-      const float = document.createElement('div');
-      float.id = 'cf-floating-live';
-      float.className = 'cf-floating-live';
-      float.innerHTML = `
-        <div class="cf-live-pill" title="Live viewers on CineFlex">
-          <span class="cf-live-dot"></span><span id="cf-live-online-count">1</span> online
-        </div>
-        <div class="cf-live-pill" id="cf-current-watch-pill" style="display:none;">
-          <i class="fa-solid fa-eye"></i><span id="cf-live-watching-count">0</span> watching this
-        </div>`;
-      document.body.appendChild(float);
-    }
-
     const nav = document.querySelector('.nav-right') || document.querySelector('nav') || document.querySelector('.navbar') || document.querySelector('header');
     if(nav && !document.getElementById('cf-top-live-pill')){
       const pill = document.createElement('div');
       pill.id = 'cf-top-live-pill';
-      pill.className = 'cf-live-pill';
+      pill.className = 'cf-live-pill cf-top-online-indicator';
       pill.innerHTML = `<span class="cf-live-dot"></span><span id="cf-top-online-count">1</span> online`;
       nav.appendChild(pill);
     }
@@ -1365,7 +1351,7 @@ async function createProfile(){
       sec.innerHTML = `
         <div class="cf-community-head">
           <h2><i class="fa-solid fa-fire" style="color:#ff3b7a"></i> Live on CineFlex</h2>
-          <span class="cf-live-pill"><span class="cf-live-dot"></span><span id="cf-section-online-count">1</span> online</span>
+          <small class="cf-community-live-label">Real-time activity</small>
         </div>
         <div class="cf-community-grid">
           <div class="cf-community-card"><span>Online right now</span><strong id="cf-card-online-count">1</strong><small>active viewers on the website</small></div>
@@ -1385,12 +1371,10 @@ async function createProfile(){
   function updateCountsUI(online, watching){
     lastOnlineCount = online || lastOnlineCount || 1;
     lastWatchingCount = watching || 0;
-    const idsOnline = ['cf-live-online-count','cf-top-online-count','cf-drawer-online-count','cf-section-online-count','cf-card-online-count'];
+    const idsOnline = ['cf-top-online-count','cf-drawer-online-count','cf-card-online-count'];
     idsOnline.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = safeText(lastOnlineCount, '1'); });
-    const idsWatching = ['cf-live-watching-count','cf-drawer-watching-count','cf-card-watching-count'];
+    const idsWatching = ['cf-drawer-watching-count','cf-card-watching-count'];
     idsWatching.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = safeText(lastWatchingCount, '0'); });
-    const watchPill = document.getElementById('cf-current-watch-pill');
-    if(watchPill) watchPill.style.display = currentWatching ? 'inline-flex' : 'none';
   }
 
   function getLocalTrending(){

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="home.css?v=8.7">
+  <link rel="stylesheet" href="home.css?v=9.0">
   <link rel="stylesheet" href="css/core/identity.css?v=2.1">
   <link rel="stylesheet" href="css/modules/hero.css?v=8.7">
   <link rel="stylesheet" href="css/core/signature.css?v=1.0">
@@ -69,6 +69,7 @@
   <link rel="stylesheet" href="css/modules/desktop-row-scroll.css?v=1.0">
   <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.3">
   <link rel="stylesheet" href="css/modules/watch-time.css?v=8.0.7">
+  <link rel="stylesheet" href="css/modules/tv-edition.css?v=9.0">
   <link rel="stylesheet" href="css/modules/membership.css?v=8.0.4">
 </head>
 <body>
@@ -91,23 +92,8 @@ CINEFLEX PROFILE SELECTOR
     </div>
 
 </div>
-<nav class="navbar cf-dulo-navbar">
+<nav class="navbar cf-dulo-navbar cf-logo-only-header" aria-label="CineFlex header">
     <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home">CINEFLEX</button>
-    <div class="cf-desktop-nav" aria-label="Browse CineFlex">
-      <button class="active" type="button" onclick="cfCloseCatalog(); window.scrollTo({top:0,behavior:'smooth'})">Home</button>
-      <button type="button" onclick="cfOpenCatalog('all-movies')">Movies</button>
-      <button type="button" onclick="cfOpenCatalog('all-shows')">TV Shows</button>
-      <button type="button" onclick="cfOpenCatalog('anime')">Anime</button>
-      <button type="button" onclick="viewWatchlist()">Library</button>
-    </div>
-    <div class="nav-icons cf-nav-actions">
-      <button id="cfTopAddTime" class="cf-top-add-time" type="button" aria-label="Add 3 hours watch time">
-        <i class="fa-solid fa-clock"></i><span>Add Time</span><b id="cfTopAddTimeBalance">+3h</b>
-      </button>
-      <button class="cf-nav-search" type="button" onclick="openSearch()" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
-      <button id="installBtn" class="cf-install-btn" style="display:none">Install</button>
-      <button class="cf-nav-menu" type="button" onclick="openMenuDrawer()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
-    </div>
 </nav>
 
 <div class="cf-progress-bar" id="cf-progress-bar"></div>
@@ -172,6 +158,12 @@ CINEFLEX PROFILE SELECTOR
             </div>
             <div id="drawer-profiles" class="drawer-profiles"></div>
             <button class="drawer-add-profile cf-add-profile-trigger" data-cf-add-profile onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
+        </div>
+        <div class="drawer-section cf-install-drawer-section">
+            <h4>Application</h4>
+            <button id="installBtn" class="drawer-item cf-drawer-install" type="button" style="display:none">
+                <i class="fa-solid fa-download"></i><span>Install CineFlex App</span>
+            </button>
         </div>
         <div class="drawer-section">
             <h4>Personal</h4>
@@ -471,9 +463,10 @@ CINEFLEX PROFILE SELECTOR
     </div>
 </div>
 
-<nav class="bottom-nav" aria-label="Main navigation">
+<nav class="bottom-nav cf-native-bottom-nav" aria-label="Main navigation">
   <button class="nav-item active" type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></button>
   <button class="nav-item" type="button" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+  <button id="cfTopAddTime" class="nav-item cf-footer-add-time" type="button" aria-label="Add 3 hours watch time"><i class="fa-solid fa-clock"></i><span>Add Time</span><b id="cfTopAddTimeBalance">+3h</b></button>
   <button class="nav-item" type="button" onclick="viewWatchlist()"><i class="fa-solid fa-heart"></i><span>My List</span></button>
   <button class="nav-item" type="button" onclick="cfOpenCatalog('all-movies')"><i class="fa-solid fa-clapperboard"></i><span>Movies</span></button>
   <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
@@ -506,7 +499,7 @@ CINEFLEX PROFILE SELECTOR
 <script src="firebase.js?v=3.1"></script>
   <script src="js/core/foundation.js?v=8.6"></script>
   <script src="js/core/api-client61.js?v=6.1"></script>
-  <script src="home.js?v=8.6"></script>
+  <script src="home.js?v=9.0"></script>
   <script src="js/modules/desktop-row-scroll.js?v=1.0"></script>
   <script src="js/modules/catalog-browser.js?v=1.3"></script>
   <script src="js/modules/hero.js?v=8.6"></script>
@@ -525,5 +518,6 @@ CINEFLEX PROFILE SELECTOR
   <script src="js/modules/ai-assistant.js?v=6.1.2"></script>
   <script src="js/modules/membership.js?v=8.0.4"></script>
   <script src="js/modules/watch-time.js?v=8.0.7"></script>
+  <script src="js/modules/tv-edition.js?v=9.0"></script>
 </body>
 </html>

@@ -62,7 +62,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredPrompt = e;
   const installBtn = document.getElementById('installBtn');
   if (installBtn) {
-    installBtn.style.display = 'block';
+    installBtn.style.display = 'flex';
   }
 });
 

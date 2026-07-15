@@ -5,7 +5,8 @@
   const CONFIG = {
     sound: "./cineflex-intro.mp3",
     logo: "./cineflex-logo.png",
-    duration: 3600,
+    duration: 3200,
+    hardTimeout: 5000,
     storageKey: "cineflex_intro_seen_session"
   };
 
@@ -174,14 +175,22 @@
   function closeIntro() {
     if (closing) return;
     closing = true;
+    clearTimeout(closeTimer);
+    clearTimeout(hardCloseTimer);
+    try { audio.pause(); } catch (_) {}
     intro.classList.add("cf-hide");
     window.setTimeout(() => intro.remove(), 750);
   }
 
-  function scheduleClose() {
+  function scheduleClose(delay = CONFIG.duration) {
     clearTimeout(closeTimer);
-    closeTimer = setTimeout(closeIntro, CONFIG.duration);
+    closeTimer = setTimeout(closeIntro, delay);
   }
+
+  // Safety watchdog: the intro must never block the homepage forever,
+  // even when Android/PWA audio playback is denied or hangs.
+  const hardCloseTimer = setTimeout(closeIntro, CONFIG.hardTimeout);
+  window.addEventListener("load", () => scheduleClose(Math.min(CONFIG.duration, 2600)), { once: true });
 
   async function startSound() {
     try {
@@ -200,11 +209,12 @@
   startSound();
 
   const unlock = async () => {
-    const played = await startSound();
-    if (played) {
-      document.removeEventListener("pointerdown", unlock);
-      document.removeEventListener("keydown", unlock);
-    }
+    // A user gesture should always enter the homepage immediately.
+    // Sound is attempted, but it is never allowed to keep the splash open.
+    try { await startSound(); } catch (_) {}
+    closeIntro();
+    document.removeEventListener("pointerdown", unlock);
+    document.removeEventListener("keydown", unlock);
   };
 
   intro.querySelector(".cf-enter").addEventListener("click", unlock);

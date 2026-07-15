@@ -62,17 +62,30 @@
   window.cfFilterLiveTV=function(filter,button){activeFilter=filter;document.querySelectorAll('#cfLiveFilters button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');render();};
   window.cfToggleLiveFavorite=function(id){let list=favorites();list=list.includes(id)?list.filter(x=>x!==id):[...list,id];saveFavorites(list);render();updatePlayerFavorite();};
   window.cfToggleCurrentFavorite=function(){if(activeChannelId)cfToggleLiveFavorite(activeChannelId);};
-  window.cfPlayLiveChannel=function(id){
+  window.cfPlayLiveChannel=async function(id){
     const c=CHANNELS.find(x=>x.id===id);if(!c)return;activeChannelId=id;
     document.getElementById('cfLivePlayerTitle').textContent=c.name;document.getElementById('cfLivePlayerName').textContent=c.name;document.getElementById('cfLiveNowPlaying').textContent=c.name+' • '+c.type;document.getElementById('cfLiveOfficialLink').href=c.official;
     const frame=document.getElementById('cfLiveIframe'),fallback=document.getElementById('cfLiveFallback');
     if(c.embed){frame.src=c.embed;frame.hidden=false;fallback.hidden=true;}else{frame.src='about:blank';frame.hidden=true;fallback.hidden=false;}
     updatePlayerFavorite();const p=document.getElementById('cfLivePlayer');p.classList.add('active');p.setAttribute('aria-hidden','false');
+    // Build 9.5: channel taps open the TV screen directly in fullscreen landscape.
+    const screenEl=document.getElementById('cfLiveScreen');
+    try{
+      if(!document.fullscreenElement){
+        if(screenEl.requestFullscreen) await screenEl.requestFullscreen({navigationUI:'hide'});
+        else if(screenEl.webkitRequestFullscreen) screenEl.webkitRequestFullscreen();
+      }
+      if(window.screen&&screen.orientation&&screen.orientation.lock){
+        await screen.orientation.lock('landscape');
+      }
+    }catch(err){
+      console.info('Live TV fullscreen/orientation is restricted by this browser:',err);
+    }
   };
-  window.cfCloseLivePlayer=function(){const p=document.getElementById('cfLivePlayer');if(p){p.classList.remove('active');p.setAttribute('aria-hidden','true');}const f=document.getElementById('cfLiveIframe');if(f)f.src='about:blank';};
+  window.cfCloseLivePlayer=async function(){const p=document.getElementById('cfLivePlayer');if(p){p.classList.remove('active');p.setAttribute('aria-hidden','true');}const f=document.getElementById('cfLiveIframe');if(f)f.src='about:blank';try{if(document.fullscreenElement&&document.exitFullscreen)await document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(_){}};
   function adjacent(step){let i=CHANNELS.findIndex(c=>c.id===activeChannelId);if(i<0)i=0;i=(i+step+CHANNELS.length)%CHANNELS.length;cfPlayLiveChannel(CHANNELS[i].id);}
   window.cfLivePrevious=function(){adjacent(-1);};window.cfLiveNext=function(){adjacent(1);};
-  window.cfLiveFullscreen=function(){const el=document.getElementById('cfLiveScreen');if(!el)return;if(document.fullscreenElement){document.exitFullscreen&&document.exitFullscreen();}else{el.requestFullscreen&&el.requestFullscreen();}};
+  window.cfLiveFullscreen=async function(){const el=document.getElementById('cfLiveScreen');if(!el)return;try{if(document.fullscreenElement){if(document.exitFullscreen)await document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}else{if(el.requestFullscreen)await el.requestFullscreen({navigationUI:'hide'});else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape');}}catch(err){console.info('Fullscreen is restricted by this browser:',err);}};
   document.addEventListener('keydown',e=>{const p=document.getElementById('cfLivePlayer');if(e.key==='Escape'){if(p&&p.classList.contains('active'))cfCloseLivePlayer();else cfCloseLiveTV();}if(p&&p.classList.contains('active')&&e.key==='ArrowRight')cfLiveNext();if(p&&p.classList.contains('active')&&e.key==='ArrowLeft')cfLivePrevious();});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

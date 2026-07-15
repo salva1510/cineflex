@@ -16,18 +16,7 @@
       vid.className = 'cf-hero-video';
       banner.insertBefore(vid, banner.firstChild);
     }
-    const content = banner && banner.querySelector('.banner-content');
-    if(content && !document.getElementById('cf-hero-metrics')){
-      const meta = document.createElement('div');
-      meta.id = 'cf-hero-metrics';
-      meta.className = 'cf-hero-metrics';
-      meta.innerHTML = `
-        <span class="cf-hero-metric"><i class="fa-solid fa-star"></i><b id="cf-hero-rating">CineFlex</b></span>
-        <span class="cf-hero-metric"><i class="fa-solid fa-users"></i><b id="cf-hero-viewers">Live viewers</b></span>
-        <span class="cf-hero-metric"><i class="fa-solid fa-sparkles"></i><b>Smart pick</b></span>`;
-      const buttons = content.querySelector('.banner-buttons');
-      content.insertBefore(meta, buttons || null);
-    }
+    // Build 9.5: keep the featured banner clean; no metric badges are injected.
   }
   function addCommunityFeed(){
     const sec = document.getElementById('cf-community-section');

@@ -1,6 +1,0 @@
-CINEFLEX BUILD 22.0.1 - STARTUP LOGO FIX
-
-- Added a 5-second hard timeout to the CineFlex intro.
-- Tap/keyboard input now closes the intro immediately even if audio is blocked.
-- Added a window-load fallback close timer.
-- Bumped the service-worker cache to force delivery of the fix.

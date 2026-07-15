@@ -6,7 +6,7 @@
     sound: "./cineflex-intro.mp3",
     logo: "./cineflex-logo.png",
     duration: 3200,
-    hardTimeout: 5000,
+    hardTimeout: 3000,
     storageKey: "cineflex_intro_seen_session"
   };
 
@@ -179,7 +179,7 @@
     clearTimeout(hardCloseTimer);
     try { audio.pause(); } catch (_) {}
     intro.classList.add("cf-hide");
-    window.setTimeout(() => intro.remove(), 750);
+    window.setTimeout(() => { try { intro.remove(); } catch (_) {} }, 120);
   }
 
   function scheduleClose(delay = CONFIG.duration) {
@@ -208,13 +208,21 @@
   // Desktop may allow it. Android Chrome/PWA usually requires the first tap.
   startSound();
 
-  const unlock = async () => {
-    // A user gesture should always enter the homepage immediately.
-    // Sound is attempted, but it is never allowed to keep the splash open.
-    try { await startSound(); } catch (_) {}
+  const unlock = () => {
+    // IMPORTANT: close synchronously before touching audio.
+    // Some Android/PWA WebViews leave audio.play() pending forever.
     closeIntro();
     document.removeEventListener("pointerdown", unlock);
     document.removeEventListener("keydown", unlock);
+
+    // Best-effort intro sound only; never await it and never block navigation.
+    try {
+      audio.currentTime = 0;
+      const playAttempt = audio.play();
+      if (playAttempt && typeof playAttempt.catch === "function") {
+        playAttempt.catch(() => {});
+      }
+    } catch (_) {}
   };
 
   intro.querySelector(".cf-enter").addEventListener("click", unlock);

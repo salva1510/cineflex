@@ -6,3 +6,7 @@
 .cf-live-screen:fullscreen iframe,.cf-live-screen:-webkit-full-screen iframe{width:100vw!important;height:100vh!important;object-fit:contain;background:#000}
 .cf-live-screen:fullscreen .cf-live-fallback,.cf-live-screen:-webkit-full-screen .cf-live-fallback{max-width:760px}
 @media (orientation:landscape) and (max-height:600px){.cf-live-player{padding:0}.cf-live-player-card{width:100vw;height:100vh;border:0;border-radius:0}.cf-live-screen{flex:1;aspect-ratio:auto}.cf-live-player-top,.cf-live-channel-controls,.cf-live-note{flex-shrink:0}}
+
+/* CineFlex Build 10 — keep the selected channel fully immersive */
+body.cf-live-immersive .navbar,body.cf-live-immersive .bottom-nav,body.cf-live-immersive #cf-top-live-pill,body.cf-live-immersive .cf-ai-launcher{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+

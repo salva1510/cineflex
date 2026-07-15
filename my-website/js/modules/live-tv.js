@@ -67,7 +67,7 @@
     document.getElementById('cfLivePlayerTitle').textContent=c.name;document.getElementById('cfLivePlayerName').textContent=c.name;document.getElementById('cfLiveNowPlaying').textContent=c.name+' • '+c.type;document.getElementById('cfLiveOfficialLink').href=c.official;
     const frame=document.getElementById('cfLiveIframe'),fallback=document.getElementById('cfLiveFallback');
     if(c.embed){frame.src=c.embed;frame.hidden=false;fallback.hidden=true;}else{frame.src='about:blank';frame.hidden=true;fallback.hidden=false;}
-    updatePlayerFavorite();const p=document.getElementById('cfLivePlayer');p.classList.add('active');p.setAttribute('aria-hidden','false');
+    updatePlayerFavorite();const p=document.getElementById('cfLivePlayer');p.classList.add('active');p.setAttribute('aria-hidden','false');document.body.classList.add('cf-live-immersive');
     // Build 9.5: channel taps open the TV screen directly in fullscreen landscape.
     const screenEl=document.getElementById('cfLiveScreen');
     try{
@@ -82,7 +82,7 @@
       console.info('Live TV fullscreen/orientation is restricted by this browser:',err);
     }
   };
-  window.cfCloseLivePlayer=async function(){const p=document.getElementById('cfLivePlayer');if(p){p.classList.remove('active');p.setAttribute('aria-hidden','true');}const f=document.getElementById('cfLiveIframe');if(f)f.src='about:blank';try{if(document.fullscreenElement&&document.exitFullscreen)await document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(_){}};
+  window.cfCloseLivePlayer=async function(){document.body.classList.remove('cf-live-immersive');const p=document.getElementById('cfLivePlayer');if(p){p.classList.remove('active');p.setAttribute('aria-hidden','true');}const f=document.getElementById('cfLiveIframe');if(f)f.src='about:blank';try{if(document.fullscreenElement&&document.exitFullscreen)await document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(_){}};
   function adjacent(step){let i=CHANNELS.findIndex(c=>c.id===activeChannelId);if(i<0)i=0;i=(i+step+CHANNELS.length)%CHANNELS.length;cfPlayLiveChannel(CHANNELS[i].id);}
   window.cfLivePrevious=function(){adjacent(-1);};window.cfLiveNext=function(){adjacent(1);};
   window.cfLiveFullscreen=async function(){const el=document.getElementById('cfLiveScreen');if(!el)return;try{if(document.fullscreenElement){if(document.exitFullscreen)await document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}else{if(el.requestFullscreen)await el.requestFullscreen({navigationUI:'hide'});else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape');}}catch(err){console.info('Fullscreen is restricted by this browser:',err);}};

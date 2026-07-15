@@ -15,3 +15,13 @@
 /* Build 6.1.2 — keep Smart Discovery below Today's Mode */
 .cf-discovery-v2{position:relative;z-index:4;clear:both;margin-top:20px!important;margin-bottom:24px!important}
 @media(max-width:600px){.cf-discovery-v2{margin-top:18px!important;padding-top:4px}}
+
+/* CineFlex Build 10 — AI Recommendation 2.0 quick actions */
+.cf-ai-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 16px 10px;border-top:1px solid rgba(255,255,255,.06);background:rgba(4,9,18,.72)}
+.cf-ai-action{min-width:0;border:1px solid rgba(91,225,255,.16);border-radius:14px;background:linear-gradient(145deg,rgba(30,56,82,.58),rgba(14,22,38,.82));color:#e9fbff;padding:10px 6px;display:grid;place-items:center;gap:6px;cursor:pointer;font-size:10px;font-weight:800;transition:.2s ease}
+.cf-ai-action i{font-size:16px;color:#68edff}.cf-ai-action:hover,.cf-ai-action:focus-visible{transform:translateY(-2px);border-color:rgba(91,225,255,.5);outline:none}
+.cf-ai-command-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 10px;background:rgba(4,9,18,.72)}
+.cf-ai-command{border:1px solid rgba(255,255,255,.12);border-radius:13px;background:rgba(255,255,255,.07);color:#fff;padding:10px 9px;font-weight:900;cursor:pointer}.cf-ai-command i{margin-right:6px;color:#72efff}
+#cfAiSurprise{background:linear-gradient(135deg,rgba(126,76,255,.34),rgba(38,181,255,.2))}
+@media(max-width:420px){.cf-ai-quick-grid{grid-template-columns:repeat(3,1fr);padding-inline:12px}.cf-ai-command-row{padding-inline:12px}.cf-ai-action{padding:9px 4px}}
+

@@ -71,6 +71,7 @@
   <link rel="stylesheet" href="css/modules/watch-time.css?v=8.0.7">
   <link rel="stylesheet" href="css/modules/tv-edition.css?v=9.0">
   <link rel="stylesheet" href="css/modules/membership.css?v=8.0.4">
+  <link rel="stylesheet" href="css/modules/mobile-layout-fix-v91.css?v=9.1">
 </head>
 <body>
 <!-- ===========================
@@ -182,7 +183,7 @@ CINEFLEX PROFILE SELECTOR
             <div class="drawer-item" onclick="document.getElementById('marvel-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-mask"></i> Marvel Universe</div>
             <div class="drawer-item" onclick="document.getElementById('anime-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-dragon"></i> Latest Anime</div>
             <div class="drawer-item" onclick="document.getElementById('kids-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-child"></i> Kids & Family</div>
-            <div class="drawer-item" onclick="document.getElementById('cocomelon-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-watermelon-slice"></i> Cocomelon</div>
+            <div class="drawer-item" onclick="document.getElementById('horror-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-ghost"></i> Trending Horror</div>
             <div class="drawer-item" onclick="document.getElementById('filipino-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-film"></i> Vivamax</div>
         </div>
         <div class="drawer-section">
@@ -286,7 +287,7 @@ CINEFLEX PROFILE SELECTOR
   <button class="cf-dock-chip" data-target="#netflix-movies-section" type="button">🎬 Blockbusters</button>
   <button class="cf-dock-chip" data-target="#anime-section" type="button">⚡ Anime Rush</button>
   <button class="cf-dock-chip" data-target="#kdrama-section" type="button">💜 K-Drama Night</button>
-  <button class="cf-dock-chip" data-target="#filipino-section" type="button">🇵🇭 Pinoy Picks</button>
+  <button class="cf-dock-chip" data-target="#horror-section" type="button">👻 Horror Night</button>
   <button class="cf-dock-chip" data-target="#kids-section" type="button">✨ Family Time</button>
 </section>
 
@@ -334,24 +335,14 @@ CINEFLEX PROFILE SELECTOR
     <section class="row" id="marvel-section"><h2>Marvel Universe</h2><div class="scroller" id="marvel-list"></div></section>
     <section class="row" id="kids-section"><h2>Kids & Family</h2><div class="scroller" id="kids-list"></div></section>
     
-    <!-- HETO ANG BAGONG ROW PARA SA COCOMELON -->
-    <section class="row" id="cocomelon-section">
-        <h2><i class="fa-solid fa-music" style="color: #2ecc71;"></i> Cocomelon Specials</h2>
-        <div class="scroller" id="cocomelon-list"></div>
+    <section class="row" id="horror-section">
+        <h2><i class="fa-solid fa-ghost" style="color:#e50914;"></i> Trending Horror Movies</h2>
+        <div class="scroller" id="horror-list"></div>
     </section>
-    
+
     <section class="row" id="anime-section"><h2>Latest Anime</h2><div class="scroller" id="anime-list"></div></section>
     <section class="row" id="filipino-section"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
     <section class="row" id="kdrama-section"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
-    <section class="row" id="kpop-section"><h2>K-Pop Specials</h2><div class="scroller" id="kpop-list"></div></section>
-    <section class="row" id="pinoy-action-section">
-        <h2>Pinoy Action</h2>
-        <div class="scroller" id="pinoy-action-list"></div>
-    </section>
-    <section class="row" id="dramabox-section">
-        <h2><i class="fa-solid fa-bolt" style="color: #ffcc00;"></i> Mini Short Dramas (DramaBox Style)</h2>
-        <div class="scroller dramabox-scroller" id="dramabox-list"></div>
-    </section>
 </main>
 
 <div id="details-modal" class="modal" style="display:none;">

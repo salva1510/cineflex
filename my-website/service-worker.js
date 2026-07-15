@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v9.0";
+const CACHE_NAME = "cineflex-v9.1";
 
 const CORE_ASSETS = [
   "/",
@@ -22,6 +22,7 @@ const CORE_ASSETS = [
   "/css/modules/watch-time.css",
   "/js/modules/watch-time.js",
   "/css/modules/membership.css",
+  "/css/modules/mobile-layout-fix-v91.css",
   "/js/modules/membership.js",
   "/cineflex-support.html",
   "/js/modules/personalized.js",

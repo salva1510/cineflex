@@ -147,18 +147,15 @@ function handleFullscreenExit() {
 
 async function init() {
   try {
-    const [trd, marvel, anime, fil, kd, kp, kids, pinoyAction, dramabox, netflixMovies, cocomelonData] = await Promise.all([
+    const [trd, marvel, anime, fil, kd, kids, netflixMovies, horror] = await Promise.all([
       fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_companies=420&sort_by=release_date.desc`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_origin_country=PH`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&with_genres=18`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10402&with_original_language=ko`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16,10751`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&region=PH&with_genres=28&with_origin_country=PH`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=18,10766&without_genres=16,16&with_original_language=zh|ko&sort_by=popularity.desc`).then(r => r.json()),
       fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_watch_providers=8&watch_region=PH&sort_by=popularity.desc`).then(r => r.json()),
-      fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16,10751&keywords=210024|310931|234327&sort_by=popularity.desc`).then(r => r.json())
+      fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27&sort_by=popularity.desc&vote_count.gte=100`).then(r => r.json())
     ]);
 
     trendingItems = trd.results;
@@ -169,12 +166,9 @@ async function init() {
     displayCards(anime.results, "anime-list");
     displayCards(fil.results, "filipino-list");
     displayCards(kd.results, "kdrama-list");
-    displayCards(kp.results, "kpop-list");
     displayCards(kids.results, "kids-list");
-    displayCards(pinoyAction.results, "pinoy-action-list");
-    displayCards(cocomelonData.results || [], "cocomelon-list");
     displayCards(netflixMovies.results, "netflix-movies-list");
-    displayDramaBoxCards(dramabox.results || [], "dramabox-list");
+    displayCards(horror.results || [], "horror-list");
     
     updateContinueUI();
     setupInfiniteScroll(); 

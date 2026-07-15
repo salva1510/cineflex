@@ -1,0 +1,63 @@
+/* CINEFLEX WATCH TIME v8.0.0 */
+.cf-watchtime-chip{position:absolute;left:14px;bottom:14px;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;background:rgba(5,7,12,.88);border:1px solid rgba(255,255,255,.16);box-shadow:0 8px 28px rgba(0,0,0,.35);font-size:12px;font-weight:800;color:#fff;backdrop-filter:blur(12px)}
+.cf-watchtime-chip.low{border-color:#ffb020;color:#ffd37a}.cf-watchtime-chip.empty{border-color:#ff3344;color:#ff8790}.cf-watchtime-chip button{border:0;border-radius:999px;padding:6px 9px;background:#e50914;color:white;font:inherit;cursor:pointer}
+.cf-time-modal{position:fixed;inset:0;z-index:60000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}.cf-time-modal.open{display:flex}
+.cf-time-card{width:min(440px,100%);border-radius:24px;padding:24px;background:linear-gradient(160deg,#171b25,#080a0f);border:1px solid rgba(255,255,255,.12);box-shadow:0 28px 90px rgba(0,0,0,.7);color:#fff;text-align:center}.cf-time-icon{width:68px;height:68px;margin:0 auto 14px;display:grid;place-items:center;border-radius:20px;background:rgba(229,9,20,.15);color:#ff4350;font-size:28px}.cf-time-card h2{margin:0 0 8px;font-size:25px}.cf-time-card p{margin:0 auto 18px;max-width:340px;color:#b9bec9;line-height:1.55}.cf-time-balance{margin:12px auto 20px;font-size:14px;color:#e8ebf1}.cf-time-balance strong{display:block;margin-top:3px;font-size:28px;color:#fff}.cf-time-actions{display:grid;gap:10px}.cf-time-primary,.cf-time-secondary{min-height:50px;border-radius:14px;border:0;font-weight:900;font-size:15px;cursor:pointer}.cf-time-primary{background:#e50914;color:#fff}.cf-time-primary:disabled{opacity:.55;cursor:wait}.cf-time-secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1)}.cf-time-note{display:block;margin-top:13px;color:#7f8795;font-size:11px;line-height:1.45}.cf-time-status{min-height:19px;margin:10px 0 0!important;color:#ffd27a!important;font-size:12px}
+@media(max-width:600px){.cf-watchtime-chip{left:8px;bottom:8px;padding:7px 9px}.cf-watchtime-chip span{max-width:110px;white-space:nowrap}.cf-time-card{padding:20px;border-radius:20px}}
+
+/* Monetag support countdown v7.1 */
+.cf-sponsor-progress{margin:0 0 18px;padding:16px;border-radius:18px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09)}
+.cf-sponsor-progress[hidden]{display:none!important}
+.cf-sponsor-ring{width:78px;height:78px;margin:0 auto 10px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,rgba(229,9,20,.24),rgba(229,9,20,.06));border:2px solid rgba(229,9,20,.65);box-shadow:0 0 30px rgba(229,9,20,.14)}
+.cf-sponsor-ring strong{font-size:26px;line-height:1}.cf-sponsor-ring span{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#aab0bc;margin-top:2px}
+.cf-sponsor-progress p{margin:0 0 11px!important;font-size:12px!important;color:#b9bec9!important}
+.cf-sponsor-track{height:7px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.09)}
+.cf-sponsor-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#e50914,#ff5560);transition:width .35s linear}
+
+
+/* Permanent Add Time action v7.1.1 */
+.cf-add-time-action{display:inline-flex!important;align-items:center;gap:8px;background:rgba(229,9,20,.12)!important;border:1px solid rgba(229,9,20,.42)!important;color:#fff!important}
+.cf-add-time-action:hover{background:rgba(229,9,20,.24)!important;border-color:rgba(255,64,74,.8)!important;transform:translateY(-1px)}
+.cf-add-time-action b{margin-left:2px;padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.28);font-size:11px;line-height:1.2;color:#fff}
+.cf-add-time-action.low{border-color:#ffb020!important;color:#ffd37a!important}.cf-add-time-action.empty{border-color:#ff3344!important;background:rgba(255,51,68,.16)!important}
+@media(max-width:600px){.cf-add-time-action{flex:1 1 calc(50% - 6px);justify-content:center;min-height:46px}.cf-watchtime-chip{z-index:999!important}}
+
+
+/* Build 8 membership states */
+.cf-watchtime-chip.vip{border-color:rgba(255,202,68,.65);color:#ffe39a;background:rgba(30,22,4,.92)}
+.cf-watchtime-chip.vip i{color:#ffd257}
+.cf-add-time-action[hidden],#cfAddTimeMini[hidden]{display:none!important}
+.cf-add-time-action{position:relative}
+.cf-add-time-action b{white-space:nowrap}
+
+
+/* BUILD 8.0.2 — persistent drawer Add Time */
+.cf-drawer-add-time{width:100%;display:flex!important;align-items:center;gap:12px;text-align:left;border:1px solid rgba(229,9,20,.35)!important;background:linear-gradient(135deg,rgba(229,9,20,.18),rgba(255,255,255,.04))!important;color:#fff!important;border-radius:14px;padding:13px 14px;margin-top:10px;cursor:pointer}
+.cf-drawer-add-time>i:first-child{width:34px;height:34px;border-radius:10px;background:#e50914;display:grid;place-items:center;flex:none}
+.cf-drawer-add-time span{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.cf-drawer-add-time b{font-size:.92rem}.cf-drawer-add-time small{font-size:.72rem;color:#b8c0cc;font-weight:600}
+.cf-drawer-add-time[hidden]{display:none!important}
+
+
+/* BUILD 8.0.6 — Homepage upper-right Add Time */
+.cf-top-add-time{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 11px;border-radius:999px;border:1px solid rgba(229,9,20,.55);background:linear-gradient(135deg,rgba(229,9,20,.9),rgba(165,5,14,.9));color:#fff;font:inherit;font-size:12px;font-weight:850;cursor:pointer;box-shadow:0 7px 22px rgba(229,9,20,.22);white-space:nowrap}
+.cf-top-add-time:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.cf-top-add-time b{padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.28);font-size:10px}
+.cf-top-add-time.low{border-color:#ffb020}.cf-top-add-time.empty{animation:cfTimePulse 1.8s infinite}
+.cf-top-add-time[hidden]{display:none!important}
+@keyframes cfTimePulse{50%{box-shadow:0 0 0 7px rgba(229,9,20,0)}}
+@media(max-width:600px){.cf-top-add-time{padding:7px 9px}.cf-top-add-time span{display:none}.cf-top-add-time b{font-size:9px}.cf-nav-actions{gap:6px!important}}
+
+
+/* BUILD 8.0.7 — force-visible upper-right Watch Time button */
+.navbar.cf-dulo-navbar .cf-nav-actions{margin-left:auto!important;flex:0 0 auto!important;display:flex!important;align-items:center!important;overflow:visible!important}
+#cfTopAddTime.cf-top-add-time{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:10060!important;flex:0 0 auto!important}
+#cfTopAddTime.cf-top-add-time.vip{background:linear-gradient(135deg,#7a5700,#d79b00)!important;border-color:#ffd76a!important}
+@media(max-width:899px){
+  .navbar.cf-dulo-navbar{overflow:visible!important}
+  #cfTopAddTime.cf-top-add-time{min-width:52px!important;justify-content:center!important;padding:7px 8px!important}
+  #cfTopAddTime.cf-top-add-time b{display:inline-block!important;max-width:88px;overflow:hidden;text-overflow:ellipsis}
+}
+@media(max-width:420px){
+  #cfTopAddTime.cf-top-add-time b{max-width:58px;font-size:8px!important}
+  .cf-nav-search,.cf-nav-menu{padding:0 10px!important}
+}

@@ -117,6 +117,56 @@ function triggerPopUnder() {
   }
 }
 
+// --- PLAY MOVIE / EPISODE POP-UNDER ---
+// Triggers once for each newly selected movie or TV episode.
+let cineflexLastPlayAdKey = "";
+let cineflexPlayAdSequence = 0;
+
+function getCurrentPlayAdKey() {
+  if (!currentItem || !currentItem.id) return "";
+
+  const type = currentTVState?.type || currentItem.media_type || "movie";
+  if (type === "tv") {
+    const season = Number(currentTVState?.season || 1);
+    const episode = Number(currentTVState?.currentEpNum || currentTVState?.episode || 1);
+    return `tv:${currentItem.id}:s${season}:e${episode}`;
+  }
+
+  return `movie:${currentItem.id}`;
+}
+
+function triggerPlayPopUnderForCurrentTitle() {
+  try {
+    const playKey = getCurrentPlayAdKey();
+    if (!playKey || playKey === cineflexLastPlayAdKey) return false;
+
+    // Reserve immediately so rapid double-taps do not create duplicate pop-unders.
+    cineflexLastPlayAdKey = playKey;
+
+    const previous = document.getElementById("cineflex-play-ad-script");
+    if (previous) previous.remove();
+
+    const adScript = document.createElement("script");
+    adScript.id = "cineflex-play-ad-script";
+    adScript.src = `https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js?cf_play=${Date.now()}_${++cineflexPlayAdSequence}`;
+    adScript.type = "text/javascript";
+    adScript.async = true;
+
+    const cleanup = () => {
+      window.setTimeout(() => {
+        if (adScript.isConnected) adScript.remove();
+      }, 1500);
+    };
+    adScript.addEventListener("load", cleanup, { once: true });
+    adScript.addEventListener("error", cleanup, { once: true });
+    document.body.appendChild(adScript);
+    return true;
+  } catch (error) {
+    console.log("Play ad script blocked or failed:", error);
+    return false;
+  }
+}
+
 async function enterCinemaMode() {
   const playerContainer = document.getElementById("modal-player-container");
   if (!playerContainer) return;
@@ -532,6 +582,9 @@ function playSpecificEpisode(epNum, element) {
         currentTVState.currentEpNum = epNum;
         window.currentTVState = currentTVState;
 
+        // Show the pop-under only when this is a newly selected episode.
+        triggerPlayPopUnderForCurrentTitle();
+
         const playerContainer = document.getElementById("modal-player-container");
         if (playerContainer) playerContainer.style.display = "block";
 
@@ -548,6 +601,9 @@ function playSpecificEpisode(epNum, element) {
 
 function startPlayback() {
     requireLogin(() => {
+        // Show the pop-under only when this is a newly selected movie or episode.
+        triggerPlayPopUnderForCurrentTitle();
+
         const playerContainer = document.getElementById("modal-player-container");
         if (playerContainer) playerContainer.style.display = "block";
 

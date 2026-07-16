@@ -23,6 +23,6 @@ window.cfCloseProfileCenter=function(){ensure();$('#cfProfileCenter').classList.
 window.cfSaveProfilePrefs=function(){ensure();const p={kids:$('#cfPrefKids').checked,compact:$('#cfPrefCompact').checked,autoplay:$('#cfPrefAutoplay').checked,profileData:$('#cfPrefData').checked};savePrefs(p);apply();window.cfCloseProfileCenter();if(typeof showToast==='function')showToast('Profile preferences saved');else alert('Profile preferences saved.');};
 window.cfResetCurrentProfileData=function(){if(!confirm('Clear My List, continue watching, music and radio activity for this profile?'))return;DATA_KEYS.forEach(k=>localStorage.removeItem(k));localStorage.removeItem(dataKey(active()));location.reload();};
 window.addEventListener('cineflex:before-profile-switch',e=>{const from=e.detail&&e.detail.from;if(prefs(from).profileData!==false)snapshot(from);});
-window.addEventListener('cineflex:profile-switched',e=>{const to=e.detail&&e.detail.to;if(prefs(to).profileData!==false)restore(to);apply();setTimeout(()=>location.reload(),80);});
+window.addEventListener('cineflex:profile-switched',e=>{const from=e.detail&&e.detail.from;const to=e.detail&&e.detail.to;if(!to||from===to){apply();return;}if(prefs(to).profileData!==false)restore(to);apply();setTimeout(()=>location.reload(),80);});
 document.addEventListener('DOMContentLoaded',()=>{ensure();apply();});
 })();

@@ -1,6 +1,0 @@
-CINEFLEX BUILD 8.0.1
-- Static + dynamically bound Add Time button in movie details
-- Free members can stack +15 minutes repeatedly
-- Mobile drawer uses full device height and its content scrolls independently
-- Bottom controls receive safe-area padding and are no longer hidden behind bottom navigation
-- PWA cache version bumped

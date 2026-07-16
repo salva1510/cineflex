@@ -284,15 +284,27 @@
 
   async function selectProfile(id, silent) {
     const previousProfileId = localStorage.getItem("cineflex_profile") || "";
-    window.dispatchEvent(new CustomEvent("cineflex:before-profile-switch", { detail: { from: previousProfileId, to: id } }));
-    localStorage.setItem("cineflex_profile", id);
+    const isActualSwitch = previousProfileId !== id;
+
+    // Firebase may fire auth callbacks more than once during login/session restore.
+    // Do not announce a profile switch when the same profile is already active,
+    // otherwise profile-personalization will keep reloading the homepage.
+    if (isActualSwitch) {
+      window.dispatchEvent(new CustomEvent("cineflex:before-profile-switch", { detail: { from: previousProfileId, to: id } }));
+      localStorage.setItem("cineflex_profile", id);
+    }
+
     window.CF_CURRENT_PROFILE = id;
     const selector = $("profile-selector");
     if (selector) selector.style.display = "none";
     renderDrawerProfiles();
     if (typeof window.loadUserData === "function") await window.loadUserData();
     if (typeof window.closeMenuDrawer === "function" && !silent) window.closeMenuDrawer();
-    window.dispatchEvent(new CustomEvent("cineflex:profile-switched", { detail: { from: previousProfileId, to: id } }));
+
+    if (isActualSwitch) {
+      window.dispatchEvent(new CustomEvent("cineflex:profile-switched", { detail: { from: previousProfileId, to: id } }));
+    }
+
     if (isProfilesPage() && !silent) window.location.href = "index.html";
   }
 

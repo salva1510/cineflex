@@ -25,8 +25,20 @@
     }
     if(!$('.cf19-scroll-cue',hero)){const cue=document.createElement('div');cue.className='cf19-scroll-cue';cue.setAttribute('aria-hidden','true');hero.appendChild(cue)}
     syncHeroVisual(hero);
-    const obs=new MutationObserver(()=>{hero.classList.add('cf19-changing');setTimeout(()=>{syncHeroVisual(hero);hero.classList.remove('cf19-changing');cycleDot()},320)});
-    obs.observe(hero,{attributes:true,attributeFilter:['style','class']});
+    let heroSyncTimer = null;
+    const obs=new MutationObserver((mutations)=>{
+      if(!mutations.some(m=>m.attributeName==='style')) return;
+      hero.classList.add('cf19-changing');
+      clearTimeout(heroSyncTimer);
+      heroSyncTimer=setTimeout(()=>{
+        syncHeroVisual(hero);
+        hero.classList.remove('cf19-changing');
+        cycleDot();
+      },320);
+    });
+    // Watch only inline background/style updates. Watching the class attribute here
+    // caused a self-triggering loop because this observer also toggles a class.
+    obs.observe(hero,{attributes:true,attributeFilter:['style']});
   }
   function syncHeroVisual(hero){const visual=$('.cf19-hero-visual',hero);if(!visual)return;visual.style.backgroundImage=getComputedStyle(hero).backgroundImage;visual.style.backgroundPosition=getComputedStyle(hero).backgroundPosition;visual.style.backgroundSize='cover';deriveAccent(hero)}
   function cycleDot(){const dots=$$('.cf19-hero-dot');if(!dots.length)return;let i=dots.findIndex(x=>x.classList.contains('active'));dots.forEach(x=>x.classList.remove('active'));dots[(i+1)%dots.length].classList.add('active')}

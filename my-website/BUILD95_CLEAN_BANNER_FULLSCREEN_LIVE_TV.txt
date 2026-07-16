@@ -1,8 +1,0 @@
-CINEFLEX BUILD 9.5 — CLEAN BANNER + FULLSCREEN LIVE TV
-
-- Removed CineFlex, Live viewers, Smart pick, and star metric badges from the hero banner.
-- Removed the Trending, Blockbusters, Anime Rush, K-Drama Night, Horror Night, and Family Time shortcut strip below the banner.
-- Live TV now requests fullscreen immediately after a channel card is tapped.
-- Mobile devices request landscape orientation while Live TV is fullscreen.
-- Exiting the Live TV player also exits fullscreen and unlocks orientation.
-- Browsers that restrict automatic orientation lock continue playback normally.

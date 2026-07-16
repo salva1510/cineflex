@@ -1,9 +1,0 @@
-CINEFLEX BUILD 9.4 — DIRECT LIVE TV + ONLINE INDICATOR FIX
-
-- Official YouTube broadcast embeds now play inside the CineFlex Live TV modal for configured channels.
-- External official channel page is retained only as backup when a broadcast is offline or embedding is disabled.
-- Online indicator moved to the fixed upper-right corner.
-- Removed the floating lower online/watching indicator and duplicate section badge.
-- Existing movies, authentication, profiles, admin and Firestore logic retained.
-
-Important: Broadcasters control live schedules, video IDs, geographic availability and embedding permission. An official embed can show an offline/replay notice when no active broadcast is available.

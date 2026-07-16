@@ -1,6 +1,0 @@
-CineFlex Build 19.2
-- CineFlex logo fixed to the upper-left of the homepage.
-- Removed Match, 4K UHD, Dolby Audio, and Featured badges from the home banner.
-- Added a persistent close button inside the Live TV screen, including fullscreen mode.
-- Replaced stale fixed replay video IDs with official YouTube channel live-stream embeds where a verified channel ID is available.
-- Channels without a reliable embeddable live feed now use the official broadcaster Live page instead of presenting an old replay as live.

@@ -1,0 +1,8 @@
+CINEFLEX CATALOG BROWSER UPDATE
+- Added desktop sidebar + poster grid inspired by the supplied reference.
+- All Movies loads popular movies across multiple TMDB pages.
+- Horror, Anime, Action, Animation, Comedy, Romance, Sci-Fi, Thriller and Family load their matching catalogs.
+- Added Popular, Top Rated, In Theaters, Coming Soon and All TV Shows.
+- Infinite scrolling + Load More fallback.
+- Responsive mobile category drawer.
+- Existing CineFlex details/player opens when a poster is selected.

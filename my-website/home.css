@@ -1539,3 +1539,219 @@ body { padding-bottom: calc(74px + env(safe-area-inset-bottom)) !important; }
 /* Remove the small PRO pill so the brand stays clean and properly stretched. */
 .cf-logo-only-header .logo::after { content: none !important; display: none !important; }
 .banner::after { content: none !important; display: none !important; animation: none !important; }
+
+
+/* ==== Improved Button Contrast ==== */
+.play-btn-large{
+background:linear-gradient(135deg,#ffb300,#ff6a00)!important;
+color:#111!important;
+font-weight:800!important;
+text-shadow:none!important;
+box-shadow:0 8px 20px rgba(255,106,0,.35)!important;
+}
+.play-btn-large:hover{
+filter:brightness(1.08);
+}
+.cf-drawer-install,
+#tvModeBtn,
+.drawer-item.tv-mode,
+button#tvModeToggle{
+background:linear-gradient(135deg,#00c6ff,#0072ff)!important;
+color:#fff!important;
+font-weight:700!important;
+border-radius:12px!important;
+padding:12px 14px!important;
+}
+.cf-drawer-install i,
+#tvModeBtn i,
+.drawer-item.tv-mode i,
+button#tvModeToggle i{
+color:#fff!important;
+}
+
+/* =========================================================
+   CINEFLEX PREMIUM ACTION BUTTONS — Gold / Glass / Neon
+   ========================================================= */
+.play-btn-large {
+  position: relative !important;
+  isolation: isolate;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  min-height: 50px !important;
+  padding: 13px 24px !important;
+  border: 1px solid rgba(255, 238, 155, .92) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #fff2a8 0%, #ffd54a 34%, #f7a800 72%, #db7200 100%) !important;
+  color: #241300 !important;
+  font-weight: 950 !important;
+  letter-spacing: .025em !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.45) !important;
+  box-shadow: 0 12px 28px rgba(247,168,0,.34), inset 0 1px 0 rgba(255,255,255,.8) !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease !important;
+}
+.play-btn-large::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -80%;
+  left: -35%;
+  width: 24%;
+  height: 260%;
+  background: rgba(255,255,255,.52);
+  transform: rotate(24deg);
+  transition: left .55s ease;
+}
+.play-btn-large:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  filter: saturate(1.08) brightness(1.05) !important;
+  box-shadow: 0 16px 36px rgba(247,168,0,.46), 0 0 0 4px rgba(255,205,45,.12) !important;
+}
+.play-btn-large:hover::after { left: 118%; }
+.play-btn-large:active { transform: translateY(1px) scale(.98) !important; }
+.play-btn-large i { color: #241300 !important; filter: drop-shadow(0 1px 0 rgba(255,255,255,.4)); }
+
+#installBtn.cf-drawer-install,
+.cf-drawer-install {
+  position: relative !important;
+  display: flex;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 54px !important;
+  padding: 13px 15px !important;
+  border: 1px solid rgba(125,211,252,.42) !important;
+  border-radius: 15px !important;
+  background: linear-gradient(135deg, rgba(14,165,233,.28), rgba(37,99,235,.20)) !important;
+  color: #f8fcff !important;
+  font-weight: 850 !important;
+  letter-spacing: .015em !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.62) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 10px 26px rgba(2,132,199,.20) !important;
+  backdrop-filter: blur(16px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(145%) !important;
+  overflow: hidden !important;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease !important;
+}
+#installBtn.cf-drawer-install::before,
+.cf-drawer-install::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255,255,255,.16), transparent 42%);
+}
+#installBtn.cf-drawer-install:hover,
+.cf-drawer-install:hover {
+  transform: translateX(4px) !important;
+  border-color: rgba(186,230,253,.85) !important;
+  background: linear-gradient(135deg, rgba(14,165,233,.43), rgba(37,99,235,.34)) !important;
+  box-shadow: 0 13px 32px rgba(2,132,199,.32), 0 0 0 3px rgba(56,189,248,.10) !important;
+}
+#installBtn.cf-drawer-install:active,
+.cf-drawer-install:active { transform: translateX(2px) scale(.985) !important; }
+#installBtn.cf-drawer-install i,
+.cf-drawer-install i {
+  color: #e9f9ff !important;
+  font-size: 1.08rem !important;
+  filter: drop-shadow(0 0 7px rgba(56,189,248,.75));
+}
+
+#cfTvModeToggle,
+.cf-tv-mode-toggle,
+#cf15TvToggle,
+.cf15-tv-toggle,
+#tvModeBtn,
+.drawer-item.tv-mode,
+button#tvModeToggle {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 54px !important;
+  padding: 13px 15px !important;
+  border: 1px solid rgba(103,232,249,.58) !important;
+  border-radius: 15px !important;
+  background: linear-gradient(135deg, rgba(6,78,101,.92), rgba(15,23,42,.96)) !important;
+  color: #ecfeff !important;
+  font-weight: 900 !important;
+  letter-spacing: .025em !important;
+  text-shadow: 0 0 10px rgba(34,211,238,.42) !important;
+  box-shadow: inset 0 0 18px rgba(34,211,238,.08), 0 0 16px rgba(6,182,212,.20) !important;
+  overflow: hidden !important;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+#cfTvModeToggle::before,
+.cf-tv-mode-toggle::before,
+#cf15TvToggle::before,
+.cf15-tv-toggle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(34,211,238,.11), transparent);
+  transform: translateX(-100%);
+  transition: transform .55s ease;
+}
+#cfTvModeToggle:hover,
+.cf-tv-mode-toggle:hover,
+#cf15TvToggle:hover,
+.cf15-tv-toggle:hover,
+#tvModeBtn:hover,
+.drawer-item.tv-mode:hover,
+button#tvModeToggle:hover {
+  transform: translateX(4px) !important;
+  border-color: #67e8f9 !important;
+  box-shadow: inset 0 0 22px rgba(34,211,238,.12), 0 0 22px rgba(34,211,238,.36), 0 0 0 3px rgba(34,211,238,.08) !important;
+}
+#cfTvModeToggle:hover::before,
+.cf-tv-mode-toggle:hover::before,
+#cf15TvToggle:hover::before,
+.cf15-tv-toggle:hover::before { transform: translateX(100%); }
+#cfTvModeToggle:active,
+.cf-tv-mode-toggle:active,
+#cf15TvToggle:active,
+.cf15-tv-toggle:active { transform: translateX(2px) scale(.985) !important; }
+#cfTvModeToggle i,
+.cf-tv-mode-toggle i,
+#cf15TvToggle i,
+.cf15-tv-toggle i,
+#tvModeBtn i,
+.drawer-item.tv-mode i,
+button#tvModeToggle i {
+  color: #67e8f9 !important;
+  filter: drop-shadow(0 0 8px rgba(34,211,238,.9));
+}
+#cfTvModeToggle[aria-pressed="true"],
+#cf15TvToggle[aria-pressed="true"],
+body.cf-tv-mode .cf-tv-mode-toggle,
+body.cf-tv-mode .cf15-tv-toggle {
+  border-color: #a7f3d0 !important;
+  background: linear-gradient(135deg, rgba(5,150,105,.70), rgba(6,78,59,.92)) !important;
+  color: #f0fdf4 !important;
+  box-shadow: 0 0 24px rgba(16,185,129,.36) !important;
+}
+
+.play-btn-large:focus-visible,
+.cf-drawer-install:focus-visible,
+.cf-tv-mode-toggle:focus-visible,
+.cf15-tv-toggle:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 3px !important;
+}
+
+@media (max-width: 640px) {
+  .play-btn-large { width: 100% !important; min-height: 52px !important; }
+  #movie-play-action { flex: 1 1 100% !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play-btn-large,
+  .cf-drawer-install,
+  .cf-tv-mode-toggle,
+  .cf15-tv-toggle,
+  .play-btn-large::after,
+  .cf-tv-mode-toggle::before,
+  .cf15-tv-toggle::before { transition: none !important; }
+}

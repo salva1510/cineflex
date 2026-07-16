@@ -17,3 +17,9 @@ body.cf-live-immersive .navbar,body.cf-live-immersive .bottom-nav,body.cf-live-i
 .cf-live-screen-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:20;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.92);background:rgba(0,0,0,.78);color:#fff;display:grid;place-items:center;font-size:1.15rem;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.65)}
 .cf-live-screen-close:hover,.cf-live-screen-close:focus-visible{background:#e50914;outline:none;transform:scale(1.05)}
 .cf-live-screen:fullscreen .cf-live-screen-close,.cf-live-screen:-webkit-full-screen .cf-live-screen-close{display:grid!important;position:fixed!important}
+
+/* Build 19.4 — FPJ Movies inside Live TV */
+.cf-live-badge.movie,.cf-player-live.movie{background:linear-gradient(135deg,#f6c453,#b97800)!important;color:#171006!important}
+.cf-live-badge.movie:before{display:none!important}
+.cf-live-card:has(.cf-live-badge.movie){background:linear-gradient(145deg,#241a0c,#0d0f14)}
+.cf-live-card:has(.cf-live-badge.movie) .cf-live-logo{background:linear-gradient(135deg,#ffe8a0,#c98613);color:#171006}

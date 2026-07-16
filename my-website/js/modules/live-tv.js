@@ -10,7 +10,15 @@
     {id:'gmanews',name:'GMA Integrated News',short:'GMA',category:'News',type:'News / Special Coverage',official:'https://www.youtube.com/@gmanews/streams',channelId:''},
     {id:'news5',name:'News5Everywhere',short:'NEWS5',category:'News',type:'News / Public Affairs',official:'https://www.youtube.com/@News5Everywhere/streams',channelId:'UCGEbMwiX774cseKvJqF9R2g'},
     {id:'senate',name:'Senate of the Philippines',short:'SENATE',category:'Government',type:'Government',official:'https://www.youtube.com/@SenatePhilippines/streams',channelId:''},
-    {id:'house',name:'House of Representatives',short:'HOUSE',category:'Government',type:'Government',official:'https://www.youtube.com/@HouseofRepsPH/streams',channelId:''}
+    {id:'house',name:'House of Representatives',short:'HOUSE',category:'Government',type:'Government',official:'https://www.youtube.com/@HouseofRepsPH/streams',channelId:''},
+    {id:'fpj-nagbabagang-asero',name:'Nagbabagang Asero',short:'FPJ',category:'FPJ Movies',type:'Restored Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=q_p95QGW0OE',videoId:'q_p95QGW0OE'},
+    {id:'fpj-pepeng-kaliwete',name:'Pepeng Kaliwete',short:'FPJ',category:'FPJ Movies',type:'Restored Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=1Z0M6MaGCHw',videoId:'1Z0M6MaGCHw'},
+    {id:'fpj-ayos-na-ang-kasunod',name:'Ayos na ang Kasunod',short:'FPJ',category:'FPJ Movies',type:'Restored Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=hNEkdbXrYF8',videoId:'hNEkdbXrYF8'},
+    {id:'fpj-kapag-puno-na-ang-salop',name:'Kapag Puno na ang Salop',short:'FPJ',category:'FPJ Movies',type:'Full Movie HD • FPJ Productions',official:'https://www.youtube.com/watch?v=kNLEOj-5TYc',videoId:'kNLEOj-5TYc'},
+    {id:'fpj-isang-bala-ka-lang',name:'Isang Bala Ka Lang',short:'FPJ',category:'FPJ Movies',type:'Restored Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=3psVIN8pJ80',videoId:'3psVIN8pJ80'},
+    {id:'fpj-walang-matigas',name:'Walang Matigas na Tinapay sa Mainit na Kape',short:'FPJ',category:'FPJ Movies',type:'Restored Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=SQjXLlbb_aU',videoId:'SQjXLlbb_aU'},
+    {id:'fpj-tatak-ng-tundo',name:'Tatak ng Tundo',short:'FPJ',category:'FPJ Movies',type:'Classic HD Full Movie • FPJ Productions',official:'https://www.youtube.com/watch?v=PqSorXSfoOw',videoId:'PqSorXSfoOw'},
+    {id:'fpj-muslim-357',name:'Muslim .357',short:'FPJ',category:'FPJ Movies',type:'Full Movie 4K • OctoArts Films',official:'https://www.youtube.com/watch?v=fIG8Khx7nY8',videoId:'fIG8Khx7nY8'}
   ];
 
   let activeFilter='All';
@@ -33,7 +41,7 @@
     if(!list.length) return '<div class="cf-live-empty"><i class="fa-regular fa-star"></i><h3>No favorite channels yet</h3><p>Tap the star on a channel to save it here.</p></div>';
     return list.map(c=>`<article class="cf-live-card-wrap">
       <button class="cf-live-card" type="button" onclick="cfPlayLiveChannel('${c.id}')">
-        <span class="cf-live-badge">LIVE</span><span class="cf-live-logo">${esc(c.short)}</span>
+        <span class="cf-live-badge ${c.videoId?'movie':''}">${c.videoId?'MOVIE':'LIVE'}</span><span class="cf-live-logo">${esc(c.short)}</span>
         <h4>${esc(c.name)}</h4><p>${esc(c.type)}</p><span class="cf-live-watch"><i class="fa-solid fa-play"></i> Watch</span>
       </button>
       <button class="cf-live-favorite ${isFavorite(c.id)?'active':''}" type="button" aria-label="Favorite ${esc(c.name)}" onclick="event.stopPropagation();cfToggleLiveFavorite('${c.id}')"><i class="${isFavorite(c.id)?'fa-solid':'fa-regular'} fa-star"></i></button>
@@ -42,19 +50,19 @@
 
   function markup(){return `<section id="cfLiveTvShell" class="cf-live-tv-shell" aria-hidden="true">
     <header class="cf-live-tv-head"><div class="cf-live-tv-brand"><i class="fa-solid fa-tower-broadcast"></i><div><h2>CineFlex Live TV</h2><small>Philippine official channel sources</small></div></div><button class="cf-live-tv-close" type="button" onclick="cfCloseLiveTV()"><i class="fa-solid fa-xmark"></i></button></header>
-    <main class="cf-live-tv-wrap"><div class="cf-live-tv-hero"><div class="cf-live-tv-feature"><span class="cf-on-air"><i></i> ON AIR</span><h1>Philippine Live TV</h1><p>Watch available official broadcasts and quickly switch between PH news, entertainment, and government channels.</p><button type="button" onclick="cfPlayLiveChannel('ptv')"><i class="fa-solid fa-play"></i> Start Watching</button></div><div class="cf-live-tv-stats"><strong>${CHANNELS.length}</strong><span>official channel shortcuts</span><small>Availability depends on broadcaster schedule.</small></div></div>
-    <div class="cf-live-filter" id="cfLiveFilters">${['All','News','Entertainment','Government','Favorites'].map(x=>`<button class="${x==='All'?'active':''}" onclick="cfFilterLiveTV('${x}',this)">${x==='Favorites'?'<i class="fa-solid fa-star"></i> ':''}${x}</button>`).join('')}</div>
+    <main class="cf-live-tv-wrap"><div class="cf-live-tv-hero"><div class="cf-live-tv-feature"><span class="cf-on-air"><i></i> ON AIR</span><h1>Live TV & FPJ Classics</h1><p>Watch official Philippine broadcasts and authorized full FPJ movies without leaving CineFlex.</p><button type="button" onclick="cfPlayLiveChannel('ptv')"><i class="fa-solid fa-play"></i> Start Watching</button></div><div class="cf-live-tv-stats"><strong>${CHANNELS.length}</strong><span>official live and movie sources</span><small>Availability and embedding remain controlled by each YouTube publisher.</small></div></div>
+    <div class="cf-live-filter" id="cfLiveFilters">${['All','News','Entertainment','Government','FPJ Movies','Favorites'].map(x=>`<button class="${x==='All'?'active':''}" onclick="cfFilterLiveTV('${x}',this)">${x==='Favorites'?'<i class="fa-solid fa-star"></i> ':''}${x}</button>`).join('')}</div>
     <div class="cf-live-tv-title"><h3 id="cfLiveSectionTitle">All PH Channels</h3><span>Tap ★ to save favorites</span></div><div id="cfLiveTvGrid" class="cf-live-tv-grid">${cardsMarkup()}</div></main></section>
 
     <div id="cfLivePlayer" class="cf-live-player" aria-hidden="true"><div class="cf-live-player-card">
-      <div class="cf-live-player-top"><div><span class="cf-player-live">LIVE</span><h3 id="cfLivePlayerTitle">Live channel</h3></div><div class="cf-live-player-tools"><button onclick="cfToggleCurrentFavorite()" id="cfLivePlayerFav" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfLiveFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseLivePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
-      <div id="cfLiveScreen" class="cf-live-screen"><button class="cf-live-screen-close" type="button" onclick="cfCloseLivePlayer()" aria-label="Close Live TV"><i class="fa-solid fa-xmark"></i></button><iframe id="cfLiveIframe" title="CineFlex Live TV player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe><div id="cfLiveFallback" class="cf-live-fallback"><i class="fa-solid fa-satellite-dish"></i><h3 id="cfLivePlayerName"></h3><p>The official embedded broadcast is unavailable or not scheduled right now. Use the broadcaster page only as a backup.</p><a id="cfLiveOfficialLink" class="cf-live-primary" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Watch Official Live</a></div></div>
+      <div class="cf-live-player-top"><div><span class="cf-player-live" id="cfLivePlayerBadge">LIVE</span><h3 id="cfLivePlayerTitle">Live channel</h3></div><div class="cf-live-player-tools"><button onclick="cfToggleCurrentFavorite()" id="cfLivePlayerFav" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfLiveFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseLivePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
+      <div id="cfLiveScreen" class="cf-live-screen"><button class="cf-live-screen-close" type="button" onclick="cfCloseLivePlayer()" aria-label="Close Live TV"><i class="fa-solid fa-xmark"></i></button><iframe id="cfLiveIframe" title="CineFlex Live TV player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe><div id="cfLiveFallback" class="cf-live-fallback"><i class="fa-solid fa-satellite-dish"></i><h3 id="cfLivePlayerName"></h3><p>This official YouTube video is unavailable for embedded playback or is not currently live. Open its official YouTube page as a backup.</p><a id="cfLiveOfficialLink" class="cf-live-primary" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Official YouTube</a></div></div>
       <div class="cf-live-channel-controls"><button onclick="cfLivePrevious()"><i class="fa-solid fa-backward-step"></i><span>Previous</span></button><div id="cfLiveNowPlaying">Official PH channel</div><button onclick="cfLiveNext()"><span>Next</span><i class="fa-solid fa-forward-step"></i></button></div>
-      <div class="cf-live-note"><i class="fa-solid fa-shield-halved"></i> Direct playback uses official broadcaster embeds. Live availability and embed permission remain controlled by each broadcaster.</div>
+      <div class="cf-live-note"><i class="fa-solid fa-shield-halved"></i> Playback uses official or authorized YouTube embeds. Availability and embed permission remain controlled by each publisher.</div>
     </div></div>`;}
 
   function init(){if(document.getElementById('cfLiveTvShell'))return;document.body.insertAdjacentHTML('beforeend',markup());}
-  function render(){const grid=document.getElementById('cfLiveTvGrid');if(grid)grid.innerHTML=cardsMarkup();const title=document.getElementById('cfLiveSectionTitle');if(title)title.textContent=activeFilter==='All'?'All PH Channels':activeFilter+' Channels';}
+  function render(){const grid=document.getElementById('cfLiveTvGrid');if(grid)grid.innerHTML=cardsMarkup();const title=document.getElementById('cfLiveSectionTitle');if(title)title.textContent=activeFilter==='All'?'All Live TV & Movies':activeFilter==='FPJ Movies'?'Fernando Poe Jr. Movies':activeFilter+' Channels';}
   function updatePlayerFavorite(){const b=document.getElementById('cfLivePlayerFav');if(!b||!activeChannelId)return;const yes=isFavorite(activeChannelId);b.classList.toggle('active',yes);b.innerHTML=`<i class="${yes?'fa-solid':'fa-regular'} fa-star"></i>`;}
 
   window.cfOpenLiveTV=function(){init();const e=document.getElementById('cfLiveTvShell');e.classList.add('active');e.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';if(typeof closeMenuDrawer==='function')closeMenuDrawer();};
@@ -64,10 +72,10 @@
   window.cfToggleCurrentFavorite=function(){if(activeChannelId)cfToggleLiveFavorite(activeChannelId);};
   window.cfPlayLiveChannel=async function(id){
     const c=CHANNELS.find(x=>x.id===id);if(!c)return;activeChannelId=id;
-    document.getElementById('cfLivePlayerTitle').textContent=c.name;document.getElementById('cfLivePlayerName').textContent=c.name;document.getElementById('cfLiveNowPlaying').textContent=c.name+' • '+c.type;document.getElementById('cfLiveOfficialLink').href=c.official;
+    document.getElementById('cfLivePlayerTitle').textContent=c.name;const badge=document.getElementById('cfLivePlayerBadge');if(badge){badge.textContent=c.videoId?'MOVIE':'LIVE';badge.classList.toggle('movie',!!c.videoId);}document.getElementById('cfLivePlayerName').textContent=c.name;document.getElementById('cfLiveNowPlaying').textContent=c.name+' • '+c.type;document.getElementById('cfLiveOfficialLink').href=c.official;
     const frame=document.getElementById('cfLiveIframe'),fallback=document.getElementById('cfLiveFallback');
-    const liveEmbed=c.channelId?`https://www.youtube-nocookie.com/embed/live_stream?channel=${encodeURIComponent(c.channelId)}&autoplay=1&rel=0&modestbranding=1&playsinline=1`:'';
-    if(liveEmbed){frame.src=liveEmbed;frame.hidden=false;fallback.hidden=true;}else{frame.src='about:blank';frame.hidden=true;fallback.hidden=false;}
+    const youtubeEmbed=c.videoId?`https://www.youtube-nocookie.com/embed/${encodeURIComponent(c.videoId)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`:c.channelId?`https://www.youtube-nocookie.com/embed/live_stream?channel=${encodeURIComponent(c.channelId)}&autoplay=1&rel=0&modestbranding=1&playsinline=1`:'';
+    if(youtubeEmbed){frame.src=youtubeEmbed;frame.hidden=false;fallback.hidden=true;}else{frame.src='about:blank';frame.hidden=true;fallback.hidden=false;}
     updatePlayerFavorite();const p=document.getElementById('cfLivePlayer');p.classList.add('active');p.setAttribute('aria-hidden','false');document.body.classList.add('cf-live-immersive');
     // Build 9.5: channel taps open the TV screen directly in fullscreen landscape.
     const screenEl=document.getElementById('cfLiveScreen');

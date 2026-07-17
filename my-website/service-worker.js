@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v21.0.0";
+const CACHE_NAME = "cineflex-v22.0.0";
 
 const CORE_ASSETS = [
   "/",
@@ -45,6 +45,12 @@ const CORE_ASSETS = [
   "/js/modules/player-fullscreen-fix611.js",
   "/manifest.json",
   "/icon-192.png",
+  "/css/modules/youtube-kdrama.css",
+  "/js/modules/youtube-kdrama.js",
+  "/css/modules/youtube-movies.css",
+  "/js/modules/youtube-movies.js",
+  "/css/modules/music-hub.css",
+  "/js/modules/music-hub.js",
   "/icon-512.png"
 ];
 

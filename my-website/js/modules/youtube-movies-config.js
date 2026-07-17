@@ -3,7 +3,7 @@
  * Restrict HTTP referrers to https://cineflex.online/* and https://www.cineflex.online/*.
  */
 window.CINEFLEX_YOUTUBE = Object.freeze({
-  apiKey: 'AIzaSyBN2H7LUujDgdE2edNkXkCoHljbabNGfyE',
+  apiKey: 'AIzaSyDqaBoK5lBfqWa5AR1EP0hnwtU7B4OUd9c',
   channels: [],
   searchQueries: [
     'full movie official English', 'full movie official Filipino Tagalog',

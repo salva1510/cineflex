@@ -1,7 +1,7 @@
 window.CINEFLEX_KDRAMA_CONFIG = {
   // Gumamit lamang ng BAGONG key na naka-restrict sa:
   // https://cineflex.online/* at https://www.cineflex.online/*
-  apiKey: 'YOUR_RESTRICTED_YOUTUBE_API_KEY',
+  apiKey: 'AIzaSyBN2H7LUujDgdE2edNkXkCoHljbabNGfyE',
   maxSearchPagesPerQuery: 3,
   cacheHours: 6,
   minMinutes: 18,

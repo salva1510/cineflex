@@ -1372,14 +1372,8 @@ async function createProfile(){
   }
 
   function ensureCommunityUI(){
-    const nav = document.querySelector('.nav-right') || document.querySelector('nav') || document.querySelector('.navbar') || document.querySelector('header');
-    if(nav && !document.getElementById('cf-top-live-pill')){
-      const pill = document.createElement('div');
-      pill.id = 'cf-top-live-pill';
-      pill.className = 'cf-live-pill cf-top-online-indicator';
-      pill.innerHTML = `<span class="cf-live-dot"></span><span id="cf-top-online-count">1</span> online`;
-      nav.appendChild(pill);
-    }
+    // Online status is intentionally shown only inside the menu drawer.
+    document.getElementById('cf-top-live-pill')?.remove();
 
     const drawer = document.getElementById('menu-drawer');
     if(drawer && !document.getElementById('cf-drawer-community-card')){
@@ -1395,7 +1389,8 @@ async function createProfile(){
       links.insertBefore(card, links.firstChild);
     }
 
-    const main = document.querySelector('main');
+    const main = null; // Keep online activity off the homepage.
+    document.getElementById('cf-community-section')?.remove();
     if(main && !document.getElementById('cf-community-section')){
       const sec = document.createElement('section');
       sec.id = 'cf-community-section';

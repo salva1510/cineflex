@@ -1792,3 +1792,68 @@ body.cf-tv-mode .cf15-tv-toggle {
   .cf-logo-only-header .cf-logo-button, .cf-logo-only-header .logo { height: 49px !important; }
   .cf-logo-only-header .cf-logo-button img { height: 49px !important; max-width: 68vw !important; }
 }
+
+/* CineFlex Build 23.1 — true edge-to-edge header and six-item footer */
+.navbar.cf-logo-only-header,
+.cf-logo-only-header{
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:none!important;
+  height:64px!important;
+  min-height:64px!important;
+  margin:0!important;
+  padding:0!important;
+  border-left:0!important;
+  border-right:0!important;
+  border-top:0!important;
+  border-radius:0!important;
+  box-sizing:border-box!important;
+}
+.cf-logo-only-header .cf-logo-button,
+.cf-logo-only-header .logo{
+  margin:0!important;
+  padding:0!important;
+  height:64px!important;
+  min-width:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+.cf-logo-only-header .cf-logo-button img{
+  display:block!important;
+  height:64px!important;
+  width:auto!important;
+  max-width:min(320px,72vw)!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+}
+.bottom-nav.cf-native-bottom-nav,
+.cf-native-bottom-nav{
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  transform:none!important;
+  width:100vw!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)!important;
+  border-radius:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:0!important;
+  box-sizing:border-box!important;
+}
+.cf-native-bottom-nav .nav-item{width:100%!important;min-width:0!important;margin:0!important;border-radius:0!important;padding-inline:1px!important}
+.cf-native-bottom-nav .nav-item span{font-size:clamp(.52rem,1.75vw,.7rem)!important}
+#cf-top-live-pill,.cf-top-online-indicator,#cf-community-section{display:none!important}
+body.cf-youtube-movies-open .cf-logo-only-header,
+body.cf-youtube-player-open .cf-logo-only-header{display:none!important}
+@media(max-width:600px){
+  .navbar.cf-logo-only-header,.cf-logo-only-header{height:56px!important;min-height:56px!important}
+  .cf-logo-only-header .cf-logo-button,.cf-logo-only-header .logo,.cf-logo-only-header .cf-logo-button img{height:56px!important}
+}

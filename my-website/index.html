@@ -14,12 +14,9 @@
   <link rel="stylesheet" href="css/modules/hero.css?v=8.7">
   <link rel="stylesheet" href="css/core/signature.css?v=1.0">
   <link rel="stylesheet" href="css/modules/personalized.css?v=2.1">
-  <link rel="stylesheet" href="css/modules/watch-party.css?v=3.4">
   <link rel="stylesheet" href="css/modules/content-center.css?v=6.1.5">
   <link rel="stylesheet" href="css/modules/progression.css?v=3.4">
-  <link rel="stylesheet" href="css/modules/ai-assistant.css?v=10.0">
   <link rel="stylesheet" href="css/modules/music-hub.css?v=21.0">
-  <link rel="stylesheet" href="css/modules/radio-hub.css?v=12.1">
   <link rel="stylesheet" href="profiles.css?v=15.2">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -76,7 +73,6 @@
   <link rel="stylesheet" href="css/modules/mobile-layout-fix-v91.css?v=9.1">
   <link rel="stylesheet" href="css/modules/live-tv.css?v=19.2">
   <link rel="stylesheet" href="css/modules/youtube-movies.css?v=22.0">
-  <link rel="stylesheet" href="css/modules/youtube-kdrama.css?v=22.0">
   <link rel="stylesheet" href="css/modules/activity-center13.css?v=13.0">
   <link rel="stylesheet" href="css/modules/performance14.css?v=14.0">
   <link rel="stylesheet" href="css/modules/smart-tv15.css?v=15.0">
@@ -106,7 +102,7 @@ CINEFLEX PROFILE SELECTOR
 
 </div>
 <nav class="navbar cf-dulo-navbar cf-logo-only-header" aria-label="CineFlex header">
-    <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home">CINEFLEX</button>
+    <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home"><img src="cineflex-header-logo.png?v=23.0" alt="CINEFLEX"></button>
 </nav>
 
 <div class="cf-progress-bar" id="cf-progress-bar"></div>
@@ -188,7 +184,6 @@ CINEFLEX PROFILE SELECTOR
             <h4>Browse Catalog</h4>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-movies')"><i class="fa-solid fa-border-all"></i> All Movies</div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-shows')"><i class="fa-solid fa-tv"></i> All TV Shows</div>
-            <div class="drawer-item" onclick="cfOpenRadio()"><i class="fa-solid fa-radio"></i> Radio Hub <span style="margin-left:auto;color:#fb7185;font-size:.68rem;font-weight:900">NEW</span></div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('anime')"><i class="fa-solid fa-dragon"></i> Anime Catalog</div>
             <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('horror')"><i class="fa-solid fa-ghost"></i> Horror Movies</div>
         </div>
@@ -200,8 +195,6 @@ CINEFLEX PROFILE SELECTOR
         </div>
         <div class="drawer-section">
             <h4>Community</h4>
-            <div class="drawer-item" onclick="closeMenuDrawer(); window.CineFlexParty && window.CineFlexParty.open()"><i class="fa-solid fa-users-viewfinder"></i> Watch Party</div>
-            <div class="drawer-item" onclick="alert('Gcash: 09365028152')"><i class="fa-solid fa-circle-dollar-to-slot"></i> Donate</div>
             <div class="drawer-item" onclick="cfOpenContentCenter('request'); closeMenuDrawer()"><i class="fa-solid fa-paper-plane"></i> Request Movie</div>
           <div class="drawer-section">
     <h4>Account</h4>
@@ -451,7 +444,6 @@ CINEFLEX PROFILE SELECTOR
 <nav class="bottom-nav cf-native-bottom-nav" aria-label="Main navigation">
   <button class="nav-item active" type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></button>
   <button class="nav-item" type="button" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
-  <button class="nav-item" type="button" onclick="cfOpenYouTubeKDrama()"><i class="fa-solid fa-tv"></i><span>K-Drama</span></button>
   <button class="nav-item" type="button" onclick="cfOpenMusic()"><i class="fa-brands fa-youtube"></i><span>YT Music</span></button>
   <button class="nav-item" type="button" onclick="cfOpenYouTubeMovies()"><i class="fa-solid fa-clapperboard"></i><span>YT Movies</span></button>
   <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
@@ -494,22 +486,18 @@ CINEFLEX PROFILE SELECTOR
 <script src="auth.js?v=3.1"></script>
   <script src="js/modules/community53.js?v=5.3"></script>
   <script src="profiles.js?v=15.5"></script>
-  <script src="js/modules/watch-party.js?v=3.4"></script>
   <script src="js/modules/progression.js?v=3.4"></script>
   <script src="js/modules/admin-homepage.js?v=4.1"></script>
   <script src="js/modules/content-center.js?v=6.1.5"></script>
   <link rel="stylesheet" href="admin43.css?v=4.3">
   <script src="js/modules/moderation-guard.js?v=4.3"></script>
-  <script src="js/modules/ai-assistant.js?v=10.0"></script>
   <script src="js/modules/membership.js?v=8.0.4"></script>
   <script src="js/modules/watch-time.js?v=8.0.7"></script>
   <script src="js/modules/tv-edition.js?v=9.0"></script>
   <script src="js/modules/live-tv.js?v=19.2"></script>
   <script src="js/modules/youtube-movies-config.js?v=20.0"></script>
   <script src="js/modules/youtube-movies.js?v=22.0"></script>
-  <script src="js/modules/youtube-kdrama.js?v=22.0"></script>
   <script src="js/modules/music-hub.js?v=21.0"></script>
-  <script src="js/modules/radio-hub.js?v=12.1"></script>
   <script src="js/modules/activity-center13.js?v=13.0"></script>
   <script src="js/modules/performance14.js?v=14.0"></script>
   <script src="js/modules/smart-tv15.js?v=15.0"></script>

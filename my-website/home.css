@@ -1755,3 +1755,40 @@ body.cf-tv-mode .cf15-tv-toggle {
   .cf-tv-mode-toggle::before,
   .cf15-tv-toggle::before { transition: none !important; }
 }
+
+
+/* CineFlex Build 23.0 — supplied image logo, zero-padding header */
+.cf-logo-only-header {
+  padding: 0 12px !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.cf-logo-only-header .cf-logo-button,
+.cf-logo-only-header .logo {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  width: auto !important;
+  height: 58px !important;
+  line-height: 0 !important;
+  overflow: visible !important;
+}
+.cf-logo-only-header .cf-logo-button img {
+  display: block !important;
+  width: auto !important;
+  height: 58px !important;
+  max-width: min(310px, 76vw) !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+@media (max-width: 600px) {
+  .cf-logo-only-header { padding: 0 8px !important; min-height: 54px !important; height: 54px !important; }
+  .cf-logo-only-header .cf-logo-button, .cf-logo-only-header .logo { height: 49px !important; }
+  .cf-logo-only-header .cf-logo-button img { height: 49px !important; max-width: 68vw !important; }
+}

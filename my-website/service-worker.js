@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v22.0.0";
+const CACHE_NAME = "cineflex-v22-1.0.0";
 
 const CORE_ASSETS = [
   "/",
@@ -11,14 +11,10 @@ const CORE_ASSETS = [
   "/profiles.js",
   "/css/core/identity.css",
   "/js/core/foundation.js",
-  "/css/modules/watch-party.css",
-  "/js/modules/watch-party.js",
   "/css/modules/content-center.css",
   "/js/modules/content-center.js",
   "/admin43.css",
   "/js/modules/moderation-guard.js",
-  "/css/modules/ai-assistant.css",
-  "/js/modules/ai-assistant.js",
   "/css/modules/watch-time.css",
   "/js/modules/watch-time.js",
   "/css/modules/membership.css",
@@ -45,8 +41,6 @@ const CORE_ASSETS = [
   "/js/modules/player-fullscreen-fix611.js",
   "/manifest.json",
   "/icon-192.png",
-  "/css/modules/youtube-kdrama.css",
-  "/js/modules/youtube-kdrama.js",
   "/css/modules/youtube-movies.css",
   "/js/modules/youtube-movies.js",
   "/css/modules/music-hub.css",

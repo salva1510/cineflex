@@ -13,6 +13,17 @@ window.CINEFLEX_YOUTUBE = Object.freeze({
       label: 'Official VIVA Films uploads'
     }
   ],
+  searchQueries: [
+    'full movie official',
+    'full movie Filipino official',
+    'full movie English official',
+    'full movie Korean official',
+    'full movie action official',
+    'full movie comedy official',
+    'full movie romance official',
+    'full movie horror official'
+  ],
+  maxSearchPagesPerQuery: 1,
   cacheHours: 6,
-  maxVideosPerChannel: 200
+  maxVideosPerChannel: 300
 });

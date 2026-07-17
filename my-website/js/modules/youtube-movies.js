@@ -4,7 +4,7 @@
   const CFG = window.CINEFLEX_YOUTUBE || {};
   const CACHE_KEY = 'cineflex_youtube_movies_cache_v1';
   const FAVORITES_KEY = 'cineflex_youtube_movie_favorites_v1';
-  const FULL_MOVIE_RE = /\b(full\s*movie|full\s*film|pelikulang\s*buo|movie\s*hd)\b/i;
+  const FULL_MOVIE_RE = /\b(full\s*movie|full\s*film|pelikulang\s*buo|movie\s*hd|complete\s*movie|entire\s*movie)\b/i;
   const EXCLUDE_RE = /\b(trailer|teaser|clip|highlights?|shorts?|behind\s+the\s+scenes|music\s+video|interview|presscon|reaction)\b/i;
   let allMovies = [];
   let visibleMovies = [];
@@ -87,34 +87,55 @@
     return output;
   }
 
+  async function searchMovieVideos(queryText, maxPages){
+    let pageToken = '';
+    const ids = [];
+    for(let page = 0; page < Math.max(1, Number(maxPages || 1)); page++){
+      const params = {part:'snippet', type:'video', videoEmbeddable:'true', videoDuration:'long', maxResults:'50', q:queryText, safeSearch:'moderate'};
+      if(pageToken) params.pageToken = pageToken;
+      const data = await api('search', params);
+      ids.push(...(data.items || []).map(item => item.id?.videoId).filter(Boolean));
+      pageToken = data.nextPageToken || '';
+      if(!pageToken) break;
+    }
+    return ids;
+  }
+
   async function loadFromApi(){
     const channels = Array.isArray(CFG.channels) ? CFG.channels : [];
-    const collected = [];
+    const collectedIds = [];
     for(const channel of channels){
       const playlistId = await getUploadsPlaylist(channel.id);
       if(!playlistId) continue;
-      const playlistItems = await getPlaylistItems(playlistId, Number(CFG.maxVideosPerChannel || 200));
-      const ids = playlistItems.map(x => x.contentDetails?.videoId).filter(Boolean);
-      const details = await getVideoDetails(ids);
-      details.forEach(video => {
-        const title = video.snippet?.title || 'Untitled movie';
-        const description = video.snippet?.description || '';
-        const seconds = parseDuration(video.contentDetails?.duration);
-        const playable = video.status?.embeddable === true && video.status?.privacyStatus === 'public';
-        if(!playable || seconds < 3600 || EXCLUDE_RE.test(title) || (!FULL_MOVIE_RE.test(title) && !FULL_MOVIE_RE.test(description))) return;
-        collected.push({
-          id: video.id,
-          title,
-          description,
-          publishedAt: video.snippet?.publishedAt || '',
-          thumbnail: video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.medium?.url || '',
-          channelTitle: video.snippet?.channelTitle || channel.name,
-          durationSeconds: seconds,
-          views: Number(video.statistics?.viewCount || 0),
-          genre: classify(title, description)
-        });
-      });
+      const playlistItems = await getPlaylistItems(playlistId, Number(CFG.maxVideosPerChannel || 300));
+      collectedIds.push(...playlistItems.map(x => x.contentDetails?.videoId).filter(Boolean));
     }
+    const queries = Array.isArray(CFG.searchQueries) ? CFG.searchQueries : [];
+    for(const q of queries){
+      try { collectedIds.push(...await searchMovieVideos(q, CFG.maxSearchPagesPerQuery || 1)); } catch(err) { console.warn('Movie search skipped:', q, err); }
+    }
+    const ids = [...new Set(collectedIds)];
+    const details = await getVideoDetails(ids);
+    const collected = [];
+    details.forEach(video => {
+      const title = video.snippet?.title || 'Untitled movie';
+      const description = video.snippet?.description || '';
+      const seconds = parseDuration(video.contentDetails?.duration);
+      const playable = video.status?.embeddable === true && video.status?.privacyStatus === 'public';
+      const looksFull = FULL_MOVIE_RE.test(title) || FULL_MOVIE_RE.test(description) || seconds >= 5400;
+      if(!playable || seconds < 3600 || EXCLUDE_RE.test(title) || !looksFull) return;
+      collected.push({
+        id: video.id,
+        title,
+        description,
+        publishedAt: video.snippet?.publishedAt || '',
+        thumbnail: video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.medium?.url || '',
+        channelTitle: video.snippet?.channelTitle || 'YouTube',
+        durationSeconds: seconds,
+        views: Number(video.statistics?.viewCount || 0),
+        genre: classify(title, description)
+      });
+    });
     const unique = [...new Map(collected.map(movie => [movie.id, movie])).values()];
     localStorage.setItem(CACHE_KEY, JSON.stringify({savedAt:Date.now(), movies:unique}));
     return unique;
@@ -132,22 +153,22 @@
   function shellMarkup(){
     return `<section id="cfYouTubeMovies" class="cf-yt-shell" aria-hidden="true">
       <header class="cf-yt-head">
-        <div class="cf-yt-brand"><i class="fa-brands fa-youtube"></i><div><h2>YouTube Movies</h2><small>Official and authorized full-movie uploads</small></div></div>
+        <div class="cf-yt-brand"><i class="fa-brands fa-youtube"></i><div><h2>YouTube Movies</h2><small>Available public and embeddable full-movie uploads</small></div></div>
         <button type="button" onclick="cfCloseYouTubeMovies()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </header>
       <main class="cf-yt-wrap">
         <section class="cf-yt-hero">
-          <div><span class="cf-yt-official"><i class="fa-solid fa-circle-check"></i> OFFICIAL SOURCES</span><h1>VIVA Films Hub</h1><p>Browse full Filipino movies using official YouTube embeds. New uploads appear after the catalog refreshes.</p></div>
+          <div><span class="cf-yt-official"><i class="fa-solid fa-circle-check"></i> OFFICIAL SOURCES</span><h1>YouTube Movies Hub</h1><p>Browse available public, embeddable full movies from YouTube. Results refresh automatically and may change based on uploader availability.</p></div>
           <button type="button" onclick="cfRefreshYouTubeMovies(true)"><i class="fa-solid fa-rotate"></i> Refresh Catalog</button>
         </section>
         <section id="cfYtTrending" class="cf-yt-trending" hidden><div class="cf-yt-section-title"><h3><i class="fa-solid fa-fire"></i> Trending Movies</h3><span>Based on available YouTube view counts</span></div><div id="cfYtTrendingRow" class="cf-yt-trending-row"></div></section>
         <div class="cf-yt-tools">
-          <label class="cf-yt-search"><i class="fa-solid fa-magnifying-glass"></i><input id="cfYtSearch" type="search" placeholder="Search VIVA movies..." oninput="cfSearchYouTubeMovies(this.value)"></label>
+          <label class="cf-yt-search"><i class="fa-solid fa-magnifying-glass"></i><input id="cfYtSearch" type="search" placeholder="Search YouTube movies..." oninput="cfSearchYouTubeMovies(this.value)"></label>
           <select id="cfYtSort" onchange="cfSortYouTubeMovies(this.value)"><option>Newest</option><option>Most Viewed</option><option>Title A–Z</option></select>
         </div>
         <div id="cfYtGenres" class="cf-yt-genres">${['All','Action','Comedy','Romance','Horror','Drama','Favorites'].map(g => `<button class="${g==='All'?'active':''}" onclick="cfFilterYouTubeMovies('${g}',this)">${g==='Favorites'?'<i class="fa-solid fa-star"></i> ':''}${g}</button>`).join('')}</div>
-        <div class="cf-yt-section-title"><h3 id="cfYtTitle">All Official Full Movies</h3><span id="cfYtCount">Loading…</span></div>
-        <div id="cfYtStatus" class="cf-yt-status"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading official movie catalog…</p></div>
+        <div class="cf-yt-section-title"><h3 id="cfYtTitle">All Available Full Movies</h3><span id="cfYtCount">Loading…</span></div>
+        <div id="cfYtStatus" class="cf-yt-status"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading YouTube movie catalog…</p></div>
         <div id="cfYtGrid" class="cf-yt-grid"></div>
       </main>
     </section>
@@ -184,7 +205,7 @@
     const count = document.getElementById('cfYtCount');
     const title = document.getElementById('cfYtTitle');
     if(count) count.textContent = `${visibleMovies.length} movie${visibleMovies.length === 1 ? '' : 's'}`;
-    if(title) title.textContent = activeGenre === 'All' ? 'All Official Full Movies' : `${activeGenre} Movies`;
+    if(title) title.textContent = activeGenre === 'All' ? 'All Available Full Movies' : `${activeGenre} Movies`;
     if(status) status.hidden = true;
     if(grid) grid.innerHTML = visibleMovies.length ? visibleMovies.map(movie => card(movie, false)).join('') : '<div class="cf-yt-empty"><i class="fa-solid fa-film"></i><h3>No movies found</h3><p>Try another genre or search term.</p></div>';
     const trending = [...allMovies].sort((a,b) => b.views - a.views).slice(0,10);
@@ -208,7 +229,7 @@
 
   async function refresh(force){
     const status = document.getElementById('cfYtStatus');
-    if(status){status.hidden=false;status.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><p>Loading official movie catalog…</p>';}
+    if(status){status.hidden=false;status.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><p>Loading YouTube movie catalog…</p>';}
     try {
       if(!apiReady()) throw new Error('API key missing');
       const cached = force ? null : getCached();

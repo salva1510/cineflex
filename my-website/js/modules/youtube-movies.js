@@ -259,11 +259,12 @@
     init();
     const shell = document.getElementById('cfYouTubeMovies');
     shell.classList.add('active'); shell.setAttribute('aria-hidden','false');
+    document.body.classList.add('cf-youtube-movies-open');
     document.body.style.overflow = 'hidden';
     if(typeof closeMenuDrawer === 'function') closeMenuDrawer();
     if(!allMovies.length) refresh(false);
   };
-  window.cfCloseYouTubeMovies = function(){ const shell=document.getElementById('cfYouTubeMovies'); if(shell){shell.classList.remove('active');shell.setAttribute('aria-hidden','true');} document.body.style.overflow=''; cfCloseYouTubePlayer(); };
+  window.cfCloseYouTubeMovies = function(){ const shell=document.getElementById('cfYouTubeMovies'); if(shell){shell.classList.remove('active');shell.setAttribute('aria-hidden','true');} document.body.classList.remove('cf-youtube-movies-open','cf-youtube-player-open'); document.body.style.overflow=''; cfCloseYouTubePlayer(); };
   window.cfRefreshYouTubeMovies = refresh;
   window.cfFilterYouTubeMovies = function(genre, button){activeGenre=genre;document.querySelectorAll('#cfYtGenres button').forEach(x=>x.classList.remove('active'));button?.classList.add('active');applyFilters();};
   window.cfSearchYouTubeMovies = function(value){query=String(value||'').trim().toLowerCase();applyFilters();};
@@ -275,9 +276,9 @@
     document.getElementById('cfYtPlayerTitle').textContent=movie.title;
     document.getElementById('cfYtIframe').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
     document.getElementById('cfYtOfficial').href=`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
-    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');updatePlayerFav();history.pushState({cfYtPlayer:true},'');setTimeout(()=>cfYouTubeFullscreen(),100);
+    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');document.body.classList.add('cf-youtube-player-open');updatePlayerFav();history.pushState({cfYtPlayer:true},'');setTimeout(()=>cfYouTubeFullscreen(),100);
   };
-  window.cfCloseYouTubePlayer = function(){const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active');player.setAttribute('aria-hidden','true');}const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';try{if(document.fullscreenElement)document.exitFullscreen()}catch(_){}try{screen.orientation?.unlock?.()}catch(_){}};
+  window.cfCloseYouTubePlayer = function(){const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active');player.setAttribute('aria-hidden','true');}document.body.classList.remove('cf-youtube-player-open');const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';try{if(document.fullscreenElement)document.exitFullscreen()}catch(_){}try{screen.orientation?.unlock?.()}catch(_){}};
   window.cfYouTubeFullscreen = function(){const el=document.getElementById('cfYtScreen');if(el?.requestFullscreen)el.requestFullscreen().catch(()=>{});else if(el?.webkitRequestFullscreen)el.webkitRequestFullscreen();try{window.screen.orientation?.lock?.('landscape')}catch(_){}};
   window.cfYouTubePrevious = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index-1+visibleMovies.length)%visibleMovies.length].id);};
   window.cfYouTubeNext = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index+1)%visibleMovies.length].id);};

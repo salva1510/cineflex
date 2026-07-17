@@ -2,3 +2,15 @@
 
 /* Build 22.1 Filipino Movies player back control */
 .cf-yt-player-back{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.2);background:rgba(15,23,42,.9);color:#fff;border-radius:999px;padding:.65rem 1rem;font-weight:800;cursor:pointer;white-space:nowrap}.cf-yt-player-back:hover{background:#fff;color:#111827}@media(max-width:720px){.cf-yt-player-top{flex-wrap:wrap}.cf-yt-player-back{order:-1;width:100%;justify-content:center}}
+
+/* Build 23.1 — unobstructed YouTube movie controls */
+.cf-yt-shell{z-index:30000!important}
+.cf-yt-head{z-index:30002!important;padding-top:max(16px,env(safe-area-inset-top))!important}
+.cf-yt-player{z-index:31000!important}
+.cf-yt-player-card{position:relative;max-height:calc(100vh - 20px)}
+.cf-yt-player-top{position:relative;z-index:3;background:#11151c}
+.cf-yt-player-back{width:auto!important;height:auto!important;border-radius:999px!important;padding:.65rem 1rem!important;font-size:.82rem!important}
+@media(max-width:720px){
+ .cf-yt-player-top{padding-top:max(12px,env(safe-area-inset-top))!important}
+ .cf-yt-player-back{display:flex!important;order:-1!important;width:100%!important;min-height:44px!important}
+}

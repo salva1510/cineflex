@@ -5,7 +5,7 @@
  * and restrict API access to YouTube Data API v3 only.
  */
 window.CINEFLEX_YOUTUBE = Object.freeze({
-  apiKey: 'AIzaSyBN2H7LUujDgdE2edNkXkCoHljbabNGfyE',
+  apiKey: 'YOUR_RESTRICTED_YOUTUBE_API_KEY',
   channels: [
     {
       id: 'UCNP49xH_JCwxHIfKdN8dCQw',

@@ -152,7 +152,7 @@
       </main>
     </section>
     <div id="cfYtPlayer" class="cf-yt-player" aria-hidden="true"><div class="cf-yt-player-card">
-      <div class="cf-yt-player-top"><div><span>YOUTUBE MOVIE</span><h3 id="cfYtPlayerTitle">Movie</h3></div><div><button id="cfYtPlayerFav" onclick="cfToggleYouTubeFavorite(activeVideoId)" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfYouTubeFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseYouTubePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
+      <div class="cf-yt-player-top"><div class="cf-yt-player-title"><button class="cf-yt-back" onclick="cfCloseYouTubePlayer()"><i class="fa-solid fa-arrow-left"></i> Back to Movies</button><span>YOUTUBE MOVIE</span><h3 id="cfYtPlayerTitle">Movie</h3></div><div><button id="cfYtPlayerFav" onclick="cfToggleYouTubeFavorite(activeVideoId)" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfYouTubeFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseYouTubePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
       <div id="cfYtScreen" class="cf-yt-screen"><iframe id="cfYtIframe" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
       <div class="cf-yt-player-foot"><button onclick="cfYouTubePrevious()"><i class="fa-solid fa-backward-step"></i> Previous</button><a id="cfYtOfficial" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Open on YouTube</a><button onclick="cfYouTubeNext()">Next <i class="fa-solid fa-forward-step"></i></button></div>
     </div></div>`;
@@ -236,16 +236,37 @@
   window.cfSearchYouTubeMovies = function(value){query=String(value||'').trim().toLowerCase();applyFilters();};
   window.cfSortYouTubeMovies = function(value){activeSort=value;applyFilters();};
   window.cfToggleYouTubeFavorite = function(id){let list=favorites();list=list.includes(id)?list.filter(x=>x!==id):[...list,id];saveFavorites(list);applyFilters();updatePlayerFav();};
+  let vivaPlayerHistoryActive = false;
+  async function enterVivaLandscape(){
+    const player=document.getElementById('cfYtPlayer');
+    player?.classList.add('landscape-active');
+    try {
+      if(!document.fullscreenElement && !document.webkitFullscreenElement){
+        if(player?.requestFullscreen) await player.requestFullscreen({navigationUI:'hide'});
+        else if(player?.webkitRequestFullscreen) player.webkitRequestFullscreen();
+      }
+    } catch(_) {}
+    try { await screen.orientation?.lock?.('landscape'); } catch(_) {}
+  }
   window.cfPlayYouTubeMovie = function(id){
     const movie=allMovies.find(x=>x.id===id); if(!movie)return;
     activeVideoId=id; window.activeVideoId=id;
     document.getElementById('cfYtPlayerTitle').textContent=movie.title;
-    document.getElementById('cfYtIframe').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    document.getElementById('cfYtIframe').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1&playsinline=0`;
     document.getElementById('cfYtOfficial').href=`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
-    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');updatePlayerFav();
+    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');
+    if(!vivaPlayerHistoryActive){history.pushState({cineflexVivaPlayer:true},'',location.href);vivaPlayerHistoryActive=true;}
+    updatePlayerFav(); enterVivaLandscape();
   };
-  window.cfCloseYouTubePlayer = function(){const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active');player.setAttribute('aria-hidden','true');}const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';};
-  window.cfYouTubeFullscreen = function(){const screen=document.getElementById('cfYtScreen');if(screen?.requestFullscreen)screen.requestFullscreen().catch(()=>{});else if(screen?.webkitRequestFullscreen)screen.webkitRequestFullscreen();try{screen.orientation?.lock?.('landscape');}catch(_){}};
+  window.cfCloseYouTubePlayer = async function(fromPopState=false){
+    const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active','landscape-active');player.setAttribute('aria-hidden','true');}
+    const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';
+    try{screen.orientation?.unlock?.();}catch(_){}
+    try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.webkitFullscreenElement&&document.webkitExitFullscreen)document.webkitExitFullscreen();}catch(_){}
+    if(vivaPlayerHistoryActive){vivaPlayerHistoryActive=false;if(!fromPopState)history.back();}
+  };
+  window.cfYouTubeFullscreen = enterVivaLandscape;
+  window.addEventListener('popstate',()=>{const p=document.getElementById('cfYtPlayer');if(p?.classList.contains('active')){vivaPlayerHistoryActive=false;cfCloseYouTubePlayer(true);}});
   window.cfYouTubePrevious = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index-1+visibleMovies.length)%visibleMovies.length].id);};
   window.cfYouTubeNext = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index+1)%visibleMovies.length].id);};
   function updatePlayerFav(){const button=document.getElementById('cfYtPlayerFav');if(!button||!activeVideoId)return;const yes=isFavorite(activeVideoId);button.classList.toggle('active',yes);button.innerHTML=`<i class="${yes?'fa-solid':'fa-regular'} fa-star"></i>`;}

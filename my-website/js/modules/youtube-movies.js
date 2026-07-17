@@ -2,10 +2,10 @@
   'use strict';
 
   const CFG = window.CINEFLEX_YOUTUBE || {};
-  const CACHE_KEY = 'cineflex_youtube_movies_cache_v1';
-  const FAVORITES_KEY = 'cineflex_youtube_movie_favorites_v1';
+  const CACHE_KEY = 'cineflex_global_youtube_movies_cache_v3';
+  const FAVORITES_KEY = 'cineflex_global_youtube_movie_favorites_v3';
   const FULL_MOVIE_RE = /\b(full\s*movie|full\s*film|pelikulang\s*buo|movie\s*hd|complete\s*movie|entire\s*movie)\b/i;
-  const EXCLUDE_RE = /\b(trailer|teaser|clip|highlights?|shorts?|behind\s+the\s+scenes|music\s+video|interview|presscon|reaction)\b/i;
+  const EXCLUDE_RE = /\b(trailer|teaser|clip|highlights?|shorts?|behind\s+the\s+scenes|music\s+video|interview|presscon|reaction|recap|review|ending explained|episode\s*\d+)\b/i;
   let allMovies = [];
   let visibleMovies = [];
   let activeGenre = 'All';
@@ -26,10 +26,21 @@
 
   function classify(title, description){
     const text = `${title || ''} ${description || ''}`.toLowerCase();
-    if(/horror|aswang|multo|engkanto|takot|shake rattle|patayin|halimaw/.test(text)) return 'Horror';
-    if(/comedy|nakakatawa|komedya|laugh|funny|andrew e|janno gibbs|bayani agbayani|vic sotto/.test(text)) return 'Comedy';
-    if(/romance|love|pag-ibig|mahal|puso|forever|boyfriend|girlfriend|wedding|bride/.test(text)) return 'Romance';
-    if(/action|baril|bala|pulis|sundalo|war|laban|delubyo|probinsyano|bad boy|robin padilla|bong revilla|fpj/.test(text)) return 'Action';
+    if(/documentary|true story|history|nature|wildlife|biography/.test(text)) return 'Documentary';
+    if(/animation|animated|cartoon|anime|kids movie/.test(text)) return 'Animation';
+    if(/science fiction|sci-fi|spaceship|alien|cyberpunk|future/.test(text)) return 'Sci-Fi';
+    if(/fantasy|magic|dragon|fairy|mythical/.test(text)) return 'Fantasy';
+    if(/horror|ghost|haunted|zombie|demon|aswang|multo|takot|halimaw/.test(text)) return 'Horror';
+    if(/thriller|suspense|mystery|psychological/.test(text)) return 'Thriller';
+    if(/crime|gangster|mafia|detective|heist|police/.test(text)) return 'Crime';
+    if(/comedy|funny|laugh|komedya|nakakatawa/.test(text)) return 'Comedy';
+    if(/romance|romantic|love story|pag-ibig|mahal|wedding|bride/.test(text)) return 'Romance';
+    if(/martial arts|kung fu|karate|ninja|shaolin/.test(text)) return 'Martial Arts';
+    if(/war movie|world war|soldier|military|battlefield/.test(text)) return 'War';
+    if(/western|cowboy|gunslinger/.test(text)) return 'Western';
+    if(/family movie|family film|kids and family/.test(text)) return 'Family';
+    if(/adventure|treasure|journey|expedition/.test(text)) return 'Adventure';
+    if(/action|fight|baril|bala|pulis|sundalo|laban/.test(text)) return 'Action';
     return 'Drama';
   }
 
@@ -122,6 +133,7 @@
       const description = video.snippet?.description || '';
       const seconds = parseDuration(video.contentDetails?.duration);
       const playable = video.status?.embeddable === true && video.status?.privacyStatus === 'public';
+      const combined = `${title} ${description} ${video.snippet?.channelTitle || ''}`;
       const looksFull = FULL_MOVIE_RE.test(title) || FULL_MOVIE_RE.test(description) || seconds >= 5400;
       if(!playable || seconds < 3600 || EXCLUDE_RE.test(title) || !looksFull) return;
       collected.push({
@@ -153,27 +165,27 @@
   function shellMarkup(){
     return `<section id="cfYouTubeMovies" class="cf-yt-shell" aria-hidden="true">
       <header class="cf-yt-head">
-        <div class="cf-yt-brand"><i class="fa-brands fa-youtube"></i><div><h2>YouTube Movies</h2><small>Available public and embeddable full-movie uploads</small></div></div>
+        <div class="cf-yt-brand"><i class="fa-brands fa-youtube"></i><div><h2>YouTube Movies</h2><small>Global full movies from public, embeddable YouTube uploads</small></div></div>
         <button type="button" onclick="cfCloseYouTubeMovies()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </header>
       <main class="cf-yt-wrap">
         <section class="cf-yt-hero">
-          <div><span class="cf-yt-official"><i class="fa-solid fa-circle-check"></i> OFFICIAL SOURCES</span><h1>YouTube Movies Hub</h1><p>Browse available public, embeddable full movies from YouTube. Results refresh automatically and may change based on uploader availability.</p></div>
+          <div><span class="cf-yt-official"><i class="fa-brands fa-youtube"></i> GLOBAL MOVIE CATALOG</span><h1>YouTube Movies</h1><p>Browse available public, full-length, and embeddable movies from YouTube by genre, language, region, title, actor, or channel.</p></div>
           <button type="button" onclick="cfRefreshYouTubeMovies(true)"><i class="fa-solid fa-rotate"></i> Refresh Catalog</button>
         </section>
         <section id="cfYtTrending" class="cf-yt-trending" hidden><div class="cf-yt-section-title"><h3><i class="fa-solid fa-fire"></i> Trending Movies</h3><span>Based on available YouTube view counts</span></div><div id="cfYtTrendingRow" class="cf-yt-trending-row"></div></section>
         <div class="cf-yt-tools">
-          <label class="cf-yt-search"><i class="fa-solid fa-magnifying-glass"></i><input id="cfYtSearch" type="search" placeholder="Search YouTube movies..." oninput="cfSearchYouTubeMovies(this.value)"></label>
+          <label class="cf-yt-search"><i class="fa-solid fa-magnifying-glass"></i><input id="cfYtSearch" type="search" placeholder="Search movie, actor, language, country, title, or channel..." oninput="cfSearchYouTubeMovies(this.value)"></label>
           <select id="cfYtSort" onchange="cfSortYouTubeMovies(this.value)"><option>Newest</option><option>Most Viewed</option><option>Title A–Z</option></select>
         </div>
-        <div id="cfYtGenres" class="cf-yt-genres">${['All','Action','Comedy','Romance','Horror','Drama','Favorites'].map(g => `<button class="${g==='All'?'active':''}" onclick="cfFilterYouTubeMovies('${g}',this)">${g==='Favorites'?'<i class="fa-solid fa-star"></i> ':''}${g}</button>`).join('')}</div>
+        <div id="cfYtGenres" class="cf-yt-genres">${['All','Action','Adventure','Animation','Comedy','Crime','Documentary','Drama','Family','Fantasy','Horror','Martial Arts','Romance','Sci-Fi','Thriller','War','Western','Favorites'].map(g => `<button class="${g==='All'?'active':''}" onclick="cfFilterYouTubeMovies('${g}',this)">${g==='Favorites'?'<i class="fa-solid fa-star"></i> ':''}${g}</button>`).join('')}</div>
         <div class="cf-yt-section-title"><h3 id="cfYtTitle">All Available Full Movies</h3><span id="cfYtCount">Loading…</span></div>
-        <div id="cfYtStatus" class="cf-yt-status"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading YouTube movie catalog…</p></div>
+        <div id="cfYtStatus" class="cf-yt-status"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading global movie catalog…</p></div>
         <div id="cfYtGrid" class="cf-yt-grid"></div>
       </main>
     </section>
     <div id="cfYtPlayer" class="cf-yt-player" aria-hidden="true"><div class="cf-yt-player-card">
-      <div class="cf-yt-player-top"><div><span>YOUTUBE MOVIE</span><h3 id="cfYtPlayerTitle">Movie</h3></div><div><button id="cfYtPlayerFav" onclick="cfToggleYouTubeFavorite(activeVideoId)" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfYouTubeFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseYouTubePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
+      <div class="cf-yt-player-top"><button class="cf-yt-player-back" onclick="cfCloseYouTubePlayer()"><i class="fa-solid fa-arrow-left"></i> Back to Movies</button><div><span>YOUTUBE MOVIE</span><h3 id="cfYtPlayerTitle">Movie</h3></div><div><button id="cfYtPlayerFav" onclick="cfToggleYouTubeFavorite(activeVideoId)" aria-label="Favorite"><i class="fa-regular fa-star"></i></button><button onclick="cfYouTubeFullscreen()" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button><button onclick="cfCloseYouTubePlayer()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div>
       <div id="cfYtScreen" class="cf-yt-screen"><iframe id="cfYtIframe" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
       <div class="cf-yt-player-foot"><button onclick="cfYouTubePrevious()"><i class="fa-solid fa-backward-step"></i> Previous</button><a id="cfYtOfficial" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Open on YouTube</a><button onclick="cfYouTubeNext()">Next <i class="fa-solid fa-forward-step"></i></button></div>
     </div></div>`;
@@ -229,7 +241,7 @@
 
   async function refresh(force){
     const status = document.getElementById('cfYtStatus');
-    if(status){status.hidden=false;status.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><p>Loading YouTube movie catalog…</p>';}
+    if(status){status.hidden=false;status.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><p>Loading global movie catalog…</p>';}
     try {
       if(!apiReady()) throw new Error('API key missing');
       const cached = force ? null : getCached();
@@ -263,13 +275,15 @@
     document.getElementById('cfYtPlayerTitle').textContent=movie.title;
     document.getElementById('cfYtIframe').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
     document.getElementById('cfYtOfficial').href=`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
-    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');updatePlayerFav();
+    const player=document.getElementById('cfYtPlayer');player.classList.add('active');player.setAttribute('aria-hidden','false');updatePlayerFav();history.pushState({cfYtPlayer:true},'');setTimeout(()=>cfYouTubeFullscreen(),100);
   };
-  window.cfCloseYouTubePlayer = function(){const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active');player.setAttribute('aria-hidden','true');}const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';};
-  window.cfYouTubeFullscreen = function(){const screen=document.getElementById('cfYtScreen');if(screen?.requestFullscreen)screen.requestFullscreen().catch(()=>{});else if(screen?.webkitRequestFullscreen)screen.webkitRequestFullscreen();try{screen.orientation?.lock?.('landscape');}catch(_){}};
+  window.cfCloseYouTubePlayer = function(){const player=document.getElementById('cfYtPlayer');if(player){player.classList.remove('active');player.setAttribute('aria-hidden','true');}const frame=document.getElementById('cfYtIframe');if(frame)frame.src='';try{if(document.fullscreenElement)document.exitFullscreen()}catch(_){}try{screen.orientation?.unlock?.()}catch(_){}};
+  window.cfYouTubeFullscreen = function(){const el=document.getElementById('cfYtScreen');if(el?.requestFullscreen)el.requestFullscreen().catch(()=>{});else if(el?.webkitRequestFullscreen)el.webkitRequestFullscreen();try{window.screen.orientation?.lock?.('landscape')}catch(_){}};
   window.cfYouTubePrevious = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index-1+visibleMovies.length)%visibleMovies.length].id);};
   window.cfYouTubeNext = function(){const index=visibleMovies.findIndex(x=>x.id===activeVideoId);if(index>=0&&visibleMovies.length)cfPlayYouTubeMovie(visibleMovies[(index+1)%visibleMovies.length].id);};
   function updatePlayerFav(){const button=document.getElementById('cfYtPlayerFav');if(!button||!activeVideoId)return;const yes=isFavorite(activeVideoId);button.classList.toggle('active',yes);button.innerHTML=`<i class="${yes?'fa-solid':'fa-regular'} fa-star"></i>`;}
+
+  window.addEventListener('popstate',()=>{const p=document.getElementById('cfYtPlayer');if(p?.classList.contains('active'))cfCloseYouTubePlayer();});
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();

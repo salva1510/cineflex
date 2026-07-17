@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CineFlex Ultra — Watch Movies, TV & More</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="home.css?v=9.1">
+  <link rel="stylesheet" href="css/core/identity.css?v=2.1">
+  <link rel="stylesheet" href="css/modules/hero.css?v=8.7">
+  <link rel="stylesheet" href="css/core/signature.css?v=1.0">
+  <link rel="stylesheet" href="css/modules/personalized.css?v=2.1">
+  <link rel="stylesheet" href="css/modules/watch-party.css?v=3.4">
+  <link rel="stylesheet" href="css/modules/content-center.css?v=6.1.5">
+  <link rel="stylesheet" href="css/modules/progression.css?v=3.4">
+  <link rel="stylesheet" href="css/modules/ai-assistant.css?v=10.0">
+  <link rel="stylesheet" href="css/modules/music-hub.css?v=11.2">
+  <link rel="stylesheet" href="css/modules/radio-hub.css?v=12.1">
+  <link rel="stylesheet" href="profiles.css?v=15.2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Scrolling Text */
+    .scrolling-text-container { background: #1a1a1a; color: #ffcc00; overflow: hidden; white-space: nowrap; padding: 10px 0; font-family: sans-serif; font-weight: bold; border-bottom: 2px solid #333; }
+    .scrolling-text-inner { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* Modal & List Styles */
+    .episode-list-container, .mini-recommendation-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding: 5px; }
+    .episode-item, .rec-item { display: flex; gap: 15px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .episode-item:hover, .rec-item:hover { background: rgba(255, 255, 255, 0.1); }
+    .episode-item.active { background: rgba(229, 9, 20, 0.2); border-left: 4px solid #e50914; padding-left: 10px; }
+    .ep-thumb-container, .rec-thumb-container { width: 120px; flex-shrink: 0; }
+    .ep-thumb, .rec-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; }
+    .ep-info h4, .rec-info h4 { margin: 0; font-size: 0.9rem; color: #fff; }
+    .ep-info p, .rec-info p { margin: 0; font-size: 0.75rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Menu Drawer Styling */
+    .menu-drawer { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 2000; transition: 0.4s; padding: 20px; box-sizing: border-box; border-left: 1px solid #333; }
+    .menu-drawer.active { right: 0; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+    .drawer-header h3 { color: #e50914; margin: 0; letter-spacing: 1px; }
+    .close-drawer { font-size: 1.5rem; cursor: pointer; }
+    .drawer-section { margin-bottom: 25px; }
+    .drawer-section h4 { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+    .drawer-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; color: #eee; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
+    .drawer-item i { width: 20px; color: #e50914; }
+    .drawer-item:hover { color: #fff; transform: translateX(5px); }
+
+    .modal-player-wrapper { width: 100%; margin-bottom: 20px; border-radius: 8px; overflow: hidden; background: #000; display: none; }
+    
+    /* Server Selector Styles */
+    .server-tabs { display: flex; gap: 10px; margin-bottom: 10px; justify-content: center; }
+    .server-btn { background: #222; color: #ccc; border: 1px solid #444; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+    .server-btn.active { background: #e50914; color: #fff; border-color: #e50914; }
+
+    #banner { cursor: grab; user-select: none; }
+    #banner:active { cursor: grabbing; }
+
+    /* Style para sa mga modal buttons */
+    .action-btn-large { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.95rem; transition: 0.2s ease; }
+    .action-btn-large:hover { background: rgba(255, 255, 255, 0.2); }
+  </style>
+  <link rel="stylesheet" href="css/modules/admin-homepage.css?v=4.1">
+  <link rel="stylesheet" href="css/modules/community53.css?v=5.3">
+  <link rel="stylesheet" href="css/modules/dulo-inspired.css?v=1.1">
+  <link rel="stylesheet" href="css/modules/desktop-row-scroll.css?v=1.0">
+  <link rel="stylesheet" href="css/modules/catalog-browser.css?v=1.3">
+  <link rel="stylesheet" href="css/modules/watch-time.css?v=8.0.7">
+  <link rel="stylesheet" href="css/modules/tv-edition.css?v=9.0">
+  <link rel="stylesheet" href="css/modules/membership.css?v=8.0.4">
+  <link rel="stylesheet" href="css/modules/mobile-layout-fix-v91.css?v=9.1">
+  <link rel="stylesheet" href="css/modules/live-tv.css?v=19.2">
+  <link rel="stylesheet" href="css/modules/youtube-movies.css?v=20.0">
+  <link rel="stylesheet" href="css/modules/activity-center13.css?v=13.0">
+  <link rel="stylesheet" href="css/modules/performance14.css?v=14.0">
+  <link rel="stylesheet" href="css/modules/smart-tv15.css?v=15.0">
+  <link rel="stylesheet" href="css/modules/profile-personalization16.css?v=16.0">
+  <link rel="stylesheet" href="css/modules/next-level-ui.css?v=17.0">
+  <link rel="stylesheet" href="css/modules/ultra-pro18.css?v=18.0">
+  <link rel="stylesheet" href="css/modules/infinity19.css?v=19.2">
+</head>
+<body>
+<!-- ===========================
+CINEFLEX PROFILE SELECTOR
+=========================== -->
+
+<div id="profile-selector" class="profile-selector" style="display:none;">
+
+    <div class="profile-box">
+
+        <h1>Who's Watching?</h1>
+
+        <div id="profiles" class="profiles"></div>
+
+        <button onclick="createProfile()">
+            + Add Profile
+        </button>
+
+    </div>
+
+</div>
+<nav class="navbar cf-dulo-navbar cf-logo-only-header" aria-label="CineFlex header">
+    <button class="logo cf-logo-button" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="CineFlex home">CINEFLEX</button>
+</nav>
+
+<div class="cf-progress-bar" id="cf-progress-bar"></div>
+
+<section id="cf-catalog" class="cf-catalog" aria-hidden="true">
+  <div class="cf-catalog-shell">
+    <aside class="cf-catalog-sidebar" aria-label="Browse categories">
+      <button class="cf-catalog-mobile-close" type="button" onclick="cfToggleCatalogSidebar(false)" aria-label="Close categories"><i class="fa-solid fa-xmark"></i></button>
+      <div class="cf-catalog-group">
+        <button class="cf-catalog-filter active" data-filter="all-movies"><i class="fa-solid fa-border-all"></i><span>All Movies</span></button>
+        <button class="cf-catalog-filter" data-filter="popular"><i class="fa-solid fa-fire-flame-curved"></i><span>Popular</span></button>
+        <button class="cf-catalog-filter" data-filter="top-rated"><i class="fa-solid fa-trophy"></i><span>Top Rated</span></button>
+        <button class="cf-catalog-filter" data-filter="in-theaters"><i class="fa-solid fa-clapperboard"></i><span>In Theaters</span></button>
+        <button class="cf-catalog-filter" data-filter="coming-soon"><i class="fa-regular fa-calendar"></i><span>Coming Soon</span></button>
+        <button class="cf-catalog-filter" data-filter="all-shows"><i class="fa-solid fa-tv"></i><span>All TV Shows</span></button>
+        <button class="cf-catalog-filter" data-filter="anime"><i class="fa-solid fa-dragon"></i><span>Anime</span></button>
+      </div>
+      <div class="cf-catalog-label">Genres</div>
+      <div class="cf-catalog-group">
+        <button class="cf-catalog-filter" data-filter="action"><i class="fa-solid fa-burst"></i><span>Action & Adventure</span></button>
+        <button class="cf-catalog-filter" data-filter="animation"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Animation</span></button>
+        <button class="cf-catalog-filter" data-filter="comedy"><i class="fa-regular fa-face-laugh"></i><span>Comedy</span></button>
+        <button class="cf-catalog-filter" data-filter="horror"><i class="fa-solid fa-ghost"></i><span>Horror</span></button>
+        <button class="cf-catalog-filter" data-filter="romance"><i class="fa-solid fa-heart"></i><span>Romance</span></button>
+        <button class="cf-catalog-filter" data-filter="scifi"><i class="fa-solid fa-rocket"></i><span>Sci-Fi & Fantasy</span></button>
+        <button class="cf-catalog-filter" data-filter="thriller"><i class="fa-solid fa-user-secret"></i><span>Thriller</span></button>
+        <button class="cf-catalog-filter" data-filter="family"><i class="fa-solid fa-children"></i><span>Family</span></button>
+      </div>
+    </aside>
+    <main class="cf-catalog-main">
+      <div class="cf-catalog-toolbar">
+        <button class="cf-catalog-category-toggle" type="button" onclick="cfToggleCatalogSidebar(true)"><i class="fa-solid fa-sliders"></i> Categories</button>
+        <div>
+          <p class="cf-catalog-eyebrow">Browse CineFlex</p>
+          <h1 id="cf-catalog-title">All Movies</h1>
+        </div>
+        <button class="cf-catalog-exit" type="button" onclick="cfCloseCatalog()"><i class="fa-solid fa-xmark"></i><span>Close</span></button>
+      </div>
+      <div id="cf-catalog-grid" class="cf-catalog-grid"></div>
+      <div id="cf-catalog-status" class="cf-catalog-status">Loading movies...</div>
+      <button id="cf-catalog-more" class="cf-catalog-more" type="button">Load more</button>
+    </main>
+  </div>
+  <button class="cf-catalog-sidebar-backdrop" type="button" onclick="cfToggleCatalogSidebar(false)" aria-label="Close categories"></button>
+</section>
+
+<div class="cf-ambient" aria-hidden="true">
+  <span></span><span></span><span></span>
+</div>
+
+<div id="drawer-backdrop" class="drawer-backdrop" onclick="closeMenuDrawer()"></div>
+<div id="menu-drawer" class="menu-drawer">
+    <div class="drawer-header">
+        <h3>CINEFLEX</h3>
+        <button class="close-drawer" onclick="closeMenuDrawer()" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-links">
+        <div class="drawer-section drawer-profile-section">
+            <div class="drawer-profile-head">
+                <span>Who's Watching?</span>
+                <button onclick="toggleManageProfiles()" type="button">Manage</button>
+            </div>
+            <div id="drawer-profiles" class="drawer-profiles"></div>
+            <button class="drawer-add-profile cf-add-profile-trigger" data-cf-add-profile onclick="createProfile()" type="button"><i class="fa-solid fa-plus"></i> Add Profile</button>
+        </div>
+        <div class="drawer-section cf-install-drawer-section">
+            <h4>Application</h4>
+            <button id="installBtn" class="drawer-item cf-drawer-install" type="button" style="display:none">
+                <i class="fa-solid fa-download"></i><span>Install CineFlex App</span>
+            </button>
+        </div>
+        <div class="drawer-section">
+            <h4>Personal</h4>
+            <div class="drawer-item" onclick="closeMenuDrawer(); viewWatchlist()"><i class="fa-solid fa-heart"></i> My List</div>
+            <div class="drawer-item" onclick="cfOpenActivity()"><i class="fa-solid fa-clock-rotate-left"></i> Activity & History</div>
+            <div class="drawer-item" onclick="cfOpenProfileCenter()"><i class="fa-solid fa-sliders"></i> Profile Preferences <span style="margin-left:auto;color:#60a5fa;font-size:.68rem;font-weight:900">NEW</span></div>
+        </div>
+        <div class="drawer-section">
+            <h4>Browse Catalog</h4>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-movies')"><i class="fa-solid fa-border-all"></i> All Movies</div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('all-shows')"><i class="fa-solid fa-tv"></i> All TV Shows</div>
+            <div class="drawer-item" onclick="cfOpenMusic()"><i class="fa-solid fa-music"></i> Music Hub</div>
+            <div class="drawer-item" onclick="cfOpenRadio()"><i class="fa-solid fa-radio"></i> Radio Hub <span style="margin-left:auto;color:#fb7185;font-size:.68rem;font-weight:900">NEW</span></div>
+            <div class="drawer-item" onclick="cfOpenLiveTV()"><i class="fa-solid fa-tower-broadcast"></i> Live TV Philippines <span style="margin-left:auto;color:#ff3344;font-size:.68rem;font-weight:900">LIVE</span></div>
+            <div class="drawer-item" onclick="cfOpenYouTubeMovies()"><i class="fa-brands fa-youtube"></i> YouTube Movies <span style="margin-left:auto;color:#ffd447;font-size:.68rem;font-weight:900">NEW</span></div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('anime')"><i class="fa-solid fa-dragon"></i> Anime Catalog</div>
+            <div class="drawer-item" onclick="closeMenuDrawer(); cfOpenCatalog('horror')"><i class="fa-solid fa-ghost"></i> Horror Movies</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Quick Categories</h4>
+            <div class="drawer-item" onclick="document.getElementById('kids-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-child"></i> Kids & Family</div>
+            <div class="drawer-item" onclick="document.getElementById('horror-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-ghost"></i> Trending Horror</div>
+            <div class="drawer-item" onclick="document.getElementById('filipino-section').scrollIntoView({behavior: 'smooth'}); closeMenuDrawer()"><i class="fa-solid fa-film"></i> Vivamax</div>
+        </div>
+        <div class="drawer-section">
+            <h4>Community</h4>
+            <div class="drawer-item" onclick="closeMenuDrawer(); window.CineFlexParty && window.CineFlexParty.open()"><i class="fa-solid fa-users-viewfinder"></i> Watch Party</div>
+            <div class="drawer-item" onclick="alert('Gcash: 09365028152')"><i class="fa-solid fa-circle-dollar-to-slot"></i> Donate</div>
+            <div class="drawer-item" onclick="cfOpenContentCenter('request'); closeMenuDrawer()"><i class="fa-solid fa-paper-plane"></i> Request Movie</div>
+          <div class="drawer-section">
+    <h4>Account</h4>
+
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+
+        <img id="userPhoto"
+        src="https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff"
+        style="
+        width:55px;
+        height:55px;
+        border-radius:50%;
+        object-fit:cover;
+        border:2px solid #e50914;">
+
+        <div style="flex:1;">
+            <div id="userName"
+            style="font-weight:bold;color:white;">
+                Guest
+            </div>
+
+            <div id="userEmail"
+            style="font-size:.8rem;color:#999;">
+                Not logged in
+            </div>
+
+            <div id="userBadge"
+            style="
+            margin-top:5px;
+            display:inline-block;
+            background:#e50914;
+            color:white;
+            padding:3px 8px;
+            border-radius:20px;
+            font-size:11px;">
+                FREE MEMBER
+            </div>
+            <button id="cfPremiumBadge" class="cf-premium-account-badge" type="button" onclick="cfOpenMembershipInfo()">UPGRADE TO VIP</button>
+        </div>
+
+    </div>
+
+    <div id="drawerLoginActions" class="drawer-login-actions">
+        <button class="drawer-auth-btn google" onclick="googleLogin()" type="button"><i class="fa-brands fa-google"></i> Login with Google</button>
+        <button class="drawer-auth-btn" onclick="openLoginModal()" type="button"><i class="fa-solid fa-envelope"></i> Email Login / Create Account</button>
+    </div>
+
+    <div id="cfMembershipCard" class="cf-membership-card" onclick="cfOpenMembershipInfo()" role="button" tabindex="0">
+        <div class="cf-membership-emblem"><i id="cfMembershipIcon" class="fa-solid fa-user"></i></div>
+        <div class="cf-membership-copy">
+            <strong id="cfMembershipPlan">Free Member</strong>
+            <small id="cfMembershipDetail">15-minute watch balance</small>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#737b88"></i>
+    </div>
+
+    <div id="drawerAccountActions" class="drawer-account-actions" style="display:none;">
+        <div class="drawer-item cf-add-profile-trigger" data-cf-add-profile onclick="createProfile()"><i class="fa-solid fa-user-plus"></i> Add Profile</div>
+        <div class="drawer-item" onclick="toggleManageProfiles()"><i class="fa-solid fa-user-pen"></i> Manage Profiles</div>
+        <div class="drawer-item" onclick="logout()" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+    </div>
+
+</div>
+        </div>
+    </div>
+</div>
+  
+
+<header class="banner" id="banner" 
+        ontouchstart="handleTouchStart(event)" 
+        ontouchend="handleTouchEnd(event)"
+        onmousedown="handleMouseDown(event)"
+        onmousemove="handleMouseMove(event)"
+        onmouseup="handleMouseUp()"
+        onmouseleave="handleMouseLeave()">
+  <div class="banner-content">
+    <h1 id="banner-title">Loading...</h1>
+    <div class="banner-buttons">
+      <button class="play-btn" onclick="showBannerDetails()"><i class="fa-solid fa-play"></i> Watch Now</button>
+    </div>
+  </div>
+  <div class="banner-fade"></div>
+</header>
+
+
+
+
+
+<main class="content">
+    <section class="row cf-personal-row" id="for-you-section">
+      <div class="cf-personal-head">
+        <div class="cf-personal-title"><i class="fa-solid fa-wand-magic-sparkles"></i><div><span class="cf-personal-kicker">Personalized For This Profile</span><h2>Para Sa’yo</h2></div></div>
+        <span class="cf-personal-note">Learns from your watches, opens, and My List</span>
+      </div>
+      <div class="cf-smart-scroller" id="for-you-list"><div class="cf-empty-personal">Preparing your personal picks...</div></div>
+    </section>
+
+    <section class="row" id="continue-watching-section" style="display:none;">
+        <h2>Continue Watching</h2>
+        <div class="scroller" id="continue-list"></div>
+    </section>
+
+    <section class="row cf-top10-section" id="top10-section">
+      <div class="cf-row-heading">
+        <div><span class="cf-row-kicker">Most watched across CineFlex</span><h2>Top 10 Today</h2></div>
+        <div class="cf-top10-controls" aria-label="Top 10 navigation">
+          <button type="button" onclick="cfScrollTop10(-1)" aria-label="Scroll Top 10 left"><i class="fa-solid fa-chevron-left"></i></button>
+          <button type="button" onclick="cfScrollTop10(1)" aria-label="Scroll Top 10 right"><i class="fa-solid fa-chevron-right"></i></button>
+          <button class="cf-row-refresh" type="button" onclick="window.cfRefreshHome51?.()" aria-label="Refresh personalized rows"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+      </div>
+      <div class="cf-top10-scroller" id="top10-list"><div class="cf-row-loading">Loading today’s chart...</div></div>
+    </section>
+
+    <section class="row cf-because-section" id="because-section" style="display:none;">
+      <div class="cf-row-heading">
+        <div><span class="cf-row-kicker">Picked from your recent activity</span><h2 id="because-title">Because You Watched</h2></div>
+      </div>
+      <div class="cf-smart-scroller" id="because-list"></div>
+    </section>
+
+    <section class="row" id="netflix-movies-section">
+        <h2>Netflix Movies</h2>
+        <div class="scroller" id="netflix-movies-list"></div>
+    </section>
+
+    <section class="row" id="kids-section"><h2>Kids & Family</h2><div class="scroller" id="kids-list"></div></section>
+    
+    <section class="row" id="horror-section">
+        <h2><i class="fa-solid fa-ghost" style="color:#e50914;"></i> Trending Horror Movies</h2>
+        <div class="scroller" id="horror-list"></div>
+    </section>
+
+    <section class="row" id="filipino-section"><h2>Vivamax</h2><div class="scroller" id="filipino-list"></div></section>
+    <section class="row" id="kdrama-section"><h2>Korean Dramas</h2><div class="scroller" id="kdrama-list"></div></section>
+</main>
+
+<div id="details-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-banner" id="modal-banner"><span class="close-modal" onclick="closeModal()">&times;</span></div>
+      <div class="modal-body">
+        
+        <div id="modal-player-container" class="modal-player-wrapper">
+            <div class="iframe-container">
+                <iframe id="modal-video-iframe" src="" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>
+            </div>
+        </div>
+
+        <div class="cf-premium-heading">
+            <h2 id="modal-title"></h2>
+            <span id="modal-match-badge" class="cf-match-badge">--% Match</span>
+        </div>
+        <div id="modal-meta-row" class="cf-premium-meta" aria-label="Title information"></div>
+        <p id="modal-desc"></p>
+        <div id="modal-facts" class="cf-title-facts"></div>
+        
+        <div class="modal-actions-wrapper" style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <div id="movie-play-action" style="display: block;">
+                <button class="play-btn-large" onclick="startPlayback()"><i class="fa-solid fa-play"></i> Play Movie</button>
+            </div>
+            <button class="action-btn-large" onclick="playTrailer()"><i class="fa-solid fa-film"></i> Trailer</button>
+            <button id="modal-watchlist-btn" class="action-btn-large" onclick="toggleWatchlist()"><i class="fa-solid fa-plus"></i> My List</button>
+            <button id="modal-download-btn" class="action-btn-large" onclick="triggerDownload()" style="background: rgba(46, 204, 113, 0.1); border-color: rgba(46, 204, 113, 0.2); color: #2ecc71;"><i class="fa-solid fa-download"></i> Download</button>
+        </div>
+
+        
+
+        <section id="cf-rating-box" class="cf-rating-box" aria-label="CineFlex community rating">
+            <div class="cf-rating-top">
+                <div>
+                    <h3><i class="fa-solid fa-star"></i> CineFlex Rating</h3>
+                    <p id="cf-rating-summary" class="cf-rating-summary">Loading community score...</p>
+                </div>
+                <div class="cf-rating-score">
+                    <span id="cf-rating-average">--</span>
+                    <small>/5</small>
+                </div>
+            </div>
+            <div class="cf-rating-actions">
+                <button id="cf-like-btn" type="button" onclick="cfReactToTitle('like')"><i class="fa-solid fa-thumbs-up"></i> <span id="cf-like-count">0</span></button>
+                <button id="cf-dislike-btn" type="button" onclick="cfReactToTitle('dislike')"><i class="fa-solid fa-thumbs-down"></i> <span id="cf-dislike-count">0</span></button>
+                <div class="cf-stars" aria-label="Rate this title">
+                    <button type="button" onclick="cfRateTitle(1)">★</button>
+                    <button type="button" onclick="cfRateTitle(2)">★</button>
+                    <button type="button" onclick="cfRateTitle(3)">★</button>
+                    <button type="button" onclick="cfRateTitle(4)">★</button>
+                    <button type="button" onclick="cfRateTitle(5)">★</button>
+                </div>
+            </div>
+            <p id="cf-rating-login-note" class="cf-rating-login-note">Mag-login para makapag-like at rate. Nakikita ng lahat ang community score.</p>
+        </section>
+
+
+        <section id="cf-reaction-box" class="cf-reaction-box" aria-label="Expressive reactions">
+  <div class="cf-community-head"><h3><i class="fa-solid fa-face-smile"></i> Quick Reactions</h3><small>Live community pulse</small></div>
+  <div class="cf-reaction-grid">
+    <button class="cf-emoji-reaction" data-cf-reaction="heart" onclick="cfCommunityReact('heart')"><b>❤️</b><span>Love</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="haha" onclick="cfCommunityReact('haha')"><b>😂</b><span>Haha</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="wow" onclick="cfCommunityReact('wow')"><b>😮</b><span>Wow</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="sad" onclick="cfCommunityReact('sad')"><b>😢</b><span>Sad</span><em>0</em></button>
+    <button class="cf-emoji-reaction" data-cf-reaction="fire" onclick="cfCommunityReact('fire')"><b>🔥</b><span>Fire</span><em>0</em></button>
+  </div><p id="cf-community-login-note" class="cf-community-login">Mag-login para makapag-react.</p>
+</section>
+<section class="cf-achievement-box"><div class="cf-community-head"><h3><i class="fa-solid fa-trophy"></i> Your Achievements</h3><small>Keep watching</small></div><div id="cf-achievement-row" class="cf-badge-row"></div></section>
+<section class="cf-activity-box"><div class="cf-community-head"><h3><i class="fa-solid fa-bolt"></i> Community Activity</h3><small>Live updates</small></div><div id="cf-activity-list" class="cf-activity-list"><div class="cf-community-empty">Loading activity...</div></div></section>
+
+<section id="cf-comments-box" class="cf-comments-box" aria-label="CineFlex comments">
+            <div class="cf-comments-head">
+                <h3><i class="fa-solid fa-comments"></i> Community Comments</h3>
+                <span id="cf-comments-count" class="cf-comments-count">0 comments</span>
+            </div>
+            <p id="cf-comment-login-note" class="cf-comment-login-note">Mag-login muna para makapag-comment. Puwede pa ring basahin ng lahat ang comments.</p>
+            <div class="cf-comment-form">
+                <img id="cf-comment-user-avatar" class="cf-comment-avatar" src="icon-192.png" alt="User">
+                <div class="cf-comment-input-wrap">
+                    <textarea id="cf-comment-input" class="cf-comment-input" maxlength="500" placeholder="Magkwento tungkol sa movie na ito... maganda ba? sulit ba panoorin?"></textarea>
+                    <div class="cf-comment-actions">
+                        <span class="cf-comment-hint">Max 500 characters • be respectful</span>
+                        <button id="cf-comment-send" class="cf-comment-send" type="button" onclick="cfPostComment()"><i class="fa-solid fa-paper-plane"></i> Post</button>
+                    </div>
+                </div>
+            </div>
+            <div id="cf-comments-list" class="cf-comments-list">
+                <div class="cf-comment-empty">Loading comments...</div>
+            </div>
+        </section>
+
+        <div class="cast-section">
+            <h4>Top Cast</h4>
+            <div class="cast-scroller" id="modal-cast"></div>
+        </div>
+        <div id="episode-selector" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <h3 style="margin:0; font-size:1.1rem; border-left: 4px solid #e50914; padding-left: 10px;">Episodes</h3>
+                <select id="season-select" onchange="loadEpisodes(currentItem.id, this.value)"></select>
+            </div>
+            <div id="episode-list" class="episode-list-container"></div>
+        </div>
+        <div class="modal-row" style="margin-top:25px;">
+            <h3 style="font-size:1.1rem; border-left:4px solid #e50914; padding-left:10px;">More Like This</h3>
+            <div id="modal-recommendations" class="mini-recommendation-list"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<nav class="bottom-nav cf-native-bottom-nav" aria-label="Main navigation">
+  <button class="nav-item active" type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="nav-item" type="button" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+  <button id="cfTopAddTime" class="nav-item cf-footer-add-time" type="button" aria-label="Add 3 hours watch time"><i class="fa-solid fa-clock"></i><span>Add Time</span><b id="cfTopAddTimeBalance">+3h</b></button>
+  <button class="nav-item" type="button" onclick="cfOpenLiveTV()"><i class="fa-solid fa-tower-broadcast"></i><span>Live TV</span></button>
+  <button class="nav-item" type="button" onclick="cfOpenCatalog('all-movies')"><i class="fa-solid fa-film"></i><span>All Movies</span></button>
+  <button class="nav-item" type="button" onclick="openMenuDrawer()"><i class="fa-solid fa-bars"></i><span>Menu</span></button>
+</nav>
+
+<div id="search-overlay" class="search-overlay" style="display:none;">
+    <div class="search-input-wrapper">
+        <input type="text" id="searchInput" placeholder="Search movies, anime, watchlist..." oninput="processSearch(this.value)">
+        <i class="fa-solid fa-xmark" onclick="closeSearch()"></i>
+    </div>
+    <div id="search-results" class="search-results-grid"></div>
+</div>
+  <div id="profiles-modal" class="profiles-modal">
+
+    <div class="profiles-box">
+
+        <h2>Who's Watching?</h2>
+
+        <div id="profiles-list"></div>
+
+    </div>
+
+</div>
+  <script src="./cineflex-intro.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<!-- CineFlex load order: Firebase config -> UI foundation -> app -> auth -> profiles -->
+<script src="firebase.js?v=3.1"></script>
+  <script src="js/core/foundation.js?v=8.6"></script>
+  <script src="js/core/api-client61.js?v=6.1"></script>
+  <script src="home.js?v=9.1"></script>
+  <script src="js/modules/desktop-row-scroll.js?v=1.0"></script>
+  <script src="js/modules/catalog-browser.js?v=1.3"></script>
+  <script src="js/modules/hero.js?v=8.6"></script>
+  <script src="js/core/signature.js?v=1.0"></script>
+  <script src="js/modules/personalized.js?v=2.2"></script>
+  <script src="js/modules/personal-home51.js?v=5.1"></script>
+<script src="auth.js?v=3.1"></script>
+  <script src="js/modules/community53.js?v=5.3"></script>
+  <script src="profiles.js?v=15.5"></script>
+  <script src="js/modules/watch-party.js?v=3.4"></script>
+  <script src="js/modules/progression.js?v=3.4"></script>
+  <script src="js/modules/admin-homepage.js?v=4.1"></script>
+  <script src="js/modules/content-center.js?v=6.1.5"></script>
+  <link rel="stylesheet" href="admin43.css?v=4.3">
+  <script src="js/modules/moderation-guard.js?v=4.3"></script>
+  <script src="js/modules/ai-assistant.js?v=10.0"></script>
+  <script src="js/modules/membership.js?v=8.0.4"></script>
+  <script src="js/modules/watch-time.js?v=8.0.7"></script>
+  <script src="js/modules/tv-edition.js?v=9.0"></script>
+  <script src="js/modules/live-tv.js?v=19.2"></script>
+  <script src="js/modules/youtube-movies-config.js?v=20.0"></script>
+  <script src="js/modules/youtube-movies.js?v=20.0"></script>
+  <script src="js/modules/music-hub.js?v=11.2"></script>
+  <script src="js/modules/radio-hub.js?v=12.1"></script>
+  <script src="js/modules/activity-center13.js?v=13.0"></script>
+  <script src="js/modules/performance14.js?v=14.0"></script>
+  <script src="js/modules/smart-tv15.js?v=15.0"></script>
+  <script src="js/modules/profile-personalization16.js?v=16.1"></script>
+  <script src="js/modules/ultra-pro18.js?v=18.0"></script>
+  <script src="js/modules/infinity19.js?v=19.2"></script>
+</body>
+</html>

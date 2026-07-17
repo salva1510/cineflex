@@ -92,7 +92,7 @@
   function registerIdleWork(){
     const run = () => {
       // Warm only same-origin UI modules; media/posters remain demand-loaded.
-      ['css/modules/activity-center13.css','js/modules/activity-center13.js','js/modules/music-hub.js','js/modules/radio-hub.js'].forEach(url => {
+      ['css/modules/activity-center13.css','js/modules/activity-center13.js','js/modules/music-hub.js'].forEach(url => {
         if(document.querySelector(`link[data-cf14-prefetch="${url}"]`)) return;
         const link=document.createElement('link'); link.rel='prefetch'; link.href=url; link.as=url.endsWith('.css')?'style':'script'; link.dataset.cf14Prefetch=url; document.head.appendChild(link);
       });

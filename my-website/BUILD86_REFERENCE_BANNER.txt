@@ -1,9 +1,0 @@
-CINEFLEX BUILD 8.6 — REFERENCE BANNER LAYOUT
-
-- Full-width cinematic backdrop
-- Large lower-left title
-- CineFlex / Live viewers / Smart pick pill badges
-- One large Watch Now button
-- Strong mobile-safe dark gradient
-- Poster/backdrop remains clickable to open the details modal
-- Removed descriptions, ratings, arrows, dots, progress, autoplay trailer, My List and extra hero controls

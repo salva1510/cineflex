@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v19.2.0";
+const CACHE_NAME = "cineflex-v21.0.0";
 
 const CORE_ASSETS = [
   "/",
@@ -32,6 +32,8 @@ const CORE_ASSETS = [
   "/js/modules/smart-tv15.js",
   "/css/modules/profile-personalization16.css",
   "/js/modules/profile-personalization16.js",
+  "/css/modules/youtube-kdrama.css",
+  "/js/modules/youtube-kdrama.js",
   "/cineflex-support.html",
   "/js/modules/personalized.js",
   "/js/modules/personal-home51.js",

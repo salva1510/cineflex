@@ -1,56 +1,79 @@
 (function(){
 'use strict';
-const ITEMS=[
-{id:'opm26',title:'Pinoy OPM Hits 2026',artist:'Official music-video playlist',cat:'opm',playlist:'PLMmqTuUsDkRLPIsLKF0xIFX4JY457GRx8',icon:'🇵🇭'},
-{id:'lofi',title:'Lofi Study Radio',artist:'Lofi Girl',cat:'chill',video:'X4VbdwhkE10',icon:'📚',live:true},
-{id:'sleep',title:'Lofi Sleep Radio',artist:'Lofi Girl',cat:'sleep',video:'JD-kMIpDfnY',icon:'🌙',live:true},
-{id:'asian',title:'Asian Lofi Radio',artist:'Lofi Girl',cat:'chill',video:'1Tl2FtV06qo',icon:'⛩️',live:true},
-{id:'opmchill',title:'OPM Chill Vibes',artist:'Filipino playlist',cat:'opm',video:'BAXlAjUNNrg',icon:'🎸'},
-{id:'audiofree',title:'Creator Music Library',artist:'Royalty-free music channel',cat:'instrumental',external:'https://www.youtube.com/c/audiolibrary-channel',icon:'🎹'}
-];
-let filter='all',current=null,query='',queue=[],queueIndex=-1,shuffle=false,repeat=false;
+const CFG=window.CINEFLEX_YOUTUBE||{};
+const API='https://www.googleapis.com/youtube/v3';
+const GENRES={
+ trending:{label:'Trending',q:'official music video',order:'viewCount'},
+ opm:{label:'OPM',q:'OPM official music video Philippines',order:'relevance'},
+ pop:{label:'Pop',q:'pop official music video',order:'viewCount'},
+ rock:{label:'Rock',q:'rock official music video',order:'viewCount'},
+ hiphop:{label:'Hip-Hop',q:'hip hop official music video',order:'viewCount'},
+ rnb:{label:'R&B',q:'R&B official music video',order:'viewCount'},
+ kpop:{label:'K-Pop',q:'K-pop official music video',order:'viewCount'},
+ worship:{label:'Worship',q:'Christian worship official music',order:'viewCount'},
+ reggae:{label:'Reggae',q:'reggae official music video',order:'viewCount'},
+ edm:{label:'EDM',q:'EDM official music video',order:'viewCount'},
+ acoustic:{label:'Acoustic',q:'acoustic official music',order:'relevance'},
+ chill:{label:'Chill',q:'chill music official',order:'relevance'},
+ jazz:{label:'Jazz',q:'jazz music official',order:'relevance'},
+ classical:{label:'Classical',q:'classical music official',order:'relevance'}
+};
+let genre='trending',items=[],nextToken='',loading=false,current=null;
 const $=s=>document.querySelector(s);
-const favKey='cineflex_music_favorites',recentKey='cineflex_music_recent';
-const get=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}};
-const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const item=id=>ITEMS.find(x=>x.id===id);
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>{n=Number(n||0);return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n)};
+const cacheKey=(g,q)=>`cf_ytmusic_${g}_${(q||'').toLowerCase().replace(/\W+/g,'_').slice(0,45)}`;
 function ensure(){
- if($('#cfMusicOverlay'))return;
- document.body.insertAdjacentHTML('beforeend',`<section id="cfMusicOverlay" class="cf-music-overlay" aria-hidden="true"><div class="cf-music-shell">
- <div class="cf-music-top"><div><p class="cf-music-kicker">CINEFLEX MUSIC</p><h1 class="cf-music-title">Music for every mood</h1></div><button class="cf-music-close" onclick="cfCloseMusic()"><i class="fa-solid fa-xmark"></i></button></div>
- <div class="cf-music-hero"><h2>Listen without leaving CineFlex</h2><p>Curated OPM, study, chill and sleep music from official or creator-hosted sources.</p><button class="cf-open-radio" onclick="cfCloseMusic();cfOpenRadio()"><i class="fa-solid fa-radio"></i> Open Philippine Radio</button><div class="cf-music-search"><i class="fa-solid fa-magnifying-glass"></i><input id="cfMusicSearch" type="search" placeholder="Search music, artist or mood" autocomplete="off"></div></div>
- <div class="cf-music-toolbar"><div class="cf-music-filters" id="cfMusicFilters"></div><button class="cf-queue-open" onclick="cfToggleQueue(true)"><i class="fa-solid fa-list"></i> Queue <span id="cfQueueCount">0</span></button></div>
- <div class="cf-music-grid" id="cfMusicGrid"></div></div></section>
- <aside id="cfMusicQueue" class="cf-music-queue"><div class="cf-queue-head"><div><b>Up Next</b><span id="cfQueueNow">Nothing playing</span></div><button onclick="cfToggleQueue(false)"><i class="fa-solid fa-xmark"></i></button></div><div id="cfQueueList" class="cf-queue-list"></div><button class="cf-queue-clear" onclick="cfClearQueue()">Clear queue</button></aside>
- <div id="cfMusicPlayer" class="cf-music-player"><div class="cf-player-top"><button onclick="cfMinimizeMusic()"><i class="fa-solid fa-chevron-down"></i> Minimize</button><div class="cf-player-actions"><button id="cfShuffleBtn" onclick="cfToggleShuffle()" title="Shuffle"><i class="fa-solid fa-shuffle"></i></button><button id="cfRepeatBtn" onclick="cfToggleRepeat()" title="Repeat"><i class="fa-solid fa-repeat"></i></button><button onclick="cfToggleQueue(true)" title="Queue"><i class="fa-solid fa-list"></i></button><button onclick="cfStopMusic()"><i class="fa-solid fa-xmark"></i></button></div></div><iframe id="cfMusicFrame" class="cf-music-frame" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe><div class="cf-player-bottom"><button onclick="cfPrevMusic()"><i class="fa-solid fa-backward-step"></i></button><div><b id="cfPlayerTitle">Music</b><span id="cfPlayerArtist">CineFlex</span></div><button onclick="cfNextMusic()"><i class="fa-solid fa-forward-step"></i></button></div></div>
- <div id="cfMusicMini" class="cf-music-mini"><div class="cf-music-mini-art" id="cfMiniArt">🎵</div><div class="cf-music-mini-info" onclick="cfRestoreMusic()"><b id="cfMiniTitle">Music</b><span id="cfMiniArtist">CineFlex</span></div><button onclick="cfPrevMusic()"><i class="fa-solid fa-backward-step"></i></button><button onclick="cfRestoreMusic()"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button><button onclick="cfNextMusic()"><i class="fa-solid fa-forward-step"></i></button><button class="cf-mini-close" onclick="cfStopMusic()"><i class="fa-solid fa-xmark"></i></button></div>`);
- const search=$('#cfMusicSearch');
- search.addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
- renderFilters();render();renderQueue();
+ if($('#cfYTMusicOverlay'))return;
+ document.body.insertAdjacentHTML('beforeend',`<section id="cfYTMusicOverlay" class="cf-ytm-overlay" aria-hidden="true">
+ <div class="cf-ytm-shell">
+  <header class="cf-ytm-head"><div><p>Powered by YouTube</p><h1>YouTube Music</h1></div><button onclick="cfCloseMusic()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></header>
+  <div class="cf-ytm-hero"><div><h2>Hanapin at pakinggan ang music mo</h2><p>Official at public YouTube music videos, nakaayos ayon sa genre.</p></div>
+   <form id="cfYTMusicSearch"><i class="fa-solid fa-magnifying-glass"></i><input id="cfYTMusicQuery" placeholder="Search song, artist, album..." autocomplete="off"><button>Search</button></form>
+  </div>
+  <div id="cfYTMusicGenres" class="cf-ytm-genres"></div>
+  <div class="cf-ytm-meta"><b id="cfYTMusicTitle">Trending Music</b><span id="cfYTMusicCount"></span></div>
+  <div id="cfYTMusicGrid" class="cf-ytm-grid"></div>
+  <button id="cfYTMusicMore" class="cf-ytm-more" onclick="cfYTMusicLoadMore()">Load more</button>
+ </div></section>
+ <section id="cfYTMusicPlayer" class="cf-ytm-player" aria-hidden="true">
+  <button class="cf-ytm-back" onclick="cfYTMusicBack()"><i class="fa-solid fa-arrow-left"></i> Back to Music</button>
+  <div class="cf-ytm-video"><iframe id="cfYTMusicFrame" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+  <div class="cf-ytm-now"><div><b id="cfYTMusicNowTitle"></b><span id="cfYTMusicNowArtist"></span></div><a id="cfYTMusicYouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Open on YouTube</a></div>
+ </section>`);
+ $('#cfYTMusicSearch').addEventListener('submit',e=>{e.preventDefault();load(true,$('#cfYTMusicQuery').value.trim());});
+ renderGenres();
 }
-function renderFilters(){const f=[['all','All'],['opm','OPM'],['chill','Chill'],['sleep','Sleep'],['instrumental','Instrumental'],['favorites','Favorites'],['recent','Recently Played']];$('#cfMusicFilters').innerHTML=f.map(x=>`<button class="cf-music-filter ${filter===x[0]?'active':''}" onclick="cfMusicFilter('${x[0]}')">${x[1]}</button>`).join('');}
-function baseList(){if(filter==='favorites'){const ids=get(favKey);return ITEMS.filter(x=>ids.includes(x.id));}if(filter==='recent'){return get(recentKey).map(item).filter(Boolean);}return filter==='all'?ITEMS:ITEMS.filter(x=>x.cat===filter);}
-function list(){return baseList().filter(x=>!query||`${x.title} ${x.artist} ${x.cat}`.toLowerCase().includes(query));}
-function render(){const favs=get(favKey),target=$('#cfMusicGrid');if(!target)return;target.innerHTML=list().map(x=>`<article class="cf-music-card" onclick="cfPlayMusic('${x.id}')">${x.live?'<span class="cf-music-live">LIVE</span>':''}<button class="cf-music-heart ${favs.includes(x.id)?'active':''}" onclick="event.stopPropagation();cfToggleMusicFavorite('${x.id}')"><i class="fa-${favs.includes(x.id)?'solid':'regular'} fa-heart"></i></button><button class="cf-music-addq" title="Add to queue" onclick="event.stopPropagation();cfAddQueue('${x.id}')"><i class="fa-solid fa-plus"></i></button><div class="cf-music-cover"><span>${x.icon}</span></div><h3>${x.title}</h3><p>${x.artist}</p></article>`).join('')||'<div class="cf-music-empty"><i class="fa-solid fa-music"></i><p>No music found.</p></div>';}
-function updateMeta(x){['cfMiniTitle','cfPlayerTitle'].forEach(id=>{const n=$('#'+id);if(n)n.textContent=x.title;});['cfMiniArtist','cfPlayerArtist'].forEach(id=>{const n=$('#'+id);if(n)n.textContent=x.artist;});$('#cfMiniArt').textContent=x.icon;$('#cfQueueNow').textContent=`Playing: ${x.title}`;}
-function play(id,keepQueue){ensure();const x=item(id);if(!x)return;if(x.external){window.open(x.external,'_blank','noopener');return;}if(!keepQueue){queue=[id,...ITEMS.filter(v=>v.id!==id&&!v.external).map(v=>v.id)];queueIndex=0;}current=x;let r=get(recentKey).filter(v=>v!==id);set(recentKey,[id,...r].slice(0,20));const src=x.playlist?`https://www.youtube-nocookie.com/embed/videoseries?list=${x.playlist}&autoplay=1&rel=0`:`https://www.youtube-nocookie.com/embed/${x.video}?autoplay=1&rel=0`;$('#cfMusicFrame').src=src;$('#cfMusicPlayer').classList.add('is-open');$('#cfMusicMini').classList.remove('show');updateMeta(x);renderQueue();render();}
-function nextIndex(step){if(!queue.length)return -1;if(repeat&&current)return queueIndex;if(shuffle&&queue.length>1){let n=queueIndex;while(n===queueIndex)n=Math.floor(Math.random()*queue.length);return n;}return (queueIndex+step+queue.length)%queue.length;}
-function renderQueue(){if(!$('#cfQueueList'))return;$('#cfQueueCount').textContent=queue.length;$('#cfQueueList').innerHTML=queue.map((id,i)=>{const x=item(id);if(!x)return'';return `<button class="cf-queue-item ${i===queueIndex?'active':''}" onclick="cfPlayQueueIndex(${i})"><span>${x.icon}</span><div><b>${x.title}</b><small>${x.artist}</small></div><i class="fa-solid fa-play"></i></button>`;}).join('')||'<p class="cf-queue-empty">Your queue is empty.</p>';}
-window.cfOpenMusic=function(){ensure();$('#cfMusicOverlay').classList.add('is-open');$('#cfMusicOverlay').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';};
-window.cfCloseMusic=function(){ensure();$('#cfMusicOverlay').classList.remove('is-open');$('#cfMusicOverlay').setAttribute('aria-hidden','true');document.body.style.overflow='';};
-window.cfMusicFilter=function(v){filter=v;renderFilters();render();};
-window.cfToggleMusicFavorite=function(id){let a=get(favKey);a=a.includes(id)?a.filter(x=>x!==id):[id,...a];set(favKey,a);render();};
-window.cfPlayMusic=id=>play(id,false);
-window.cfAddQueue=function(id){ensure();if(!queue.includes(id))queue.push(id);if(queueIndex<0&&current){queue.unshift(current.id);queueIndex=0;}renderQueue();};
-window.cfPlayQueueIndex=function(i){if(!queue[i])return;queueIndex=i;play(queue[i],true);};
-window.cfNextMusic=function(){ensure();const i=nextIndex(1);if(i<0)return;queueIndex=i;play(queue[i],true);};
-window.cfPrevMusic=function(){ensure();const i=nextIndex(-1);if(i<0)return;queueIndex=i;play(queue[i],true);};
-window.cfToggleShuffle=function(){shuffle=!shuffle;$('#cfShuffleBtn').classList.toggle('active',shuffle);};
-window.cfToggleRepeat=function(){repeat=!repeat;$('#cfRepeatBtn').classList.toggle('active',repeat);};
-window.cfToggleQueue=function(open){ensure();$('#cfMusicQueue').classList.toggle('is-open',!!open);};
-window.cfClearQueue=function(){queue=current?[current.id]:[];queueIndex=current?0:-1;renderQueue();};
-window.cfMinimizeMusic=function(){ensure();$('#cfMusicPlayer').classList.remove('is-open');if(current)$('#cfMusicMini').classList.add('show');};
-window.cfRestoreMusic=function(){ensure();if(current){$('#cfMusicPlayer').classList.add('is-open');$('#cfMusicMini').classList.remove('show');}};
-window.cfStopMusic=function(){ensure();$('#cfMusicFrame').src='';$('#cfMusicPlayer').classList.remove('is-open');$('#cfMusicMini').classList.remove('show');$('#cfMusicQueue').classList.remove('is-open');current=null;queue=[];queueIndex=-1;renderQueue();};
+function renderGenres(){const box=$('#cfYTMusicGenres');if(!box)return;box.innerHTML=Object.entries(GENRES).map(([k,v])=>`<button class="${k===genre?'active':''}" onclick="cfYTMusicGenre('${k}')">${esc(v.label)}</button>`).join('');}
+async function api(path,params){if(!CFG.apiKey||CFG.apiKey.includes('YOUR_'))throw new Error('YouTube API key is not configured.');const u=new URL(API+path);Object.entries({...params,key:CFG.apiKey}).forEach(([k,v])=>v!==''&&v!=null&&u.searchParams.set(k,v));const r=await fetch(u);const d=await r.json();if(!r.ok)throw new Error(d.error?.message||'YouTube request failed');return d;}
+function getCache(k){try{const x=JSON.parse(localStorage.getItem(k));if(x&&Date.now()-x.time<6*3600000)return x.data}catch(e){}return null}
+function setCache(k,data){try{localStorage.setItem(k,JSON.stringify({time:Date.now(),data}))}catch(e){}}
+async function fetchMusic(reset,custom){const g=GENRES[genre];const q=custom||g.q;const key=cacheKey(genre,q);if(reset&&!custom){const c=getCache(key);if(c)return c}
+ const search=await api('/search',{part:'snippet',type:'video',videoCategoryId:'10',maxResults:'25',q,order:custom?'relevance':g.order,regionCode:'PH',safeSearch:'moderate',pageToken:reset?'':nextToken});
+ const ids=(search.items||[]).map(x=>x.id.videoId).filter(Boolean);if(!ids.length)return {items:[],nextPageToken:''};
+ const details=await api('/videos',{part:'snippet,status,contentDetails,statistics',id:ids.join(',')});
+ const map=new Map((details.items||[]).map(x=>[x.id,x]));
+ const clean=ids.map(id=>map.get(id)).filter(v=>v&&v.status?.embeddable&&v.status?.privacyStatus==='public').map(v=>({id:v.id,title:v.snippet.title,channel:v.snippet.channelTitle,thumb:v.snippet.thumbnails?.high?.url||v.snippet.thumbnails?.medium?.url,views:v.statistics?.viewCount||0,published:v.snippet.publishedAt}));
+ const out={items:clean,nextPageToken:search.nextPageToken||''};if(reset&&!custom)setCache(key,out);return out;
+}
+async function load(reset=true,custom=''){
+ if(loading)return;loading=true;ensure();
+ const grid=$('#cfYTMusicGrid'),more=$('#cfYTMusicMore');if(reset){items=[];nextToken='';grid.innerHTML='<div class="cf-ytm-loading"><i class="fa-solid fa-compact-disc fa-spin"></i><p>Loading YouTube music...</p></div>';}more.style.display='none';
+ try{const d=await fetchMusic(reset,custom);items=reset?d.items:items.concat(d.items);nextToken=d.nextPageToken;render(custom);}
+ catch(e){grid.innerHTML=`<div class="cf-ytm-error"><i class="fa-solid fa-triangle-exclamation"></i><h3>Hindi ma-load ang YouTube Music</h3><p>${esc(e.message)}</p></div>`;}
+ finally{loading=false;}
+}
+function render(custom=''){$('#cfYTMusicTitle').textContent=custom?`Search: ${custom}`:`${GENRES[genre].label} Music`;$('#cfYTMusicCount').textContent=`${items.length} results`;$('#cfYTMusicGrid').innerHTML=items.length?items.map(v=>`<article class="cf-ytm-card" onclick="cfYTMusicPlay('${v.id}')"><div class="cf-ytm-thumb"><img src="${esc(v.thumb)}" loading="lazy" alt=""><span><i class="fa-solid fa-play"></i></span></div><h3>${esc(v.title)}</h3><p>${esc(v.channel)}</p><small>${fmt(v.views)} views</small></article>`).join(''):'<div class="cf-ytm-error"><h3>Walang music na nakita</h3><p>Subukan ang ibang artist, title, o genre.</p></div>';$('#cfYTMusicMore').style.display=nextToken?'block':'none';}
+function open(){ensure();$('#cfYTMusicOverlay').classList.add('is-open');$('#cfYTMusicOverlay').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';if(!items.length)load(true);}
+function close(){ensure();$('#cfYTMusicOverlay').classList.remove('is-open');$('#cfYTMusicOverlay').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function play(id){const v=items.find(x=>x.id===id);if(!v)return;current=v;$('#cfYTMusicFrame').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;$('#cfYTMusicNowTitle').textContent=v.title;$('#cfYTMusicNowArtist').textContent=v.channel;$('#cfYTMusicYouTube').href=`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;$('#cfYTMusicPlayer').classList.add('is-open');$('#cfYTMusicPlayer').setAttribute('aria-hidden','false');history.pushState({cfYTMusicPlayer:true},'');}
+function back(fromPop){ensure();$('#cfYTMusicFrame').src='';$('#cfYTMusicPlayer').classList.remove('is-open');$('#cfYTMusicPlayer').setAttribute('aria-hidden','true');current=null;if(!fromPop&&history.state?.cfYTMusicPlayer)history.back();}
+window.cfOpenMusic=window.cfOpenMusicHub=function(){try{closeMenuDrawer()}catch(e){}open();};
+window.cfCloseMusic=close;
+window.cfYTMusicGenre=function(g){if(!GENRES[g])return;genre=g;$('#cfYTMusicQuery').value='';renderGenres();load(true);};
+window.cfYTMusicLoadMore=function(){load(false,$('#cfYTMusicQuery').value.trim());};
+window.cfYTMusicPlay=play;
+window.cfYTMusicBack=()=>back(false);
+window.addEventListener('popstate',()=>{if($('#cfYTMusicPlayer')?.classList.contains('is-open'))back(true);});
 document.addEventListener('DOMContentLoaded',ensure);
 })();

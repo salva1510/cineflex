@@ -2,10 +2,9 @@
   const API_KEY='742aa17a327005b91fb6602054523286', BASE='https://api.themoviedb.org/3', IMG='https://image.tmdb.org/t/p/w500';
   const q=new URLSearchParams(location.search), id=q.get('id'), type=q.get('type')==='tv'?'tv':'movie';
   const SERVERS=[
-    {id:'zxc',name:'zxcstream',label:'Server 1',note:'Primary • Desktop compatible',movie:id=>`https://zxcstream.xyz/player/movie/${id}`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}`},
+    {id:'zxc',name:'zxcstream',label:'Server 1',note:'Primary',movie:id=>`https://zxcstream.xyz/player/movie/${id}`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}`},
     {id:'peach',name:'peachify.top',label:'Server 2',note:'Backup 1',movie:id=>`https://peachify.top/embed/movie/${id}`,tv:(id,s,e)=>`https://peachify.top/embed/tv/${id}/${s}/${e}`},
-    {id:'oneembed',name:'1embed.cc',label:'Server 3',note:'Backup 2',movie:id=>`https://1embed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://1embed.cc/embed/tv/${id}/${s}/${e}`},
-    {id:'vixsrc',name:'VixSrc',label:'Server 4',note:'Backup 3',movie:id=>`https://vixsrc.to/movie/${id}`,tv:(id,s,e)=>`https://vixsrc.to/tv/${id}/${s}/${e}`}
+    {id:'oneembed',name:'1embed.cc',label:'Server 3',note:'Backup 2',movie:id=>`https://1embed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://1embed.cc/embed/tv/${id}/${s}/${e}`}
   ];
   let season=Number(q.get('season')||1), episode=Number(q.get('episode')||1), isVip=false, adReady=false, adTimer=null;
   let currentServerIndex=Math.max(0,SERVERS.findIndex(x=>x.id===localStorage.getItem('cineflex_preferred_server'))), serverLoadTimer=null;
@@ -45,35 +44,46 @@
     }catch(e){$('overview').textContent='Unable to load title details right now.'}
   }
   async function loadEpisodes(){try{const d=await fetch(`${BASE}/tv/${id}/season/${season}?api_key=${API_KEY}`).then(x=>x.json());$('episodeGrid').innerHTML=(d.episodes||[]).map(e=>`<article class="episode-card" data-episode="${e.episode_number}"><img loading="lazy" src="${e.still_path?IMG+e.still_path:'icon-512.png'}"><div><h3>Episode ${e.episode_number}${e.name?' • '+e.name:''}</h3><p>${e.runtime?e.runtime+' min':'Play episode'}</p></div></article>`).join('');document.querySelectorAll('.episode-card').forEach(c=>c.onclick=()=>{episode=Number(c.dataset.episode);history.replaceState(null,'',`watch.html?id=${id}&type=tv&season=${season}&episode=${episode}`);loadPlayer();scrollTo({top:0,behavior:'smooth'})})}catch(e){$('episodeGrid').innerHTML='<p>Episodes unavailable.</p>'}}
+  async function lockLandscape(){
+    if(screen.orientation && typeof screen.orientation.lock==='function'){
+      try{await screen.orientation.lock('landscape')}catch(e){}
+    }
+  }
   async function enterFullscreenLandscape(){
-    const el=document.querySelector('.player-frame-wrap');
+    const el=frameWrap;
     if(!el)return;
+    frameWrap.classList.add('landscape-mode');
     try{
-      if(el.requestFullscreen) await el.requestFullscreen();
-      else if(el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-      else if(el.webkitEnterFullscreen && typeof el.webkitEnterFullscreen==='function') el.webkitEnterFullscreen();
-
-      if(screen.orientation && typeof screen.orientation.lock==='function'){
-        await screen.orientation.lock('landscape').catch(()=>{});
-      }
-      toast('Landscape fullscreen');
+      if(el.requestFullscreen) await el.requestFullscreen({navigationUI:'hide'});
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if(frame.webkitEnterFullscreen) frame.webkitEnterFullscreen();
+      await lockLandscape();
+      setTimeout(lockLandscape,250);
+      toast('Fullscreen landscape enabled');
     }catch(err){
+      frameWrap.classList.remove('landscape-mode');
       console.log('Fullscreen/landscape error:',err);
-      toast('Rotate your phone to landscape');
+      toast('Rotate the device to landscape');
     }
   }
   function unlockOrientationAfterFullscreen(){
     if(!document.fullscreenElement && !document.webkitFullscreenElement){
+      frameWrap.classList.remove('landscape-mode');
       if(screen.orientation && typeof screen.orientation.unlock==='function'){
         try{screen.orientation.unlock()}catch(e){}
       }
+    }else{
+      setTimeout(lockLandscape,100);
     }
   }
   document.addEventListener('fullscreenchange',unlockOrientationAfterFullscreen);
   document.addEventListener('webkitfullscreenchange',unlockOrientationAfterFullscreen);
+  window.addEventListener('orientationchange',()=>{
+    if(document.fullscreenElement||document.webkitFullscreenElement)setTimeout(lockLandscape,150);
+  });
 
   $('backBtn').onclick=()=>history.length>1?history.back():location.href='index.html';$('homeBtn').onclick=() => location.href='index.html';$('returnLogin').onclick=()=>location.href='index.html';$('reloadBtn').onclick=()=>{frame.src='';setTimeout(loadPlayer,100);toast('Player reloaded')};$('fullscreenBtn').onclick=enterFullscreenLandscape;$('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);toast('Watch link copied')}catch(e){toast('Copy unavailable')}};
-  $('openDirectBtn').onclick=()=>{const url=playerUrl();const win=window.open(url,'_blank','noopener,noreferrer');if(!win)toast('Allow pop-ups to open the player directly')};
+  $('openDirectBtn').onclick=()=>{const url=playerUrl();const win=window.open(url,'_blank','noopener,noreferrer');if(!win)toast('Allow pop-ups to open the player directly');else toast('Player opened in a new tab')};
   frame.addEventListener('load',()=>{if(frame.src==='about:blank')return;clearTimeout(serverLoadTimer);frameWrap.classList.remove('is-loading');$('serverNotice').hidden=true});
   $('nextServerBtn').onclick=()=>switchServer(currentServerIndex+1,true);
   renderServers();

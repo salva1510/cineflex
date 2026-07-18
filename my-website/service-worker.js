@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v28-working-servers-only";
+const CACHE_NAME = "cineflex-v29-stable-player-restart";
 
 const CORE_ASSETS = [
   "/",

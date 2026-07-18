@@ -324,86 +324,17 @@ function cfRenderPremiumDetails(details, credits, type) {
 }
 
 async function showDetails(item) {
-  currentItem = item;
-  window.currentItem = currentItem;
-  window.currentTVState = currentTVState;
-  const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
-  currentTVState.type = type;
-  activeServer = 1; 
-  updateServerTabsUI();
-
-  const modal = document.getElementById("details-modal");
-  const playerContainer = document.getElementById("modal-player-container");
-  const iframe = document.getElementById("modal-video-iframe");
-
-  if (playerContainer) playerContainer.style.display = "none";
-  if (iframe) iframe.src = "";
+  if (!item || !item.id) return;
   closeSearch();
-
-  try {
-    const [details, credits, recs] = await Promise.all([
-      fetch(`${BASE_URL}/${type}/${item.id}?api_key=${API_KEY}&append_to_response=${type === 'movie' ? 'release_dates' : 'content_ratings'}`).then(r => r.json()),
-      fetch(`${BASE_URL}/${type}/${item.id}/credits?api_key=${API_KEY}`).then(r => r.json()),
-      fetch(`${BASE_URL}/${type}/${item.id}/recommendations?api_key=${API_KEY}`).then(r => r.json())
-    ]);
-
-    document.getElementById("modal-title").innerText = item.title || item.name;
-    document.getElementById("modal-desc").innerText = item.overview || "";
-    const heroPath = details.backdrop_path || item.backdrop_path || details.poster_path || item.poster_path;
-    document.getElementById("modal-banner").style.backgroundImage = heroPath ? `linear-gradient(to top, #141414 0%, transparent 55%), url(https://image.tmdb.org/t/p/original${heroPath})` : 'none';
-    cfRenderPremiumDetails(details, credits, type);
-    
-    const recContainer = document.getElementById("modal-recommendations");
-    if (recContainer) {
-      recContainer.className = "modern-grid-container";
-      recContainer.innerHTML = recs.results.slice(0, 8).map(r => {
-        const releaseYear = r.release_date || r.first_air_date ? new Date(r.release_date || r.first_air_date).getFullYear() : "2026";
-        return `
-        <div class="modern-grid-item" tabindex="0" onclick='showDetails(${JSON.stringify(r).replace(/'/g, "&apos;")})'>
-            <div class="modern-thumb-wrapper">
-                <img src="${IMG_URL}${r.backdrop_path || r.poster_path}" class="modern-img" loading="lazy">
-            </div>
-            <div class="modern-meta-info">
-                <h4 class="modern-ep-title">${r.title || r.name}</h4>
-                <p class="modern-sub-text">${releaseYear} &nbsp;•&nbsp; Recommended</p>
-            </div>
-        </div>`;
-      }).join('');
-    }
-
-    const castContainer = document.getElementById("modal-cast");
-    if (castContainer) {
-      castContainer.innerHTML = credits.cast.slice(0, 8).map(c => `
-        <div class="cast-card">
-          <img src="${c.profile_path ? IMG_URL + c.profile_path : 'https://via.placeholder.com/100x150'}"><p>${c.name}</p>
-        </div>`).join('');
-    }
-
-    const epSelector = document.getElementById("episode-selector");
-    const movieBtn = document.getElementById("movie-play-action");
-
-    if (type === 'tv') {
-        if (epSelector) epSelector.style.display = "block";
-        if (movieBtn) movieBtn.style.display = "none";
-        setupSeasonSelector(details);
-    } else {
-        if (epSelector) epSelector.style.display = "none";
-        if (movieBtn) movieBtn.style.display = "block";
-    }
-
-    const wlBtn = document.getElementById("modal-watchlist-btn");
-    if (wlBtn) {
-        const isAdded = watchlist.some(i => i.id === item.id);
-        wlBtn.innerHTML = isAdded ? `<i class="fa-solid fa-check" style="color: #2ecc71;"></i> In My List` : `<i class="fa-solid fa-plus"></i> My List`;
-    }
-
-    if (modal) {
-      modal.style.display = "flex";
-      document.body.style.overflow = "hidden";
-      document.querySelector('.modal-content').scrollTo({ top: 0 });
-    }
-    if (window.cfLoadCommentsForCurrent) setTimeout(window.cfLoadCommentsForCurrent, 250);
-  } catch (err) { console.error("Details Error:", err); }
+  const type = (item.first_air_date || item.name || item.media_type === 'tv') ? 'tv' : 'movie';
+  const params = new URLSearchParams({
+    id: String(item.id),
+    type,
+    title: item.title || item.name || 'CineFlex'
+  });
+  if (item.backdrop_path) params.set('backdrop', item.backdrop_path);
+  if (item.poster_path) params.set('poster', item.poster_path);
+  window.location.href = `details.html?${params.toString()}`;
 }
 
 async function playTrailer() {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v24-premium-watch-auth-fix";
+const CACHE_NAME = "cineflex-v25-build31-details-page";
 
 const CORE_ASSETS = [
   "/",
@@ -44,7 +44,13 @@ const CORE_ASSETS = [
   "/js/modules/youtube-movies.js",
   "/css/modules/music-hub.css",
   "/js/modules/music-hub.js",
-  "/icon-512.png"
+  "/icon-512.png",
+  "/details.html",
+  "/details.css",
+  "/details.js",
+  "/watch.html",
+  "/watch.css",
+  "/watch.js"
 ];
 
 self.addEventListener("install", event => {

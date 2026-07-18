@@ -83,22 +83,10 @@
   }
 
   function cfLoadPlayPop(){
-    const key=cfPendingPopContentKey || cfGetPlayContentKey();
-    if(!key || key===cfLastPopContentKey) return false;
-
-    cfLastPopContentKey=key;
+    // Pop ads are controlled centrally in home.js:
+    // free members only, after five minutes, on their next screen touch.
     cfPendingPopContentKey='';
-
-    const old=document.getElementById('cineflex-play-pop-script');
-    if(old) old.remove();
-
-    const s=document.createElement('script');
-    s.id='cineflex-play-pop-script';
-    s.src='https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js?cf_content='+encodeURIComponent(key)+'&t='+Date.now();
-    s.async=true;
-    s.dataset.contentKey=key;
-    document.body.appendChild(s);
-    return true;
+    return false;
   }
 
   function hook(){ inject(); setupAutoHide(); const frame=$('modal-video-iframe'); frame?.addEventListener('load',()=>{ if(frame.src&&frame.src!=='about:blank'){cfLoadPlayPop();startSession();window.cf60ShowControls?.(2200);} }); const originalClose=window.closeModal; if(typeof originalClose==='function')window.closeModal=function(...a){stopSession(true);return originalClose.apply(this,a)}; const originalUpdate=window.updateVideoSource;if(typeof originalUpdate==='function')window.updateVideoSource=function(...a){stopSession(true);cfQueuePlayPop();const r=originalUpdate.apply(this,a);setStatus('Loading stream…');window.cf60ShowControls?.(2600);return r}; document.addEventListener('visibilitychange',()=>{if(document.hidden)saveProgress();}); window.addEventListener('beforeunload',()=>saveProgress()); }

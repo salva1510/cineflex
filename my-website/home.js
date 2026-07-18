@@ -567,49 +567,34 @@ function updateServerTabsUI() {
     }
 }
 
+function openPremiumWatchPage({ episode = 1 } = {}) {
+    if (!currentItem) return;
+    const type = currentTVState.type === 'tv' ? 'tv' : 'movie';
+    const title = currentItem.title || currentItem.name || 'CineFlex';
+    const params = new URLSearchParams({
+        id: String(currentItem.id),
+        type,
+        title,
+        season: String(currentTVState.season || 1),
+        episode: String(episode || currentTVState.currentEpNum || 1)
+    });
+    if (currentItem.backdrop_path) params.set('backdrop', currentItem.backdrop_path);
+    if (currentItem.poster_path) params.set('poster', currentItem.poster_path);
+    addToContinueWatching(currentItem);
+    window.location.href = `watch.html?${params.toString()}`;
+}
+
 function playSpecificEpisode(epNum, element) {
     requireLogin(() => {
-        document.querySelectorAll('.episode-item')
-            .forEach(el => el.classList.remove('active'));
-
         if (element) element.classList.add('active');
-
         currentTVState.currentEpNum = epNum;
         window.currentTVState = currentTVState;
-
-        // Show the pop-under only when this is a newly selected episode.
-        triggerPlayPopUnderForCurrentTitle();
-
-        const playerContainer = document.getElementById("modal-player-container");
-        if (playerContainer) playerContainer.style.display = "block";
-
-        updateVideoSource();
-
-        document.querySelector('.modal-content').scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-
-        addToContinueWatching(currentItem);
+        openPremiumWatchPage({ episode: epNum });
     });
 }
 
 function startPlayback() {
-    requireLogin(() => {
-        // Show the pop-under only when this is a newly selected movie or episode.
-        triggerPlayPopUnderForCurrentTitle();
-
-        const playerContainer = document.getElementById("modal-player-container");
-        if (playerContainer) playerContainer.style.display = "block";
-
-        updateVideoSource();
-        document.querySelector('.modal-content').scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-
-        addToContinueWatching(currentItem);
-    });
+    requireLogin(() => openPremiumWatchPage());
 }
 
 function displayCards(data, containerId) {

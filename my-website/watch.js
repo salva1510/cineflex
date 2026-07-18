@@ -2,11 +2,11 @@
   const API_KEY='742aa17a327005b91fb6602054523286', BASE='https://api.themoviedb.org/3', IMG='https://image.tmdb.org/t/p/w500';
   const q=new URLSearchParams(location.search), id=q.get('id'), type=q.get('type')==='tv'?'tv':'movie';
   const SERVERS=[
-    {id:'zxc',name:'zxcstream',label:'Server 1',note:'Primary',movie:id=>`https://zxcstream.xyz/player/movie/${id}?dubLang=tl&dubType=0`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}?dubLang=tl&dubType=0`},
+    {id:'zxc',name:'zxcstream',label:'Server 1',note:'Primary • Desktop compatible',movie:id=>`https://zxcstream.xyz/player/movie/${id}`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}`},
     {id:'peach',name:'peachify.top',label:'Server 2',note:'Backup 1',movie:id=>`https://peachify.top/embed/movie/${id}`,tv:(id,s,e)=>`https://peachify.top/embed/tv/${id}/${s}/${e}`},
     {id:'oneembed',name:'1embed.cc',label:'Server 3',note:'Backup 2',movie:id=>`https://1embed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://1embed.cc/embed/tv/${id}/${s}/${e}`},
-    {id:'embedsu',name:'embed.su',label:'Server 4',note:'Backup 3',movie:id=>`https://embed.su/embed/movie/${id}`,tv:(id,s,e)=>`https://embed.su/embed/tv/${id}/${s}/${e}`},
-    {id:'vidsrc',name:'VidSrc',label:'Server 5',note:'Backup 4',movie:id=>`https://vidsrc.to/embed/movie/${id}`,tv:(id,s,e)=>`https://vidsrc.to/embed/tv/${id}/${s}/${e}`}
+    {id:'autoembed',name:'AutoEmbed',label:'Server 4',note:'Backup 3',movie:id=>`https://autoembed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://autoembed.cc/embed/tv/${id}/${s}/${e}`},
+    {id:'vixsrc',name:'VixSrc',label:'Server 5',note:'Backup 4',movie:id=>`https://vixsrc.to/movie/${id}`,tv:(id,s,e)=>`https://vixsrc.to/tv/${id}/${s}/${e}`}
   ];
   let season=Number(q.get('season')||1), episode=Number(q.get('episode')||1), isVip=false, adReady=false, adTimer=null;
   let currentServerIndex=Math.max(0,SERVERS.findIndex(x=>x.id===localStorage.getItem('cineflex_preferred_server'))), serverLoadTimer=null;
@@ -26,7 +26,7 @@
   function loadPlayer(){
     clearTimeout(serverLoadTimer);$('serverNotice').hidden=true;frameWrap.classList.add('is-loading');frame.src='about:blank';
     setTimeout(()=>{frame.src=playerUrl()},70);
-    serverLoadTimer=setTimeout(()=>{$('serverNotice').hidden=false;frameWrap.classList.remove('is-loading')},9000);
+    serverLoadTimer=setTimeout(()=>{$('serverNotice').hidden=false;frameWrap.classList.remove('is-loading')},10000);
     $('episodeLabel').textContent=type==='tv'?`Season ${season} • Episode ${episode}`:'Movie';
   }
   function setAdTimer(){clearTimeout(adTimer);adReady=false;if(isVip)return;adTimer=setTimeout(()=>adReady=true,300000)}
@@ -47,6 +47,7 @@
   }
   async function loadEpisodes(){try{const d=await fetch(`${BASE}/tv/${id}/season/${season}?api_key=${API_KEY}`).then(x=>x.json());$('episodeGrid').innerHTML=(d.episodes||[]).map(e=>`<article class="episode-card" data-episode="${e.episode_number}"><img loading="lazy" src="${e.still_path?IMG+e.still_path:'icon-512.png'}"><div><h3>Episode ${e.episode_number}${e.name?' • '+e.name:''}</h3><p>${e.runtime?e.runtime+' min':'Play episode'}</p></div></article>`).join('');document.querySelectorAll('.episode-card').forEach(c=>c.onclick=()=>{episode=Number(c.dataset.episode);history.replaceState(null,'',`watch.html?id=${id}&type=tv&season=${season}&episode=${episode}`);loadPlayer();scrollTo({top:0,behavior:'smooth'})})}catch(e){$('episodeGrid').innerHTML='<p>Episodes unavailable.</p>'}}
   $('backBtn').onclick=()=>history.length>1?history.back():location.href='index.html';$('homeBtn').onclick=() => location.href='index.html';$('returnLogin').onclick=()=>location.href='index.html';$('reloadBtn').onclick=()=>{frame.src='';setTimeout(loadPlayer,100);toast('Player reloaded')};$('fullscreenBtn').onclick=()=>{const el=document.querySelector('.player-frame-wrap');(el.requestFullscreen||el.webkitRequestFullscreen)?.call(el)};$('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);toast('Watch link copied')}catch(e){toast('Copy unavailable')}};
+  $('openDirectBtn').onclick=()=>{const url=playerUrl();const win=window.open(url,'_blank','noopener,noreferrer');if(!win)toast('Allow pop-ups to open the player directly')};
   frame.addEventListener('load',()=>{if(frame.src==='about:blank')return;clearTimeout(serverLoadTimer);frameWrap.classList.remove('is-loading');$('serverNotice').hidden=true});
   $('nextServerBtn').onclick=()=>switchServer(currentServerIndex+1,true);
   renderServers();

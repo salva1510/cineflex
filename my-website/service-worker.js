@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v26-build40-multiserver";
+const CACHE_NAME = "cineflex-v27-landscape-fullscreen";
 
 const CORE_ASSETS = [
   "/",

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v25-build31-details-page";
+const CACHE_NAME = "cineflex-v26-build40-multiserver";
 
 const CORE_ASSETS = [
   "/",

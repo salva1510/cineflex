@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon-192.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="watch.css?v=2.1">
+  <link rel="stylesheet" href="watch.css?v=4.0">
 </head>
 <body>
   <div id="watchBackdrop" class="watch-backdrop"></div>
@@ -23,6 +23,17 @@
       <div class="player-head">
         <div><span class="eyebrow">NOW WATCHING</span><h1 id="watchTitle">Loading…</h1><p id="episodeLabel" class="episode-label"></p></div>
         <div class="live-pill"><span></span> CINEMA MODE</div>
+      </div>
+      <div class="server-panel" aria-label="Streaming servers">
+        <div class="server-panel-copy">
+          <span class="eyebrow">STREAMING SERVER</span>
+          <strong id="currentServerLabel">Server 1 • zxcstream</strong>
+        </div>
+        <div id="serverButtons" class="server-buttons"></div>
+      </div>
+      <div id="serverNotice" class="server-notice" hidden>
+        <span><i class="fa-solid fa-circle-exclamation"></i> Matagal mag-load ang server na ito.</span>
+        <button id="nextServerBtn" type="button">Try next server</button>
       </div>
       <div class="player-frame-wrap">
         <iframe id="watchFrame" title="CineFlex player" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; gyroscope; clipboard-write" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>
@@ -55,6 +66,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="firebase.js?v=3.1"></script>
-  <script src="watch.js?v=2.1"></script>
+  <script src="watch.js?v=4.0"></script>
 </body>
 </html>

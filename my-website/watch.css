@@ -6,3 +6,10 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+
+/* Build 4.0: premium multi-server switcher */
+.server-panel{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-top:1px solid var(--line);background:rgba(7,7,10,.88)}
+.server-panel-copy{display:grid;gap:5px;min-width:165px}.server-panel-copy strong{font-size:13px}
+.server-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.server-btn{border:1px solid var(--line);background:#17171c;color:#d7d7dc;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:800;cursor:pointer;transition:.2s}.server-btn:hover{border-color:rgba(255,255,255,.34);transform:translateY(-1px)}.server-btn.active{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 8px 24px rgba(229,9,20,.25)}.server-btn small{display:block;margin-top:2px;font-size:9px;font-weight:600;opacity:.75}.server-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 18px;background:#271d08;border-top:1px solid rgba(255,195,64,.22);color:#f2d28a;font-size:12px}.server-notice button{border:0;border-radius:9px;background:#f0c14b;color:#161000;padding:8px 11px;font-weight:800;cursor:pointer}.player-frame-wrap.is-loading:after{content:"Loading streaming server…";position:absolute;inset:auto 50% 18px auto;transform:translateX(50%);z-index:2;background:rgba(0,0,0,.72);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:11px;font-weight:800;pointer-events:none}
+@media(max-width:760px){.server-panel{align-items:flex-start;flex-direction:column;padding:12px}.server-buttons{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.server-btn{padding:10px 7px}.server-notice{align-items:flex-start;flex-direction:column}.server-notice button{width:100%}}

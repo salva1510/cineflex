@@ -1857,3 +1857,63 @@ body.cf-youtube-player-open .cf-logo-only-header{display:none!important}
   .navbar.cf-logo-only-header,.cf-logo-only-header{height:56px!important;min-height:56px!important}
   .cf-logo-only-header .cf-logo-button,.cf-logo-only-header .logo,.cf-logo-only-header .cf-logo-button img{height:56px!important}
 }
+
+/* CineFlex Build 23.4 — clean floating logo, no surrounding rectangle */
+.navbar.cf-logo-only-header,
+.cf-logo-only-header,
+.navbar.cf-logo-only-header.scrolled,
+.cf-logo-only-header.scrolled {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+.cf-logo-only-header .cf-logo-button,
+.cf-logo-only-header .logo {
+  pointer-events: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  overflow: visible !important;
+}
+
+.cf-logo-only-header .cf-logo-button::before,
+.cf-logo-only-header .cf-logo-button::after,
+.cf-logo-only-header .logo::before,
+.cf-logo-only-header .logo::after {
+  content: none !important;
+  display: none !important;
+}
+
+.cf-logo-only-header .cf-logo-button img,
+.cf-logo-only-header .logo img {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

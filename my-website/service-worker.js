@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v22-1.0.1-free-touch-ad-v1";
+const CACHE_NAME = "cineflex-v23-5-clean-header-final";
 
 const CORE_ASSETS = [
   "/",
@@ -39,6 +39,7 @@ const CORE_ASSETS = [
   "/js/modules/player-fullscreen-fix611.js",
   "/manifest.json",
   "/icon-192.png",
+  "/css/modules/clean-header-final.css",
   "/css/modules/youtube-movies.css",
   "/js/modules/youtube-movies.js",
   "/css/modules/music-hub.css",

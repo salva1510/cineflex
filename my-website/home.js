@@ -121,6 +121,9 @@ function triggerPopUnder() {
 // Triggers once for each newly selected movie or TV episode.
 let cineflexLastPlayAdKey = "";
 let cineflexPlayAdSequence = 0;
+const CINEFLEX_PLAY_AD_LAST_SHOWN_KEY = "cineflex_play_ad_last_shown";
+const CINEFLEX_FREE_PLAY_AD_COOLDOWN_MS = 30 * 60 * 1000;
+const CINEFLEX_VIP_PLAY_AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 function getCurrentPlayAdKey() {
   if (!currentItem || !currentItem.id) return "";
@@ -140,8 +143,18 @@ function triggerPlayPopUnderForCurrentTitle() {
     const playKey = getCurrentPlayAdKey();
     if (!playKey || playKey === cineflexLastPlayAdKey) return false;
 
-    // Reserve immediately so rapid double-taps do not create duplicate pop-unders.
+    const now = Date.now();
+    const lastShown = Number(localStorage.getItem(CINEFLEX_PLAY_AD_LAST_SHOWN_KEY) || 0);
+    const vip = !!window.CineFlexMembership?.isVip?.();
+    const cooldown = vip ? CINEFLEX_VIP_PLAY_AD_COOLDOWN_MS : CINEFLEX_FREE_PLAY_AD_COOLDOWN_MS;
+    if (lastShown && (now - lastShown) < cooldown) {
+      cineflexLastPlayAdKey = playKey;
+      return false;
+    }
+
+    // Minimal ads: free accounts see at most one play ad every 30 minutes; VIP at most once daily.
     cineflexLastPlayAdKey = playKey;
+    localStorage.setItem(CINEFLEX_PLAY_AD_LAST_SHOWN_KEY, String(now));
 
     const previous = document.getElementById("cineflex-play-ad-script");
     if (previous) previous.remove();

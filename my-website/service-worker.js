@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v23-5-clean-header-final";
+const CACHE_NAME = "cineflex-v24-premium-watch-auth-fix";
 
 const CORE_ASSETS = [
   "/",

@@ -17,7 +17,7 @@
         <button class="cf-vip-close" type="button" data-vip-close>×</button>
         <div class="cf-vip-crown">👑</div><p class="cf-vip-kicker">CINEFLEX MEMBERSHIP</p>
         <h2>Upgrade to VIP</h2><div class="cf-vip-price">₱${PRICE}<small>/month</small></div>
-        <ul><li>Unlimited watch time</li><li>No Add Time countdown</li><li>VIP badge</li><li>One pop ad may appear when starting a movie</li></ul>
+        <ul><li>Watch without time limits</li><li>Fewer ads while watching</li><li>VIP badge</li><li>Priority membership support</li></ul>
         <div class="cf-gcash-box"><span>Pay via GCash</span><strong>${GCASH}</strong><button id="cfCopyGcash" type="button">Copy number</button></div>
         <label class="cf-vip-label">GCash reference number<input id="cfVipReference" inputmode="numeric" maxlength="20" placeholder="Enter reference number"></label>
         <button id="cfSubmitVip" class="cf-vip-submit" type="button">Submit VIP Request</button>
@@ -50,7 +50,7 @@
     if(badge){badge.textContent=vip?'👑 PREMIUM MEMBER':'FREE MEMBER';badge.classList.toggle('cf-vip-badge',vip);}
     if(pb){pb.textContent=vip?'👑 PREMIUM VIP':'UPGRADE TO VIP';pb.classList.toggle('active',vip);}
     if($('cfMembershipPlan')) $('cfMembershipPlan').textContent=vip?'VIP Member':'Free Member';
-    if($('cfMembershipDetail')) $('cfMembershipDetail').textContent=vip?`Unlimited • valid until ${expiryLabel()}`:`₱${PRICE}/month • Unlimited watch time`;
+    if($('cfMembershipDetail')) $('cfMembershipDetail').textContent=vip?`VIP • fewer ads • valid until ${expiryLabel()}`:`Optional VIP • ₱${PRICE}/month • fewer ads`;
     if($('cfMembershipIcon')) $('cfMembershipIcon').className=vip?'fa-solid fa-crown':'fa-solid fa-gem';
     $('cfMembershipCard')?.classList.toggle('vip',vip);
     document.documentElement.classList.toggle('cf-user-vip',vip);

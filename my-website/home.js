@@ -85,99 +85,81 @@ function startAppWithSound() {
     }
 }
 
-// --- DOWNLOAD-ONLY POP-UNDER (MAX ONCE PER 24 HOURS) ---
-const CINEFLEX_AD_LAST_SHOWN_KEY = "cineflex_download_ad_last_shown";
-const CINEFLEX_AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+// --- FREE-MEMBER POP AD: AFTER 5 MINUTES, ON NEXT SCREEN TOUCH ---
+// VIP members never receive this pop ad.
+const CINEFLEX_FREE_TOUCH_AD_DELAY_MS = 5 * 60 * 1000;
+const CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY = "cineflex_free_touch_ad_armed_at";
+let cineflexFreeTouchAdSequence = 0;
 
-function triggerPopUnder() {
+function cineflexIsVipMember() {
+  return !!window.CineFlexMembership?.isVip?.();
+}
+
+function armFreeMemberTouchAd() {
   try {
-    const lastShown = Number(localStorage.getItem(CINEFLEX_AD_LAST_SHOWN_KEY) || 0);
-    const now = Date.now();
-
-    if (lastShown && (now - lastShown) < CINEFLEX_AD_COOLDOWN_MS) {
+    if (cineflexIsVipMember()) {
+      localStorage.removeItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY);
       return false;
     }
 
-    // Reserve the cooldown immediately to prevent duplicate injections from rapid taps.
-    localStorage.setItem(CINEFLEX_AD_LAST_SHOWN_KEY, String(now));
-
-    const existing = document.getElementById("cineflex-download-ad-script");
-    if (existing) return false;
-
-    const adScript = document.createElement("script");
-    adScript.id = "cineflex-download-ad-script";
-    adScript.src = "https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js";
-    adScript.type = "text/javascript";
-    adScript.async = true;
-    document.body.appendChild(adScript);
+    // Start a fresh five-minute waiting period when playback/download is requested.
+    localStorage.setItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY, String(Date.now()));
     return true;
-  } catch (e) {
-    console.log("Ad script blocked or failed:", e);
+  } catch (error) {
+    console.log("Unable to arm free-member ad:", error);
     return false;
   }
 }
 
-// --- PLAY MOVIE / EPISODE POP-UNDER ---
-// Triggers once for each newly selected movie or TV episode.
-let cineflexLastPlayAdKey = "";
-let cineflexPlayAdSequence = 0;
-const CINEFLEX_PLAY_AD_LAST_SHOWN_KEY = "cineflex_play_ad_last_shown";
-const CINEFLEX_FREE_PLAY_AD_COOLDOWN_MS = 30 * 60 * 1000;
-const CINEFLEX_VIP_PLAY_AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-
-function getCurrentPlayAdKey() {
-  if (!currentItem || !currentItem.id) return "";
-
-  const type = currentTVState?.type || currentItem.media_type || "movie";
-  if (type === "tv") {
-    const season = Number(currentTVState?.season || 1);
-    const episode = Number(currentTVState?.currentEpNum || currentTVState?.episode || 1);
-    return `tv:${currentItem.id}:s${season}:e${episode}`;
-  }
-
-  return `movie:${currentItem.id}`;
-}
-
-function triggerPlayPopUnderForCurrentTitle() {
+function showFreeMemberTouchAd() {
   try {
-    const playKey = getCurrentPlayAdKey();
-    if (!playKey || playKey === cineflexLastPlayAdKey) return false;
-
-    const now = Date.now();
-    const lastShown = Number(localStorage.getItem(CINEFLEX_PLAY_AD_LAST_SHOWN_KEY) || 0);
-    const vip = !!window.CineFlexMembership?.isVip?.();
-    const cooldown = vip ? CINEFLEX_VIP_PLAY_AD_COOLDOWN_MS : CINEFLEX_FREE_PLAY_AD_COOLDOWN_MS;
-    if (lastShown && (now - lastShown) < cooldown) {
-      cineflexLastPlayAdKey = playKey;
+    if (cineflexIsVipMember()) {
+      localStorage.removeItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY);
       return false;
     }
 
-    // Minimal ads: free accounts see at most one play ad every 30 minutes; VIP at most once daily.
-    cineflexLastPlayAdKey = playKey;
-    localStorage.setItem(CINEFLEX_PLAY_AD_LAST_SHOWN_KEY, String(now));
+    const armedAt = Number(localStorage.getItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY) || 0);
+    if (!armedAt || (Date.now() - armedAt) < CINEFLEX_FREE_TOUCH_AD_DELAY_MS) return false;
 
-    const previous = document.getElementById("cineflex-play-ad-script");
+    // Reset immediately so one touch cannot create duplicate pop ads.
+    localStorage.setItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY, String(Date.now()));
+
+    const previous = document.getElementById("cineflex-free-touch-ad-script");
     if (previous) previous.remove();
 
     const adScript = document.createElement("script");
-    adScript.id = "cineflex-play-ad-script";
-    adScript.src = `https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js?cf_play=${Date.now()}_${++cineflexPlayAdSequence}`;
+    adScript.id = "cineflex-free-touch-ad-script";
+    adScript.src = `https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js?cf_touch=${Date.now()}_${++cineflexFreeTouchAdSequence}`;
     adScript.type = "text/javascript";
     adScript.async = true;
+    document.body.appendChild(adScript);
 
-    const cleanup = () => {
-      window.setTimeout(() => {
-        if (adScript.isConnected) adScript.remove();
-      }, 1500);
-    };
+    const cleanup = () => window.setTimeout(() => adScript.remove(), 2000);
     adScript.addEventListener("load", cleanup, { once: true });
     adScript.addEventListener("error", cleanup, { once: true });
-    document.body.appendChild(adScript);
     return true;
   } catch (error) {
-    console.log("Play ad script blocked or failed:", error);
+    console.log("Free-member touch ad blocked or failed:", error);
     return false;
   }
+}
+
+// Capture the user's next real screen interaction after the five-minute delay.
+["pointerdown", "touchstart"].forEach((eventName) => {
+  document.addEventListener(eventName, showFreeMemberTouchAd, { capture: true, passive: true });
+});
+
+window.addEventListener("cineflex-membership-change", (event) => {
+  if (event?.detail?.vip) localStorage.removeItem(CINEFLEX_FREE_TOUCH_AD_ARMED_AT_KEY);
+});
+
+// Kept as compatibility wrappers for existing buttons/player calls.
+function triggerPopUnder() {
+  return armFreeMemberTouchAd();
+}
+
+function triggerPlayPopUnderForCurrentTitle() {
+  return armFreeMemberTouchAd();
 }
 
 async function enterCinemaMode() {

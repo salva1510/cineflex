@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v22-1.0.1";
+const CACHE_NAME = "cineflex-v22-1.0.1-free-touch-ad-v1";
 
 const CORE_ASSETS = [
   "/",

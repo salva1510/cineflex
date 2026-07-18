@@ -5,8 +5,7 @@
     {id:'zxc',name:'zxcstream',label:'Server 1',note:'Primary • Desktop compatible',movie:id=>`https://zxcstream.xyz/player/movie/${id}`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}`},
     {id:'peach',name:'peachify.top',label:'Server 2',note:'Backup 1',movie:id=>`https://peachify.top/embed/movie/${id}`,tv:(id,s,e)=>`https://peachify.top/embed/tv/${id}/${s}/${e}`},
     {id:'oneembed',name:'1embed.cc',label:'Server 3',note:'Backup 2',movie:id=>`https://1embed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://1embed.cc/embed/tv/${id}/${s}/${e}`},
-    {id:'autoembed',name:'AutoEmbed',label:'Server 4',note:'Backup 3',movie:id=>`https://autoembed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://autoembed.cc/embed/tv/${id}/${s}/${e}`},
-    {id:'vixsrc',name:'VixSrc',label:'Server 5',note:'Backup 4',movie:id=>`https://vixsrc.to/movie/${id}`,tv:(id,s,e)=>`https://vixsrc.to/tv/${id}/${s}/${e}`}
+    {id:'vixsrc',name:'VixSrc',label:'Server 4',note:'Backup 3',movie:id=>`https://vixsrc.to/movie/${id}`,tv:(id,s,e)=>`https://vixsrc.to/tv/${id}/${s}/${e}`}
   ];
   let season=Number(q.get('season')||1), episode=Number(q.get('episode')||1), isVip=false, adReady=false, adTimer=null;
   let currentServerIndex=Math.max(0,SERVERS.findIndex(x=>x.id===localStorage.getItem('cineflex_preferred_server'))), serverLoadTimer=null;

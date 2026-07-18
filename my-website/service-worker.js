@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v27-landscape-fullscreen";
+const CACHE_NAME = "cineflex-v28-working-servers-only";
 
 const CORE_ASSETS = [
   "/",

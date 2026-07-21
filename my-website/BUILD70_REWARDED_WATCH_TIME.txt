@@ -1,0 +1,18 @@
+CINEFLEX BUILD 7.0 — REWARDED WATCH TIME
+
+Included:
+- One-time initial 15-minute balance per signed-in user.
+- Countdown only while the embedded player is open, loaded, and the browser tab is visible.
+- Player is held when time reaches zero.
+- Rewarded video ad button adds 15 minutes only after Google's rewardedSlotGranted event.
+- Firebase balance sync with local fallback.
+- Google official sample rewarded ad unit is enabled for testing.
+
+LIVE ADS / EARNINGS:
+Open js/modules/watch-time.js and replace:
+/22639388115/rewarded_web_example
+with your own Google Ad Manager web REWARDED ad unit path.
+You need an approved/configured Google Ad Manager inventory and eligible demand. A sample/test unit shows a real test ad but earns no money.
+
+LIMITATION:
+Because Peachify is a cross-origin iframe, CineFlex cannot reliably read its internal play/pause state. The timer runs while the player iframe is open and the tab is visible, and stops when the modal/tab is closed or hidden.

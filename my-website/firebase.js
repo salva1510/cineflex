@@ -1,5 +1,5 @@
 // ===========================================
-// CINEFLEX FIREBASE ENGINE v6
+// CINEFLEX FIREBASE ENGINE v7
 // ===========================================
 
 // Firebase Config
@@ -50,7 +50,7 @@ let currentUser = null;
 
 window.cineflexAuthReady = false;
 window.cineflexRedirectChecked = false;
-window.currentUser = null;
+window.currentUser = auth.currentUser || null;
 
 function hasPendingGoogleRedirect() {
     const pending = localStorage.getItem("cineflex_google_redirect_pending") === "1";

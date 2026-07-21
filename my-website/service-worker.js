@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v241-guest-viewing";
+const CACHE_NAME = "cineflex-v242-desktop-auth-sync";
 
 const CORE_ASSETS = [
   "/",
@@ -80,7 +80,7 @@ self.addEventListener("fetch", event => {
 
   if (freshUI) {
     event.respondWith(
-      fetch(event.request).then(response => {
+      fetch(event.request, { cache: "no-store" }).then(response => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
         return response;

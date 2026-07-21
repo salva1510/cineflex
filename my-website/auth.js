@@ -476,7 +476,7 @@ window.addEventListener("cineflex-auth-error", function(e) {
     }
 });
 
-console.log("✅ Auth Engine Loaded v18 - Login Repair");
+console.log("✅ Auth Engine Loaded v19 - Desktop Session Sync");
 
 window.addEventListener("cineflex-auth-pending", function(){
     const name = document.getElementById("userName");
@@ -494,3 +494,66 @@ window.forgotPassword = forgotPassword;
 window.logout = logout;
 window.openLoginModal = openLoginModal;
 window.closeLoginModal = closeLoginModal;
+
+
+// ======================================
+// BUILD 242: DESKTOP AUTH SESSION/UI SYNC
+// Keeps the drawer account aligned with Firebase's real session even when
+// older modules or a delayed desktop cache render "Guest" after login.
+// ======================================
+(function installDesktopAuthSessionSync(){
+    const authObj = getCineflexAuth();
+    if (!authObj || window.__cineflexDesktopAuthSyncInstalled) return;
+    window.__cineflexDesktopAuthSyncInstalled = true;
+
+    function renderFirebaseUser(user) {
+        // Never trust a stale custom event over Firebase's actual currentUser.
+        const liveUser = authObj.currentUser || user || null;
+        window.currentUser = liveUser;
+
+        const photo = document.getElementById("userPhoto");
+        const name = document.getElementById("userName");
+        const email = document.getElementById("userEmail");
+        const badge = document.getElementById("userBadge");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const loginActions = document.getElementById("drawerLoginActions");
+        const accountActions = document.getElementById("drawerAccountActions");
+
+        if (liveUser) {
+            if (photo) photo.src = liveUser.photoURL || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(liveUser.displayName || liveUser.email || "User") + "&background=e50914&color=fff");
+            if (name) name.textContent = liveUser.displayName || liveUser.email?.split("@")[0] || "CineFlex User";
+            if (email) email.textContent = liveUser.email || "Logged in";
+            if (badge && !badge.classList.contains("cf-vip-badge")) badge.textContent = "CINEFLEX MEMBER";
+            if (logoutBtn) logoutBtn.style.display = "flex";
+            if (loginActions) loginActions.style.display = "none";
+            if (accountActions) accountActions.style.display = "block";
+            closeLoginModal();
+        } else if (window.cineflexAuthReady && !hasPendingGoogleRedirect()) {
+            if (photo) photo.src = "https://ui-avatars.com/api/?name=Guest&background=e50914&color=fff";
+            if (name) name.textContent = "Guest";
+            if (email) email.textContent = "Not logged in";
+            if (badge) badge.textContent = "FREE MEMBER";
+            if (logoutBtn) logoutBtn.style.display = "none";
+            if (loginActions) loginActions.style.display = "grid";
+            if (accountActions) accountActions.style.display = "none";
+        }
+    }
+
+    authObj.onAuthStateChanged(user => {
+        renderFirebaseUser(user);
+        // Reconcile again after profile/membership modules finish rendering.
+        setTimeout(() => renderFirebaseUser(authObj.currentUser), 250);
+        setTimeout(() => renderFirebaseUser(authObj.currentUser), 1200);
+    });
+
+    window.addEventListener("cineflex-login", event => {
+        renderFirebaseUser(authObj.currentUser || event.detail || null);
+        setTimeout(() => renderFirebaseUser(authObj.currentUser), 400);
+    });
+    window.addEventListener("cineflex-logout", () => renderFirebaseUser(null));
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) renderFirebaseUser(authObj.currentUser);
+    });
+    window.addEventListener("focus", () => renderFirebaseUser(authObj.currentUser));
+    window.addEventListener("pageshow", () => renderFirebaseUser(authObj.currentUser));
+})();

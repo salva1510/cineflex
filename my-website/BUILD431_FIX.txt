@@ -1,0 +1,14 @@
+CINEFLEX BUILD 4.3.1 — ADMIN ACCESS FIX
+
+Fixes:
+- Owner email and delegated Firestore roles can enter Admin Studio.
+- Refreshes Firebase user before checking email.
+- Shows the actual signed-in email when access is denied.
+- Cache-busting asset versions for installed PWA.
+
+Owner email: emviemsalva@gmail.com
+
+After upload:
+1. Clear site data or uninstall/reinstall the PWA.
+2. Sign in using the owner Google account.
+3. Open /admin.html.

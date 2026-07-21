@@ -1,0 +1,7 @@
+CINEFLEX BUILD 6.1.2
+
+- Server selector is hidden during playback.
+- Tap the Servers button to show or hide server choices.
+- Server selector closes automatically after switching/loading.
+- Smart Discovery / Picked from Your Taste now renders below Today’s Mode without overlap.
+- Mobile spacing and fullscreen behavior preserved.

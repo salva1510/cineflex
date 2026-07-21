@@ -1,0 +1,6 @@
+CineFlex Build 23.1
+- Header/logo container is edge-to-edge with zero outer padding and zero rounded side gaps.
+- Footer navigation is full width with six equal items, including All Movies.
+- Homepage online indicator and activity section removed; online count remains in menu drawer.
+- YouTube Movies overlays now hide the site header so the Close control is never blocked.
+- Back to Movies control remains visible and closes only the player, returning to the movie catalog.

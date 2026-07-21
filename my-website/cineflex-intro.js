@@ -23,9 +23,9 @@
       place-items: center;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 43%, rgba(0,229,255,.15), transparent 32%),
-        radial-gradient(circle at 70% 70%, rgba(100,55,255,.12), transparent 28%),
-        #02050b;
+        radial-gradient(circle at 50% 43%, rgba(229,9,20,.20), transparent 32%),
+        radial-gradient(circle at 70% 70%, rgba(255,45,55,.10), transparent 28%),
+        #050000;
       opacity: 1;
       transition: opacity .65s ease, visibility .65s ease;
       font-family: Arial, Helvetica, sans-serif;
@@ -43,8 +43,8 @@
       background: linear-gradient(
         115deg,
         transparent 42%,
-        rgba(102,245,255,.13) 48%,
-        rgba(102,245,255,.28) 50%,
+        rgba(255,70,75,.12) 48%,
+        rgba(255,20,35,.30) 50%,
         transparent 57%
       );
       transform: translateX(-70%);
@@ -67,8 +67,8 @@
       max-height: 70vh;
       object-fit: contain;
       filter:
-        drop-shadow(0 0 16px rgba(0,229,255,.42))
-        drop-shadow(0 0 45px rgba(0,119,255,.25));
+        drop-shadow(0 0 16px rgba(229,9,20,.52))
+        drop-shadow(0 0 45px rgba(160,0,10,.34));
       animation: cfPulse 1.5s ease-in-out 1.05s both;
     }
 
@@ -76,14 +76,14 @@
       width: 0;
       height: 2px;
       margin: 18px auto 0;
-      background: linear-gradient(90deg, transparent, #55f6ff, #6773ff, transparent);
-      box-shadow: 0 0 18px rgba(75,239,255,.8);
+      background: linear-gradient(90deg, transparent, #ff5560, #e50914, transparent);
+      box-shadow: 0 0 18px rgba(229,9,20,.85);
       animation: cfLine 1.05s ease 1.1s forwards;
     }
 
     #cineflexIntro .cf-label {
       margin-top: 14px;
-      color: rgba(222,249,255,.88);
+      color: rgba(255,235,235,.90);
       font-size: clamp(10px, 2.6vw, 14px);
       font-weight: 800;
       letter-spacing: .42em;
@@ -98,16 +98,16 @@
       bottom: max(34px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
       min-width: 190px;
-      border: 1px solid rgba(111,242,255,.36);
+      border: 1px solid rgba(255,65,75,.42);
       border-radius: 999px;
       padding: 13px 21px;
-      background: rgba(3,12,25,.72);
-      color: #eaffff;
+      background: rgba(15,0,2,.78);
+      color: #fff5f5;
       font: 800 12px/1 Arial, sans-serif;
       letter-spacing: .16em;
       text-transform: uppercase;
       backdrop-filter: blur(14px);
-      box-shadow: 0 0 30px rgba(0,217,255,.16);
+      box-shadow: 0 0 30px rgba(229,9,20,.22);
       opacity: 0;
       pointer-events: none;
       transition: opacity .25s ease;
@@ -123,9 +123,9 @@
     }
 
     @keyframes cfPulse {
-      0% { transform: scale(.96); filter: brightness(.7) drop-shadow(0 0 4px #00d9ff); }
-      45% { transform: scale(1.025); filter: brightness(1.28) drop-shadow(0 0 32px #00d9ff); }
-      100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(0,217,255,.55)); }
+      0% { transform: scale(.96); filter: brightness(.7) drop-shadow(0 0 4px #e50914); }
+      45% { transform: scale(1.025); filter: brightness(1.28) drop-shadow(0 0 32px #e50914); }
+      100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(229,9,20,.62)); }
     }
 
     @keyframes cfScan {
@@ -158,7 +158,7 @@
     <div class="cf-stage">
       <img class="cf-logo" src="${CONFIG.logo}" alt="CineFlex">
       <div class="cf-line"></div>
-      <div class="cf-label">Original Streaming Experience</div>
+      <div class="cf-label">CineFlex Streaming Experience</div>
     </div>
     <button class="cf-enter" type="button">Tap to enter CineFlex</button>
   `;

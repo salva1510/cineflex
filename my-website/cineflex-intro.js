@@ -5,7 +5,7 @@
   const CONFIG = {
     sound: "./cineflex-intro.mp3",
     logo: "./cineflex-logo.png",
-    duration: 3600,
+    duration: 2600,
     storageKey: "cineflex_intro_seen_session"
   };
 

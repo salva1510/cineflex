@@ -1,8 +1,0 @@
-CINEFLEX BUILD 22.2 — GLOBAL YOUTUBE MOVIES
-
-- Expanded YouTube Movies from Filipino-only to a global full-movie catalog.
-- Added genre categories: Action, Adventure, Animation, Comedy, Crime, Documentary, Drama, Family, Fantasy, Horror, Martial Arts, Romance, Sci-Fi, Thriller, War, and Western.
-- Added searches for English, Filipino, Korean, Japanese, Chinese, Hindi, Thai, Indonesian, Spanish, and French movies.
-- Keeps only public, embeddable, full-length YouTube videos.
-- Search supports movie title, actor, language, country, and channel.
-- API key remains a safe placeholder and must be replaced with a restricted key.

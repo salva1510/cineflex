@@ -1,4 +1,4 @@
-const CACHE_NAME = "cineflex-v29-stable-player-restart";
+const CACHE_NAME = "cineflex-v239-premium-intro";
 
 const CORE_ASSETS = [
   "/",

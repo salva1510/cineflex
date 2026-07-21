@@ -3,9 +3,9 @@
   "use strict";
 
   const CONFIG = {
-    sound: "./cineflex-intro.mp3",
+    sound: "./cineflex-intro.mp3?v=239",
     logo: "./cineflex-logo.png",
-    duration: 2600,
+    duration: 3200,
     storageKey: "cineflex_intro_seen_session"
   };
 
@@ -166,7 +166,7 @@
 
   const audio = new Audio(CONFIG.sound);
   audio.preload = "auto";
-  audio.volume = 0.9;
+  audio.volume = 1.0;
 
   let closing = false;
   let closeTimer = null;

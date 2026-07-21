@@ -1,0 +1,6 @@
+CINEFLEX DESKTOP ROW SCROLL FIX
+- Restored horizontal scrolling for all homepage movie sections on desktop.
+- Added left/right controls that appear when hovering a row.
+- Restored a slim horizontal scrollbar.
+- Mouse-wheel over a movie row now scrolls it horizontally.
+- Mobile swipe behavior and the full catalog grid remain unchanged.

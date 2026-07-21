@@ -5,8 +5,13 @@
 
 let pendingPlayback = null;
 
+function getCineflexAuth() {
+    return window.auth || (window.firebase && firebase.auth ? firebase.auth() : null);
+}
+
 function isLoggedIn() {
-    return auth.currentUser !== null;
+    const authService = getCineflexAuth();
+    return !!(authService && authService.currentUser);
 }
 
 function requireLogin(callback) {
@@ -49,88 +54,74 @@ function clearGoogleLoginPending() {
 }
 
 async function googleLogin() {
-
     const buttons = document.querySelectorAll('button[onclick="googleLogin()"], .drawer-auth-btn.google, #drawerGoogleLoginBtn, #googleLoginBtn');
     buttons.forEach(btn => {
         btn.disabled = true;
-        btn.dataset.oldText = btn.innerHTML;
+        if (!btn.dataset.oldText) btn.dataset.oldText = btn.innerHTML;
         btn.innerHTML = "Signing in...";
     });
 
     try {
-        if (!window.firebase || !window.auth) {
-            throw new Error("Firebase hindi pa loaded. I-refresh ang page at subukan ulit.");
+        const authService = getCineflexAuth();
+        if (!window.firebase || !authService) {
+            throw new Error("Firebase Authentication hindi pa loaded. I-refresh ang page at subukan ulit.");
         }
 
         const provider = window.googleProvider || new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({ prompt: "select_account" });
+        await authService.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        markGoogleLoginPending();
-
-        // IMPORTANT: Mas stable ito sa Android Chrome at normal browser.
-        // Redirect lang ang fallback kapag blocked ang popup/WebView.
         try {
-            const result = await auth.signInWithPopup(provider);
+            const result = await authService.signInWithPopup(provider);
             clearGoogleLoginPending();
-            const user = result && result.user ? result.user : auth.currentUser;
-            if (!user) throw new Error("Google login finished pero walang user session.");
+            const user = result && result.user ? result.user : authService.currentUser;
+            if (!user) throw new Error("Google login completed pero walang user session.");
             window.currentUser = user;
-            localStorage.setItem("cineflex_last_login_email", user.email || "google");
             window.dispatchEvent(new CustomEvent("cineflex-login", { detail: user }));
-            if (typeof closeLoginModal === "function") closeLoginModal();
-            if (typeof loadProfiles === "function") setTimeout(() => loadProfiles(), 200);
+            closeLoginModal();
             return user;
         } catch (popupErr) {
-            console.warn("Google popup failed:", popupErr);
-            const canRedirect = [
+            console.warn("Google popup login failed:", popupErr);
+            const redirectCodes = [
                 "auth/popup-blocked",
-                "auth/popup-closed-by-user",
                 "auth/cancelled-popup-request",
                 "auth/operation-not-supported-in-this-environment"
-            ].includes(popupErr.code) || isMobileDevice();
-
-            if (!canRedirect) throw popupErr;
-
-            // Fallback para sa mobile/PWA/WebView
+            ];
+            if (!redirectCodes.includes(popupErr.code)) throw popupErr;
+            markGoogleLoginPending();
             sessionStorage.setItem("cineflex_after_google_redirect", location.href);
-            await auth.signInWithRedirect(provider);
+            await authService.signInWithRedirect(provider);
             return null;
         }
-
     } catch (e) {
         console.error("Google login error:", e);
         clearGoogleLoginPending();
-
         let msg = e.message || "Google login failed.";
         if (e.code === "auth/unauthorized-domain") {
-            msg = "Hindi authorized ang domain sa Firebase. Idagdag sa Authentication > Settings > Authorized domains: cineflex.online at www.cineflex.online";
+            msg = "Hindi authorized ang website domain sa Firebase. Idagdag ang cineflex.online at www.cineflex.online sa Firebase Authentication > Settings > Authorized domains.";
         } else if (e.code === "auth/operation-not-allowed") {
-            msg = "Hindi pa naka-enable ang Google provider sa Firebase Authentication > Sign-in method.";
-        } else if (e.code === "auth/web-storage-unsupported") {
-            msg = "Blocked ang browser storage. Buksan sa Chrome normal tab, hindi incognito, at payagan cookies/storage.";
+            msg = "Hindi naka-enable ang Google provider sa Firebase Authentication > Sign-in method.";
+        } else if (e.code === "auth/network-request-failed") {
+            msg = "Hindi makakonekta sa Firebase. Suriin ang internet, ad blocker, DNS, o browser privacy settings.";
         } else if (e.code === "auth/popup-closed-by-user") {
-            msg = "Nasara ang Google login popup. Pindutin ulit ang Login with Google.";
+            msg = "Nasara ang Google login window bago matapos ang pag-sign in.";
         }
         alert(msg);
         return null;
-
     } finally {
         buttons.forEach(btn => {
             btn.disabled = false;
             if (btn.dataset.oldText) btn.innerHTML = btn.dataset.oldText;
         });
     }
-
 }
 
 async function emailLogin() {
-
-    const email =
-        document.getElementById("login-email").value.trim();
-
-    const password =
-        document.getElementById("login-password").value;
+    const emailInput = document.getElementById("login-email");
+    const passwordInput = document.getElementById("login-password");
+    if (!emailInput || !passwordInput) { openLoginModal(); return; }
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
     if (!email || !password) {
 
@@ -141,7 +132,13 @@ async function emailLogin() {
 
     try {
 
-        await auth.signInWithEmailAndPassword(email, password);
+        const authService = getCineflexAuth();
+        if (!authService) throw new Error("Firebase Authentication hindi pa loaded.");
+        await authService.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = await authService.signInWithEmailAndPassword(email, password);
+        window.currentUser = credential.user;
+        window.dispatchEvent(new CustomEvent("cineflex-login", { detail: credential.user }));
+        closeLoginModal();
 
     } catch (e) {
 
@@ -152,12 +149,11 @@ async function emailLogin() {
 }
 
 async function registerAccount() {
-
-    const email =
-        document.getElementById("login-email").value.trim();
-
-    const password =
-        document.getElementById("login-password").value;
+    const emailInput = document.getElementById("login-email");
+    const passwordInput = document.getElementById("login-password");
+    if (!emailInput || !passwordInput) { openLoginModal(); return; }
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
     if (!email || !password) {
 
@@ -168,7 +164,13 @@ async function registerAccount() {
 
     try {
 
-        await auth.createUserWithEmailAndPassword(email, password);
+        const authService = getCineflexAuth();
+        if (!authService) throw new Error("Firebase Authentication hindi pa loaded.");
+        await authService.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = await authService.createUserWithEmailAndPassword(email, password);
+        window.currentUser = credential.user;
+        window.dispatchEvent(new CustomEvent("cineflex-login", { detail: credential.user }));
+        closeLoginModal();
 
     } catch (e) {
 
@@ -192,7 +194,9 @@ async function forgotPassword() {
 
     try {
 
-        await auth.sendPasswordResetEmail(email);
+        const authService = getCineflexAuth();
+        if (!authService) throw new Error("Firebase Authentication hindi pa loaded.");
+        await authService.sendPasswordResetEmail(email);
 
         alert("Password reset email sent.");
 
@@ -206,7 +210,8 @@ async function forgotPassword() {
 
 async function logout() {
 
-    await auth.signOut();
+    const authService = getCineflexAuth();
+    if (authService) await authService.signOut();
 
 }
 
@@ -364,7 +369,8 @@ function closeLoginModal() {
 // AUTH STATE
 // ======================================
 
-auth.onAuthStateChanged(async (user) => {
+const authServiceForUI = getCineflexAuth();
+if (authServiceForUI) authServiceForUI.onAuthStateChanged(async (user) => {
 
     const photo =
         document.getElementById("userPhoto");
@@ -470,7 +476,7 @@ window.addEventListener("cineflex-auth-error", function(e) {
     }
 });
 
-console.log("✅ Auth Engine Loaded v17");
+console.log("✅ Auth Engine Loaded v18 - Login Repair");
 
 window.addEventListener("cineflex-auth-pending", function(){
     const name = document.getElementById("userName");
@@ -480,3 +486,11 @@ window.addEventListener("cineflex-auth-pending", function(){
     if (email) email.innerText = "Google session loading";
     if (badge) badge.innerText = "PLEASE WAIT";
 });
+
+window.googleLogin = googleLogin;
+window.emailLogin = emailLogin;
+window.registerAccount = registerAccount;
+window.forgotPassword = forgotPassword;
+window.logout = logout;
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;

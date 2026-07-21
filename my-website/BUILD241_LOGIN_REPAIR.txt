@@ -1,0 +1,8 @@
+CINEFLEX BUILD 241 - LOGIN REPAIR
+
+- Auth script now loads immediately after Firebase.
+- Repaired Email/Password login and account registration.
+- Repaired Google popup login with redirect fallback.
+- Added Firebase readiness and null checks.
+- Added clearer Firebase error messages.
+- Guest viewing remains enabled; account-only history remains unchanged.

@@ -1,0 +1,12 @@
+CINEFLEX BUILD 242 — DESKTOP EMAIL & GOOGLE LOGIN FIX
+
+Fixes included:
+- Firebase session is now the single source of truth for Guest/Member UI.
+- Added delayed UI reconciliation after desktop popup login and profile/membership rendering.
+- Added focus, pageshow, and visibility session refresh for PC browsers.
+- Prevented firebase.js from blindly resetting window.currentUser during startup.
+- Bumped auth/firebase/home/profile asset versions to defeat stale desktop cache.
+- Bumped service-worker cache to cineflex-v242-desktop-auth-sync.
+- Critical JS/CSS/HTML requests now use network-first with no-store fetch before offline fallback.
+
+Deploy the full my-website folder. On first desktop visit after deployment, refresh once so the new service worker activates.

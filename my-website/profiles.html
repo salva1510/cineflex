@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CineFlex Profiles</title>
+<link rel="stylesheet" href="profiles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+<div id="profile-selector" class="profile-selector">
+  <div class="profile-aurora"></div>
+  <div class="profile-box">
+    <div class="profile-brand">CINEFLEX</div>
+    <h1>Who's Watching?</h1>
+    <p class="profile-subtitle">Piliin ang profile mo o gumawa ng bagong profile.</p>
+    <div id="profiles" class="profiles"></div>
+    <div class="profile-actions">
+      <button class="cf-profile-btn ghost" onclick="toggleManageProfiles()"><i class="fa-solid fa-pen"></i> Manage Profiles</button>
+      <button class="cf-profile-btn" onclick="createProfile()"><i class="fa-solid fa-plus"></i> Add Profile</button>
+    </div>
+  </div>
+</div>
+
+<div id="addProfileModal" class="profile-modal hidden" aria-hidden="true">
+  <div class="profile-modal-content">
+    <button class="modal-x" onclick="closeAddProfile()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-kicker">CINEFLEX PROFILE</div>
+    <h2 id="profileModalTitle">Add Profile</h2>
+    <p class="modal-copy">Gumawa ng profile na parang Netflix: sariling avatar, kids mode, watchlist at continue watching.</p>
+
+    <div class="profile-editor-row">
+      <div class="selected-avatar-wrap">
+        <img id="selectedAvatarPreview" class="selected-avatar" alt="Selected avatar">
+        <span id="kidsBadgePreview" class="kids-badge-preview hidden">KIDS</span>
+      </div>
+      <div class="profile-fields">
+        <input type="text" id="newProfileName" placeholder="Profile name" maxlength="20" autocomplete="off">
+        <label class="kids-option">
+          <input type="checkbox" id="kidsProfile">
+          <span>Kids Profile</span>
+        </label>
+        <label class="kids-option">
+          <input type="checkbox" id="defaultProfile">
+          <span>Default Profile</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="avatar-title">Choose avatar</div>
+    <div id="avatarPicker" class="avatar-picker"></div>
+
+    <div class="modal-buttons">
+      <button class="cf-profile-btn ghost" onclick="closeAddProfile()">Cancel</button>
+      <button class="cf-profile-btn" onclick="saveProfile()" id="saveProfileBtn">Create Profile</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js?v=8.0.250"></script>
+<script src="profiles.js?v=16.0.250"></script>
+</body>
+</html>

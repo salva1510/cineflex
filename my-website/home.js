@@ -35,8 +35,21 @@ let currentTVState = { season: 1, episode: 1, currentEpNum: 1, type: 'movie' };
 let activeServer = 1;
 
 // --- LOCAL STORAGE DATA STORES ---
-let continueWatching = JSON.parse(localStorage.getItem("cineflex_recent")) || [];
-let watchlist = JSON.parse(localStorage.getItem("cineflex_watchlist")) || [];
+let continueWatching = [];
+let watchlist = [];
+
+function cineflexSignedIn() {
+  try { return !!(window.auth && window.auth.currentUser); }
+  catch (e) { return false; }
+}
+
+function guestSaveNotice(feature = 'progress') {
+  const message = feature === 'list'
+    ? 'Mag-login para magamit at ma-save ang My List.'
+    : 'Guest viewing: makakapanood ka, pero mag-login para ma-save ang Continue Watching at history.';
+  if (typeof showToast === 'function') showToast(message);
+  else alert(message);
+}
 
 let touchStartX = 0;
 let touchEndX = 0;
@@ -360,6 +373,11 @@ async function playTrailer() {
 
 function toggleWatchlist() {
     if (!currentItem) return;
+    if (!cineflexSignedIn()) {
+        guestSaveNotice('list');
+        if (typeof openLoginModal === 'function') openLoginModal();
+        return;
+    }
     const index = watchlist.findIndex(i => i.id === currentItem.id);
     const wlBtn = document.getElementById("modal-watchlist-btn");
 
@@ -376,6 +394,11 @@ function toggleWatchlist() {
 
 function viewWatchlist() {
     closeMenuDrawer();
+    if (!cineflexSignedIn()) {
+      guestSaveNotice('list');
+      if (typeof openLoginModal === 'function') openLoginModal();
+      return;
+    }
     const font = document.getElementById("search-results");
     const overlay = document.getElementById("search-overlay");
     if (!font || !overlay) return;
@@ -511,21 +534,19 @@ function openPremiumWatchPage({ episode = 1 } = {}) {
     });
     if (currentItem.backdrop_path) params.set('backdrop', currentItem.backdrop_path);
     if (currentItem.poster_path) params.set('poster', currentItem.poster_path);
-    addToContinueWatching(currentItem);
+    if (cineflexSignedIn()) addToContinueWatching(currentItem);
     window.location.href = `watch.html?${params.toString()}`;
 }
 
 function playSpecificEpisode(epNum, element) {
-    requireLogin(() => {
-        if (element) element.classList.add('active');
-        currentTVState.currentEpNum = epNum;
-        window.currentTVState = currentTVState;
-        openPremiumWatchPage({ episode: epNum });
-    });
+    if (element) element.classList.add('active');
+    currentTVState.currentEpNum = epNum;
+    window.currentTVState = currentTVState;
+    openPremiumWatchPage({ episode: epNum });
 }
 
 function startPlayback() {
-    requireLogin(() => openPremiumWatchPage());
+    openPremiumWatchPage();
 }
 
 function displayCards(data, containerId) {
@@ -614,6 +635,7 @@ function openSearch() { document.getElementById("search-overlay").style.display 
 function closeSearch() { document.getElementById("search-overlay").style.display = "none"; currentViewAllUrl = ""; }
 
 function addToContinueWatching(item) {
+  if (!cineflexSignedIn()) return;
   continueWatching = continueWatching.filter(i => i.id !== item.id);
   continueWatching.unshift(item);
   if (continueWatching.length > 10) continueWatching.pop();
@@ -624,10 +646,13 @@ function addToContinueWatching(item) {
 
 function updateContinueUI() {
   const section = document.getElementById("continue-watching-section");
-  if(continueWatching.length > 0 && section) {
-    section.style.display = "block";
-    displayCards(continueWatching, "continue-list");
+  if (!section) return;
+  if (!cineflexSignedIn() || continueWatching.length === 0) {
+    section.style.display = "none";
+    return;
   }
+  section.style.display = "block";
+  displayCards(continueWatching, "continue-list");
 }
 
 async function viewAll(containerId) {
@@ -1878,3 +1903,23 @@ function cfScrollTop10(direction) {
   const amount = Math.max(320, Math.round(row.clientWidth * 0.78));
   row.scrollBy({ left: direction * amount, behavior: 'smooth' });
 }
+
+
+// BUILD 240: Guests can watch, but private viewing data is account-only.
+(function initGuestViewingPrivacy(){
+  function applyUserState(user){
+    if (!user) {
+      watchlist = [];
+      continueWatching = [];
+      updateContinueUI();
+    }
+  }
+  if (window.auth && typeof window.auth.onAuthStateChanged === 'function') {
+    window.auth.onAuthStateChanged(applyUserState);
+  } else {
+    window.addEventListener('load', () => {
+      if (window.auth && typeof window.auth.onAuthStateChanged === 'function') window.auth.onAuthStateChanged(applyUserState);
+      else applyUserState(null);
+    }, { once:true });
+  }
+})();

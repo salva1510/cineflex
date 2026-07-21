@@ -114,9 +114,10 @@
     clearTimeout(authFallback);
 
     if (!user) {
-      frame.src = '';
-      showAuthGuard(true);
-      $('planBadge').textContent = 'LOGIN REQUIRED';
+      showAuthGuard(false);
+      $('planBadge').textContent = 'GUEST • PROGRESS NOT SAVED';
+      loadPlayer();
+      toast('Guest mode: mag-login para ma-save ang progress at history');
       return;
     }
 

@@ -1,0 +1,9 @@
+CineFlex Build 250.8 — Premium UX
+
+- Premium hover/tap movie cards with rating, metadata and actions
+- Enhanced movie details presentation
+- Active footer navigation glow
+- Cleaned drawer quick links; removed dead homepage targets
+- Added YT Movies and YT Music quick access in drawer
+- Async image decoding and smoother poster transitions
+- Preserved login, VIP, player, pop-ad and footer destinations

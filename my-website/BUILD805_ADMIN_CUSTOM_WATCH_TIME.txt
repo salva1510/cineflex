@@ -1,0 +1,19 @@
+CINEFLEX BUILD 8.0.5 — ADMIN CUSTOM WATCH TIME
+
+ADDED:
+- New Watch Time menu in Admin Studio
+- Search/select user by email, name, or UID
+- Add custom hours and minutes
+- Set exact remaining watch time
+- Reset watch time to 0
+- Current balance display
+- Audit log entry for every adjustment
+
+IMPORTANT:
+1. Upload/replace all files from this package.
+2. Publish the included firestore.rules in Firebase Console.
+3. Clear site cache or reinstall/update the PWA if the old Admin Studio remains cached.
+
+Firestore path used:
+users/{uid}/watchTime/balance
+Field: remainingSeconds

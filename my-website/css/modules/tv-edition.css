@@ -1,0 +1,107 @@
+/* CineFlex TV Edition v1.0 */
+html.cf-tv-mode {
+  --cf-tv-safe-x: clamp(42px, 4vw, 86px);
+  --cf-tv-safe-y: clamp(28px, 3vh, 58px);
+  font-size: clamp(16px, 1.05vw, 22px);
+  scroll-behavior: smooth;
+}
+html.cf-tv-mode body {
+  overscroll-behavior: none;
+  padding-bottom: 0 !important;
+  cursor: none;
+}
+html.cf-tv-mode .navbar {
+  height: 82px;
+  padding: 18px var(--cf-tv-safe-x);
+  background: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.18), transparent) !important;
+}
+html.cf-tv-mode .logo { font-size: clamp(2rem, 2.35vw, 3rem); }
+html.cf-tv-mode .bottom-nav { display: none !important; }
+html.cf-tv-mode .banner {
+  min-height: 82vh !important;
+  height: 82vh !important;
+  padding: 0 var(--cf-tv-safe-x) clamp(66px, 8vh, 120px) !important;
+  background-position: center 20% !important;
+}
+html.cf-tv-mode .banner-content { max-width: min(780px, 58vw) !important; }
+html.cf-tv-mode .banner-content h1 {
+  font-size: clamp(3.6rem, 6.4vw, 7.8rem) !important;
+  line-height: .94;
+  margin-bottom: 22px;
+}
+html.cf-tv-mode .cf-hero-metrics { gap: 12px; font-size: 1rem; }
+html.cf-tv-mode .play-btn {
+  min-height: 58px;
+  padding: 0 34px;
+  font-size: 1.25rem;
+  border-radius: 10px;
+}
+html.cf-tv-mode .content,
+html.cf-tv-mode .genre-wrapper { padding-left: var(--cf-tv-safe-x); padding-right: var(--cf-tv-safe-x); }
+html.cf-tv-mode .row { margin-bottom: clamp(42px, 5vh, 74px); }
+html.cf-tv-mode .row h2 { font-size: clamp(1.55rem, 1.8vw, 2.25rem); margin-bottom: 18px; }
+html.cf-tv-mode .scroller { gap: clamp(18px, 1.5vw, 30px); padding: 24px 8px 34px; overflow-y: visible; }
+html.cf-tv-mode .card,
+html.cf-tv-mode .dramabox-card {
+  --card-w: clamp(190px, 14vw, 280px);
+  --card-h: calc(var(--card-w) * 1.5);
+  border-radius: 14px;
+}
+html.cf-tv-mode .netflix-item-container { min-width: clamp(250px, 20vw, 390px); }
+html.cf-tv-mode .search-card,
+html.cf-tv-mode .cf-smart-card,
+html.cf-tv-mode .cf-top10-card,
+html.cf-tv-mode .cf51-because-card,
+html.cf-tv-mode .cf-catalog-card { border-radius: 14px; }
+html.cf-tv-mode .menu-drawer {
+  width: min(560px, 42vw);
+  padding: 34px 38px;
+  font-size: 1.08rem;
+}
+html.cf-tv-mode .drawer-item,
+html.cf-tv-mode .drawer-auth-btn,
+html.cf-tv-mode .drawer-add-profile,
+html.cf-tv-mode .cf-drawer-install { min-height: 56px; }
+html.cf-tv-mode .modal-content { max-width: min(1100px, 82vw); max-height: 88vh; }
+html.cf-tv-mode .modal-banner { height: min(48vh, 520px); }
+html.cf-tv-mode .modal-body { padding: 38px 44px; }
+html.cf-tv-mode .search-overlay { padding: 110px var(--cf-tv-safe-x) 60px; }
+html.cf-tv-mode .search-input-wrapper { max-width: 1050px; min-height: 66px; }
+html.cf-tv-mode .search-results-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 28px; }
+
+/* Strong, consistent focus ring for D-pad navigation. */
+html.cf-tv-mode .cf-tv-focus,
+html.cf-tv-mode :focus-visible {
+  outline: 4px solid #fff !important;
+  outline-offset: 5px !important;
+  box-shadow: 0 0 0 8px rgba(229,9,20,.82), 0 18px 50px rgba(0,0,0,.78) !important;
+  transform: scale(1.075) translateY(-5px) !important;
+  z-index: 999 !important;
+  transition: transform .16s ease, box-shadow .16s ease, outline-color .16s ease !important;
+}
+html.cf-tv-mode button.cf-tv-focus,
+html.cf-tv-mode a.cf-tv-focus,
+html.cf-tv-mode .drawer-item.cf-tv-focus { transform: scale(1.045) !important; }
+html.cf-tv-mode .cf-tv-focus img { filter: brightness(1.08); }
+html.cf-tv-mode .cf-tv-toast {
+  position: fixed;
+  right: var(--cf-tv-safe-x);
+  top: 96px;
+  z-index: 30000;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(10,10,10,.86);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff;
+  font-weight: 800;
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: .2s ease;
+  pointer-events: none;
+}
+html.cf-tv-mode .cf-tv-toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1100px) {
+  html.cf-tv-mode .search-results-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

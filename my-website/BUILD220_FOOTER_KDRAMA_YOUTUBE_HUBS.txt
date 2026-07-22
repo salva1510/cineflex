@@ -1,0 +1,7 @@
+CineFlex Build 22.0
+- Restored K-Drama Tagalog Dub hub
+- Removed Live TV from footer and menu drawer
+- Removed Add Time from footer
+- Added K-Drama, YouTube Music, and YouTube Movies to footer
+- Expanded YouTube Movies discovery using multiple YouTube Data API searches
+- Only public, embeddable, long-form videos are shown

@@ -1,0 +1,9 @@
+CINEFLEX BUILD 3.1 — PREMIUM DETAILS PAGE
+
+- Poster and banner clicks now open details.html.
+- Premium cinematic hero with title metadata and overview.
+- Play Now routes to the dedicated watch page.
+- Trailer modal, My List, cast, facts, episodes, and recommendations included.
+- TV episodes can launch directly into the selected episode on watch.html.
+- Existing login gate, VIP behavior, and free-member 5-minute touch ad remain on watch.html.
+- Service-worker cache upgraded to v25.

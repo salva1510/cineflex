@@ -1,0 +1,12 @@
+CINEFLEX BUILD 8.1 — CLEAN BANNER LAYOUT
+
+Changes:
+- Moved hero title, description, and buttons lower.
+- Reduced the text footprint so the banner artwork remains visible.
+- Replaced the heavy full-height overlay with a softer bottom gradient.
+- Improved mobile title sizing and spacing.
+- Repositioned hero controls to avoid overlap.
+- Bumped hero assets and service-worker cache.
+
+Upload/replace the complete my-website folder, then hard refresh.
+For an installed PWA, close and reopen it after deployment.

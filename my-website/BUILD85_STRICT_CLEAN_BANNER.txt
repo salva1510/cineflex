@@ -1,0 +1,7 @@
+CINEFLEX BUILD 8.5 — STRICT CLEAN BANNER
+
+Changes:
+- Banner now shows only the movie/series title and Watch Now button.
+- Removed description, premium label, metadata, Details button, My List, arrows, dots, and progress bar from the poster.
+- Clicking the poster or Watch Now opens the existing full-details modal.
+- Updated hero asset versions and service-worker cache name so the new layout refreshes correctly.

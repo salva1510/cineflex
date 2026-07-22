@@ -1,7 +1,0 @@
-CINEFLEX BUILD 23.5
-
-- Added a final stylesheet loaded after all UI modules.
-- Removed the initial/top-of-page header glass rectangle and padding.
-- Forced both normal and .scrolled header states to stay transparent and edge-aligned.
-- Preserved logo click/touch while the empty header area does not block the banner.
-- Bumped the service worker cache so the correction replaces older cached CSS.

@@ -1,8 +1,0 @@
-CINEFLEX BUILD 239 — LOUD CINEMATIC INTRO
-
-- Replaced the quiet startup audio with a new original 3-second CineFlex signature sound.
-- Added stronger deep-bass impacts, rising whoosh, stereo width, and cinematic tail.
-- Increased playback volume to 100%.
-- Added cache-busting to force installed PWA/browser to load the new sound.
-- Updated service-worker cache version to remove the old cached intro.
-- Extended intro timing to match the new audio.

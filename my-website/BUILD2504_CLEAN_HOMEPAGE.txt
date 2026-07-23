@@ -1,0 +1,18 @@
+CineFlex Build 250.4 LTS - Clean Homepage
+
+Homepage sections retained:
+- Top 10 Today
+- Vivamax
+- Korean Dramas
+
+Footer navigation retained unchanged:
+- Home
+- Search
+- All Movies
+- YT Music
+- YT Movies
+- Menu
+
+Performance:
+- Removed homepage requests for Netflix Movies, Kids & Family, and Horror rows.
+- Reduced initial TMDB homepage requests from six to three.

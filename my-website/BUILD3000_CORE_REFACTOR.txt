@@ -1,0 +1,10 @@
+CINEFLEX BUILD 300.0 — CORE REFACTOR
+
+- Added a guarded single Firebase app instance shared by all active pages.
+- Added a guarded one-time authentication bootstrap and auth-ready Promise.
+- Updated Service Worker cache namespaces to Build 300.
+- Added central build metadata for diagnostics and future migrations.
+- Added optional admin-only Developer Mode (?debug=1).
+- Developer Mode shows build, auth, online status, FPS, request count, memory, and cache version.
+- Normal viewers do not load a visible diagnostics panel.
+- Preserved homepage, player, footer navigation, VIP, Google/Email login, and Play pop-ad behavior.

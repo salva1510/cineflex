@@ -1,0 +1,14 @@
+CINEFLEX BUILD 250 LTS — FOUNDATION RELEASE 1
+
+Implemented:
+- Firebase.js is the single core source of authentication state.
+- Added cineflex-auth-state event for dependent UI modules.
+- Removed redundant core auth listeners from auth.js, home.js, and profiles.js.
+- Desktop focus/pageshow reconciliation now reads Firebase currentUser without adding another listener.
+- Updated cache/version identifiers to Build 250.
+- Existing player, ads, membership, and content modules were preserved to minimize regressions.
+
+Deployment:
+1. Upload the full my-website folder.
+2. Open the site once and use Ctrl+F5 on desktop.
+3. Test Email login, Google login, logout, refresh, and tab restore.

@@ -1,0 +1,21 @@
+CINEFLEX BUILD 7.2.1 — ADS ONLY AFTER FREE WATCH TIME
+
+FIXES
+- Removed the hardcoded Monetag MultiTag script from index.html.
+- Monetag is not initialized during page load or during the free 15-minute period.
+- Reaching 0:00 only pauses the stream and opens the Add Watch Time modal.
+- Monetag loads only after the signed-in user taps “Support CineFlex • +15 Minutes.”
+- Removed the old bundled Monetag push worker sw.js.
+- Added startup cleanup for stale third-party Monetag service-worker registrations left by older builds.
+- Updated the CineFlex service-worker cache name and watch-time asset versions.
+
+EXPECTED FLOW
+1. User watches for the initial 15 minutes with no Monetag script loaded.
+2. At 0:00, playback is held and the support modal appears.
+3. No sponsor ad is initialized until the user taps Support CineFlex.
+4. After the tap, MultiTag may display an ad according to Monetag rules.
+5. The visible 20-second CineFlex countdown runs while the tab is active.
+6. CineFlex adds 15 minutes and resumes the held stream.
+
+IMPORTANT
+After upload, clear site data or uninstall/reinstall the PWA once so old cached HTML and prior worker registrations are removed.

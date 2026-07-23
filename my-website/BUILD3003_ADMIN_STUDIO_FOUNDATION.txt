@@ -1,0 +1,11 @@
+CINEFLEX BUILD 300.3 — ADMIN STUDIO 2.0 FOUNDATION
+
+- Added Server Health Monitor for configured player domains
+- Added browser response timing and reachability states
+- Added System & Cache diagnostics
+- Added service-worker update check
+- Added safe CineFlex cache clearing control
+- Preserved User Moderation, Watch Time, VIP Manager, Admin Roles and Audit Logs
+- Updated service-worker cache to cineflex-v300-admin-3
+
+Note: Browser health checks cannot confirm that every title exists or plays on a third-party iframe provider.

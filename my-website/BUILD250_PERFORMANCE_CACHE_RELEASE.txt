@@ -1,0 +1,11 @@
+CINEFLEX BUILD 250.1 LTS — PERFORMANCE & CACHE RELEASE
+
+- Reduced service-worker install payload to essential app files only.
+- Optional hubs/modules are now cached only after actual use.
+- Network-first strategy for HTML, JavaScript, and CSS prevents stale desktop UI.
+- Stale-while-revalidate cache for posters, logos, fonts, and intro audio.
+- TMDB poster caching added without intercepting TMDB API requests.
+- Service-worker updates bypass browser HTTP cache and activate safely.
+- Added connection hints for TMDB API, poster CDN, and Firebase CDN.
+- Updated core asset versions to 250.1.
+- Existing player, ads, VIP, Live TV, YouTube Movies, and Music behavior retained.

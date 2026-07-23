@@ -1,0 +1,8 @@
+CINEFLEX BUILD 236 — PREMIUM DEDICATED WATCH PAGE
+
+- Movie Play and TV episode Play now open watch.html instead of playing inside the details modal.
+- Added cinematic standalone player layout, title information, fullscreen, reload, copy link, episode grid, and recommendations.
+- Playback remains account/login required.
+- Free members: pop ad becomes eligible after 5 minutes and triggers only on the next trusted screen touch/click.
+- VIP members: no pop ad.
+- Existing homepage details modal, trailer, My List, TMDB catalog, and authentication remain available.

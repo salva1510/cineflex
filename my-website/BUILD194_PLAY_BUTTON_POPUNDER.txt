@@ -1,9 +1,0 @@
-CINEFLEX BUILD 194 — PLAY BUTTON POP-UNDER
-
-Changes:
-- Added the supplied bashsecret pop-under script to the Play Movie action.
-- Also triggers when a newly selected TV episode starts.
-- Triggers once per newly selected movie or episode.
-- Does not trigger from pause, fullscreen, server switching, or page load.
-- Existing Download pop-under and its 24-hour cooldown remain separate.
-- Rapid double-taps are protected from duplicate script injection.

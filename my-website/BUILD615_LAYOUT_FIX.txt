@@ -1,0 +1,7 @@
+CINEFLEX BUILD 6.1.5
+- Removed Today's Mode / Mobile First / Fresh Layout panel
+- Added desktop left/right controls to Top 10 Today
+- Removed floating Request Movie / notifications icon
+- Request Movie remains available inside Menu Drawer
+- Expanded bottom navigation to full screen width
+- Added My List and Watch Party footer buttons

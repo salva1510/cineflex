@@ -1,0 +1,8 @@
+BUILD 233 – FREE MEMBER TOUCH POP AD
+
+- Pop ad is enabled for FREE members only.
+- VIP members receive no pop ad.
+- The five-minute timer starts when playback or download is requested.
+- After five minutes, the ad triggers only on the user’s next screen touch/pointer interaction.
+- After triggering, another five-minute waiting period begins.
+- Removed the old immediate player pop-ad injection.

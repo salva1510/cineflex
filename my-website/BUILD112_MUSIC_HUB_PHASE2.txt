@@ -1,0 +1,12 @@
+CINEFLEX BUILD 11.2 — MUSIC HUB PHASE 2
+
+Added:
+- Music search by title, artist, or mood
+- Playback queue with add, select, and clear controls
+- Previous and next controls in full player and mini-player
+- Shuffle and repeat toggles
+- Enhanced persistent mini-player
+- Recently Played expanded to 20 entries
+- PWA asset version bumped for cache refresh
+
+Music continues to use official or creator-hosted embeddable sources.

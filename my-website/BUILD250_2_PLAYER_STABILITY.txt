@@ -1,0 +1,10 @@
+CINEFLEX BUILD 250.2 LTS — PLAYER STABILITY
+
+- Added live server state labels: Ready, Loading, Loaded, Slow, Offline.
+- Improved slow-server notice and manual next-server recovery.
+- Added offline detection and automatic reload when connection returns.
+- Fixed season and episode URL updates for refresh/share continuity.
+- Saved last watched title, episode, and preferred server locally for guest continuity.
+- Added keyboard controls: F fullscreen, R reload, S next server.
+- Added active episode highlighting and stronger keyboard focus styles.
+- Preserved current auth, VIP, ad, and embed behavior.

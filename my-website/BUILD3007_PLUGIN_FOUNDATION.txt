@@ -1,0 +1,17 @@
+CineFlex Build 300.7 — Plugin Foundation
+Released: 2026-07-23
+
+Added:
+- Central CineFlexPlugins registry.
+- Feature guards for Ads, Recommendations, YT Movies, and YT Music.
+- Plugin ready/change browser events.
+- Admin-protected runtime enable/disable API.
+- Safe compatibility wrappers so existing buttons and flows continue working.
+- Updated build metadata and service-worker caches.
+
+Developer API examples:
+CineFlexPlugins.list()
+CineFlexPlugins.isEnabled('ads')
+CineFlexPlugins.setEnabled('youtubeMusic', false)
+
+The setEnabled call requires an active admin session. All plugins remain enabled by default.

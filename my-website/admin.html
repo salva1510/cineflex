@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#030711"><title>CineFlex Admin Studio</title><link rel="stylesheet" href="admin.css?v=300.8"><link rel="stylesheet" href="admin43.css?v=300.8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script><link rel="stylesheet" href="css/core/plugin-manager3008.css?v=300.8"></head><body>
+<div id="adminLock" class="lock"><div class="lock-card"><i class="fa-solid fa-shield-halved"></i><h2>Admin Login</h2><p id="lockMessage">Sign in using emviemsalva@gmail.com.</p><button id="adminLoginBtn" class="primary-btn" type="button"><i class="fa-brands fa-google"></i> Login as Admin</button><button id="adminLogoutBtn" class="ghost-btn" type="button" hidden>Use another account</button><button id="backHome" class="ghost-btn" type="button" onclick="location.href='index.html'">Back to CineFlex</button></div></div>
+<div class="admin-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">C</div><div><strong>CINEFLEX</strong><small>ADMIN STUDIO 2.0 · BUILD 300.8</small></div></div><nav class="nav"><button class="nav-btn active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i>Dashboard</button><button class="nav-btn" data-page="homepage"><i class="fa-solid fa-wand-magic-sparkles"></i>Homepage Editor</button><button class="nav-btn" data-page="rooms"><i class="fa-solid fa-users-viewfinder"></i>Live Rooms</button><button class="nav-btn" data-page="requests"><i class="fa-solid fa-inbox"></i>Requests</button><button class="nav-btn" data-page="reports"><i class="fa-solid fa-triangle-exclamation"></i>Link Reports</button><button class="nav-btn" data-page="notifications"><i class="fa-solid fa-bell"></i>Notifications</button><button class="nav-btn" data-page="importer"><i class="fa-solid fa-wand-magic-sparkles"></i>TMDB Import</button><button class="nav-btn" data-page="analytics"><i class="fa-solid fa-chart-line"></i>Analytics</button><button class="nav-btn" data-page="plugins"><i class="fa-solid fa-puzzle-piece"></i>Plugins</button><button class="nav-btn" data-page="settings"><i class="fa-solid fa-gear"></i>Settings</button></nav><div class="sidebar-foot"><button class="ghost-btn" onclick="location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Open website</button></div></aside>
+<main class="content"><header class="topbar"><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Live overview of your CineFlex platform</p></div><div class="admin-user"><img id="adminPhoto" alt=""><span id="adminName">Admin</span></div></header>
+<section id="dashboard" class="page active"><div class="stats"><article class="stat"><div class="icon"><i class="fa-solid fa-user-group"></i></div><b id="totalUsers">—</b><span>Registered users</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-address-card"></i></div><b id="totalProfiles">—</b><span>CineFlex profiles</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-tower-broadcast"></i></div><b id="activeRooms">—</b><span>Watch Party rooms</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-eye"></i></div><b id="liveViewers">—</b><span>Live room members</span></article></div><div class="grid-2"><div class="panel"><h2>Recent Watch Parties</h2><div id="recentRooms"><p>Loading activity…</p></div></div><div class="panel"><h2>Platform status</h2><div class="activity"><span>Firebase connection</span><span class="badge" id="firebaseStatus">Checking</span></div><div class="activity"><span>Homepage config</span><span class="badge" id="configStatus">Loading</span></div><div class="activity"><span>Admin access</span><span class="badge">Verified</span></div></div></div></section>
+<section id="homepage" class="page"><div class="grid-2"><div class="panel"><h2>Homepage controls</h2><div class="form-grid"><div class="field full"><div class="switch-row"><div><b>Show announcement</b><br><small>Display a notice at the top of the homepage</small></div><input id="announcementEnabled" class="switch" type="checkbox"></div></div><div class="field full"><label>Announcement text</label><textarea id="announcementText" maxlength="220" placeholder="Welcome to CineFlex 4.1!"></textarea></div><div class="field"><label>Announcement style</label><select id="announcementType"><option value="info">Cyan information</option><option value="success">Green success</option><option value="warning">Yellow warning</option><option value="danger">Red important</option></select></div><div class="field"><label>Announcement link (optional)</label><input id="announcementLink" placeholder="https://..."></div><div class="field full"><hr style="border-color:rgba(255,255,255,.07)"></div><div class="field"><label>Featured media type</label><select id="featuredType"><option value="auto">Automatic trending</option><option value="movie">Movie</option><option value="tv">TV series</option></select></div><div class="field"><label>TMDB ID</label><input id="featuredId" inputmode="numeric" placeholder="Example: 550"></div><div class="field"><label>Featured badge</label><input id="featuredBadge" maxlength="36" placeholder="CINEFLEX FEATURED"></div><div class="field"><label>Homepage headline</label><input id="homepageHeadline" maxlength="70" placeholder="Stream beyond limits"></div><div class="field"><label>Announcement expires</label><input id="announcementExpires" type="datetime-local"></div><div class="field full"><hr style="border-color:rgba(255,255,255,.07)"></div><div class="field full"><h3 style="margin:0 0 4px">Homepage rows</h3><small>Choose which core rows viewers can see and rename them safely.</small></div><div class="field"><div class="switch-row"><div><b>Top 10 Today</b></div><input id="showTop10" class="switch" type="checkbox" checked></div></div><div class="field"><label>Top 10 label</label><input id="top10Label" maxlength="40" placeholder="Top 10 Today"></div><div class="field"><div class="switch-row"><div><b>Vivamax</b></div><input id="showVivamax" class="switch" type="checkbox" checked></div></div><div class="field"><label>Vivamax label</label><input id="vivamaxLabel" maxlength="40" placeholder="Vivamax"></div><div class="field"><div class="switch-row"><div><b>Korean Dramas</b></div><input id="showKdrama" class="switch" type="checkbox" checked></div></div><div class="field"><label>Korean label</label><input id="kdramaLabel" maxlength="40" placeholder="Korean Dramas"></div></div><div class="actions"><button id="resetConfig" class="ghost-btn">Reset</button><button id="saveConfig" class="primary-btn"><i class="fa-solid fa-cloud-arrow-up"></i> Publish changes</button></div></div><div class="panel"><h2>Live preview</h2><div class="preview"><div id="previewAnnouncement" class="announcement">Announcement preview</div><small id="previewBadge">CINEFLEX FEATURED</small><h3 id="previewHeadline">Stream beyond limits</h3><p>Changes will appear to viewers after publishing.</p></div></div></div></section>
+<section id="rooms" class="page"><div class="panel"><h2>Active Watch Party rooms</h2><div id="roomManager">Loading rooms…</div></div></section>
+
+<section id="requests" class="page"><div class="panel"><div class="manager-head"><div><h2>Content Requests</h2><p class="muted">Review movie, TV, and anime requests.</p></div><select id="requestFilter"><option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="added">Added</option><option value="declined">Declined</option></select></div><div id="requestManager">Loading requests…</div></div></section>
+<section id="reports" class="page"><div class="panel"><div class="manager-head"><div><h2>Broken Link Reports</h2><p class="muted">Track player and episode problems reported by users.</p></div><select id="reportFilter"><option value="all">All statuses</option><option value="pending">Pending</option><option value="checking">Checking</option><option value="fixed">Fixed</option><option value="closed">Closed</option></select></div><div id="reportManager">Loading reports…</div></div></section>
+<section id="notifications" class="page"><div class="grid-2"><div class="panel"><h2>Send Notification</h2><form id="notificationForm"><div class="field"><label>Title</label><input id="notificationTitle" maxlength="80" required placeholder="New movie available"></div><div class="field" style="margin-top:12px"><label>Message</label><textarea id="notificationMessage" maxlength="300" required placeholder="Tell viewers what is new..."></textarea></div><div class="field" style="margin-top:12px"><label>Type</label><select id="notificationType"><option value="info">Information</option><option value="new-content">New content</option><option value="maintenance">Maintenance</option><option value="event">Event</option></select></div><div class="switch-row" style="margin-top:12px"><div><b>Active</b><br><small>Show this to users</small></div><input id="notificationActive" class="switch" type="checkbox" checked></div><div class="actions"><button class="primary-btn">Publish Notification</button></div></form></div><div class="panel"><h2>Recent Notifications</h2><div id="notificationManager">Loading…</div></div></div></section>
+<section id="importer" class="page"><div class="grid-2"><div class="panel"><h2>TMDB Quick Import</h2><div class="form-grid"><div class="field"><label>Media type</label><select id="importType"><option value="movie">Movie</option><option value="tv">TV Series</option></select></div><div class="field"><label>TMDB ID</label><input id="importId" inputmode="numeric" placeholder="Example: 550"></div></div><div class="actions"><button id="fetchTmdb" class="primary-btn"><i class="fa-solid fa-magnifying-glass"></i> Fetch Details</button></div><div id="importPreview" class="import-preview"><p class="muted">Enter a TMDB ID to preview content.</p></div></div><div class="panel"><h2>Imported Content</h2><div id="importedManager">Loading…</div></div></div></section>
+<section id="analytics" class="page"><div class="stats"><article class="stat"><div class="icon"><i class="fa-solid fa-inbox"></i></div><b id="analyticsRequests">—</b><span>Total requests</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-link-slash"></i></div><b id="analyticsReports">—</b><span>Link reports</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-bell"></i></div><b id="analyticsNotifications">—</b><span>Notifications</span></article><article class="stat"><div class="icon"><i class="fa-solid fa-film"></i></div><b id="analyticsImports">—</b><span>Imported titles</span></article></div><div class="grid-2"><div class="panel"><h2>Request Breakdown</h2><div id="requestBreakdown"></div></div><div class="panel"><h2>Report Breakdown</h2><div id="reportBreakdown"></div></div></div></section>
+<section id="plugins" class="page"><div class="panel"><h2>Plugin Manager</h2><div class="plugin-warning"><i class="fa-solid fa-triangle-exclamation"></i> Changes apply site-wide after publishing. Disabling Ads removes CineFlex ad triggers for free users; VIP remains ad-free either way.</div><div class="plugin-grid">
+<article class="plugin-card"><h3><i class="fa-solid fa-rectangle-ad"></i> Ads</h3><p>Controls BashSecret pop-ad triggers for Guest and Free users. VIP validation remains protected.</p><div class="switch-row"><span>Enabled</span><input id="pluginAds" class="switch" type="checkbox"></div><div id="pluginAdsStatus" class="plugin-status">Loading…</div></article>
+<article class="plugin-card"><h3><i class="fa-solid fa-wand-magic-sparkles"></i> Recommendations</h3><p>Controls personalized rows, Continue Watching recommendations, and Because You Watched.</p><div class="switch-row"><span>Enabled</span><input id="pluginRecommendations" class="switch" type="checkbox"></div><div id="pluginRecommendationsStatus" class="plugin-status">Loading…</div></article>
+<article class="plugin-card"><h3><i class="fa-brands fa-youtube"></i> YT Movies</h3><p>Controls access to the YouTube Movies hub and its navigation entry.</p><div class="switch-row"><span>Enabled</span><input id="pluginYoutubeMovies" class="switch" type="checkbox"></div><div id="pluginYoutubeMoviesStatus" class="plugin-status">Loading…</div></article>
+<article class="plugin-card"><h3><i class="fa-solid fa-music"></i> YT Music</h3><p>Controls access to the YouTube Music hub and its navigation entry.</p><div class="switch-row"><span>Enabled</span><input id="pluginYoutubeMusic" class="switch" type="checkbox"></div><div id="pluginYoutubeMusicStatus" class="plugin-status">Loading…</div></article>
+</div><div class="plugin-actions"><button id="reloadPluginSettings" class="ghost-btn"><i class="fa-solid fa-rotate"></i> Reload</button><button id="publishPluginSettings" class="primary-btn"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Plugin Settings</button></div></div></section><section id="settings" class="page"><div class="panel"><h2>Platform settings</h2><div class="switch-row"><div><b>Maintenance notice</b><br><small>Shows a maintenance message without blocking admin access.</small></div><input id="maintenanceEnabled" class="switch" type="checkbox"></div><div class="field" style="margin-top:15px"><label>Maintenance message</label><textarea id="maintenanceMessage" maxlength="220" placeholder="CineFlex maintenance is in progress."></textarea></div><div class="actions"><button id="saveSettings" class="primary-btn">Save settings</button></div></div></section>
+</main></div><div id="toast" class="toast"></div><script>
+(() => {
+  'use strict';
+  const OWNER_EMAIL = 'emviemsalva@gmail.com';
+  const OWNER_UID = '6t6m25YN7AM2d8iIecT6kUTC1me2';
+  const firebaseConfig = {
+    apiKey: 'AIzaSyDdLmGBrgmr8y26GblAhvdcV60eUfPgILk',
+    authDomain: 'cineflex-login-b8380.firebaseapp.com',
+    projectId: 'cineflex-login-b8380',
+    storageBucket: 'cineflex-login-b8380.firebasestorage.app',
+    messagingSenderId: '453926417888',
+    appId: '1:453926417888:web:4c13aefa06f5aed559e785',
+    measurementId: 'G-95K8CPHPFM'
+  };
+
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('email');
+  provider.addScope('profile');
+  provider.setCustomParameters({ prompt: 'select_account' });
+  window.auth = auth;
+  window.db = db;
+  window.googleProvider = provider;
+
+  const msg = document.getElementById('lockMessage');
+  const loginBtn = document.getElementById('adminLoginBtn');
+  const logoutBtn = document.getElementById('adminLogoutBtn');
+  let scriptsLoaded = false;
+
+  function setMessage(text) { msg.textContent = text; }
+  function normalizeEmail(user) {
+    const direct = user && user.email;
+    const providerEmail = user && Array.isArray(user.providerData)
+      ? (user.providerData.find(p => p && p.providerId === 'google.com' && p.email) || {}).email
+      : '';
+    return String(direct || providerEmail || '').trim().toLowerCase();
+  }
+  function loadAdminScripts() {
+    if (scriptsLoaded) return;
+    scriptsLoaded = true;
+    ['admin.js?v=300.8','admin42.js?v=300.8','admin43.js?v=300.8','admin44.js?v=300.8','admin45.js?v=300.8'].forEach(src => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.defer = false;
+      document.body.appendChild(s);
+    });
+  }
+
+  async function login() {
+    loginBtn.disabled = true;
+    setMessage('Resetting old session and opening Google login...');
+    try {
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+      // Important: remove the stale Firebase account that has no email
+      // before starting a fresh Google sign-in.
+      if (auth.currentUser && !normalizeEmail(auth.currentUser) && auth.currentUser.uid !== OWNER_UID) {
+        await auth.signOut();
+      }
+
+      const result = await auth.signInWithPopup(provider);
+      if (!result.user) throw new Error('Google login completed without a user account.');
+
+      await result.user.reload();
+      await result.user.getIdToken(true);
+      const freshUser = auth.currentUser || result.user;
+      const freshEmail = normalizeEmail(freshUser);
+
+      if (!freshEmail && freshUser.uid !== OWNER_UID) {
+        await auth.signOut();
+        throw new Error('Google sign-in returned an account that is not the registered CineFlex owner.');
+      }
+    } catch (e) {
+      console.error('Admin login failed:', e);
+      let friendly = e.message || 'Google login failed.';
+      if (e.code === 'auth/unauthorized-domain') friendly = 'Firebase blocked this domain. Add cineflex.online and www.cineflex.online under Firebase Authentication > Settings > Authorized domains.';
+      if (e.code === 'auth/operation-not-allowed') friendly = 'Google sign-in is disabled. Enable Google under Firebase Authentication > Sign-in method.';
+      if (e.code === 'auth/popup-blocked') friendly = 'The browser blocked the Google popup. Allow popups for this website and press Login as Admin again.';
+      if (e.code === 'auth/popup-closed-by-user') friendly = 'The Google login window was closed before sign-in finished.';
+      setMessage(friendly);
+      loginBtn.disabled = false;
+    }
+  }
+
+  loginBtn.addEventListener('click', login);
+  logoutBtn.addEventListener('click', async () => {
+    await auth.signOut();
+    location.reload();
+  });
+
+  auth.onAuthStateChanged(async user => {
+    const email = normalizeEmail(user);
+    console.log('Admin auth state:', user ? { uid: user.uid, email, provider: user.providerData } : null);
+    if (!user) {
+      setMessage('Sign in using emviemsalva@gmail.com.');
+      loginBtn.hidden = false;
+      loginBtn.disabled = false;
+      logoutBtn.hidden = true;
+      return;
+    }
+    if (user.uid === OWNER_UID) {
+      setMessage('Admin owner verified by Firebase UID. Loading Admin Studio...');
+      loginBtn.hidden = true;
+      logoutBtn.hidden = false;
+      window.CINEFLEX_ADMIN_ROLE = 'super_admin';
+      loadAdminScripts();
+      return;
+    }
+    if (email !== OWNER_EMAIL) {
+      setMessage(`Signed in as ${email}. Use emviemsalva@gmail.com instead.`);
+      loginBtn.hidden = true;
+      logoutBtn.hidden = false;
+      return;
+    }
+    setMessage('Admin verified. Loading Admin Studio...');
+    loginBtn.hidden = true;
+    logoutBtn.hidden = false;
+    window.CINEFLEX_ADMIN_ROLE = 'super_admin';
+    loadAdminScripts();
+  });
+})();
+</script></body></html>

@@ -1,8 +1,0 @@
-CineFlex Build 21.0 - YouTube Music
-- Replaced legacy Music Hub with YouTube Music
-- Genre filters: Trending, OPM, Pop, Rock, Hip-Hop, R&B, K-Pop, Worship, Reggae, EDM, Acoustic, Chill, Jazz, Classical
-- Search by song, artist, or album
-- Public embeddable YouTube music videos only
-- Ready-to-play privacy-enhanced YouTube player
-- Back to Music button and browser-back handling
-- Pagination / Load more and 6-hour genre cache

@@ -1,0 +1,10 @@
+CineFlex Build 250.6 — Premium Homepage
+
+- Netflix-style Top 10 cards retained and polished
+- 8-second hero autoplay with progress bar and navigation dots
+- Next hero backdrop preloading
+- Skeleton loading for Top 10, Vivamax, and Korean Dramas
+- Larger posters and smoother homepage transitions
+- Debounced search input to reduce unnecessary TMDB requests
+- Footer remains: Home, Search, All Movies, YT Music, YT Movies, Menu
+- Existing login, VIP, player, and play pop-ad behavior preserved

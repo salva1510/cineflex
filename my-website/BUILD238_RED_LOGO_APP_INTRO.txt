@@ -1,6 +1,0 @@
-CINEFLEX BUILD 238 — RED LOGO APP INTRO
-
-- Replaced the blue opening logo with the supplied CineFlex red-and-white logo.
-- Converted the intro background, scan, glow, line, pulse, and tap button accents from blue to cinematic red/black.
-- Preserved the existing intro sound and startup behavior.
-- Optimized the supplied logo as a PNG splash asset.

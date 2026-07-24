@@ -1,0 +1,9 @@
+CINEFLEX BUILD 301.4 – POP-UNDER PRELOAD FIX
+
+- Loads the BashSecret/Adsterra provider tag before Play clicks for Guest and Free users.
+- Keeps active VIP users ad-free.
+- Play Now and direct episode clicks remain the monetized actions.
+- Adds provider readiness diagnostics through CineFlexPlayAds.getState().
+- Updates cache versions to prevent old scripts from remaining active.
+
+IMPORTANT: Browser ad blockers, Brave Shields, Private DNS filtering, and provider-side campaign/frequency limits can still prevent a pop-under.

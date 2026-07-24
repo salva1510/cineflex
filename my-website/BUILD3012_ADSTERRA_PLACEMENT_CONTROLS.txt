@@ -1,0 +1,8 @@
+CineFlex Build 301.2 — Adsterra Placement Controls
+
+- Admin-selectable ad placement: Play Now + episode, Play Now only, or first Play Now per session.
+- Site-wide Firebase setting stored in cineflexConfig/plugins.adPlacement.
+- VIP remains 100% ad-free.
+- Monetag remains removed.
+- Direct episode card click is explicitly wired to the central Adsterra controller.
+- No ads on Download, server controls, fullscreen, reload, or Next/Previous shortcuts.

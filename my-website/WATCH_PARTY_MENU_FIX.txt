@@ -1,6 +1,0 @@
-CINEFLEX WATCH PARTY MENU FIX
-
-- Removed the floating Watch Party button.
-- Added Watch Party under Menu Drawer > Community.
-- AI Recommendation remains the only floating recommendation control.
-- Updated asset versions to v3.4 to reduce cache issues.

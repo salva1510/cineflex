@@ -1,7 +1,0 @@
-CINEFLEX BUILD 8.0.7 — VISIBLE UPPER-RIGHT ADD TIME FIX
-
-- Forces the Add Time button to remain visible in the upper-right navigation.
-- Prevents the desktop navigation from pushing the button outside the screen.
-- Shows VIP ∞ instead of completely hiding the button for VIP accounts.
-- Uses network-first loading for HTML, CSS, and JavaScript to prevent an old installed-PWA cache from hiding the update.
-- Keeps the 3-hour initial balance and +3-hour Add Time reward.

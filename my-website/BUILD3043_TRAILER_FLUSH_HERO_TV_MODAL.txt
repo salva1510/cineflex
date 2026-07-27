@@ -1,6 +1,0 @@
-CineFlex Build 304.3
-- Restored muted automatic TMDB/YouTube trailer preview on desktop/TV hero.
-- Removed hero rating/status; title and Watch Now only.
-- Centered title and Watch Now near lower middle.
-- Forced flush top/edge-to-edge hero with no rounded padding.
-- TV mode auto-focuses Play Movie in the details modal.

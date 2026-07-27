@@ -1,8 +1,0 @@
-CineFlex Build 304.2
-- Removed homepage parent/container horizontal padding.
-- Banner and content rows are true edge-to-edge.
-- TV navigation now uses deterministic poster-row navigation.
-- Arrow Down from Watch Now goes directly to the first poster.
-- Arrow Left/Right moves through posters in the current row.
-- Arrow Up/Down moves to the nearest poster in adjacent rows.
-- Dynamic poster cards receive tabindex automatically.

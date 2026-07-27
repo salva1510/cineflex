@@ -1,0 +1,13 @@
+CINEFLEX FLOATING NOTIFICATIONS FIX
+
+Fixed overlap between Watch Party and AI Recommendation floating buttons.
+
+Changes:
+- Watch Party is now stacked above the AI Assistant button.
+- Added mobile/PWA safe-area spacing.
+- Added smooth hover and movement transitions.
+- Updated watch-party.css cache version to v3.3 in index.html.
+
+Upload/replace the full my-website folder, or at minimum replace:
+1. css/modules/watch-party.css
+2. index.html

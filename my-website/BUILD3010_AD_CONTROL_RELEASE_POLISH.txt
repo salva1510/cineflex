@@ -1,0 +1,9 @@
+CineFlex Build 301.0 — Ad Control & Release Polish
+
+- Centralized BashSecret ad loading in one controller.
+- Ads are accepted only for Play Now and direct episode-card clicks.
+- Removed ad trigger from Download, server switching, reload, fullscreen, Next/Previous episode and keyboard shortcuts.
+- VIP remains 100% ad-free.
+- Membership failures skip ads instead of treating the user as Free.
+- Added local diagnostic event history (last 50 events) and cineflex-ad-event browser events.
+- Updated cache version to cineflex-v301-ad-control-0.

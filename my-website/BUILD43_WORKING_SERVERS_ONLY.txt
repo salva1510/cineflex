@@ -1,8 +1,0 @@
-CineFlex Build 4.3 — Working Servers Only
-
-Changes:
-- Removed AutoEmbed because it was not working.
-- Renumbered VixSrc from Server 5 to Server 4.
-- Kept only the current configured servers: zxcstream, peachify.top, 1embed.cc, and VixSrc.
-- Updated the service-worker cache version so browsers receive the new server list.
-- Fullscreen landscape behavior from Build 4.2 is retained.

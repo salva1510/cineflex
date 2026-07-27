@@ -1,8 +1,0 @@
-CINEFLEX BUILD 19.4 — FOOTER ALL MOVIES
-
-Changes:
-- Removed Music from the footer navigation only.
-- Added All Movies to the footer navigation.
-- All Movies opens the existing CineFlex catalog using the all-movies filter.
-- Music Hub remains available in the menu drawer.
-- Existing FPJ Movies, Live TV, premium buttons, and Play pop-under updates remain included.

@@ -1,0 +1,8 @@
+CINEFLEX BUILD 10.0
+
+- Removed the CineFlex Daily Pick block under the hero banner for a cleaner homepage.
+- Kept Smart Pick, Live Viewer, star metrics, and old shortcut strip hidden.
+- Preserved the single online indicator in the upper-right corner.
+- Upgraded the existing floating AI Recommendation panel with mood shortcuts, Surprise Me, and Live TV quick access.
+- Live TV keeps automatic fullscreen/landscape attempts and now hides website navigation and the AI launcher while viewing.
+- Firebase, profiles, membership, admin studio, and movie playback logic were not replaced.

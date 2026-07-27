@@ -1,6 +1,0 @@
-CineFlex Build 304.4
-- Fixed hero trailer API variable mismatch.
-- Removed old upper hero veil/blur and made the hero flush from the top.
-- Kept only centered title and Watch Now.
-- Added persistent TV remote navigation to details.html and watch.html.
-- Improved homepage modal focus scope.

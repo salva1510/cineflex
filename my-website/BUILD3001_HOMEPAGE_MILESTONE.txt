@@ -1,0 +1,8 @@
+CINEFLEX BUILD 300.1 — HOMEPAGE MILESTONE
+
+- Premium cinematic hero controls and status
+- Progressive independent loading for Top 10, Vivamax, and Korean Dramas
+- TMDB timeout/error recovery per section
+- Improved row headings and View All actions
+- Updated service-worker cache version
+- Footer, YT Movies, YT Music, login, VIP, player, and pop-ad behavior preserved

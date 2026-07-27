@@ -1,0 +1,13 @@
+CINEFLEX BUILD 232 — LOGIN REQUIRED + OPTIONAL VIP + MINIMAL ADS
+
+Changes:
+- Removed the Add Watch Time stylesheet and JavaScript module from index.html.
+- Removed all user-facing watch-time balance, countdown, +Time chip, and Add Watch Time flow.
+- Playback remains protected by requireLogin(): guests must create an account or log in before a movie or episode starts.
+- Kept optional VIP membership and VIP request/admin activation system.
+- Updated VIP messaging: no time limits, fewer ads, VIP badge, and priority membership support.
+- Minimal play-ad frequency:
+  * Free member: maximum one play ad every 30 minutes.
+  * VIP member: maximum one play ad every 24 hours.
+- Download ad remains on its existing once-per-24-hours cooldown.
+- Updated service-worker cache to cineflex-v22-1.0.1 and removed watch-time assets from precache.

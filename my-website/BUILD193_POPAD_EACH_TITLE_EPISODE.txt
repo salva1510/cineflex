@@ -1,0 +1,8 @@
+BUILD 193 — POP AD PER NEW MOVIE / EPISODE
+
+Changes:
+- Pop ad triggers once when a different movie starts.
+- Pop ad triggers again for every different TV episode.
+- Changing streaming servers for the same movie/episode does not trigger another ad.
+- Reloading the same iframe/source does not duplicate the ad.
+- The ad script is freshly injected for each new content key.

@@ -1,0 +1,7 @@
+CineFlex Build 300.9 — Play Now & Episode Ads
+
+- Pop-ad triggers only on Play Now and direct episode-card clicks.
+- VIP accounts remain 100% ad-free after Firebase membership validation.
+- Ads plugin setting is respected site-wide.
+- Previous/Next episode buttons and N/P keyboard shortcuts no longer trigger ads.
+- 1.5-second duplicate-trigger protection remains active.

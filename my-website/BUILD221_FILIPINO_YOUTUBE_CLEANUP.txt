@@ -1,0 +1,10 @@
+CINEFLEX BUILD 22.1 — FILIPINO YOUTUBE MOVIES CLEANUP
+
+- YouTube Movies now searches Filipino/Pinoy/Tagalog full movies only
+- Expanded catalog queries across Filipino genres, classics, restored films, FPJ, VIVA, Regal, Star Cinema, OctoArts, and Seiko
+- Removed separate VIVA channel integration; matching VIVA uploads can appear in the unified Filipino catalog
+- Removed K-Drama from footer and disabled its module
+- Removed Radio Hub, Donate, and Watch Party from menu/module loading
+- Removed floating AI assistant from homepage
+- Added Back to Movies and landscape/fullscreen request to YouTube Movies player
+- Removed exposed API key and restored safe placeholder configuration

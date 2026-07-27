@@ -1,4 +1,0 @@
-CineFlex Build 304.5
-- Hero waits for trailer playback to end before rotating.
-- Poster backdrop is fully hidden while trailer plays.
-- Homepage TV navigation hardened for arrow keys, posters, Enter and modal focus.

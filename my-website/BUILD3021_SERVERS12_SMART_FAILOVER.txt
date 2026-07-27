@@ -1,9 +1,0 @@
-CineFlex Build 302.1
-
-- Replaced Server 2 with peachify.pro
-- Added Servers 8-12: MoviePire, VidSrc SBS, VidLink, VidFast, VidNest
-- Synced server lists across watch page, homepage modal player, and Admin Server Health
-- Added automatic 12-second smart failover to the next provider
-- Manual server selection resets the failover cycle
-- Saves the preferred working server in localStorage
-- Bumped service-worker cache and watch/admin script versions

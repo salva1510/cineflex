@@ -1,5 +1,0 @@
-CineFlex Build 3.1 fix
-- Exposes selected movie/TV state to Watch Party.
-- Fixes Create Room always reporting no selected title.
-- Fixes host presence state on first join.
-- Adds visible Firebase error handling.

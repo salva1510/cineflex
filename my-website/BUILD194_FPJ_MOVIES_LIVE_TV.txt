@@ -1,7 +1,0 @@
-CINEFLEX BUILD 19.4 — FPJ MOVIES IN LIVE TV
-
-Added an FPJ Movies category inside CineFlex Live TV.
-Included official/authorized YouTube full-movie embeds from FPJ Productions and OctoArts Films.
-Movies open inside the existing CineFlex Live TV fullscreen player.
-Live channels and FPJ movies share favorites, previous/next controls, and official-source fallback links.
-Availability and embed permission remain controlled by each YouTube publisher.

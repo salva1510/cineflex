@@ -1,5 +1,0 @@
-BUILD 237
-- Replaced the previous intro MP3 with an original cinematic two-hit CineFlex sound.
-- Changed the intro timing to 2.6 seconds.
-- Replaced the inactive “Para Sa’yo” homepage block with the functional Continue Watching section.
-- Continue Watching still uses cineflex_recent and appears only when viewing history exists.

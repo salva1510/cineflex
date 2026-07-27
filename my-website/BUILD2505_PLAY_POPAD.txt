@@ -1,0 +1,7 @@
+CineFlex Build 250.5 - Play Pop-Ad Trigger
+
+- Uses the supplied bashsecret pop-ad script.
+- Triggers only when a FREE user intentionally clicks Play Movie or selects a new episode.
+- VIP members remain ad-free.
+- Removed the old random next-touch / five-minute trigger from the homepage and watch page.
+- Includes a short duplicate-click guard and a brief navigation delay so the script can execute.

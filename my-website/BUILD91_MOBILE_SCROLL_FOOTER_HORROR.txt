@@ -1,5 +1,0 @@
-CineFlex v9.1
-- Restored natural vertical and diagonal page scrolling on touch devices.
-- Forced the bottom navigation to span the full viewport from left edge to right edge.
-- Removed Mini Short Dramas, Pinoy Action, K-Pop Specials, and Cocomelon Specials.
-- Added Trending Horror Movies using TMDB horror genre 27, popularity sorting, and minimum vote count.

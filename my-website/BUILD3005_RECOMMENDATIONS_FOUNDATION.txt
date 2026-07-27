@@ -1,0 +1,9 @@
+CINEFLEX BUILD 300.5 — RECOMMENDATION & PERSONALIZATION FOUNDATION
+
+- Added Continue Watching row for signed-in users with saved activity.
+- Added Recommended for You using recent history, watchlist, genre signals, and TMDB discovery.
+- Added Because You Watched using TMDB title recommendations.
+- Six-hour local recommendation cache reduces repeated TMDB requests.
+- Manual Refresh control rebuilds recommendations.
+- Safe trending fallback remains available for guests and failed recommendation requests.
+- Updated service-worker cache and homepage asset versions.

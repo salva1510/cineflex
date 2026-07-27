@@ -1,9 +1,0 @@
-CINEFLEX BUILD 8.9
-
-- Header now keeps only the CINEFLEX logo.
-- Install App moved into the menu drawer.
-- Add Time moved from header into bottom navigation.
-- Search and Menu remain in bottom navigation.
-- Bottom navigation now spans the full width on Android, iOS, and desktop.
-- Six navigation items are evenly distributed from edge to edge.
-- Safe-area padding added for iPhone home indicator and display cutouts.

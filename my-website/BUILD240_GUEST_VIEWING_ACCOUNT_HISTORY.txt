@@ -1,8 +1,0 @@
-CINEFLEX BUILD 240
-
-- Guests can play movies and TV episodes without creating an account.
-- Guest playback is no longer blocked by the login guard.
-- Continue Watching, history/progress, and My List are account-only.
-- Guest viewing data is not added to local Continue Watching.
-- Private sections are hidden when signed out.
-- Guest users receive a reminder that progress is not saved.

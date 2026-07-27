@@ -1,6 +1,0 @@
-CineFlex Build 23.4 — Clean Logo Header
-
-- Removed the dark rounded rectangle surrounding the CINEFLEX logo.
-- Removed header background, border, blur, shadow, radius, and extra padding.
-- Preserved logo click behavior while allowing the transparent header to pass through touches.
-- Kept the existing login-required playback, optional VIP, and free-member 5-minute touch pop-ad behavior.

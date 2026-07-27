@@ -1,0 +1,9 @@
+CineFlex Build 250.3 LTS — Account & Viewing Sync
+
+- Safe merge of cloud and device My List data
+- Safe merge of cloud and device Continue Watching data
+- Prevents profile cloud data from silently overwriting newer device entries
+- Clear Guest, Member, and VIP sync status in the account drawer
+- Added Continue Watching and Sync Now account shortcuts
+- Automatic account sync after login and when internet returns
+- Updated cache version and script versions

@@ -1,0 +1,13 @@
+CineFlex Build 5.0 — Stable Player Restart
+
+Changes:
+- Restarted from cineflex-main(7).zip.
+- Removed the unreliable fourth server; only three configured servers are shown.
+- Server order: zxcstream, peachify.top, 1embed.cc.
+- Improved fullscreen handling and landscape orientation locking on supported devices.
+- Added fullscreen CSS fallback for mobile landscape mode.
+- Retained direct-player opening for desktop browsers when a provider blocks iframe playback.
+- Updated watch asset versions and service-worker cache.
+
+Note:
+Third-party provider availability and desktop iframe permissions are controlled by the provider. The direct-open button is retained as the reliable browser-level fallback.

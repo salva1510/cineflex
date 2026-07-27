@@ -1,0 +1,16 @@
+CINEFLEX BUILD 9.3 — PH LIVE TV PHASE 2
+
+ADDED
+- Full Live TV player shell inside CineFlex
+- Favorite channels saved in localStorage
+- All / News / Entertainment / Government / Favorites filters
+- Previous and next channel controls
+- Keyboard left/right channel switching
+- Fullscreen button
+- Official-stream fallback for broadcasters without permanent authorized embeds
+- Improved mobile and Smart TV-friendly controls
+
+IMPORTANT
+The channel registry is in js/modules/live-tv.js.
+Use the `embed` field only for an official/authorized embeddable URL.
+Do not paste random IPTV or copied .m3u8 sources.

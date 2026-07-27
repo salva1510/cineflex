@@ -1,8 +1,0 @@
-CINEFLEX BUILD 300.8 — ADMIN PLUGIN MANAGER
-
-- Site-wide Firebase plugin settings
-- Admin controls for Ads, Recommendations, YT Movies, and YT Music
-- Public plugin engine listens for live settings changes
-- Feature visibility guards
-- VIP remains ad-free
-- Updated cache/build version

@@ -1,1 +1,0 @@
-Build 4.2: Fullscreen button now requests fullscreen and locks screen orientation to landscape when supported. Orientation unlocks after exiting fullscreen.

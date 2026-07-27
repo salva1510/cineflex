@@ -1,6 +1,0 @@
-CINEFLEX MOBILE CATALOG TOP NAV FIX v1.2
-
-- All Movies, Popular, Top Rated, In Theaters, Coming Soon, TV Shows, Anime and genres are always visible at the top of the mobile catalog.
-- The category bar scrolls horizontally by swipe.
-- Removed the hidden slide-out-only behavior on mobile.
-- Updated asset versions and service worker cache.

@@ -1,9 +1,0 @@
-CineFlex Build 250.7 - Player V3 Stable
-
-- Previous and Next Episode controls for TV series
-- Episode count and current episode status
-- Keyboard shortcuts: N next, P previous, F fullscreen, R reload, S server
-- Active episode highlighting and keyboard-accessible episode cards
-- Remembered season, episode, and preferred server retained
-- Existing login, VIP, pop-ad, and server behavior preserved
-- True playback-ended auto-next is not forced because third-party cross-origin players do not reliably expose playback state

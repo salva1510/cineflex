@@ -1,0 +1,8 @@
+CINEFLEX BUILD 11.1 — FOOTER MENU FIX
+
+Changes:
+- Removed My List from the footer navigation.
+- My List remains available inside the menu drawer.
+- Restored a six-button footer layout: Home, Search, Add Time, Live TV, Music, Menu.
+- Menu drawer closes before opening My List.
+- Bumped the PWA cache version to cineflex-v11.1.

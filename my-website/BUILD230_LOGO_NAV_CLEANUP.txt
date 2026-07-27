@@ -1,0 +1,6 @@
+CINEFLEX BUILD 23.0
+- Replaced text header brand with the supplied red/white CineFlex image logo.
+- Removed visual padding and extra space around the header logo.
+- Confirmed footer contains Home, Search, YT Music, YT Movies, and Menu only.
+- Removed Radio Hub lazy loading and Radio activity tab.
+- Removed obsolete Radio Hub and YouTube K-Drama module files.

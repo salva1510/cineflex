@@ -1,0 +1,8 @@
+CineFlex Build 304.7
+- Removed conflicting homepage TV key controllers.
+- Added one exclusive capture-phase arrow controller.
+- Arrow keys automatically activate TV Mode and focus whole poster cards.
+- Added true 16:9 cover sizing based on actual banner dimensions.
+- Static banner background and all hero overlays are hidden while trailer is playing.
+- Trailer title/button/dots/arrows temporarily hide for clean playback.
+- Mobile and desktop use the same trailer layer.

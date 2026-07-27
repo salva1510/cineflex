@@ -1,0 +1,16 @@
+CINEFLEX BUILD 300.6 — VIP AD-FREE / FREE POP-AD SYSTEM
+
+VIP USERS
+- BashSecret ad script is not injected when Firebase membership is active.
+- Membership must be resolved before any ad decision.
+- Player badge displays VIP • AD-FREE.
+
+FREE MEMBERS / GUESTS
+- Trigger point 1: pressing Play Movie / opening a new title.
+- Trigger point 2: selecting a different TV episode.
+- Script: https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js
+- 1.5-second duplicate-click protection.
+
+IMPORTANT
+- If membership status is still loading, the ad is skipped to protect VIP users.
+- Browser popup blockers and provider behavior may affect whether a pop-under opens.

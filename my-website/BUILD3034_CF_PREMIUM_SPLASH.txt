@@ -1,0 +1,9 @@
+CINEFLEX BUILD 303.4 — CF PREMIUM SPLASH
+
+- Added the selected red-and-silver CF emblem as the app startup logo.
+- Added animated rotating ring, cinematic red glow, loading progress bar and percentage.
+- Added smooth reveal and fade transition into the homepage.
+- Intro runs once per browser/app session.
+- Mobile/PWA no longer gets stuck when autoplay audio is blocked.
+- Intro sound remains available after the first user tap.
+- Updated service-worker cache version.

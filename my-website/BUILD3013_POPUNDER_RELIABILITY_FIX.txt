@@ -1,0 +1,15 @@
+CINEFLEX BUILD 301.3 — POP-UNDER RELIABILITY FIX
+
+FIXED
+- Restored reliable Adsterra/BashSecret loading on Play Now and direct episode clicks.
+- Loads the supplied script URL exactly, without extra query parameters.
+- Prevents membership/config startup delays from silently blocking ads for non-VIP users.
+- Keeps VIP users ad-free using the local membership state and membership events.
+- Removed the duplicate episode trigger that was immediately blocked by cooldown.
+- Increased the short navigation delay so the provider script can initialize before watch.html opens.
+
+ACTIVE SCRIPT
+https://bashsecret.com/03/53/7d/03537deb3b1a6012bf51de011865aed1.js
+
+NOTE
+Browser pop-up protection, DNS/ad blockers, Brave shields, private DNS, or the ad network itself can still block pop-under windows. Test on the deployed HTTPS site with ad blocking disabled.

@@ -1,0 +1,8 @@
+CineFlex Build 302.3 — VidFast Primary
+
+- Moved former Server 11 (VidFast) to Server 1.
+- Shifted VidLink to Server 2 and retained all 12 providers.
+- Updated watch page, homepage modal stream engine, smart failover order, and Admin Server Health.
+- Added one-time preferred-server migration so existing Build 302.2 users start on VidFast.
+- Activated the 12-server stream engine on the homepage.
+- Updated service-worker cache and script versions.

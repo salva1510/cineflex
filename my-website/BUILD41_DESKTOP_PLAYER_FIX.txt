@@ -1,0 +1,10 @@
+CineFlex Build 4.1 - Desktop Player Compatibility
+
+- zxcstream primary URLs now use clean movie/TV endpoints without forced dubLang parameters.
+- iframe referrer policy changed to origin-when-cross-origin for desktop compatibility.
+- Added Open Player Directly fallback for providers blocked inside desktop iframes.
+- Server 4 changed to AutoEmbed.
+- Server 5 changed to VixSrc.
+- Server load notice appears after 10 seconds.
+
+Third-party server availability and content rights remain controlled by their providers.

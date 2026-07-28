@@ -1,9 +1,0 @@
-CineFlex Build 304.6
-- Dedicated final homepage TV navigation controller loaded last
-- Whole poster receives focus; internal overlay buttons are skipped
-- Arrow Down from hero goes directly to first poster
-- Trailer autoplay enabled for desktop and mobile
-- Trailer layer covers the full hero and sits above the static backdrop
-- Static backdrop is removed only after YouTube reports PLAYING
-- Banner rotates only after trailer ends, with timed fallback if unavailable
-- Service worker cache bumped to 304.6

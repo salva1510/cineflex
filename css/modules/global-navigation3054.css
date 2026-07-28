@@ -1,5 +1,0 @@
-/* Build 305.4: unified PC/Smart TV focus */
-.cf-tv-focus:focus, body.cf-tv-mode :focus { outline: none !important; }
-.cf-tv-focus { position: relative; z-index: 50 !important; box-shadow: 0 0 0 4px #fff,0 0 0 8px #e50914,0 14px 40px rgba(0,0,0,.65) !important; transform: scale(1.045); transition: transform .12s ease,box-shadow .12s ease; }
-button.cf-tv-focus,a.cf-tv-focus,input.cf-tv-focus,.load.cf-tv-focus,#loadMore.cf-tv-focus { transform: scale(1.06); }
-.bottom,.bottom-nav,.footer-nav { left:0!important;right:0!important;width:100vw!important;max-width:none!important;margin:0!important;transform:none!important;border-radius:0!important;grid-template-columns:repeat(5,minmax(0,1fr))!important; }

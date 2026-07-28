@@ -1,6 +1,0 @@
-CineFlex Build 305.0
-- Removed quick discovery strip below hero (For You, Trending, Top 10, Horror, Anime, Music)
-- Footer: Home, Search, Vivamax, All Movies, Menu
-- Footer spans full viewport width
-- Vivamax scrolls to Filipino/Vivamax section
-- Service worker cache bumped

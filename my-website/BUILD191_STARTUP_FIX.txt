@@ -1,8 +1,0 @@
-CineFlex Build 19.1 — Startup Fix
-
-Fixed:
-- Removed a self-triggering MutationObserver loop in the Infinity hero.
-- Hero now watches only actual inline style/background changes.
-- Added timer deduplication to prevent repeated transition work.
-- Bumped Infinity CSS/JS versions to 19.1.
-- Bumped service-worker cache to cineflex-v19.1.0 so repaired assets replace cached Build 19 files.

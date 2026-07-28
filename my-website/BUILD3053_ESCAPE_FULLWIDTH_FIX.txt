@@ -1,7 +1,0 @@
-CineFlex Build 305.3
-- Loads global TV Back controller in HEAD before legacy TV scripts.
-- Handles Escape/Esc/keyCode 27, Backspace, BrowserBack, LG 461 and Samsung 10009.
-- Uses keydown + keyup capture to prevent older handlers from swallowing Back.
-- True 100vw footer on Home and Vivamax with five equal columns.
-- Removed max-width, transform, side margins, floating radius and side padding.
-- Service worker cache bumped to 305.3.

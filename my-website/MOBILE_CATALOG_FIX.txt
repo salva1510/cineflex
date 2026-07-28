@@ -1,0 +1,8 @@
+CINEFLEX MOBILE CATALOG FIX
+
+- Added Movies button to the full-width mobile bottom navigation.
+- Moved Watch Party access to the existing Menu Drawer entry.
+- Added Browse Catalog section in the Menu Drawer.
+- All Movies, TV Shows, Anime, and Horror are now directly accessible on mobile.
+- Forced the catalog and Categories button to remain visible on mobile.
+- Updated catalog asset versions to bypass browser/PWA cache.

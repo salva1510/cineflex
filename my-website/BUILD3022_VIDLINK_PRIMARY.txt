@@ -1,0 +1,7 @@
+CineFlex Build 302.2 — VidLink Primary
+
+- VidLink is now Server 1 and the first smart-failover provider.
+- ZXCStream moved from Server 1 to Server 10.
+- Updated the homepage modal player, dedicated watch page, Admin Server Health, and default player label.
+- Preferred-provider migration uses the saved provider ID before the old numeric index.
+- Updated cache and watch.js versions for deployment refresh.

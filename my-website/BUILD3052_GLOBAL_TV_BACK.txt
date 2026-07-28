@@ -1,7 +1,0 @@
-CINEFLEX BUILD 305.2 — GLOBAL TV BACK
-
-- Escape, Backspace, BrowserBack, Android/TV remote Back keys work on all user pages.
-- Back priority: fullscreen/player/trailer/details/search/menu -> previous page -> Home.
-- On Home, shows an Exit CineFlex confirmation.
-- Backspace remains available for typing inside inputs and text areas.
-- Global handler runs before older page-level keyboard handlers to prevent conflicts.

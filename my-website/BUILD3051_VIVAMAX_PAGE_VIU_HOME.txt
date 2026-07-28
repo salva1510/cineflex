@@ -1,5 +1,0 @@
-Build 305.1
-- Dedicated Vivamax page with search, load more and TV remote grid navigation.
-- Footer Vivamax opens vivamax.html.
-- Homepage Vivamax row replaced by VIU Dramas.
-- VIU provider is resolved dynamically from TMDB for PH, with Korean drama fallback.

@@ -1,0 +1,252 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return signedIn()
+        && (
+          request.auth.uid == "M3GxGOkF9ZWoezkICNpvS5ID1Hz2"
+          || (
+            request.auth.token.email != null
+            && request.auth.token.email == "emviemsalva@gmail.com"
+          )
+        );
+    }
+
+    function adminPath() {
+      return /databases/$(database)/documents/cineflexAdmins/$(request.auth.uid);
+    }
+
+    function hasAdminRole(roles) {
+      return signedIn() && (
+        isOwner()
+        || (
+          exists(adminPath())
+          && get(adminPath()).data.active == true
+          && get(adminPath()).data.role in roles
+        )
+      );
+    }
+
+    function isAdmin() {
+      return hasAdminRole([
+        "super_admin",
+        "moderator",
+        "support",
+        "content_manager"
+      ]);
+    }
+
+    function isSuperAdmin() {
+      return isOwner() || hasAdminRole(["super_admin"]);
+    }
+
+    // Main account records used by Admin Studio user search and counters.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow update: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow delete: if isSuperAdmin();
+
+      match /profiles/{profileId} {
+        allow read, create, update, delete:
+          if signedIn() && request.auth.uid == uid;
+      }
+
+      match /watchProgress/{progressId} {
+        allow read, create, update, delete:
+          if signedIn() && request.auth.uid == uid;
+      }
+
+      match /watchTime/{documentId} {
+        allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+        // The current website deducts and rewards time client-side; admins can edit any balance.
+        allow create, update: if signedIn() && (request.auth.uid == uid || isAdmin());
+        allow delete: if isAdmin();
+      }
+
+      match /membership/{documentId} {
+        allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+        allow create, update, delete: if isSuperAdmin();
+      }
+    }
+
+    // Homepage Editor: public website can read; authorized admins can publish.
+    match /cineflexConfig/{documentId} {
+      allow read: if true;
+      allow create, update, delete:
+        if hasAdminRole(["super_admin", "content_manager"]);
+    }
+
+    match /vipRequests/{requestId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid;
+      allow read: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update, delete: if isSuperAdmin();
+    }
+
+    match /livePresence/{sessionId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.lastSeenMs is int
+        && request.resource.data.mediaKey is string;
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.lastSeenMs is int
+        && request.resource.data.mediaKey is string;
+      allow delete: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // Anonymous/session-level homepage presence currently used by home.js.
+    match /cineflex_presence/{sessionId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.lastActiveMs is int;
+      allow delete: if isAdmin();
+    }
+
+    match /cineflex_title_activity/{titleKey} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /cineflex_activity/{activityId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.uid == request.auth.uid;
+    }
+
+    match /cineflex_reactions/{titleKey} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+
+      match /users/{uid} {
+        allow read: if signedIn();
+        allow create, update, delete:
+          if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    match /cineflex_comments/{titleKey} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+
+      match /items/{commentId} {
+        allow read: if true;
+        allow create: if signedIn()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 1000;
+        allow update, delete: if signedIn()
+          && (resource.data.uid == request.auth.uid || isAdmin());
+      }
+    }
+
+    match /cineflex_comment_stats/{titleKey} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /cineflex_ratings/{titleKey} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+
+      match /users/{uid} {
+        allow read: if true;
+        allow create, update, delete:
+          if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    match /watchPartyRooms/{roomId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.hostUid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.hostUid == request.auth.uid;
+
+      match /members/{uid} {
+        allow read: if signedIn();
+        allow create, update, delete:
+          if signedIn() && request.auth.uid == uid;
+      }
+
+      match /messages/{messageId} {
+        allow read: if signedIn();
+        allow create: if signedIn()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 280;
+        allow update, delete: if false;
+      }
+    }
+
+    match /cineflexAdmins/{uid} {
+      allow read: if signedIn()
+        && (request.auth.uid == uid || isAdmin());
+      allow create, update, delete: if isOwner();
+    }
+
+    match /userModeration/{uid} {
+      allow read: if signedIn()
+        && (request.auth.uid == uid || isAdmin());
+      allow create, update:
+        if hasAdminRole(["super_admin", "moderator", "support"]);
+      allow delete:
+        if hasAdminRole(["super_admin", "moderator"]);
+    }
+
+    match /adminAuditLogs/{logId} {
+      allow read:
+        if hasAdminRole(["super_admin", "moderator", "support"]);
+      allow create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /contentRequests/{requestId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid;
+      allow read: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    match /brokenLinkReports/{reportId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid;
+      allow read: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    match /cineflexNotifications/{notificationId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /importedContent/{contentId} {
+      allow read: if true;
+      allow create, update, delete:
+        if hasAdminRole(["super_admin", "content_manager"]);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

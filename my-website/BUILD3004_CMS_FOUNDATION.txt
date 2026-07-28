@@ -1,0 +1,8 @@
+CINEFLEX BUILD 300.4 — CMS FOUNDATION
+
+- Homepage now consumes cineflexConfig/homepage safely.
+- Admin can publish announcement text, style, link, and expiration.
+- Admin can show/hide and rename Top 10, Vivamax, and Korean Dramas rows.
+- Admin can pin a TMDB movie or TV title as the featured hero.
+- Automatic trending and default rows remain as fail-safe fallback.
+- Updated service-worker caches and asset versions.

@@ -1,0 +1,45 @@
+/* CineFlex Build 304.4 — definitive flush hero and trailer layer */
+html,body{margin:0!important;padding:0!important;overflow-x:hidden!important}
+body{padding-top:0!important}
+.navbar.cf-logo-only-header{position:absolute!important;top:0!important;left:0!important;z-index:12050!important;background:transparent!important;pointer-events:none!important}
+.navbar.cf-logo-only-header .logo{pointer-events:auto!important}
+#banner.banner,#banner.cf304-cinematic,#banner.cf304-minimal,#banner.cf-title-only-hero{
+  position:relative!important;top:0!important;left:0!important;
+  width:100%!important;max-width:none!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:0!important;clip-path:none!important;
+  min-height:clamp(600px,88vh,940px)!important;
+  background-size:cover!important;background-position:center center!important;
+}
+/* Remove the old dark/blurred top veil. Keep only a soft lower readability gradient. */
+#banner.banner::before,#banner.cf304-cinematic::before,#banner.cf-title-only-hero::before{
+  content:""!important;position:absolute!important;inset:0!important;z-index:3!important;
+  background:linear-gradient(to top,rgba(3,4,7,.92) 0%,rgba(3,4,7,.30) 34%,transparent 62%)!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;
+  pointer-events:none!important;
+}
+#banner.banner::after,#banner.cf304-cinematic::after,#banner.cf-title-only-hero::after{display:none!important;content:none!important}
+#banner .banner-fade{display:none!important}
+#banner .cf-hero-status,#banner .cf-hero-meta,#banner #banner-desc,#banner .hero-kicker,#banner .cf-hero-eyebrow{display:none!important}
+#banner .banner-content{
+  position:absolute!important;left:50%!important;right:auto!important;top:auto!important;
+  bottom:clamp(86px,12vh,136px)!important;transform:translateX(-50%)!important;
+  width:min(1040px,94vw)!important;max-width:min(1040px,94vw)!important;
+  margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:flex-end!important;text-align:center!important;z-index:8!important;
+  opacity:1!important;
+}
+#banner #banner-title{margin:0 0 18px!important;max-width:100%!important;text-align:center!important;font-size:clamp(2.5rem,6.4vw,6.4rem)!important;line-height:.92!important}
+#banner .banner-buttons{display:flex!important;justify-content:center!important;margin:0!important;padding:0!important}
+#banner .banner-buttons>*:not(:first-child){display:none!important}
+#banner .play-btn{pointer-events:auto!important}
+/* The trailer fills the hero from the very top and sits above the static backdrop. */
+#banner .cf-hero-video{
+  display:block!important;position:absolute!important;inset:0!important;z-index:2!important;
+  opacity:0!important;overflow:hidden!important;pointer-events:none!important;
+  background:#000!important;transition:opacity .8s ease!important;
+}
+#banner .cf-hero-video.active{opacity:.68!important}
+#banner .cf-hero-video iframe{display:block!important;position:absolute!important;left:50%!important;top:50%!important;width:177.78vh!important;height:100vh!important;min-width:100%!important;min-height:56.25vw!important;transform:translate(-50%,-50%) scale(1.08)!important;border:0!important}
+/* Make remote focus obvious on every page/modal. */
+.cf304-focus,.cf-tv-page-focus{outline:4px solid #fff!important;outline-offset:5px!important;box-shadow:0 0 0 9px rgba(229,9,20,.86),0 18px 50px rgba(0,0,0,.78)!important;transform:scale(1.055)!important;position:relative!important;z-index:12000!important}
+@media(max-width:760px){#banner .banner-content{bottom:104px!important;width:92vw!important}#banner #banner-title{font-size:clamp(2.25rem,12vw,4.8rem)!important}#banner .cf-hero-video{display:none!important}}

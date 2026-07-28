@@ -1,0 +1,8 @@
+// Add this inside your existing match /databases/{database}/documents block.
+// This protects each user's watch-time document from other users.
+match /users/{uid}/watchTime/{document=**} {
+  allow read, write: if request.auth != null && request.auth.uid == uid;
+}
+
+IMPORTANT:
+Client-side Firestore rules can prevent users from editing another account, but cannot fully stop a technical user from changing their own remainingSeconds. For production-grade anti-cheat and verified rewards, move reward grants and time deductions to a Firebase Cloud Function/server.

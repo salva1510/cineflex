@@ -1,6 +1,0 @@
-CineFlex Build 304.8
-- Removed the legacy 10-second home-banner interval that interrupted trailers.
-- Hero rotation is now controlled only by hero.js and advances after YouTube ENDED.
-- Fixed homepage ArrowDown being trapped by closed off-canvas drawers.
-- Disabled the legacy Infinity keyboard listener when the final homepage TV controller is loaded.
-- ArrowDown now targets the first real visible poster row and retries after dynamic rendering.

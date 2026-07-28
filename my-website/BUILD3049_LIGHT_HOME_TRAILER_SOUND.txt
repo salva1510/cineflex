@@ -1,0 +1,5 @@
+CineFlex Build 304.9
+- Removed YT Movies and YT Music from footer and drawer
+- Removed Live TV navigation and unloaded Live TV, YT Movies, and YT Music CSS/JS from homepage
+- Removed Watch Party references from homepage/progression
+- Trailer sound unlocks after the first user tap, click, keyboard, or remote action (browser autoplay policy compliant)

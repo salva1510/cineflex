@@ -1,5 +1,0 @@
-CINEFLEX BUILD 8.0.4
-- Repaired Add Profile on mobile/PWA by waiting for Firebase Auth restoration.
-- Added capture-based click handling for every Add Profile control.
-- Prevented profile rendering from overwriting the VIP/Premium badge.
-- Added an always-visible Premium account badge: UPGRADE TO VIP for free, PREMIUM VIP for active VIP.

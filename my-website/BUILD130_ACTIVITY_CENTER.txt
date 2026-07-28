@@ -1,0 +1,14 @@
+CINEFLEX BUILD 13.0 — ACTIVITY CENTER
+
+Added:
+- Activity & History center in the menu drawer
+- Continue Watching history with direct title reopening
+- My List overview
+- Recently Played Music shortcut and clear history
+- Recently Played Radio shortcut and clear history
+- Favorite Live TV channel overview
+- Device-local activity summary counters
+- Responsive mobile layout
+- PWA cache bumped to cineflex-v13.0.0
+
+Existing Firebase, profiles, membership, movie player, Live TV, Music and Radio modules remain intact.

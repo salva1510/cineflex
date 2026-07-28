@@ -1,0 +1,12 @@
+CINEFLEX BUILD 16.0 — PROFILE PERSONALIZATION
+
+Added:
+- Profile Preferences entry in menu drawer
+- Kids-friendly mode that hides mature shortcuts/sections
+- Compact poster-row mode
+- Autoplay preview preference flag
+- Per-profile My List, Continue Watching, Music and Radio activity using local storage namespaces
+- Reset activity for current profile
+- Automatic preference restore when switching profiles
+
+Firebase profile creation/editing remains unchanged.

@@ -1,6 +1,0 @@
-/* Build 300.8 plugin visibility guards */
-html[data-plugin-youtube-movies="off"] [data-plugin="youtubeMovies"],
-html[data-plugin-youtube-music="off"] [data-plugin="youtubeMusic"],
-html[data-plugin-recommendations="off"] [data-plugin="recommendations"],
-html[data-plugin-ads="off"] [data-plugin="ads"] { display:none !important; }
-.plugin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.plugin-card{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;background:rgba(255,255,255,.025)}.plugin-card h3{margin:0 0 6px}.plugin-card p{margin:0;color:#9aa5b5;font-size:.9rem;line-height:1.45}.plugin-card .switch-row{margin-top:14px}.plugin-status{font-size:.78rem;margin-top:10px;color:#77e0c4}.plugin-warning{padding:12px 14px;border-radius:12px;background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.22);color:#ffd978;margin-bottom:16px}.plugin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}

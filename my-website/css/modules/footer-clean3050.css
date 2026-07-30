@@ -1,0 +1,13 @@
+/* CineFlex Build 305.0 — clean footer and remove discovery strip */
+.cf-ultra-discovery{display:none!important}
+.cf-native-bottom-nav{
+  left:0!important;right:0!important;bottom:0!important;transform:none!important;
+  width:100%!important;max-width:none!important;min-height:64px!important;
+  border-radius:0!important;padding:5px 0!important;margin:0!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+.cf-native-bottom-nav .nav-item{min-width:0!important;width:100%!important}
+@media (max-width:700px){
+  .cf-native-bottom-nav{width:100%!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;border-radius:0!important;bottom:0!important}
+  .cf-native-bottom-nav .nav-item span{font-size:.58rem!important}
+}

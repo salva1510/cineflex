@@ -1,0 +1,56 @@
+:root{--cf-bg:#080808;--cf-surface:#151515;--cf-surface-2:#202020;--cf-text:#fff;--cf-muted:#aaa;--cf-accent:#e50914;--cf-accent-rgb:229,9,20;--cf-focus:0 0 0 4px rgba(var(--cf-accent-rgb),.95),0 0 26px rgba(var(--cf-accent-rgb),.7)}
+html[data-cf-theme="midnight"]{--cf-bg:#06101d;--cf-surface:#0c1b2d;--cf-surface-2:#132943;--cf-text:#f4f9ff;--cf-muted:#9db2ca}
+html[data-cf-theme="purple"]{--cf-bg:#100916;--cf-surface:#21102c;--cf-surface-2:#351843;--cf-text:#fff7ff;--cf-muted:#c5a7cf}
+html[data-cf-theme="emerald"]{--cf-bg:#06130e;--cf-surface:#0d251b;--cf-surface-2:#143a29;--cf-text:#f3fff9;--cf-muted:#9bc4af}
+html[data-cf-theme="light"]{--cf-bg:#f5f6f8;--cf-surface:#fff;--cf-surface-2:#e8eaf0;--cf-text:#111;--cf-muted:#60646c}
+html[data-cf-theme="oled"]{--cf-bg:#000;--cf-surface:#080808;--cf-surface-2:#111;--cf-text:#fff;--cf-muted:#999}
+html,body{background:var(--cf-bg)!important;color:var(--cf-text)!important}
+button,.drawer-item,.nav-item,a{accent-color:var(--cf-accent)}
+.cf-tv-focus,:focus-visible{outline:none!important;box-shadow:var(--cf-focus)!important;transform:scale(1.035);position:relative;z-index:999!important;border-radius:10px}
+.bottom-nav.cf-native-bottom-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;max-width:none!important;margin:0!important;transform:none!important;border-radius:0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;padding:6px max(0px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left))!important;box-sizing:border-box!important;background:color-mix(in srgb,var(--cf-surface) 94%,transparent)!important;border-top:1px solid rgba(255,255,255,.12)!important;z-index:5000!important}
+.bottom-nav .nav-item{width:100%!important;min-width:0!important;margin:0!important;color:var(--cf-muted)!important;background:transparent!important;border:0!important}.bottom-nav .nav-item.active,.bottom-nav .nav-item:focus{color:var(--cf-accent)!important}
+.cf-ultimate-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);z-index:20000}.cf-ultimate-modal.active{display:flex}.cf-ultimate-panel{width:min(920px,96vw);max-height:90vh;overflow:auto;background:var(--cf-surface);color:var(--cf-text);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:22px;box-shadow:0 30px 90px #000}.cf-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-22px;background:var(--cf-surface);padding:12px 0;z-index:2}.cf-panel-head h2{margin:0}.cf-icon-btn{width:44px;height:44px;border-radius:50%;border:0;background:var(--cf-surface-2);color:var(--cf-text);font-size:20px}.cf-setting-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.cf-choice{border:2px solid transparent;background:var(--cf-surface-2);color:var(--cf-text);padding:14px;border-radius:14px;text-align:left;min-height:76px}.cf-choice.selected{border-color:var(--cf-accent)}.cf-choice small{display:block;color:var(--cf-muted);margin-top:5px}.cf-section{padding:14px 0;border-top:1px solid rgba(255,255,255,.1)}.cf-section h3{margin:0 0 12px}.cf-actions{display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:-22px;background:var(--cf-surface);padding:14px 0}.cf-primary,.cf-secondary,.cf-danger{border:0;border-radius:12px;padding:12px 18px;font-weight:800}.cf-primary{background:var(--cf-accent);color:#fff}.cf-secondary{background:var(--cf-surface-2);color:var(--cf-text)}.cf-danger{background:#8b1118;color:#fff}.cf-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0}.cf-toggle-row input{width:22px;height:22px}.cf-install-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.cf-install-card{background:var(--cf-surface-2);padding:16px;border-radius:14px}.cf-install-card h3{margin:0 0 8px}.cf-install-card p{color:var(--cf-muted);line-height:1.5}.cf-qr{width:180px;max-width:100%;background:#fff;border-radius:10px;padding:8px}.cf-profile-preview{display:flex;align-items:center;gap:16px}.cf-profile-preview img{width:82px;height:82px;border-radius:18px;object-fit:cover;border:3px solid var(--cf-accent)}.cf-field{display:grid;gap:6px;margin:10px 0}.cf-field input,.cf-field select{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:var(--cf-surface-2);color:var(--cf-text)}
+@media(max-width:620px){.cf-ultimate-panel{padding:16px}.cf-panel-head{top:-16px}.bottom-nav .nav-item span{font-size:10px}.bottom-nav .nav-item i{font-size:18px}}
+
+
+/* Build 306.2 — readable installation guides on mobile, PC and Smart TV */
+.cf-install-intro{font-size:1.05rem;line-height:1.6;color:var(--cf-text);background:rgba(var(--cf-accent-rgb),.12);border-left:5px solid var(--cf-accent);padding:13px 15px;border-radius:10px;margin:0 0 16px}
+.cf-install-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start}
+.cf-install-grid.cf-install-single{display:block;max-width:760px;margin-inline:auto}
+.cf-install-card{padding:20px;border:1px solid rgba(255,255,255,.16);box-shadow:0 8px 24px rgba(0,0,0,.22);overflow-wrap:anywhere}
+.cf-install-title{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cf-install-title h3{font-size:1.25rem;line-height:1.3;margin:0;color:var(--cf-text)}
+.cf-install-icon{font-size:2rem;line-height:1;flex:0 0 auto}
+.cf-install-steps{margin:0;padding-left:1.55rem;color:var(--cf-text);font-size:1rem;line-height:1.65}
+.cf-install-steps li{padding:5px 0 5px 5px}
+.cf-install-steps li::marker{color:var(--cf-accent);font-weight:900}
+.cf-install-note{color:var(--cf-text)!important;background:rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;margin:14px 0;line-height:1.55!important}
+.cf-install-url{font-size:1.05rem;font-weight:900;letter-spacing:.02em;margin:10px 0;color:var(--cf-text)}
+.cf-install-action{display:block;width:100%;min-height:50px;margin-top:14px;font-size:1rem}
+#cf-install306 .cf-panel-body{padding-bottom:10px}
+#cf-install306 .cf-ultimate-panel{overscroll-behavior:contain;scrollbar-gutter:stable}
+@media(max-width:620px){
+  .cf-ultimate-modal{padding:8px;align-items:stretch}
+  #cf-install306 .cf-ultimate-panel{width:100%;max-height:calc(100dvh - 16px);border-radius:14px;padding:14px}
+  #cf-install306 .cf-panel-head{top:-14px;padding:10px 0}
+  #cf-install306 .cf-panel-head h2{font-size:1.2rem}
+  .cf-install-grid{grid-template-columns:1fr;gap:13px}
+  .cf-install-card{padding:16px}
+  .cf-install-title h3{font-size:1.14rem}
+  .cf-install-steps{font-size:.98rem;line-height:1.6}
+}
+@media(min-width:1000px) and (min-height:600px){
+  body.cf-tv-enabled #cf-install306 .cf-ultimate-panel{width:min(1100px,92vw);max-height:86vh;padding:28px}
+  body.cf-tv-enabled #cf-install306 .cf-panel-head{top:-28px;padding:16px 0}
+  body.cf-tv-enabled #cf-install306 .cf-panel-head h2{font-size:2rem}
+  body.cf-tv-enabled .cf-install-intro{font-size:1.3rem;padding:18px 20px}
+  body.cf-tv-enabled .cf-install-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  body.cf-tv-enabled .cf-install-grid.cf-install-single{display:block;max-width:900px}
+  body.cf-tv-enabled .cf-install-card{padding:26px;border-radius:18px}
+  body.cf-tv-enabled .cf-install-title h3{font-size:1.65rem}
+  body.cf-tv-enabled .cf-install-icon{font-size:2.5rem}
+  body.cf-tv-enabled .cf-install-steps{font-size:1.28rem;line-height:1.75;padding-left:2rem}
+  body.cf-tv-enabled .cf-install-note,body.cf-tv-enabled .cf-install-url{font-size:1.2rem}
+  body.cf-tv-enabled .cf-install-action{min-height:64px;font-size:1.2rem}
+  body.cf-tv-enabled #cf-install306 .cf-icon-btn{width:58px;height:58px;font-size:30px}
+}

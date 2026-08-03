@@ -1,6 +1,0 @@
-CineFlex Pop Ad Update 305.6
-
-- Replaced the previous bashsecret.com pop-ad tag.
-- Installed the newly supplied provider code in js/core/cineflex-pop-provider3056.js.
-- Preserved existing CineFlex rules: no homepage pop ads, VIP users remain ad-free, and placements remain controlled by the existing Play/Episode/category controller.
-- Updated script cache versions to 305.6.

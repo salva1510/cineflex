@@ -1,0 +1,4 @@
+The old FreeReels classic/public-domain catalog was removed.
+The FreeReels destination is now freereels-hub.html.
+The new hub is organized into 10 requested categories and uses official YouTube sources.
+YouTube videos are not downloaded/re-hosted. Verify rights for commercial use before monetization.

@@ -1,0 +1,13 @@
+CineFlex Build 306.0 Ultimate Edition
+- Unified PC, keyboard and Smart TV remote navigation on every HTML page
+- Arrow navigation, Enter/OK click, Escape/Backspace/TV Back handling
+- Load More and dynamically added cards are focusable
+- Full-width five-column footer navigation
+- Installation Center: Android, iPhone/iPad, Windows, Android TV/Google TV and QR code
+- Theme Center: Classic, Midnight, Purple, Emerald, Light and OLED
+- Accent colours with live preview, Apply and Cancel
+- Playback/TV preferences and local persistence
+- Cache, history, Continue Watching and search-history cleanup controls
+- Profile name, avatar, Kids profile and optional four-digit PIN settings
+- Removed obsolete 305.4 global navigation files and old build notes
+- Homepage remains free of pop-ad loading; ad placement from Build 305.5 retained

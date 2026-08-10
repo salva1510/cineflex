@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "id": "yt-iqiyi",
+      "channel": "iQIYI Short Drama",
+      "youtube": "https://www.youtube.com/@iQIYIShortDrama",
+      "categories": [
+        "Trending",
+        "Romance",
+        "Billionaire / CEO",
+        "Revenge",
+        "Contract Marriage",
+        "Thriller"
+      ]
+    },
+    {
+      "id": "yt-lakas",
+      "channel": "Lakas Drama PH",
+      "youtube": "https://www.youtube.com/@LakasDramaPH",
+      "categories": [
+        "Romance",
+        "Billionaire / CEO",
+        "Revenge",
+        "Werewolf / Fantasy",
+        "Betrayal"
+      ]
+    },
+    {
+      "id": "yt-tang",
+      "channel": "Tang Global / 柑橘短剧社",
+      "youtube": "https://www.youtube.com/c/TangGlobal",
+      "categories": [
+        "Trending",
+        "Romance",
+        "Billionaire / CEO",
+        "Revenge",
+        "Contract Marriage",
+        "Werewolf / Fantasy"
+      ]
+    },
+    {
+      "id": "yt-anik",
+      "channel": "Anik Sahan",
+      "youtube": "https://www.youtube.com/channel/UCBClWnw8wYBJpzfpUvKYZcQ",
+      "categories": [
+        "Romance",
+        "Betrayal",
+        "Thriller"
+      ]
+    }
+  ],
+  "note": "YouTube embeds only; verify individual video rights before commercial use."
+}

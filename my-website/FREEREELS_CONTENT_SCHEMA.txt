@@ -1,0 +1,33 @@
+FREE REELS CONTENT SCHEMA
+
+Each real licensed series should look like:
+
+{
+  "id": "series-001",
+  "title": "Series Title",
+  "category": "Romance",
+  "status": "ongoing",
+  "licensed": true,
+  "source": "https://authorized-source.example/...",
+  "poster": "https://...",
+  "description": "...",
+  "episodes": [
+    {"ep":1,"video":"https://authorized-video.example/ep1.mp4","duration":"01:52"},
+    {"ep":2,"video":"https://authorized-video.example/ep2.mp4","duration":"02:03"}
+  ]
+}
+
+Allowed category values:
+Trending
+Romance
+Billionaire / CEO
+Revenge
+Contract Marriage
+Royal / Empress
+Werewolf / Fantasy
+Betrayal
+Thriller
+Completed Series
+
+IMPORTANT:
+Do not add a video URL unless you have permission/license to stream it on CineFlex.

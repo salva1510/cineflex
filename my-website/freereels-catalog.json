@@ -1,0 +1,43 @@
+{
+  "categories": [
+    "Trending",
+    "Romance",
+    "Billionaire / CEO",
+    "Revenge",
+    "Contract Marriage",
+    "Royal / Empress",
+    "Werewolf / Fantasy",
+    "Betrayal",
+    "Thriller",
+    "Completed Series"
+  ],
+  "series": [
+    {
+      "id": "demo-001",
+      "title": "Your Licensed Mini-Drama Here",
+      "category": "Romance",
+      "episodes": [
+        {
+          "ep": 1,
+          "video": "",
+          "duration": ""
+        },
+        {
+          "ep": 2,
+          "video": "",
+          "duration": ""
+        },
+        {
+          "ep": 3,
+          "video": "",
+          "duration": ""
+        }
+      ],
+      "status": "ongoing",
+      "licensed": false,
+      "source": "",
+      "poster": "",
+      "description": "Placeholder entry. Add an authorized/licensed vertical-drama source before publishing."
+    }
+  ]
+}

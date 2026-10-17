@@ -1,9 +1,21 @@
 (() => {
   const API_KEY='742aa17a327005b91fb6602054523286', BASE='https://api.themoviedb.org/3', IMG='https://image.tmdb.org/t/p/w500';
   const q=new URLSearchParams(location.search), id=q.get('id'), type=q.get('type')==='tv'?'tv':'movie';
-  const SERVERS=[
-    {id:'vidsrcsbs',name:'vidsrc.sbs',label:'Server 1',note:'Primary',movie:id=>`https://vidsrc.sbs/embed/movie/${id}`,tv:(id,s,e)=>`https://vidsrc.sbs/embed/tv/${id}/${s}/${e}`},
-    {id:'vidlink',name:'vidlink.pro',label:'Server 2',note:'Backup 1',movie:id=>`https://vidlink.pro/movie/${id}`,tv:(id,s,e)=>`https://vidlink.pro/tv/${id}/${s}/${e}`},
+  const SERVERS=[{
+  id: 'zxc',
+  name: 'zxcstream.cc',
+  label: 'Server 1',
+  note: 'Primary',
+  movie: id => `https://zxcstream.cc/player/movie/${id}?dubLang=tl&dubType=0`,
+  tv: (id, s, e) => `https://zxcstream.cc/player/tv/${id}/${s}/${e}?dubLang=tl&dubType=0`
+},
+    {
+  id: 'vidstuck',
+  name: 'VidStuck',
+  label: 'Server 2',
+  movie: id => `https://vidstuck.cc/movie/${id}`,
+  tv: (id, s, e) => `https://vidstuck.cc/tv/${id}/${s}/${e}`
+},
     {id:'peach',name:'peachify.pro',label:'Server 3',note:'Backup 2',movie:id=>`https://peachify.pro/embed/movie/${id}`,tv:(id,s,e)=>`https://peachify.pro/embed/tv/${id}/${s}/${e}`},
     {id:'oneembed',name:'1embed.cc',label:'Server 4',note:'Backup 3',movie:id=>`https://1embed.cc/embed/movie/${id}`,tv:(id,s,e)=>`https://1embed.cc/embed/tv/${id}/${s}/${e}`},
     {id:'vidsrcme',name:'vidsrcme.ru',label:'Server 5',note:'Backup 4',movie:id=>`https://vidsrcme.ru/embed/movie/${id}`,tv:(id,s,e)=>`https://vidsrcme.ru/embed/tv/${id}/${s}/${e}`},

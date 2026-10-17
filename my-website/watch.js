@@ -12,7 +12,14 @@
     {id:'twoembed',name:'2embed.cc',label:'Server 8',note:'Backup 7',movie:id=>`https://2embed.cc/embed/${id}`,tv:(id,s,e)=>`https://2embed.cc/embedtv/${id}&s=${s}&e=${e}`},
     {id:'moviepire',name:'video.moviepire.co',label:'Server 9',note:'Backup 8',movie:id=>`https://video.moviepire.co/embed/movie/${id}`,tv:(id,s,e)=>`https://video.moviepire.co/embed/tv/${id}/${s}/${e}`},
     {id:'vidfast',name:'vidfast.vc',label:'Server 10',note:'Backup 9',movie:id=>`https://vidfast.vc/movie/${id}?autoPlay=true`,tv:(id,s,e)=>`https://vidfast.vc/tv/${id}/${s}/${e}?autoPlay=true`},
-    {id:'zxc',name:'zxcstream.xyz',label:'Server 11',note:'Backup 10',movie:id=>`https://zxcstream.xyz/player/movie/${id}`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}`},
+    {
+  id: 'zxc',
+  name: 'zxcstream.cc',
+  label: 'Server 1',
+  note: 'Primary',
+  movie: id => `https://zxcstream.cc/player/movie/${id}?dubLang=tl&dubType=0`,
+  tv: (id, s, e) => `https://zxcstream.cc/player/tv/${id}/${s}/${e}?dubLang=tl&dubType=0`
+},
     {id:'vidnest',name:'vidnest.fun',label:'Server 12',note:'Backup 11',movie:id=>`https://vidnest.fun/movie/${id}`,tv:(id,s,e)=>`https://vidnest.fun/tv/${id}/${s}/${e}`}
   ];
   if(localStorage.getItem('cineflex_server_order_build')!=='310.1'){

@@ -12,7 +12,7 @@
     {id:'twoembed',name:'Server 8',badge:'2Embed',movie:id=>`https://2embed.cc/embed/${id}`,tv:(id,s,e)=>`https://2embed.cc/embedtv/${id}&s=${s}&e=${e}`},
     {id:'moviepire',name:'Server 9',badge:'MoviePire',movie:id=>`https://video.moviepire.co/embed/movie/${id}`,tv:(id,s,e)=>`https://video.moviepire.co/embed/tv/${id}/${s}/${e}`},
     {id:'vidfast',name:'Server 10',badge:'VidFast',movie:id=>`https://vidfast.vc/movie/${id}?autoPlay=true`,tv:(id,s,e)=>`https://vidfast.vc/tv/${id}/${s}/${e}?autoPlay=true`},
-    {id:'zxc',name:'Server 11',badge:'ZXCStream',movie:id=>`https://zxcstream.xyz/player/movie/${id}?dubLang=tl&dubType=0`,tv:(id,s,e)=>`https://zxcstream.xyz/player/tv/${id}/${s}/${e}?dubLang=tl&dubType=0`},
+    {id:'zxc',name:'Server 11',badge:'ZXCStream',movie:id=>`https://zxcstream.cc/player/movie/${id}?dubLang=tl&dubType=0`,tv:(id,s,e)=>`https://zxcstream.cc/player/tv/${id}/${s}/${e}?dubLang=tl&dubType=0`},
     {id:'vidnest',name:'Server 12',badge:'VidNest',movie:id=>`https://vidnest.fun/movie/${id}`,tv:(id,s,e)=>`https://vidnest.fun/tv/${id}/${s}/${e}`}
   ];
   if(localStorage.getItem('cineflex_server_order_build')!=='310.1'){
